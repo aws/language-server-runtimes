@@ -1,0 +1,18 @@
+import { Auth, Logging, Lsp, Telemetry, Workspace } from '../features'
+
+/**
+ * Servers are used to provide features to the client.
+ * 
+ * Servers can make use of the {Auth}, {Lsp}, {Workspace}, {Logging} and {Telemetry} features
+ * to implement their functionality. Servers are notexpected to perform actions when their method
+ * is called, but instead to set up listeners, event handlers, etc to handle.
+ * 
+ * {Auth}}, {Lsp}, and {Workspace} features may be initialized asynchronously, and can be empty until initialization
+ * is completed and the client or user provides the necessary information. It's up to Server implementations to
+ * either wait for the content to become available, or to gracefully handle cases where content is not yet available.
+ * 
+ * The main use case for Servers is to listen to {Lsp} events and respond to these appropriately.
+ * 
+ * @returns A function that will be called when the client exits, used to dispose of any held resources. 
+ */
+export type Server = (features: { auth: Auth, lsp: Lsp, workspace: Workspace, logging: Logging, telemetry: Telemetry }) => () => void
