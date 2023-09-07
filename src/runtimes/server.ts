@@ -1,13 +1,14 @@
-import { Auth, Logging, Lsp, Telemetry, Workspace } from '../features'
+import { Logging, Lsp, Telemetry, Workspace } from '../features'
+import { CredentialsProvider } from '../features/auth/auth'
 
 /**
  * Servers are used to provide features to the client.
  * 
- * Servers can make use of the {Auth}, {Lsp}, {Workspace}, {Logging} and {Telemetry} features
+ * Servers can make use of the {CredentialsProvider}, {Lsp}, {Workspace}, {Logging} and {Telemetry} features
  * to implement their functionality. Servers are notexpected to perform actions when their method
  * is called, but instead to set up listeners, event handlers, etc to handle.
  * 
- * {Auth}}, {Lsp}, and {Workspace} features may be initialized asynchronously, and can be empty until initialization
+ * {CredentialsProvider}}, {Lsp}, and {Workspace} features may be initialized asynchronously, and can be empty until initialization
  * is completed and the client or user provides the necessary information. It's up to Server implementations to
  * either wait for the content to become available, or to gracefully handle cases where content is not yet available.
  * 
@@ -15,4 +16,4 @@ import { Auth, Logging, Lsp, Telemetry, Workspace } from '../features'
  * 
  * @returns A function that will be called when the client exits, used to dispose of any held resources. 
  */
-export type Server = (features: { auth: Auth, lsp: Lsp, workspace: Workspace, logging: Logging, telemetry: Telemetry }) => () => void
+export type Server = (features: { credentialsProvider: CredentialsProvider, lsp: Lsp, workspace: Workspace, logging: Logging, telemetry: Telemetry }) => () => void

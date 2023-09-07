@@ -1,4 +1,4 @@
-export { Auth } from "./auth"
+export { CredentialsProvider } from "./auth/auth"
 export { Logging } from "./logging"
 export { Lsp } from "./lsp"
 export { Telemetry } from "./telemetry"
