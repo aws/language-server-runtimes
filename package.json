@@ -6,20 +6,18 @@
     "test": "ts-mocha -b src/**/*.test.ts"
   },
   "dependencies": {
+    "jose": "^4.14.4",
     "vscode-languageserver": "^8.0.1",
     "vscode-languageserver-textdocument": "^1.0.8",
     "vscode-languageserver-types": "^3.17.3"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.198",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.5.9",
     "assert": "^2.0.0",
-    "crypto": "^1.0.1",
-    "jose": "^4.14.4",
-    "lodash": "^4.17.21",
     "sinon": "^15.1.0",
     "ts-mocha": "^10.0.0",
-    "ts-sinon": "^2.0.2"
+    "ts-sinon": "^2.0.2",
+    "typescript": "^5.2.2"
   }
 }

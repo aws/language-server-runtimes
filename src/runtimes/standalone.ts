@@ -1,7 +1,7 @@
 import { InitializeParams, TextDocumentSyncKind, TextDocuments } from "vscode-languageserver"
 import { TextDocument } from 'vscode-languageserver-textdocument'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
-import { EncryptionInitialization, readLine, shouldWaitForEncryptionKey, validateEncryptionDetails } from "../features/auth/encryption"
+import { EncryptionInitialization, readEncryptionDetails, shouldWaitForEncryptionKey, validateEncryptionDetails } from "../features/auth/standalone/encryption"
 import { Logging, Lsp, Telemetry, Workspace } from '../features'
 import { inlineCompletionRequestType } from "../features/lsp/inline-completions/futureProtocol"
 import { metric } from '../features/telemetry'
@@ -34,7 +34,7 @@ const withLogging = <H extends Handler, A extends Parameters<H>, B extends Retur
  * The runtime for standalone LSP-based servers.
  * 
  * Initializes one or more Servers with the following features:
- * - CredebntialsProvider: 
+ * - CredentialsProvider: provides IAM and bearer credentials 
  * - LSP: Initializes a connection based on STDIN / STDOUT
  * - Logging: logs messages through the LSP connection
  * - Telemetry: emits telemetry through the LSP connection
@@ -58,23 +58,29 @@ export const standalone = (...servers: Server[]) => {
     const lspConnection = createConnection(ProposedFeatures.all)
 
     let auth: Auth
-    if (shouldWaitForEncryptionKey()) {
-        // Before starting the runtime, accept encryption initialization details
-        // directly from the destination for standalone runtimes.
-        // Contract: Only read up to (and including) the first newline (\n).
-        readLine(process.stdin).then(input => {
-            const encryptionDetails = JSON.parse(input) as EncryptionInitialization
+    initializeAuth()
 
-            validateEncryptionDetails(encryptionDetails)
-            auth = new Auth(lspConnection, encryptionDetails.key, encryptionDetails.mode)
-            lspConnection.console.info('Runtime: Initializing runtime with credentials encryption')
+    // Initialize Auth service
+    function initializeAuth() {
+        if (shouldWaitForEncryptionKey()) {
+            // Before starting the runtime, accept encryption initialization details
+            // directly from the destination for standalone runtimes.
+            // Contract: Only read up to (and including) the first newline (\n).
+            readEncryptionDetails(process.stdin).then((encryptionDetails: EncryptionInitialization) => {
+                validateEncryptionDetails(encryptionDetails)
+                lspConnection.console.info('Runtime: Initializing runtime with encryption')
+                auth = new Auth(lspConnection, encryptionDetails.key, encryptionDetails.mode)
+                initializeRuntime()
+                },
+                error => {
+                    console.error(error)
+                    process.exit(10)
+                })
+        } else {
+            lspConnection.console.info('Runtime: Initializing runtime without encryption')
+            auth = new Auth(lspConnection)
             initializeRuntime()
-        })
-
-    } else {
-        lspConnection.console.info('Runtime: Initializing runtime without credentials encryption')
-        auth = new Auth(lspConnection)
-        initializeRuntime()
+        }
     }
 
 
@@ -112,7 +118,7 @@ export const standalone = (...servers: Server[]) => {
             }
         })
 
-        // Set up logigng over LSP
+        // Set up logging over LSP
         // TODO: set up Logging once implemented
         const logging: Logging = {
             log: message => lspConnection.console.info(`[${new Date().toISOString()}] ${message}`)

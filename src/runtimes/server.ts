@@ -1,5 +1,4 @@
-import { Logging, Lsp, Telemetry, Workspace } from '../features'
-import { CredentialsProvider } from '../features/auth/auth'
+import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider } from '../features'
 
 /**
  * Servers are used to provide features to the client.

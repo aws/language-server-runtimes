@@ -1,6 +1,6 @@
 import { jwtDecrypt } from 'jose'
 import { Connection } from 'vscode-languageserver'
-import { CredentialsEncoding } from './encryption'
+import { CredentialsEncoding } from './standalone/encryption'
 
 export type IamCredentials = {
     readonly accessKeyId: string
@@ -32,14 +32,15 @@ export interface CredentialsProvider {
 export const credentialsProtocolMethodNames = {
     iamCredentialsUpdate: '$/aws/credentials/iam/update',
     iamCredentialsDelete: '$/aws/credentials/iam/delete',
-    bearerCredentialsUpdate: '$/aws/credentials/bearer/update',
-    bearerCredentialsDelete: '$/aws/credentials/bearer/delete',
+    bearerCredentialsUpdate: '$/aws/credentials/token/update',
+    bearerCredentialsDelete: '$/aws/credentials/token/delete',
 }
 
 export interface UpdateCredentialsRequest {
-    // Plaintext Credentials or encrypted JWT token
+    // Plaintext Credentials (for browser based environments) or encrypted JWT token
     data: string | Credentials
     // If the payload is encrypted
+    // Defaults to false if undefined or null
     encrypted?: boolean
 }
 

@@ -1,7 +1,6 @@
 import assert from 'assert'
-import * as crypto from 'crypto'
+import {randomBytes} from 'node:crypto'
 import * as jose from 'jose'
-import { isEqual } from 'lodash'
 import { Connection } from 'vscode-languageserver'
 import { Auth, BearerCredentials, CredentialsProvider, CredentialsType, IamCredentials, UpdateCredentialsRequest, credentialsProtocolMethodNames } from './auth'
 
@@ -52,7 +51,7 @@ const iamCredentials: IamCredentials = {
     sessionToken: "testSession"
 }
 
-const encryptionKey = crypto.randomBytes(32)
+const encryptionKey = randomBytes(32)
 
 
 describe('Auth', () => {
@@ -86,7 +85,7 @@ describe('Auth', () => {
         await authHandlers.iamUpdateHandler(updateRequest)
 
         assert(credentialsProvider.hasCredentials('iam'))
-        assert(isEqual(credentialsProvider.getCredentials('iam'), iamCredentials))
+        assert.deepEqual(credentialsProvider.getCredentials('iam'), iamCredentials)
 
         authHandlers.iamDeleteHandler()
         assert(!credentialsProvider.hasCredentials('iam'))
@@ -105,14 +104,14 @@ describe('Auth', () => {
         await authHandlers.bearerUpdateHandler(updateRequest)
 
         assert(credentialsProvider.hasCredentials('bearer'))
-        assert(isEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials))
+        assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
 
         authHandlers.bearerDeleteHandler()
         assert(!credentialsProvider.hasCredentials('bearer'))
         assert(credentialsProvider.getCredentials('bearer') === undefined)
     })
 
-    it('Throws error when IAM credentials are invalid', async () => {
+    it('Rejects when IAM credentials are invalid', async () => {
         const malformedIamCredentials = {
             accessKeyId: 'testKey',
             sessionToken: "testSession"
@@ -124,15 +123,11 @@ describe('Auth', () => {
         const auth = new Auth(serverLspConnectionMock)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-        try {
-            await authHandlers.iamUpdateHandler(updateIamRequest)
-        } catch (exception) {
-            assert((exception as Error).message.includes('Invalid IAM credentials'))
-        }
+        await assert.rejects(authHandlers.iamUpdateHandler(updateIamRequest), /Invalid IAM credentials/)
         assert(!credentialsProvider.getCredentials('iam'))
     })
 
-    it('Throws error when bearer credentials are invalid', async () => {
+    it('Rejects when bearer credentials are invalid', async () => {
         const malformedBearerCredentials = {
             token: undefined as unknown
         }
@@ -143,11 +138,7 @@ describe('Auth', () => {
         const auth = new Auth(serverLspConnectionMock)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-        try {
-            await authHandlers.bearerUpdateHandler(updateBearerRequest)
-        } catch (exception) {
-            assert((exception as Error).message.includes('Invalid bearer credentials'))
-        }
+        await assert.rejects(authHandlers.bearerUpdateHandler(updateBearerRequest), /Invalid bearer credentials/)
         assert(!credentialsProvider.getCredentials('bearer'))
     })
 
@@ -164,11 +155,8 @@ describe('Auth', () => {
 
             let creds: any = credentialsProvider.getCredentials('iam')
             const initialAccessKey = creds.accessKeyId
-            try {
-                creds['accessKeyId'] = 'anotherKey'
-            } catch (exception) {
-                assert((exception as Error).message.includes('Cannot assign to read only property'))
-            }
+
+            assert.throws(() => creds.accessKeyId = 'anotherKey', /Cannot assign to read only property/)
             creds = {}
             assert((credentialsProvider.getCredentials('iam') as IamCredentials).accessKeyId === initialAccessKey)
         })
@@ -186,37 +174,23 @@ describe('Auth', () => {
 
             let creds: any = credentialsProvider.getCredentials('bearer')
             const initialToken = creds.token
-            try {
-                creds['token'] = 'anotherToken'
-            } catch (exception) {
-                assert((exception as Error).message.includes('Cannot assign to read only property'))
-            }
+            assert.throws(() => creds.token = 'anotherToken', /Cannot assign to read only property/)
             creds = {}
             assert((credentialsProvider.getCredentials('bearer') as BearerCredentials).token === initialToken)
         })
 
-        it('Throws error on unsupported type', async () => {
+        it('Throws on unsupported type', async () => {
 
             const auth = new Auth(serverLspConnectionMock)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-            try {
-                credentialsProvider.hasCredentials('unsupported_type' as CredentialsType)
-            } catch (exception) {
-                assert((exception as Error).message.includes('Unsupported credentials type'))
-            }
-
-            try {
-                credentialsProvider.getCredentials('unsupported_type' as CredentialsType)
-            } catch (exception) {
-                assert((exception as Error).message.includes('Unsupported credentials type'))
-            }
-
+            assert.throws(() => credentialsProvider.hasCredentials('unsupported_type' as CredentialsType), /Unsupported credentials type/)
+            assert.throws(() => credentialsProvider.getCredentials('unsupported_type' as CredentialsType), /Unsupported credentials type/)
         })
     })
 
     describe('Encrypted credentials', () => {
-        it('Throws error when encrypted flag set wrong', async () => {
+        it('Rejects when encrypted flag is set wrong', async () => {
             const updateIamRequest: UpdateCredentialsRequest = {
                 data: iamCredentials as IamCredentials,
                 encrypted: true
@@ -224,11 +198,7 @@ describe('Auth', () => {
             const auth = new Auth(serverLspConnectionMock)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-            try {
-                await authHandlers.iamUpdateHandler(updateIamRequest)
-            } catch (exception) {
-                (exception as Error).message.includes('No encryption key')
-            }
+            await assert.rejects(authHandlers.iamUpdateHandler(updateIamRequest), /No encryption key/)
 
             assert(!credentialsProvider.getCredentials('iam'))
         })
@@ -248,7 +218,7 @@ describe('Auth', () => {
                 encrypted: true
             }
             await authHandlers.iamUpdateHandler(updateIamRequest)
-            assert(isEqual(credentialsProvider.getCredentials('iam'), iamCredentials))
+            assert.deepEqual(credentialsProvider.getCredentials('iam'), iamCredentials)
         })
 
         it('Handles encrypted bearer credentials', async () => {
@@ -259,8 +229,6 @@ describe('Auth', () => {
 
             const jwt = await new jose.EncryptJWT(payload)
                 .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
-                // .setNotBefore(new Date().getTime() / 1000)
-                // .setExpirationTime(new Date().getTime() / 1000 + 30)
                 .encrypt(encryptionKey)
 
             const updateBearerRequest: UpdateCredentialsRequest = {
@@ -268,10 +236,10 @@ describe('Auth', () => {
                 encrypted: true
             }
             await authHandlers.bearerUpdateHandler(updateBearerRequest)
-            assert(isEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials))
+            assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
         })
 
-        it('Supports direct AES encryption', async () => {
+        it('Rejects if encryption algorithm is not direct A256GCM', async () => {
             const auth = new Auth(serverLspConnectionMock, encryptionKey.toString('base64'), 'JWT')
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
@@ -285,11 +253,7 @@ describe('Auth', () => {
                 data: jwt,
                 encrypted: true
             }
-            try {
-                await authHandlers.bearerUpdateHandler(updateBearerRequest)
-            } catch (exception) {
-                assert((exception as Error).message.includes('Header Parameter not allowed'))
-            }
+            await assert.rejects(authHandlers.bearerUpdateHandler(updateBearerRequest), /Header Parameter not allowed/)
             assert(!credentialsProvider.getCredentials('bearer'))
         })
 
@@ -309,11 +273,7 @@ describe('Auth', () => {
                 data: jwt,
                 encrypted: true
             }
-            try {
-                await authHandlers.bearerUpdateHandler(updateBearerRequest)
-            } catch (exception) {
-                assert((exception as Error).message.includes('"exp" claim timestamp check failed'))
-            }
+            await assert.rejects(authHandlers.bearerUpdateHandler(updateBearerRequest), /"exp" claim timestamp check failed/)
             assert(!credentialsProvider.getCredentials('bearer'))
         })
     })

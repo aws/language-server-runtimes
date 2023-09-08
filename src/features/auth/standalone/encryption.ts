@@ -1,7 +1,7 @@
 import { Readable } from "stream"
 
 export function shouldWaitForEncryptionKey(): boolean {
-    return process.argv.some(arg => arg === '--set-encryption-key')
+    return process.argv.some(arg => arg === '--set-credentials-encryption-key')
 }
 
 export type CredentialsEncoding = 'JWT'
@@ -45,27 +45,39 @@ export function validateEncryptionDetails(encryptionDetails: EncryptionInitializ
  * Read from the given stream, stopping after the first newline (\n).
  * Return the string consumed from the stream.
  */
-export function readLine(stream: Readable): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-        let contents = ''
+export function readEncryptionDetails(stream: Readable): Promise<EncryptionInitialization> {
+    return new Promise<EncryptionInitialization>((resolve, reject) => {
+        let buffer = Buffer.alloc(0)
+        const TIMEOUT_INTERVAL_MS = 5000
+
+        const timer: NodeJS.Timeout = setTimeout(() => {
+            clearTimer()
+            stream.removeListener('readable', onStreamIsReadable)
+            reject(`Encryption details followed by newline must be sent during first ${TIMEOUT_INTERVAL_MS}ms`)
+        }, TIMEOUT_INTERVAL_MS)
+
+        const clearTimer = () => {
+            if (timer) {
+                clearTimeout(timer)
+            }
+        }
 
         // Fires when the stream has contents that can be read
         const onStreamIsReadable = () => {
-            while (true) {
-                const byteRead: Buffer = process.stdin.read(1)
-                if (byteRead == null) {
-                    // wait for more content to arrive on the stream
-                    break
-                }
-
-                const nextChar = byteRead.toString('utf-8')
-                contents += nextChar
-
-                if (nextChar == '\n') {
+            let byteRead
+            while ((byteRead = stream.read(1)) !== null) {
+                if (byteRead.toString('utf-8') == '\n') {
+                    clearTimer()
                     // Stop reading this stream, we have read a line from it
                     stream.removeListener('readable', onStreamIsReadable)
-                    resolve(contents)
+                    try{
+                        resolve(JSON.parse(buffer.toString('utf-8')) as EncryptionInitialization)
+                    }catch(error){
+                        reject(error)
+                    }
                     break
+                } else {
+                    buffer = Buffer.concat([buffer, byteRead])
                 }
             }
         }
