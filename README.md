@@ -158,18 +158,9 @@ To send encrypted credentials, the `UpdateCredentialsPayload` parameters should 
 }
 ```
 
-### Standalone on MDE
-
-TBD
-
 ### WebWorker
 
 TBD
-
-### WebWorker in Lotus
-
-TBD
-
 
 ## Security
 
