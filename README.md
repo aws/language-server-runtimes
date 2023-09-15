@@ -63,7 +63,7 @@ The following table outlines custom LSP methods are supported by servers for aut
 ```ts
 export type Credentials = IamCredentials | BearerCredentials
 
-// Credentials provided to the DEXP server by the server's host
+// Credentials provided to the server by the server's host
 export interface UpdateCredentialsPayload {
     // Plaintext IamCredentials/BearerCredentials or JSON blob of encrypted credentials
     data: string | Credentials
@@ -130,7 +130,7 @@ Runtimes support the passing of encrypted credentials over LSP with stdio as tra
 The following steps outline how to enable encrypted credentials:
 
 1. Create a random 256 bit (32 byte) encryption key. 
-2. Pass the `--set-credentials-encryption-key` command line argument to the DEXP server process at launch. This will signal to the server that the client wants to enable encryption and will wait for the encryption options.
+2. Pass the `--set-credentials-encryption-key` command line argument to the server process at launch. This will signal to the server that the client wants to enable encryption and will wait for the encryption options.
 3. Immediately send a JSON blob over `stdin` with the information in the script below, followed by the new line `/n` character, which will signal the end of transmission to the runtime. If LSP initialization continues, encryption options have been validated and saved. In case of errors or unsupported parameters, the runtime process will exit. 
 
 ```json
