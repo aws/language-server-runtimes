@@ -68,6 +68,7 @@ export interface UpdateCredentialsPayload {
     // Plaintext IamCredentials/BearerCredentials or JSON blob of encrypted credentials
     data: string | Credentials
     // If the payload is encrypted
+    // Defaults to false if undefined or null
     encrypted?: boolean
 }
 ```
@@ -130,8 +131,8 @@ Runtimes support the passing of encrypted credentials over LSP with stdio as tra
 The following steps outline how to enable encrypted credentials:
 
 1. Create a random 256 bit (32 byte) encryption key. 
-2. Pass the `--set-credentials-encryption-key` command line argument to the server process at launch. This will signal to the server that the client wants to enable encryption and will wait for the encryption options.
-3. Immediately send a JSON blob over `stdin` with the information in the script below, followed by the new line `/n` character, which will signal the end of transmission to the runtime. If LSP initialization continues, encryption options have been validated and saved. In case of errors or unsupported parameters, the runtime process will exit. 
+2. Pass the `--set-credentials-encryption-key` command line argument to the server process at launch. This will signal to the server that the client wants to enable encryption and will wait for the encryption options during the next 5 seconds.
+3. Immediately send a JSON blob over `stdin` with the information in the script below, followed by the new line `/n` character, which will signal the end of transmission to the runtime. If LSP initialization continues, encryption options have been validated and saved. If the client fails to send encryption options during the first 5 seconds or the JSON object is invalid, the process will exit with status code 10. 
 
 ```json
 {
