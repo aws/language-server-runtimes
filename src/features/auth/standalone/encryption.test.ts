@@ -49,7 +49,7 @@ describe("readEncryptionDetails", () => {
         stream.push('badJSON')
         stream.push('\n')
     
-        await assert.rejects(readEncryptionDetails(stream), /not valid JSON/)
+        await assert.rejects(readEncryptionDetails(stream), /SyntaxError/)
     })
 })
 

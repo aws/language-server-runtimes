@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "description": "Runtimes to host AWS Language Servers",
   "scripts": {
+    "compile": "tsc --build",
+    "prepack": "npm run compile",
     "test": "ts-mocha -b src/**/*.test.ts"
   },
   "dependencies": {
