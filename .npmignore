@@ -1,0 +1,7 @@
+src/
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+node_modules/
+package-lock.json
+.*
+tsconfig.json
