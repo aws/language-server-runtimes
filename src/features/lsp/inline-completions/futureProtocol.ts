@@ -1,12 +1,16 @@
 import {
-    ProtocolRequestType,
-    StaticRegistrationOptions,
-    TextDocumentPositionParams,
-    TextDocumentRegistrationOptions,
-    WorkDoneProgressOptions,
-    WorkDoneProgressParams,
-} from 'vscode-languageserver'
-import { InlineCompletionContext, InlineCompletionItem, InlineCompletionList } from './futureTypes'
+  ProtocolRequestType,
+  StaticRegistrationOptions,
+  TextDocumentPositionParams,
+  TextDocumentRegistrationOptions,
+  WorkDoneProgressOptions,
+  WorkDoneProgressParams,
+} from "vscode-languageserver";
+import {
+  InlineCompletionContext,
+  InlineCompletionItem,
+  InlineCompletionList,
+} from "./futureTypes";
 
 /**
  * Inline completion is not a part of the language server protocol.
@@ -20,25 +24,25 @@ import { InlineCompletionContext, InlineCompletionItem, InlineCompletionList } f
  * between these types, and the final standard's types.
  */
 
-type InlineCompletionOptions = WorkDoneProgressOptions
+type InlineCompletionOptions = WorkDoneProgressOptions;
 
 type InlineCompletionRegistrationOptions = InlineCompletionOptions &
-    TextDocumentRegistrationOptions &
-    StaticRegistrationOptions
+  TextDocumentRegistrationOptions &
+  StaticRegistrationOptions;
 
 export type InlineCompletionParams = WorkDoneProgressParams &
-    TextDocumentPositionParams & {
-        context: InlineCompletionContext
-    }
+  TextDocumentPositionParams & {
+    context: InlineCompletionContext;
+  };
 
 /**
  * inlineCompletionRequestType defines the custom method that the language client
  * requests from the server to provide inline completion recommendations.
  */
 export const inlineCompletionRequestType = new ProtocolRequestType<
-    InlineCompletionParams,
-    InlineCompletionList | InlineCompletionItem[] | null,
-    InlineCompletionItem[],
-    void,
-    InlineCompletionRegistrationOptions
->('aws/textDocument/inlineCompletion')
+  InlineCompletionParams,
+  InlineCompletionList | InlineCompletionItem[] | null,
+  InlineCompletionItem[],
+  void,
+  InlineCompletionRegistrationOptions
+>("aws/textDocument/inlineCompletion");

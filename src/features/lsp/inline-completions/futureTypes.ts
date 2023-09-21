@@ -1,5 +1,5 @@
-import { Command } from 'vscode-languageserver'
-import { Range } from 'vscode-languageserver-textdocument'
+import { Command } from "vscode-languageserver";
+import { Range } from "vscode-languageserver-textdocument";
 
 /**
  * Inline completion is not a part of the language server protocol.
@@ -44,132 +44,132 @@ OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWA
  * `${name:default value}`.
  */
 export interface StringValue {
-    /**
-     * The kind of string value.
-     */
-    kind: 'snippet'
-    /**
-     * The snippet string.
-     */
-    value: string
+  /**
+   * The kind of string value.
+   */
+  kind: "snippet";
+  /**
+   * The snippet string.
+   */
+  value: string;
 }
 
 export namespace StringValue {
-    export function create(value: string): StringValue {
-        return { value, kind: 'snippet' }
-    }
+  export function create(value: string): StringValue {
+    return { value, kind: "snippet" };
+  }
 }
 
 /**
  * An inline completion item represents a text snippet that is proposed inline to complete text that is being typed.
  */
 export interface InlineCompletionItem {
-    /**
-     * The text to replace the range with. Must be set.
-     */
-    insertText: string | StringValue
+  /**
+   * The text to replace the range with. Must be set.
+   */
+  insertText: string | StringValue;
 
-    /**
-     * A text that is used to decide if this inline completion should be shown. When `falsy` the {@link InlineCompletionItem.insertText} is used.
-     */
-    filterText?: string
+  /**
+   * A text that is used to decide if this inline completion should be shown. When `falsy` the {@link InlineCompletionItem.insertText} is used.
+   */
+  filterText?: string;
 
-    /**
-     * The range to replace. Must begin and end on the same line.
-     */
-    range?: Range
+  /**
+   * The range to replace. Must begin and end on the same line.
+   */
+  range?: Range;
 
-    /**
-     * An optional {@link Command} that is executed *after* inserting this completion.
-     */
-    command?: Command
+  /**
+   * An optional {@link Command} that is executed *after* inserting this completion.
+   */
+  command?: Command;
 }
 
 export namespace InlineCompletionItem {
-    export function create(
-        insertText: string | StringValue,
-        filterText?: string,
-        range?: Range,
-        command?: Command
-    ): InlineCompletionItem {
-        return { insertText, filterText, range, command }
-    }
+  export function create(
+    insertText: string | StringValue,
+    filterText?: string,
+    range?: Range,
+    command?: Command,
+  ): InlineCompletionItem {
+    return { insertText, filterText, range, command };
+  }
 }
 
 /**
  * Represents a collection of {@link InlineCompletionItem inline completion items} to be presented in the editor.
  */
 export interface InlineCompletionList {
-    /**
-     * The inline completion items
-     */
-    items: InlineCompletionItem[]
+  /**
+   * The inline completion items
+   */
+  items: InlineCompletionItem[];
 }
 
 export namespace InlineCompletionList {
-    export function create(items: InlineCompletionItem[]): InlineCompletionList {
-        return { items }
-    }
+  export function create(items: InlineCompletionItem[]): InlineCompletionList {
+    return { items };
+  }
 }
 
 /**
  * Describes how an {@link InlineCompletionItemProvider inline completion provider} was triggered.
  */
 export namespace InlineCompletionTriggerKind {
-    /**
-     * Completion was triggered explicitly by a user gesture.
-     */
-    export const Invoked: 0 = 0
+  /**
+   * Completion was triggered explicitly by a user gesture.
+   */
+  export const Invoked: 0 = 0;
 
-    /**
-     * Completion was triggered automatically while editing.
-     */
-    export const Automatic: 1 = 1
+  /**
+   * Completion was triggered automatically while editing.
+   */
+  export const Automatic: 1 = 1;
 }
 
-export type InlineCompletionTriggerKind = 0 | 1
+export type InlineCompletionTriggerKind = 0 | 1;
 
 /**
  * Describes the currently selected completion item.
  */
 export interface SelectedCompletionInfo {
-    /**
-     * The range that will be replaced if this completion item is accepted.
-     */
-    range: Range
+  /**
+   * The range that will be replaced if this completion item is accepted.
+   */
+  range: Range;
 
-    /**
-     * The text the range will be replaced with if this completion is accepted.
-     */
-    text: string
+  /**
+   * The text the range will be replaced with if this completion is accepted.
+   */
+  text: string;
 }
 
 export namespace SelectedCompletionInfo {
-    export function create(range: Range, text: string): SelectedCompletionInfo {
-        return { range, text }
-    }
+  export function create(range: Range, text: string): SelectedCompletionInfo {
+    return { range, text };
+  }
 }
 
 /**
  * Provides information about the context in which an inline completion was requested.
  */
 export interface InlineCompletionContext {
-    /**
-     * Describes how the inline completion was triggered.
-     */
-    triggerKind: InlineCompletionTriggerKind
+  /**
+   * Describes how the inline completion was triggered.
+   */
+  triggerKind: InlineCompletionTriggerKind;
 
-    /**
-     * Provides information about the currently selected item in the autocomplete widget if it is visible.
-     */
-    selectedCompletionInfo?: SelectedCompletionInfo
+  /**
+   * Provides information about the currently selected item in the autocomplete widget if it is visible.
+   */
+  selectedCompletionInfo?: SelectedCompletionInfo;
 }
 
 export namespace InlineCompletionContext {
-    export function create(
-        triggerKind: InlineCompletionTriggerKind,
-        selectedCompletionInfo?: SelectedCompletionInfo
-    ): InlineCompletionContext {
-        return { triggerKind, selectedCompletionInfo }
-    }
+  export function create(
+    triggerKind: InlineCompletionTriggerKind,
+    selectedCompletionInfo?: SelectedCompletionInfo,
+  ): InlineCompletionContext {
+    return { triggerKind, selectedCompletionInfo };
+  }
 }
