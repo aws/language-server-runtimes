@@ -1,6 +1,14 @@
-import { CompletionParams, CompletionList, RequestHandler, CompletionItem } from "vscode-languageserver-protocol";
+import {
+  CompletionParams,
+  CompletionList,
+  RequestHandler,
+  CompletionItem,
+} from "vscode-languageserver-protocol";
 import { InlineCompletionParams } from "./inline-completions/futureProtocol";
-import { InlineCompletionItem, InlineCompletionList } from "./inline-completions/futureTypes";
+import {
+  InlineCompletionItem,
+  InlineCompletionList,
+} from "./inline-completions/futureTypes";
 
 // Using `RequestHandler` here from `vscode-languageserver-protocol` which doesn't support partial progress.
 // If we want to support partial progress, we'll need to use `ServerRequestHandler` from `vscode-languageserver` instead.
@@ -8,9 +16,17 @@ import { InlineCompletionItem, InlineCompletionList } from "./inline-completions
 // implementors that would prevent potentially very hard to debug type mismatch errors (even on minor versions).
 export type Lsp = {
   onInlineCompletion: (
-    handler: RequestHandler<InlineCompletionParams, InlineCompletionItem[] | InlineCompletionList | undefined | null, void>,
+    handler: RequestHandler<
+      InlineCompletionParams,
+      InlineCompletionItem[] | InlineCompletionList | undefined | null,
+      void
+    >,
   ) => void;
   onCompletion: (
-    handler: RequestHandler<CompletionParams, CompletionItem[] | CompletionList | undefined | null, void>
+    handler: RequestHandler<
+      CompletionParams,
+      CompletionItem[] | CompletionList | undefined | null,
+      void
+    >,
   ) => void;
 };

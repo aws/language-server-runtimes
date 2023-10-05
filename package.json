@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "tsc --build",
     "prepack": "npm run compile",
-    "test:unit": "ts-mocha -b src/**/*.test.ts",
+    "test:unit": "ts-mocha -b 'src/**/*.test.ts'",
     "test:prettier": "prettier . --check",
     "test": "npm run test:prettier && npm run test:unit",
     "fix:prettier": "prettier . --write"
