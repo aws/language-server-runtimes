@@ -1,14 +1,18 @@
 import {
-  CompletionParams,
-  CompletionList,
-  RequestHandler,
   CompletionItem,
-} from "vscode-languageserver-protocol";
-import { InlineCompletionParams } from "./inline-completions/futureProtocol";
-import {
+  CompletionList,
+  CompletionParams,
+  DidChangeConfigurationParams,
   InlineCompletionItem,
   InlineCompletionList,
-} from "./inline-completions/futureTypes";
+  InlineCompletionParams,
+  NotificationHandler,
+  RequestHandler,
+} from "vscode-languageserver";
+import {
+  InlineCompletionItemWithReferences,
+  InlineCompletionListWithReferences,
+} from "./inline-completions/protocolExtensions";
 
 // Using `RequestHandler` here from `vscode-languageserver-protocol` which doesn't support partial progress.
 // If we want to support partial progress, we'll need to use `ServerRequestHandler` from `vscode-languageserver` instead.
@@ -29,4 +33,22 @@ export type Lsp = {
       void
     >,
   ) => void;
+  didChangeConfiguration: (
+    handler: NotificationHandler<DidChangeConfigurationParams>,
+  ) => void;
+  workspace: {
+    getConfiguration: (section: string) => Promise<any>;
+  };
+  extensions: {
+    onInlineCompletionWithReferences: (
+      handler: RequestHandler<
+        InlineCompletionParams,
+        | InlineCompletionItemWithReferences[]
+        | InlineCompletionListWithReferences
+        | undefined
+        | null,
+        void
+      >,
+    ) => void;
+  };
 };

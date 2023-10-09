@@ -11,10 +11,11 @@ import {
 } from "vscode-languageserver/browser";
 import { Logging, Lsp, Telemetry, Workspace } from "../features";
 import { inlineCompletionRequestType } from "../features/lsp/inline-completions/futureProtocol";
-import { Server } from "./server";
 import { Auth } from "../features/auth/auth";
+
 import { handleVersionArgument } from "../features/versioning";
 import { RuntimeProps } from "./runtime";
+import { inlineCompletionWithReferencesRequestType } from "../features/lsp/inline-completions/protocolExtensions";
 
 declare const self: WindowOrWorkerGlobalScope;
 
@@ -78,6 +79,19 @@ export const webworker = (props: RuntimeProps) => {
     onCompletion: (handler) => lspConnection.onCompletion(handler),
     onInlineCompletion: (handler) =>
       lspConnection.onRequest(inlineCompletionRequestType, handler),
+    didChangeConfiguration: (handler) =>
+      lspConnection.onDidChangeConfiguration(handler),
+    workspace: {
+      getConfiguration: (section) =>
+        lspConnection.workspace.getConfiguration(section),
+    },
+    extensions: {
+      onInlineCompletionWithReferences: (handler) =>
+        lspConnection.onRequest(
+          inlineCompletionWithReferencesRequestType,
+          handler,
+        ),
+    },
   };
 
   // Set up auth without encryption

@@ -14,10 +14,12 @@ import {
 import { Logging, Lsp, Telemetry, Workspace } from "../features";
 import { inlineCompletionRequestType } from "../features/lsp/inline-completions/futureProtocol";
 import { metric } from "../features/telemetry";
-import { Server } from "./server";
 import { Auth, CredentialsProvider } from "../features/auth/auth";
+
 import { handleVersionArgument } from "../features/versioning";
 import { RuntimeProps } from "./runtime";
+
+import { inlineCompletionWithReferencesRequestType } from "../features/lsp/inline-completions/protocolExtensions";
 
 type Handler<A = any[], B = any> = (...args: A extends any[] ? A : [A]) => B;
 type HandlerWrapper<
@@ -211,6 +213,22 @@ export const standalone = (props: RuntimeProps) => {
           inlineCompletionRequestType,
           instrument("onInlineCompletion", handler),
         ),
+      didChangeConfiguration: (handler) =>
+        lspConnection.onDidChangeConfiguration(
+          instrument("didChangeConfiguration", handler),
+        ),
+      workspace: {
+        getConfiguration: instrument("workspace.getConfiguration", (section) =>
+          lspConnection.workspace.getConfiguration(section),
+        ),
+      },
+      extensions: {
+        onInlineCompletionWithReferences: (handler) =>
+          lspConnection.onRequest(
+            inlineCompletionWithReferencesRequestType,
+            instrument("onInlineCompletionWithReferences", handler),
+          ),
+      },
     };
 
     const credentialsProvider: CredentialsProvider =
