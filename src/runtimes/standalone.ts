@@ -16,6 +16,8 @@ import { inlineCompletionRequestType } from "../features/lsp/inline-completions/
 import { metric } from "../features/telemetry";
 import { Server } from "./server";
 import { Auth, CredentialsProvider } from "../features/auth/auth";
+import { handleVersionArgument } from "../features/versioning";
+import { RuntimeProps } from "./runtime";
 
 type Handler<A = any[], B = any> = (...args: A extends any[] ? A : [A]) => B;
 type HandlerWrapper<
@@ -79,7 +81,9 @@ const withLogging =
  * @param servers The list of servers to initialize and run
  * @returns
  */
-export const standalone = (...servers: Server[]) => {
+export const standalone = (props: RuntimeProps) => {
+  handleVersionArgument(props.version);
+
   const lspConnection = createConnection(ProposedFeatures.all);
 
   let auth: Auth;
@@ -132,10 +136,8 @@ export const standalone = (...servers: Server[]) => {
           name: "AWS LSP Standalone",
           // This indicates the standalone server version and is updated
           // every time the standalone or any of the servers update.
-          // Major version updates only happen when the supported LSP
-          // protocol version changes and is not backwards compatible.
-          // TODO: Set this at build time to match the above description
-          version: "0.1",
+          // Major version updates only happen for backwards incompatible changes.
+          version: props.version,
         },
         capabilities: {
           textDocumentSync: {
@@ -214,7 +216,7 @@ export const standalone = (...servers: Server[]) => {
     const credentialsProvider: CredentialsProvider =
       auth.getCredentialsProvider();
     // Initialize every Server
-    const disposables = servers.map((s) =>
+    const disposables = props.servers.map((s) =>
       s({ credentialsProvider, lsp, workspace, telemetry, logging }),
     );
 
