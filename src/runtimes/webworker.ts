@@ -1,4 +1,5 @@
 import {
+  DidChangeConfigurationNotification,
   InitializeParams,
   TextDocumentSyncKind,
   TextDocuments,
@@ -12,7 +13,9 @@ import {
 import { Logging, Lsp, Telemetry, Workspace } from "../features";
 import { inlineCompletionRequestType } from "../features/lsp/inline-completions/futureProtocol";
 import { Auth } from "../features/auth/auth";
+
 import { RuntimeProps } from "./runtime";
+import { inlineCompletionWithReferencesRequestType } from "../features/lsp/inline-completions/protocolExtensions";
 
 declare const self: WindowOrWorkerGlobalScope;
 
@@ -72,9 +75,26 @@ export const webworker = (props: RuntimeProps) => {
 
   // Map the LSP client to the LSP feature.
   const lsp: Lsp = {
-    onCompletion: (handler) => lspConnection.onCompletion(handler),
+    onInitialized: (handler) => lspConnection.onInitialized(p => {
+      // Ask the client to notify the server on configuration changes
+      lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
+      handler(p)
+    }),onCompletion: (handler) => lspConnection.onCompletion(handler),
     onInlineCompletion: (handler) =>
       lspConnection.onRequest(inlineCompletionRequestType, handler),
+    didChangeConfiguration: (handler) =>
+      lspConnection.onDidChangeConfiguration(handler),
+    workspace: {
+      getConfiguration: (section) =>
+        lspConnection.workspace.getConfiguration(section),
+    },
+    extensions: {
+      onInlineCompletionWithReferences: (handler) =>
+        lspConnection.onRequest(
+          inlineCompletionWithReferencesRequestType,
+          handler,
+        ),
+    },
   };
 
   // Set up auth without encryption
