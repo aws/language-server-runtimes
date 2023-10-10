@@ -15,7 +15,10 @@ import { Auth } from "../features/auth/auth";
 
 import { handleVersionArgument } from "../features/versioning";
 import { RuntimeProps } from "./runtime";
-import { inlineCompletionWithReferencesRequestType } from "../features/lsp/inline-completions/protocolExtensions";
+import {
+  SuggestInlineCompletionsWithReferences,
+  inlineCompletionWithReferencesRequestType,
+} from "../features/lsp/inline-completions/protocolExtensions";
 
 declare const self: WindowOrWorkerGlobalScope;
 
@@ -81,6 +84,8 @@ export const webworker = (props: RuntimeProps) => {
       lspConnection.onRequest(inlineCompletionRequestType, handler),
     didChangeConfiguration: (handler) =>
       lspConnection.onDidChangeConfiguration(handler),
+    didTextDocumentChange: (handler) =>
+      lspConnection.onDidChangeTextDocument(handler),
     workspace: {
       getConfiguration: (section) =>
         lspConnection.workspace.getConfiguration(section),
@@ -91,6 +96,12 @@ export const webworker = (props: RuntimeProps) => {
           inlineCompletionWithReferencesRequestType,
           handler,
         ),
+      suggestInlineCompletionsWithReferences(params) {
+        lspConnection.sendNotification(
+          SuggestInlineCompletionsWithReferences.type,
+          params,
+        );
+      },
     },
   };
 

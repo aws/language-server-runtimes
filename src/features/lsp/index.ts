@@ -3,6 +3,7 @@ import {
   CompletionList,
   CompletionParams,
   DidChangeConfigurationParams,
+  DidChangeTextDocumentParams,
   InlineCompletionItem,
   InlineCompletionList,
   InlineCompletionParams,
@@ -12,6 +13,7 @@ import {
 import {
   InlineCompletionItemWithReferences,
   InlineCompletionListWithReferences,
+  SuggestInlineCompletionsWithReferencesParams,
 } from "./inline-completions/protocolExtensions";
 
 // Using `RequestHandler` here from `vscode-languageserver-protocol` which doesn't support partial progress.
@@ -36,6 +38,7 @@ export type Lsp = {
   didChangeConfiguration: (
     handler: NotificationHandler<DidChangeConfigurationParams>,
   ) => void;
+  didTextDocumentChange: (handler: NotificationHandler<DidChangeTextDocumentParams>) => void
   workspace: {
     getConfiguration: (section: string) => Promise<any>;
   };
@@ -49,6 +52,9 @@ export type Lsp = {
         | null,
         void
       >,
+    ) => void;
+    suggestInlineCompletionsWithReferences: (
+      params: SuggestInlineCompletionsWithReferencesParams,
     ) => void;
   };
 };
