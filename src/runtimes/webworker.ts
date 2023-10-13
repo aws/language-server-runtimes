@@ -11,16 +11,13 @@ import {
 } from "vscode-languageserver/browser";
 import { Logging, Lsp, Telemetry, Workspace } from "../features";
 import { inlineCompletionRequestType } from "../features/lsp/inline-completions/futureProtocol";
-import { Server } from "./server";
 import { Auth } from "../features/auth/auth";
-import { handleVersionArgument } from "../features/versioning";
 import { RuntimeProps } from "./runtime";
 
 declare const self: WindowOrWorkerGlobalScope;
 
 // TODO: testing rig for runtimes
 export const webworker = (props: RuntimeProps) => {
-  handleVersionArgument(props.version);
 
   const lspConnection = createConnection(
     new BrowserMessageReader(self),
