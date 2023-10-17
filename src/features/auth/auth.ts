@@ -51,6 +51,8 @@ export interface UpdateCredentialsRequest {
   encrypted?: boolean;
 }
 
+export type UpdateCredentialsResponse = boolean;
+
 export class Auth {
   private iamCredentials: IamCredentials | undefined;
   private bearerCredentials: BearerCredentials | undefined;
@@ -114,20 +116,24 @@ export class Auth {
 
     this.connection.onRequest(
       credentialsProtocolMethodNames.iamCredentialsUpdate,
-      async (request: UpdateCredentialsRequest) => {
+      async (
+        request: UpdateCredentialsRequest,
+      ): Promise<UpdateCredentialsResponse> => {
         const iamCredentials = request.encrypted
           ? await this.decodeCredentialsRequestToken<IamCredentials>(request)
           : (request.data as IamCredentials);
 
-        if (isIamCredentials(iamCredentials)) {
-          this.setCredentials(iamCredentials);
-          this.connection.console.info(
-            "Runtime: Successfully saved IAM credentials",
-          );
-        } else {
+        if (!isIamCredentials(iamCredentials)) {
           this.iamCredentials = undefined;
           throw new Error("Invalid IAM credentials");
         }
+
+        this.setCredentials(iamCredentials);
+        this.connection.console.info(
+          "Runtime: Successfully saved IAM credentials",
+        );
+
+        return true;
       },
     );
 
@@ -147,20 +153,24 @@ export class Auth {
 
     this.connection.onRequest(
       credentialsProtocolMethodNames.bearerCredentialsUpdate,
-      async (request: UpdateCredentialsRequest) => {
+      async (
+        request: UpdateCredentialsRequest,
+      ): Promise<UpdateCredentialsResponse> => {
         const bearerCredentials = request.encrypted
           ? await this.decodeCredentialsRequestToken<BearerCredentials>(request)
           : (request.data as BearerCredentials);
 
-        if (isBearerCredentials(bearerCredentials)) {
-          this.setCredentials(bearerCredentials);
-          this.connection.console.info(
-            "Runtime: Successfully saved bearer credentials",
-          );
-        } else {
+        if (!isBearerCredentials(bearerCredentials)) {
           this.bearerCredentials = undefined;
           throw new Error("Invalid bearer credentials");
         }
+
+        this.setCredentials(bearerCredentials);
+        this.connection.console.info(
+          "Runtime: Successfully saved bearer credentials",
+        );
+
+        return true;
       },
     );
 

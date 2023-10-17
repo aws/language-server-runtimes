@@ -104,10 +104,11 @@ describe("Auth", () => {
       auth.getCredentialsProvider();
 
     assert(!credentialsProvider.hasCredentials("iam"));
-    await authHandlers.iamUpdateHandler(updateRequest);
+    const response = await authHandlers.iamUpdateHandler(updateRequest);
 
     assert(credentialsProvider.hasCredentials("iam"));
     assert.deepEqual(credentialsProvider.getCredentials("iam"), iamCredentials);
+    assert.ok(response);
 
     authHandlers.iamDeleteHandler();
     assert(!credentialsProvider.hasCredentials("iam"));
@@ -124,13 +125,14 @@ describe("Auth", () => {
       auth.getCredentialsProvider();
 
     assert(!credentialsProvider.hasCredentials("bearer"));
-    await authHandlers.bearerUpdateHandler(updateRequest);
+    const response = await authHandlers.bearerUpdateHandler(updateRequest);
 
     assert(credentialsProvider.hasCredentials("bearer"));
     assert.deepEqual(
       credentialsProvider.getCredentials("bearer"),
       bearerCredentials,
     );
+    assert.ok(response);
 
     authHandlers.bearerDeleteHandler();
     assert(!credentialsProvider.hasCredentials("bearer"));

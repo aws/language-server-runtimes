@@ -18,7 +18,6 @@ declare const self: WindowOrWorkerGlobalScope;
 
 // TODO: testing rig for runtimes
 export const webworker = (props: RuntimeProps) => {
-
   const lspConnection = createConnection(
     new BrowserMessageReader(self),
     new BrowserMessageWriter(self),
