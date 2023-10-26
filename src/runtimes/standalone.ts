@@ -147,12 +147,6 @@ export const standalone = (props: RuntimeProps) => {
             openClose: true,
             change: TextDocumentSyncKind.Incremental,
           },
-          completionProvider: {
-            resolveProvider: true,
-            completionItem: {
-              labelDetailsSupport: true,
-            },
-          },
         },
       };
     });
