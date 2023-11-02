@@ -21,7 +21,6 @@ declare const self: WindowOrWorkerGlobalScope;
 
 // TODO: testing rig for runtimes
 export const webworker = (props: RuntimeProps) => {
-
   const lspConnection = createConnection(
     new BrowserMessageReader(self),
     new BrowserMessageWriter(self),
@@ -59,7 +58,7 @@ export const webworker = (props: RuntimeProps) => {
 
   // Set up telemetry over LSP
   const telemetry: Telemetry = {
-    emit: (metric) => lspConnection.telemetry.logEvent(metric),
+    emitMetric: (metric) => lspConnection.telemetry.logEvent(metric),
   };
 
   // Set up the workspace to use the LSP Text Documents component
@@ -69,11 +68,16 @@ export const webworker = (props: RuntimeProps) => {
 
   // Map the LSP client to the LSP feature.
   const lsp: Lsp = {
-    onInitialized: (handler) => lspConnection.onInitialized(p => {
-      // Ask the client to notify the server on configuration changes
-      lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
-      handler(p)
-    }),onCompletion: (handler) => lspConnection.onCompletion(handler),
+    onInitialized: (handler) =>
+      lspConnection.onInitialized((p) => {
+        // Ask the client to notify the server on configuration changes
+        lspConnection.client.register(
+          DidChangeConfigurationNotification.type,
+          undefined,
+        );
+        handler(p);
+      }),
+    onCompletion: (handler) => lspConnection.onCompletion(handler),
     onInlineCompletion: (handler) =>
       lspConnection.onRequest(inlineCompletionRequestType, handler),
     didChangeConfiguration: (handler) =>

@@ -14,7 +14,7 @@ import {
 } from "../features/auth/standalone/encryption";
 import { Logging, Lsp, Telemetry, Workspace } from "../features";
 import { inlineCompletionRequestType } from "../features/lsp/inline-completions/futureProtocol";
-import { metric } from "../features/telemetry";
+import { metric } from "../features/telemetry/telemetry";
 import { Auth, CredentialsProvider } from "../features/auth/auth";
 
 import { handleVersionArgument } from "../features/versioning";
@@ -42,10 +42,12 @@ const withTelemetry =
     const result = handler(...args);
     Promise.resolve(result)
       .finally(() =>
-        telemetry.emit(metric(`${name}Time`, new Date().valueOf() - startTime)),
+        telemetry.emitMetric(
+          metric(`${name}Time`, new Date().valueOf() - startTime),
+        ),
       )
-      .then(() => telemetry.emit(metric(`${name}Error`, 0)))
-      .catch(() => telemetry.emit(metric(`${name}Error`, 1)));
+      .then(() => telemetry.emitMetric(metric(`${name}Error`, 0)))
+      .catch(() => telemetry.emitMetric(metric(`${name}Error`, 1)));
     return result;
   };
 
@@ -159,9 +161,9 @@ export const standalone = (props: RuntimeProps) => {
     };
 
     // Set up telemetry over LSP
-    // TODO: set up Telemetry once implemented
+
     const telemetry: Telemetry = {
-      emit: (metric) => lspConnection.telemetry.logEvent(metric),
+      emitMetric: (metric) => lspConnection.telemetry.logEvent(metric),
     };
 
     // TODO: This can probably be cleaned up a bit more.
@@ -201,11 +203,17 @@ export const standalone = (props: RuntimeProps) => {
 
     // Map the instrumented LSP client to the LSP feature.
     const lsp: Lsp = {
-      onInitialized: (handler) => lspConnection.onInitialized(instrument("onInitialized", p => {
-        // Ask the client to notify the server on configuration changes
-        lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
-        handler(p)
-      })),
+      onInitialized: (handler) =>
+        lspConnection.onInitialized(
+          instrument("onInitialized", (p) => {
+            // Ask the client to notify the server on configuration changes
+            lspConnection.client.register(
+              DidChangeConfigurationNotification.type,
+              undefined,
+            );
+            handler(p);
+          }),
+        ),
       onCompletion: (handler) =>
         lspConnection.onCompletion(instrument("onCompletion", handler)),
       onInlineCompletion: (handler) =>
