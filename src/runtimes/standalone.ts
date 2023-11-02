@@ -131,8 +131,10 @@ export const standalone = (props: RuntimeProps) => {
 
   function initializeRuntime() {
     const documents = new TextDocuments(TextDocument);
+    let clientInitializeParams: InitializeParams;
 
     lspConnection.onInitialize((params: InitializeParams) => {
+      clientInitializeParams = params;
       return {
         serverInfo: {
           // TODO: make this configurable
@@ -202,8 +204,11 @@ export const standalone = (props: RuntimeProps) => {
     // Map the instrumented LSP client to the LSP feature.
     const lsp: Lsp = {
       onInitialized: (handler) => lspConnection.onInitialized(instrument("onInitialized", p => {
-        // Ask the client to notify the server on configuration changes
-        lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
+        const workspaceCapabilities = clientInitializeParams?.capabilities.workspace;
+        if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
+          // Ask the client to notify the server on configuration changes
+          lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
+        }
         handler(p)
       })),
       onCompletion: (handler) =>
