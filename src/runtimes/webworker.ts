@@ -3,6 +3,7 @@ import {
   InitializeParams,
   TextDocumentSyncKind,
   TextDocuments,
+  InlineCompletionRequest
 } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
@@ -11,7 +12,6 @@ import {
   createConnection,
 } from "vscode-languageserver/browser";
 import { Logging, Lsp, Telemetry, Workspace } from "../features";
-import { inlineCompletionRequestType } from "../features/lsp/inline-completions/futureProtocol";
 import { Auth } from "../features/auth/auth";
 
 import { RuntimeProps } from "./runtime";
@@ -46,6 +46,7 @@ export const webworker = (props: RuntimeProps) => {
           openClose: true,
           change: TextDocumentSyncKind.Incremental,
         },
+        inlineCompletionProvider: {}
       },
     };
   });
@@ -79,7 +80,7 @@ export const webworker = (props: RuntimeProps) => {
       }),
     onCompletion: (handler) => lspConnection.onCompletion(handler),
     onInlineCompletion: (handler) =>
-      lspConnection.onRequest(inlineCompletionRequestType, handler),
+      lspConnection.onRequest(InlineCompletionRequest.type, handler),
     didChangeConfiguration: (handler) =>
       lspConnection.onDidChangeConfiguration(handler),
     workspace: {
