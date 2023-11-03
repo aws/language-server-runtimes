@@ -20,9 +20,7 @@ import {
 // but if we can avoid exposing multiple different `vscode-languageserver-*` packages and package versions to
 // implementors that would prevent potentially very hard to debug type mismatch errors (even on minor versions).
 export type Lsp = {
-  onInitialized: (
-    handler: NotificationHandler<InitializedParams>
-  ) => void,
+  onInitialized: (handler: NotificationHandler<InitializedParams>) => void;
   onInlineCompletion: (
     handler: RequestHandler<
       InlineCompletionParams,
