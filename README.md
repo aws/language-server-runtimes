@@ -78,13 +78,22 @@ Changelog:
 
 ### Telemetry
 
-Design TBD
-
 #### Initialization
-TBD
+The runtimes by default supports the telemetry feature, allowing servers to send metrics to destinations. Additional option to disable this feature during initialization as well as during an ongoing session is currently in plan.
 
 #### Feature Specification
-TBD
+The shape of the data in metrics is arbitrary allowing servers to provide any information inside the `data` field. All fields and the `name` value are expected to be written in `camelCase`.
+
+```ts
+export const metric = (
+  name: string,
+  data?: any,
+): MetricEvent => ({
+  name,
+  data,
+});
+```
+
 
 ### Logging
 
