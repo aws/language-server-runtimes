@@ -25,6 +25,8 @@ The server runtime implementation acts as a proxy for LSP methods, which means i
 | Method | Support | Notes |
 | ------ | ------- | ----- |
 | onInlineCompletion | Yes | Provide list of inline completion suggestions from the Server |
+| onInlineCompletionWithReferences | Yes | Provide list of inline completion suggestions from the Server with references for each of its suggestion |
+| onLogInlineCompelitionSessionResults | Yes | Logs the results from inline completion suggestions from the Server |
 | more tbd | | document any deviations from regular LSP that may happen in the Server |
 
 ### Auth

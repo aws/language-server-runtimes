@@ -20,7 +20,10 @@ import { Auth, CredentialsProvider } from "../features/auth/auth";
 import { handleVersionArgument } from "../features/versioning";
 import { RuntimeProps } from "./runtime";
 
-import { inlineCompletionWithReferencesRequestType } from "../features/lsp/inline-completions/protocolExtensions";
+import {
+  inlineCompletionWithReferencesRequestType,
+  logInlineCompelitionSessionResultsRequestType,
+} from "../features/lsp/inline-completions/protocolExtensions";
 
 type Handler<A = any[], B = any> = (...args: A extends any[] ? A : [A]) => B;
 type HandlerWrapper<
@@ -236,6 +239,12 @@ export const standalone = (props: RuntimeProps) => {
             inlineCompletionWithReferencesRequestType,
             instrument("onInlineCompletionWithReferences", handler),
           ),
+        onLogInlineCompelitionSessionResults: (handler) => {
+          lspConnection.onRequest(
+            logInlineCompelitionSessionResultsRequestType,
+            instrument("onLogInlineCompelitionSessionResults", handler),
+          );
+        },
       },
     };
 

@@ -13,6 +13,7 @@ import {
 import {
   InlineCompletionItemWithReferences,
   InlineCompletionListWithReferences,
+  LogInlineCompelitionSessionResultsParams,
 } from "./inline-completions/protocolExtensions";
 
 // Using `RequestHandler` here from `vscode-languageserver-protocol` which doesn't support partial progress.
@@ -49,6 +50,13 @@ export type Lsp = {
         | InlineCompletionListWithReferences
         | undefined
         | null,
+        void
+      >,
+    ) => void;
+    onLogInlineCompelitionSessionResults: (
+      handler: RequestHandler<
+        LogInlineCompelitionSessionResultsParams,
+        null,
         void
       >,
     ) => void;
