@@ -27,11 +27,13 @@ export const webworker = (props: RuntimeProps) => {
   );
 
   const documents = new TextDocuments(TextDocument);
+  let clientInitializeParams: InitializeParams;
 
   // Initialize the LSP connection based on the supported LSP capabilities
   // TODO: make this dependent on the actual requirements of the
   // servers parameter.
   lspConnection.onInitialize((params: InitializeParams) => {
+    clientInitializeParams = params;
     return {
       serverInfo: {
         // TODO: make this configurable
@@ -70,11 +72,14 @@ export const webworker = (props: RuntimeProps) => {
   const lsp: Lsp = {
     onInitialized: (handler) =>
       lspConnection.onInitialized((p) => {
-        // Ask the client to notify the server on configuration changes
-        lspConnection.client.register(
-          DidChangeConfigurationNotification.type,
-          undefined,
-        );
+        const workspaceCapabilities = clientInitializeParams?.capabilities.workspace;
+        if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
+          // Ask the client to notify the server on configuration changes
+          lspConnection.client.register(
+            DidChangeConfigurationNotification.type,
+            undefined,
+          );
+        }
         handler(p);
       }),
     onCompletion: (handler) => lspConnection.onCompletion(handler),
