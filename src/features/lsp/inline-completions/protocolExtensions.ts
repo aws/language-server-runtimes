@@ -2,6 +2,7 @@ import {
   InlineCompletionItem,
   InlineCompletionParams,
   InlineCompletionRegistrationOptions,
+  ProtocolNotificationType,
   ProtocolRequestType,
 } from "vscode-languageserver";
 
@@ -13,6 +14,11 @@ export type InlineCompletionWithReferencesParams = InlineCompletionParams & {
  * Extend InlineCompletionItem to include optional references.
  */
 export type InlineCompletionItemWithReferences = InlineCompletionItem & {
+  /**
+   * Identifier for the the recommendation returned by server.
+   */
+  itemId: string;
+
   references?: {
     referenceName?: string;
     referenceUrl?: string;
@@ -22,11 +28,6 @@ export type InlineCompletionItemWithReferences = InlineCompletionItem & {
       endCharacter?: number;
     };
   }[];
-
-  /**
-   * Identifier for the the recommendation returned by server.
-   */
-  itemId: string;
 };
 
 /**
@@ -88,18 +89,14 @@ export interface LogInlineCompelitionSessionResultsParams {
   /**
    * Time from completion request invocation start to rendering of the first recommendation in the UI.
    */
-  displayLatency?: number;
+  firstCompletionDisplayLatency?: number;
   /**
    * Total time when items from this completion session were visible in UI
    */
-  totalDisplayTime?: number;
+  totalSessionDisplayTime?: number;
 }
 
-export const logInlineCompelitionSessionResultsRequestType =
-  new ProtocolRequestType<
-    LogInlineCompelitionSessionResultsParams,
-    null,
-    void,
-    void,
-    void
-  >("aws/logInlineCompelitionSessionResults");
+export const logInlineCompelitionSessionResultsNotificationType =
+  new ProtocolNotificationType<LogInlineCompelitionSessionResultsParams, void>(
+    "aws/logInlineCompelitionSessionResults",
+  );

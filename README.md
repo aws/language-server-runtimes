@@ -22,12 +22,17 @@ Client will send the `Initialize` LSP request with custom options to configure f
 
 The server runtime implementation acts as a proxy for LSP methods, which means it supports all LSP methods. In addition to that, it can extend the LSP method to support custom capabilities.
 
-| Method | Support | Notes |
+#### Feature Specification
+
+| Method | Support | Notes | 
 | ------ | ------- | ----- |
 | onInlineCompletion | Yes | Provide list of inline completion suggestions from the Server |
-| onInlineCompletionWithReferences | Yes | Provide list of inline completion suggestions from the Server with references for each of its suggestion |
-| onLogInlineCompelitionSessionResults | Yes | Logs the results from inline completion suggestions from the Server |
-| more tbd | | document any deviations from regular LSP that may happen in the Server |
+
+##### LSP Extensions
+| Method Name | Method | Params | Method Type | Response Type | Notes |
+| ------------| ------ | ------ | ----------- | ------------- | ----- |
+| onInlineCompletionWithReferences | `$/aws/logInlineCompelitionSessionResults` | `InlineCompletionWithReferencesParams` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `InlineCompletionListWithReferences` | Provides list of inline completion suggestions from the Server with references for each of its suggestion |
+| onLogInlineCompelitionSessionResults | `$/aws/textDocument/inlineCompletionWithReferences` | `LogInlineCompelitionSessionResultsParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a | Logs the results from inline completion suggestions from the Server |
 
 ### Auth
 

@@ -22,7 +22,7 @@ import { RuntimeProps } from "./runtime";
 
 import {
   inlineCompletionWithReferencesRequestType,
-  logInlineCompelitionSessionResultsRequestType,
+  logInlineCompelitionSessionResultsNotificationType,
 } from "../features/lsp/inline-completions/protocolExtensions";
 
 type Handler<A = any[], B = any> = (...args: A extends any[] ? A : [A]) => B;
@@ -240,8 +240,8 @@ export const standalone = (props: RuntimeProps) => {
             instrument("onInlineCompletionWithReferences", handler),
           ),
         onLogInlineCompelitionSessionResults: (handler) => {
-          lspConnection.onRequest(
-            logInlineCompelitionSessionResultsRequestType,
+          lspConnection.onNotification(
+            logInlineCompelitionSessionResultsNotificationType,
             instrument("onLogInlineCompelitionSessionResults", handler),
           );
         },

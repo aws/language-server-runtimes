@@ -54,11 +54,7 @@ export type Lsp = {
       >,
     ) => void;
     onLogInlineCompelitionSessionResults: (
-      handler: RequestHandler<
-        LogInlineCompelitionSessionResultsParams,
-        null,
-        void
-      >,
+      handler: NotificationHandler<LogInlineCompelitionSessionResultsParams>,
     ) => void;
   };
 };
