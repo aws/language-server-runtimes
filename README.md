@@ -22,10 +22,17 @@ Client will send the `Initialize` LSP request with custom options to configure f
 
 The server runtime implementation acts as a proxy for LSP methods, which means it supports all LSP methods. In addition to that, it can extend the LSP method to support custom capabilities.
 
-| Method | Support | Notes |
+#### Feature Specification
+
+| Method | Support | Notes | 
 | ------ | ------- | ----- |
 | onInlineCompletion | Yes | Provide list of inline completion suggestions from the Server |
-| more tbd | | document any deviations from regular LSP that may happen in the Server |
+
+##### LSP Extensions
+| Method Name | Method | Params | Method Type | Response Type | Notes |
+| ------------| ------ | ------ | ----------- | ------------- | ----- |
+| onInlineCompletionWithReferences | `aws/textDocument/inlineCompletionWithReferences` | `InlineCompletionWithReferencesParams` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `InlineCompletionListWithReferences` | Provides list of inline completion suggestions from the Server with references for each of its suggestion |
+| onLogInlineCompelitionSessionResults | `aws/logInlineCompelitionSessionResults` | `LogInlineCompelitionSessionResultsParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a | Logs the results from inline completion suggestions from the Server |
 
 ### Auth
 
@@ -82,18 +89,20 @@ Changelog:
 The runtimes by default supports the telemetry feature, allowing servers to send metrics to destinations. Additional option to disable this feature during initialization as well as during an ongoing session is currently in plan.
 
 #### Feature Specification
-The shape of the data in metrics is arbitrary allowing servers to provide any information inside the `data` field. All fields and the `name` value are expected to be written in `camelCase`.
+The telemetry notification is sent from the server to the client to ask the client to log a telemetry event. AWS Runtimes using Telemetry feature will send metric events with default LSP telemetry notification with specified payload interface. Telemetry notifications are specified as follow:
+
+| Description |	Method | Params | Method type | Response Type |
+| ----------- | ------ | ------ | ----------- | ------------- |
+| Send telemetry event | `telemetry/event` | `MetricEvent` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
 
 ```ts
-export const metric = (
-  name: string,
-  data?: any,
-): MetricEvent => ({
-  name,
-  data,
-});
+export type MetricEvent = {
+    name: string;
+    data?: any;
+    result?: ResultType;
+    errorData?: ErrorData;
+};
 ```
-
 
 ### Logging
 
