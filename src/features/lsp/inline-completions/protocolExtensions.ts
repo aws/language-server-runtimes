@@ -60,7 +60,7 @@ export const inlineCompletionWithReferencesRequestType =
 
 export interface InlineCompletionStates {
   /**
-   * Completion item was not displayed in the client application UI.
+   * Completion item was displayed in the client application UI.
    */
   seen: boolean;
   /**
