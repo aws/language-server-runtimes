@@ -80,8 +80,25 @@ export interface UpdateCredentialsPayload {
 }
 ```
 
-Changelog:
-* 0.0.1: Initial Version
+##### Get Connection Metadata
+
+Server Auth feature supports storing extra Auth connection data in the server.
+Get connection metadata is request that server sends to client in order to obtain new connection information.
+Server expects client to provide metadata specified in `ConnectionMetadata` interface.
+
+| Description |	Method | Params | Method type | Response Type |
+| ----------- | ------ | ------ | ----------- | ------------- |
+| Get Connection Metadata | `$/aws/credentials/getConnectionMetadata` | n/a | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `ConnectionMetadata` |
+
+```ts
+export interface ConnectionMetadata {
+    sso?: SsoProfileData;
+}
+
+export interface SsoProfileData {
+    startUrl: string;
+}
+```
 
 ### Telemetry
 

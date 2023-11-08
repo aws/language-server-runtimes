@@ -31,9 +31,18 @@ export function isBearerCredentials(
   return (credentials as BearerCredentials)?.token !== undefined;
 }
 
+export interface SsoProfileData {
+  startUrl: string;
+}
+
+export interface ConnectionMetadata {
+  sso?: SsoProfileData;
+}
+
 export interface CredentialsProvider {
   hasCredentials: (type: CredentialsType) => boolean;
   getCredentials: (type: CredentialsType) => Credentials | undefined;
+  getConnectionMetadata: () => ConnectionMetadata | undefined;
 }
 
 export const credentialsProtocolMethodNames = {
@@ -41,6 +50,7 @@ export const credentialsProtocolMethodNames = {
   iamCredentialsDelete: "$/aws/credentials/iam/delete",
   bearerCredentialsUpdate: "$/aws/credentials/token/update",
   bearerCredentialsDelete: "$/aws/credentials/token/delete",
+  getConnectionMetadata: "$/aws/credentials/getConnectionMetadata",
 };
 
 export interface UpdateCredentialsRequest {
@@ -55,6 +65,7 @@ export class Auth {
   private iamCredentials: IamCredentials | undefined;
   private bearerCredentials: BearerCredentials | undefined;
   private credentialsProvider: CredentialsProvider;
+  private connectionMetadata: ConnectionMetadata | undefined;
 
   private key: Buffer | undefined;
   private credentialsEncoding: CredentialsEncoding | undefined;
@@ -89,6 +100,10 @@ export class Auth {
         }
         throw new Error(`Unsupported credentials type: ${type}`);
       },
+
+      getConnectionMetadata: () => {
+        return this.connectionMetadata;
+      },
     };
 
     this.registerLspCredentialsUpdateHandlers();
@@ -98,7 +113,7 @@ export class Auth {
     return this.credentialsProvider;
   }
 
-  public areValidCredentials(creds: Credentials): boolean {
+  private areValidCredentials(creds: Credentials): boolean {
     return creds && (isIamCredentials(creds) || isBearerCredentials(creds));
   }
 
@@ -157,6 +172,9 @@ export class Auth {
           this.connection.console.info(
             "Runtime: Successfully saved bearer credentials",
           );
+
+          // Don't wait for promise to resolve, initiate connection metadata update in the background.
+          await this.requestConnectionMetadata();
         } else {
           this.bearerCredentials = undefined;
           throw new Error("Invalid bearer credentials");
@@ -168,6 +186,7 @@ export class Auth {
       credentialsProtocolMethodNames.bearerCredentialsDelete,
       () => {
         this.bearerCredentials = undefined;
+        this.connectionMetadata = undefined;
         this.connection.console.info("Runtime: Deleted bearer credentials");
       },
     );
@@ -209,5 +228,18 @@ export class Auth {
       return result.payload.data as T;
     }
     throw new Error("Encoding mode not implemented");
+  }
+
+  private async requestConnectionMetadata() {
+    try {
+      const connectionMetadata =
+        await this.connection.sendRequest<ConnectionMetadata>(
+          credentialsProtocolMethodNames.getConnectionMetadata,
+        );
+
+      this.connectionMetadata = connectionMetadata;
+    } catch (error) {
+      this.connectionMetadata = undefined;
+    }
   }
 }
