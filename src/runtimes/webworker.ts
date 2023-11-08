@@ -15,7 +15,10 @@ import { inlineCompletionRequestType } from "../features/lsp/inline-completions/
 import { Auth } from "../features/auth/auth";
 
 import { RuntimeProps } from "./runtime";
-import { inlineCompletionWithReferencesRequestType } from "../features/lsp/inline-completions/protocolExtensions";
+import {
+  inlineCompletionWithReferencesRequestType,
+  logInlineCompelitionSessionResultsNotificationType,
+} from "../features/lsp/inline-completions/protocolExtensions";
 
 declare const self: WindowOrWorkerGlobalScope;
 
@@ -97,6 +100,12 @@ export const webworker = (props: RuntimeProps) => {
           inlineCompletionWithReferencesRequestType,
           handler,
         ),
+      onLogInlineCompelitionSessionResults: (handler) => {
+        lspConnection.onNotification(
+          logInlineCompelitionSessionResultsNotificationType,
+          handler,
+        );
+      },
     },
   };
 
