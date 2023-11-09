@@ -152,8 +152,6 @@ describe("Auth", () => {
     clientConnection.onRequest(
       credentialsProtocolMethodNames.getConnectionMetadata,
       () => {
-        console.log("Requesting new connection metadata");
-
         return CONNECTION_METADATA;
       },
     );
@@ -176,6 +174,35 @@ describe("Auth", () => {
     assert.deepEqual(
       credentialsProvider.getConnectionMetadata(),
       CONNECTION_METADATA,
+    );
+  });
+
+  it("Updates Bearer credentials on failed get connection metadata request", async () => {
+    clientConnection.onRequest(
+      credentialsProtocolMethodNames.getConnectionMetadata,
+      () => {
+        console.log("FAILING GET METADATA REQUEST");
+        throw new Error("TEST ERROR");
+      },
+    );
+
+    const updateRequest: UpdateCredentialsRequest = {
+      data: bearerCredentials,
+      encrypted: false,
+    };
+    const auth = new Auth(serverConnection);
+    const credentialsProvider: CredentialsProvider =
+      auth.getCredentialsProvider();
+
+    await clientConnection.sendRequest(
+      credentialsProtocolMethodNames.bearerCredentialsUpdate,
+      updateRequest,
+    );
+
+    assert.deepEqual(credentialsProvider.getConnectionMetadata(), undefined);
+    assert.deepEqual(
+      credentialsProvider.getCredentials("bearer"),
+      bearerCredentials,
     );
   });
 

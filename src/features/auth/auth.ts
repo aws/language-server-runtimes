@@ -32,7 +32,7 @@ export function isBearerCredentials(
 }
 
 export interface SsoProfileData {
-  startUrl: string;
+  startUrl?: string;
 }
 
 export interface ConnectionMetadata {
@@ -173,7 +173,6 @@ export class Auth {
             "Runtime: Successfully saved bearer credentials",
           );
 
-          // Don't wait for promise to resolve, initiate connection metadata update in the background.
           await this.requestConnectionMetadata();
         } else {
           this.bearerCredentials = undefined;
@@ -238,8 +237,14 @@ export class Auth {
         );
 
       this.connectionMetadata = connectionMetadata;
-    } catch (error) {
+      this.connection.console.info("Runtime: Connection metadata updated");
+    } catch (error: any) {
       this.connectionMetadata = undefined;
+      this.connection.console.info(
+        `Runtime: Failed to update Connection metadata with error: ${
+          error?.message || "unknown"
+        }`,
+      );
     }
   }
 }

@@ -96,7 +96,7 @@ export interface ConnectionMetadata {
 }
 
 export interface SsoProfileData {
-    startUrl: string;
+    startUrl?: string;
 }
 ```
 
