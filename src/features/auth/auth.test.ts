@@ -1,7 +1,8 @@
 import assert from "assert";
 import { randomBytes } from "node:crypto";
 import * as jose from "jose";
-import { Connection } from "vscode-languageserver";
+import { Duplex } from "stream";
+import { Connection, createConnection } from "vscode-languageserver/node";
 import {
   Auth,
   BearerCredentials,
@@ -11,6 +12,15 @@ import {
   UpdateCredentialsRequest,
   credentialsProtocolMethodNames,
 } from "./auth";
+
+class TestStream extends Duplex {
+  _write(chunk: string, _encoding: string, done: () => void) {
+    this.emit("data", chunk);
+    done();
+  }
+
+  _read(_size: number) {}
+}
 
 const authHandlers = {
   iamUpdateHandler: async (
@@ -76,22 +86,18 @@ const iamCredentials: IamCredentials = {
 const encryptionKey = randomBytes(32);
 
 describe("Auth", () => {
+  let serverConnection: Connection;
+  let clientConnection: Connection;
+
   beforeEach(() => {
+    const up = new TestStream();
+    const down = new TestStream();
+    serverConnection = createConnection(up, down);
+    clientConnection = createConnection(down, up);
+    serverConnection.listen();
+    clientConnection.listen();
+
     clearHandlers();
-  });
-
-  it("Registers handlers for LSP credentials methods", async () => {
-    const iamUpdateHandler = authHandlers.iamUpdateHandler;
-    const iamDeleteHandler = authHandlers.iamDeleteHandler;
-    const bearerUpdateHandler = authHandlers.bearerUpdateHandler;
-    const bearerDeleteHandler = authHandlers.bearerDeleteHandler;
-
-    new Auth(serverLspConnectionMock);
-
-    assert(authHandlers.iamUpdateHandler !== iamUpdateHandler);
-    assert(authHandlers.iamDeleteHandler !== iamDeleteHandler);
-    assert(authHandlers.bearerUpdateHandler !== bearerUpdateHandler);
-    assert(authHandlers.bearerDeleteHandler !== bearerDeleteHandler);
   });
 
   it("Handles IAM credentials", async () => {
@@ -114,27 +120,115 @@ describe("Auth", () => {
     assert(credentialsProvider.getCredentials("iam") === undefined);
   });
 
-  it("Handles Bearer credentials", async () => {
+  it("Handles Set Bearer credentials request", async () => {
     const updateRequest: UpdateCredentialsRequest = {
       data: bearerCredentials,
       encrypted: false,
     };
-    const auth = new Auth(serverLspConnectionMock);
+    const auth = new Auth(serverConnection);
     const credentialsProvider: CredentialsProvider =
       auth.getCredentialsProvider();
 
     assert(!credentialsProvider.hasCredentials("bearer"));
-    await authHandlers.bearerUpdateHandler(updateRequest);
+
+    await clientConnection.sendRequest(
+      credentialsProtocolMethodNames.bearerCredentialsUpdate,
+      updateRequest,
+    );
 
     assert(credentialsProvider.hasCredentials("bearer"));
     assert.deepEqual(
       credentialsProvider.getCredentials("bearer"),
       bearerCredentials,
     );
+  });
 
-    authHandlers.bearerDeleteHandler();
+  it("Updates connection metadata on receiving Set Bearer credentials request", async () => {
+    const CONNECTION_METADATA = {
+      sso: {
+        startUrl: "testStartUrl",
+      },
+    };
+    clientConnection.onRequest(
+      credentialsProtocolMethodNames.getConnectionMetadata,
+      () => {
+        return CONNECTION_METADATA;
+      },
+    );
+
+    const updateRequest: UpdateCredentialsRequest = {
+      data: bearerCredentials,
+      encrypted: false,
+    };
+    const auth = new Auth(serverConnection);
+    const credentialsProvider: CredentialsProvider =
+      auth.getCredentialsProvider();
+
+    assert(!credentialsProvider.getConnectionMetadata());
+
+    await clientConnection.sendRequest(
+      credentialsProtocolMethodNames.bearerCredentialsUpdate,
+      updateRequest,
+    );
+
+    assert.deepEqual(
+      credentialsProvider.getConnectionMetadata(),
+      CONNECTION_METADATA,
+    );
+  });
+
+  it("Updates Bearer credentials on failed get connection metadata request", async () => {
+    clientConnection.onRequest(
+      credentialsProtocolMethodNames.getConnectionMetadata,
+      () => {
+        console.log("FAILING GET METADATA REQUEST");
+        throw new Error("TEST ERROR");
+      },
+    );
+
+    const updateRequest: UpdateCredentialsRequest = {
+      data: bearerCredentials,
+      encrypted: false,
+    };
+    const auth = new Auth(serverConnection);
+    const credentialsProvider: CredentialsProvider =
+      auth.getCredentialsProvider();
+
+    await clientConnection.sendRequest(
+      credentialsProtocolMethodNames.bearerCredentialsUpdate,
+      updateRequest,
+    );
+
+    assert.deepEqual(credentialsProvider.getConnectionMetadata(), undefined);
+    assert.deepEqual(
+      credentialsProvider.getCredentials("bearer"),
+      bearerCredentials,
+    );
+  });
+
+  it("Handles Bearer credentials delete request", (done) => {
+    const updateRequest: UpdateCredentialsRequest = {
+      data: bearerCredentials,
+      encrypted: false,
+    };
+    const auth = new Auth(serverConnection);
+    const credentialsProvider: CredentialsProvider =
+      auth.getCredentialsProvider();
+
     assert(!credentialsProvider.hasCredentials("bearer"));
-    assert(credentialsProvider.getCredentials("bearer") === undefined);
+
+    serverConnection.onNotification(
+      credentialsProtocolMethodNames.bearerCredentialsDelete,
+      () => {
+        assert(!credentialsProvider.hasCredentials("bearer"));
+        assert(credentialsProvider.getCredentials("bearer") === undefined);
+        done();
+      },
+    );
+    clientConnection.sendNotification(
+      credentialsProtocolMethodNames.bearerCredentialsDelete,
+      updateRequest,
+    );
   });
 
   it("Rejects when IAM credentials are invalid", async () => {

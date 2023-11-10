@@ -26,11 +26,6 @@ import {
 } from "../features/lsp/inline-completions/protocolExtensions";
 
 type Handler<A = any[], B = any> = (...args: A extends any[] ? A : [A]) => B;
-type HandlerWrapper<
-  H extends Handler,
-  A extends Parameters<H>,
-  B extends ReturnType<H>,
-> = (name: string, handler: H) => (...args: A) => B;
 
 // Instruments a handler to emit telemetry without changing its signature. Supports async handlers.
 // Tracks timing between invocation and completion of the handler, and emits a failure count (either 0 or 1)
@@ -211,8 +206,11 @@ export const standalone = (props: RuntimeProps) => {
       onInitialized: (handler) =>
         lspConnection.onInitialized(
           instrument("onInitialized", (p) => {
-            const workspaceCapabilities = clientInitializeParams?.capabilities.workspace;
-            if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
+            const workspaceCapabilities =
+              clientInitializeParams?.capabilities.workspace;
+            if (
+              workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration
+            ) {
               // Ask the client to notify the server on configuration changes
               lspConnection.client.register(
                 DidChangeConfigurationNotification.type,

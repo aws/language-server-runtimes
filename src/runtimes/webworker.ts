@@ -75,8 +75,11 @@ export const webworker = (props: RuntimeProps) => {
   const lsp: Lsp = {
     onInitialized: (handler) =>
       lspConnection.onInitialized((p) => {
-        const workspaceCapabilities = clientInitializeParams?.capabilities.workspace;
-        if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
+        const workspaceCapabilities =
+          clientInitializeParams?.capabilities.workspace;
+        if (
+          workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration
+        ) {
           // Ask the client to notify the server on configuration changes
           lspConnection.client.register(
             DidChangeConfigurationNotification.type,
