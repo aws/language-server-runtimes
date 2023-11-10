@@ -62,10 +62,10 @@ The following table outlines custom LSP methods are supported by servers for aut
 
 | Description |	Method | Params | Method type | Response Type |
 | ----------- | ------ | ------ | ----------- | ------------- |
-| Send IAM Credentials | `$/aws/credentials/iam/update` | `UpdateCredentialsPayload` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | [ResponseMessage](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#responseMessage) |
-| Send Bearer token |	`$/aws/credentials/token/update` | `UpdateCredentialsPayload` |	[Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)	| [ResponseMessage](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#responseMessage) |
-| Delete IAM credentials | `$/aws/credentials/iam/delete` | n/a | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
-| Delete bearer token |	`$/aws/credentials/token/delete` | n/a | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send IAM Credentials | `aws/credentials/iam/update` | `UpdateCredentialsPayload` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | [ResponseMessage](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#responseMessage) |
+| Send Bearer token |	`aws/credentials/token/update` | `UpdateCredentialsPayload` |	[Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)	| [ResponseMessage](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#responseMessage) |
+| Delete IAM credentials | `aws/credentials/iam/delete` | n/a | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Delete bearer token |	`aws/credentials/token/delete` | n/a | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
 
 ```ts
 export type Credentials = IamCredentials | BearerCredentials
@@ -88,7 +88,7 @@ Server expects client to provide metadata specified in `ConnectionMetadata` inte
 
 | Description |	Method | Params | Method type | Response Type |
 | ----------- | ------ | ------ | ----------- | ------------- |
-| Get Connection Metadata | `$/aws/credentials/getConnectionMetadata` | n/a | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `ConnectionMetadata` |
+| Get Connection Metadata | `aws/credentials/getConnectionMetadata` | n/a | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `ConnectionMetadata` |
 
 ```ts
 export interface ConnectionMetadata {
@@ -179,7 +179,7 @@ The following steps outline how to enable encrypted credentials:
 
 4. After LSP initialization is complete, destinations should send credentials over LSP and are responsible for keeping them updated. 
 
-To send encrypted credentials, the `UpdateCredentialsPayload` parameters should be sent over the corresponding `$/aws/credentials/${type}/update` method.
+To send encrypted credentials, the `UpdateCredentialsPayload` parameters should be sent over the corresponding `aws/credentials/${type}/update` method.
 
 `UpdateCredentialsPayload` specification: 
 

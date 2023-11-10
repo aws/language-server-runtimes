@@ -46,11 +46,11 @@ export interface CredentialsProvider {
 }
 
 export const credentialsProtocolMethodNames = {
-  iamCredentialsUpdate: "$/aws/credentials/iam/update",
-  iamCredentialsDelete: "$/aws/credentials/iam/delete",
-  bearerCredentialsUpdate: "$/aws/credentials/token/update",
-  bearerCredentialsDelete: "$/aws/credentials/token/delete",
-  getConnectionMetadata: "$/aws/credentials/getConnectionMetadata",
+  iamCredentialsUpdate: "aws/credentials/iam/update",
+  iamCredentialsDelete: "aws/credentials/iam/delete",
+  bearerCredentialsUpdate: "aws/credentials/token/update",
+  bearerCredentialsDelete: "aws/credentials/token/delete",
+  getConnectionMetadata: "aws/credentials/getConnectionMetadata",
 };
 
 export interface UpdateCredentialsRequest {
