@@ -19,6 +19,7 @@ import {
   inlineCompletionWithReferencesRequestType,
   logInlineCompelitionSessionResultsNotificationType,
 } from "../features/lsp/inline-completions/protocolExtensions";
+import { observe } from "../features/lsp";
 
 declare const self: WindowOrWorkerGlobalScope;
 
@@ -29,6 +30,7 @@ export const webworker = (props: RuntimeProps) => {
     new BrowserMessageWriter(self),
   );
 
+  const documentsObserver = observe(lspConnection);
   const documents = new TextDocuments(TextDocument);
   let clientInitializeParams: InitializeParams;
 
@@ -93,6 +95,10 @@ export const webworker = (props: RuntimeProps) => {
       lspConnection.onRequest(inlineCompletionRequestType, handler),
     didChangeConfiguration: (handler) =>
       lspConnection.onDidChangeConfiguration(handler),
+    onDidChangeTextDocument: (handler) =>
+      documentsObserver.callbacks.onDidChangeTextDocument(handler),
+    onDidCloseTextDocument: (handler) =>
+      lspConnection.onDidCloseTextDocument(handler),
     workspace: {
       getConfiguration: (section) =>
         lspConnection.workspace.getConfiguration(section),
@@ -127,6 +133,6 @@ export const webworker = (props: RuntimeProps) => {
   });
 
   // Initialize the documents listener and start the LSP connection
-  documents.listen(lspConnection);
+  documents.listen(documentsObserver.callbacks);
   lspConnection.listen();
 };

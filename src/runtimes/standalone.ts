@@ -24,6 +24,7 @@ import {
   inlineCompletionWithReferencesRequestType,
   logInlineCompelitionSessionResultsNotificationType,
 } from "../features/lsp/inline-completions/protocolExtensions";
+import { observe } from "../features/lsp/textDocuments/textDocumentConnection";
 
 type Handler<A = any[], B = any> = (...args: A extends any[] ? A : [A]) => B;
 
@@ -88,6 +89,7 @@ export const standalone = (props: RuntimeProps) => {
   handleVersionArgument(props.version);
 
   const lspConnection = createConnection(ProposedFeatures.all);
+  const documentsObserver = observe(lspConnection);
 
   let auth: Auth;
   initializeAuth();
@@ -231,6 +233,14 @@ export const standalone = (props: RuntimeProps) => {
         lspConnection.onDidChangeConfiguration(
           instrument("didChangeConfiguration", handler),
         ),
+      onDidChangeTextDocument: (handler) =>
+        documentsObserver.callbacks.onDidChangeTextDocument(
+          instrument("onDidChangeTextDocument", handler),
+        ),
+      onDidCloseTextDocument: (handler) =>
+        documentsObserver.callbacks.onDidCloseTextDocument(
+          instrument("onDidCloseTextDocument", handler),
+        ),
       workspace: {
         getConfiguration: instrument("workspace.getConfiguration", (section) =>
           lspConnection.workspace.getConfiguration(section),
@@ -265,7 +275,7 @@ export const standalone = (props: RuntimeProps) => {
     });
 
     // Initialize the documents listener and start the LSP connection
-    documents.listen(lspConnection);
+    documents.listen(documentsObserver.callbacks);
     lspConnection.listen();
   }
 };
