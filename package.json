@@ -1,6 +1,6 @@
 {
   "name": "@aws-placeholder/aws-language-server-runtimes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Runtimes to host AWS Language Servers",
   "main": "out/runtimes/index.js",
   "scripts": {
