@@ -1,16 +1,19 @@
 import assert from "assert";
 import {
+  CancellationToken,
   DidChangeTextDocumentParams,
   DidCloseTextDocumentParams,
   DidOpenTextDocumentParams,
   DidSaveTextDocumentParams,
   NotificationHandler,
+  RequestHandler,
+  TextEdit,
   WillSaveTextDocumentParams,
 } from "vscode-languageserver";
 import { TextDocumentConnection } from "vscode-languageserver/lib/common/textDocuments";
 import { observe } from "./textDocumentConnection";
 
-const handlers = {
+const notificationHandlers = {
   onDidOpenTextDocument: undefined as NotificationHandler<any> | undefined,
   onDidChangeTextDocument: undefined as NotificationHandler<any> | undefined,
   onDidCloseTextDocument: undefined as NotificationHandler<any> | undefined,
@@ -18,38 +21,55 @@ const handlers = {
   onDidSaveTextDocument: undefined as NotificationHandler<any> | undefined,
 };
 
+let onWillSaveTextDocumentWaitUntilHandler:
+  | RequestHandler<
+      WillSaveTextDocumentParams,
+      TextEdit[] | undefined | null,
+      void
+    >
+  | undefined = undefined;
+
 const testConnection: TextDocumentConnection = {
   onDidOpenTextDocument: (
     handler: NotificationHandler<DidOpenTextDocumentParams>,
   ) => {
-    handlers.onDidOpenTextDocument = handler;
+    notificationHandlers.onDidOpenTextDocument = handler;
     return { dispose: () => {} };
   },
   onDidChangeTextDocument: (
     handler: NotificationHandler<DidChangeTextDocumentParams>,
   ) => {
-    handlers.onDidChangeTextDocument = handler;
+    notificationHandlers.onDidChangeTextDocument = handler;
     return { dispose: () => {} };
   },
   onDidCloseTextDocument: (
     handler: NotificationHandler<DidCloseTextDocumentParams>,
   ) => {
-    handlers.onDidCloseTextDocument = handler;
+    notificationHandlers.onDidCloseTextDocument = handler;
     return { dispose: () => {} };
   },
   onWillSaveTextDocument: (
     handler: NotificationHandler<WillSaveTextDocumentParams>,
   ) => {
-    handlers.onWillSaveTextDocument = handler;
+    notificationHandlers.onWillSaveTextDocument = handler;
     return { dispose: () => {} };
   },
   onDidSaveTextDocument: (
     handler: NotificationHandler<DidSaveTextDocumentParams>,
   ) => {
-    handlers.onDidSaveTextDocument = handler;
+    notificationHandlers.onDidSaveTextDocument = handler;
     return { dispose: () => {} };
   },
-  onWillSaveTextDocumentWaitUntil: () => ({ dispose: () => {} }),
+  onWillSaveTextDocumentWaitUntil: (
+    handler: RequestHandler<
+      WillSaveTextDocumentParams,
+      TextEdit[] | undefined | null,
+      void
+    >,
+  ) => {
+    onWillSaveTextDocumentWaitUntilHandler = handler;
+    return { dispose: () => {} };
+  },
 };
 
 describe("TextDocumentConnection", () => {
@@ -59,22 +79,24 @@ describe("TextDocumentConnection", () => {
     calledFirst = false;
     calledSecond = false;
 
-    Object.keys(handlers).forEach(
-      (k) => (handlers[k as keyof typeof handlers] = undefined),
+    Object.keys(notificationHandlers).forEach(
+      (k) =>
+        (notificationHandlers[k as keyof typeof notificationHandlers] =
+          undefined),
     );
   });
 
   describe("without observable (baseline)", () => {
-    Object.keys(handlers).forEach((key) => {
+    Object.keys(notificationHandlers).forEach((key) => {
       it(key + " only supports the last callback", () => {
-        testConnection[key as keyof typeof handlers](() => {
+        testConnection[key as keyof typeof notificationHandlers](() => {
           calledFirst = true;
         });
-        testConnection[key as keyof typeof handlers](
+        testConnection[key as keyof typeof notificationHandlers](
           () => (calledSecond = true),
         );
 
-        handlers[key as keyof typeof handlers]!({});
+        notificationHandlers[key as keyof typeof notificationHandlers]!({});
 
         assert.equal(calledFirst, false);
         assert.equal(calledSecond, true);
@@ -83,7 +105,7 @@ describe("TextDocumentConnection", () => {
   });
 
   describe("with observable", () => {
-    Object.keys(handlers).forEach((key) => {
+    Object.keys(notificationHandlers).forEach((key) => {
       let observableConnection: ReturnType<typeof observe>;
 
       beforeEach(async () => {
@@ -91,14 +113,16 @@ describe("TextDocumentConnection", () => {
       });
 
       it(key + " supports multiple subscriptions", () => {
-        observableConnection[key as keyof typeof handlers].subscribe(() => {
+        observableConnection[
+          key as keyof typeof notificationHandlers
+        ].subscribe(() => {
           calledFirst = true;
         });
-        observableConnection[key as keyof typeof handlers].subscribe(
-          () => (calledSecond = true),
-        );
+        observableConnection[
+          key as keyof typeof notificationHandlers
+        ].subscribe(() => (calledSecond = true));
 
-        handlers[key as keyof typeof handlers]!({});
+        notificationHandlers[key as keyof typeof notificationHandlers]!({});
 
         assert.equal(calledFirst, true);
         assert.equal(calledSecond, true);
@@ -106,30 +130,34 @@ describe("TextDocumentConnection", () => {
 
       it(key + " supports unsubscribe and resubscribe", () => {
         const sub = observableConnection[
-          key as keyof typeof handlers
+          key as keyof typeof notificationHandlers
         ].subscribe(() => {
           calledFirst = true;
         });
         sub.unsubscribe();
-        observableConnection[key as keyof typeof handlers].subscribe(
-          () => (calledSecond = true),
-        );
+        observableConnection[
+          key as keyof typeof notificationHandlers
+        ].subscribe(() => (calledSecond = true));
 
-        handlers[key as keyof typeof handlers]!({});
+        notificationHandlers[key as keyof typeof notificationHandlers]!({});
 
         assert.equal(calledFirst, false);
         assert.equal(calledSecond, true);
       });
 
       it(key + " supports callbacks", () => {
-        observableConnection.callbacks[key as keyof typeof handlers](() => {
+        observableConnection.callbacks[
+          key as keyof typeof notificationHandlers
+        ](() => {
           calledFirst = true;
         });
-        observableConnection.callbacks[key as keyof typeof handlers](() => {
+        observableConnection.callbacks[
+          key as keyof typeof notificationHandlers
+        ](() => {
           calledSecond = true;
         });
 
-        handlers[key as keyof typeof handlers]!({});
+        notificationHandlers[key as keyof typeof notificationHandlers]!({});
 
         assert.equal(calledFirst, true);
         assert.equal(calledSecond, true);
@@ -137,21 +165,46 @@ describe("TextDocumentConnection", () => {
 
       it(key + " supports callback dispose", () => {
         const disposable = observableConnection.callbacks[
-          key as keyof typeof handlers
+          key as keyof typeof notificationHandlers
         ](() => {
           calledFirst = true;
         });
-        observableConnection.callbacks[key as keyof typeof handlers](() => {
+        observableConnection.callbacks[
+          key as keyof typeof notificationHandlers
+        ](() => {
           calledSecond = true;
         });
 
         disposable.dispose();
 
-        handlers[key as keyof typeof handlers]!({});
+        notificationHandlers[key as keyof typeof notificationHandlers]!({});
 
         assert.equal(calledFirst, false);
         assert.equal(calledSecond, true);
       });
+    });
+  });
+
+  describe("onWillSaeTextDocumentWaitUntil", () => {
+    it("supports only last handler", () => {
+      const connection = observe(testConnection);
+      connection.callbacks.onWillSaveTextDocumentWaitUntil((p) => {
+        calledFirst = true;
+        return [];
+      });
+
+      connection.callbacks.onWillSaveTextDocumentWaitUntil((p) => {
+        calledSecond = true;
+        return [];
+      });
+
+      onWillSaveTextDocumentWaitUntilHandler!(
+        {} as WillSaveTextDocumentParams,
+        CancellationToken.None,
+      );
+
+      assert.equal(calledFirst, false);
+      assert.equal(calledSecond, true);
     });
   });
 });
