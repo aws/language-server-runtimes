@@ -32,7 +32,7 @@ The server runtime implementation acts as a proxy for LSP methods, which means i
 | Method Name | Method | Params | Method Type | Response Type | Notes |
 | ------------| ------ | ------ | ----------- | ------------- | ----- |
 | onInlineCompletionWithReferences | `aws/textDocument/inlineCompletionWithReferences` | `InlineCompletionWithReferencesParams` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `InlineCompletionListWithReferences` | Provides list of inline completion suggestions from the Server with references for each of its suggestion |
-| onLogInlineCompelitionSessionResults | `aws/logInlineCompelitionSessionResults` | `LogInlineCompelitionSessionResultsParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a | Logs the results from inline completion suggestions from the Server |
+| onLogInlineCompletionSessionResults | `aws/logInlineCompletionSessionResults` | `LogInlineCompletionSessionResultsParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a | Logs the results from inline completion suggestions from the Server |
 
 ### Auth
 

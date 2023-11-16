@@ -73,7 +73,7 @@ export interface InlineCompletionStates {
   discarded: boolean;
 }
 
-export interface LogInlineCompelitionSessionResultsParams {
+export interface LogInlineCompletionSessionResultsParams {
   /**
    * Session Id attached to get completion items response.
    * This value must match to the one that server returned in InlineCompletionListWithReferences response.
@@ -96,7 +96,7 @@ export interface LogInlineCompelitionSessionResultsParams {
   totalSessionDisplayTime?: number;
 }
 
-export const logInlineCompelitionSessionResultsNotificationType =
-  new ProtocolNotificationType<LogInlineCompelitionSessionResultsParams, void>(
-    "aws/logInlineCompelitionSessionResults",
+export const logInlineCompletionSessionResultsNotificationType =
+  new ProtocolNotificationType<LogInlineCompletionSessionResultsParams, void>(
+    "aws/logInlineCompletionSessionResults",
   );

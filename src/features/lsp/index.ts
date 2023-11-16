@@ -15,7 +15,7 @@ import {
 import {
   InlineCompletionItemWithReferences,
   InlineCompletionListWithReferences,
-  LogInlineCompelitionSessionResultsParams,
+  LogInlineCompletionSessionResultsParams,
 } from "./inline-completions/protocolExtensions";
 
 export { observe } from "./textDocuments/textDocumentConnection";
@@ -63,8 +63,8 @@ export type Lsp = {
         void
       >,
     ) => void;
-    onLogInlineCompelitionSessionResults: (
-      handler: NotificationHandler<LogInlineCompelitionSessionResultsParams>,
+    onLogInlineCompletionSessionResults: (
+      handler: NotificationHandler<LogInlineCompletionSessionResultsParams>,
     ) => void;
   };
 };
