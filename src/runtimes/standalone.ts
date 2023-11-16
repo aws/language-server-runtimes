@@ -14,7 +14,6 @@ import {
 } from "../features/auth/standalone/encryption";
 import { Logging, Lsp, Telemetry, Workspace } from "../features";
 import { inlineCompletionRequestType } from "../features/lsp/inline-completions/futureProtocol";
-import { metric } from "../features/telemetry/telemetry";
 import { Auth, CredentialsProvider } from "../features/auth/auth";
 
 import { handleVersionArgument } from "../features/versioning";
@@ -25,41 +24,6 @@ import {
   logInlineCompletionSessionResultsNotificationType,
 } from "../features/lsp/inline-completions/protocolExtensions";
 import { observe } from "../features/lsp/textDocuments/textDocumentConnection";
-
-type Handler<A = any[], B = any> = (...args: A extends any[] ? A : [A]) => B;
-
-// Instruments a handler to emit telemetry without changing its signature. Supports async handlers.
-// Tracks timing between invocation and completion of the handler, and emits a failure count (either 0 or 1)
-// depending on whether the handler threw an error or not.
-const withTelemetry =
-  <H extends Handler, A extends Parameters<H>, B extends ReturnType<H>>(
-    telemetry: Telemetry,
-  ) =>
-  (name: string, handler: H) =>
-  (...args: A): B => {
-    const startTime = new Date().valueOf();
-    const result = handler(...args);
-    Promise.resolve(result)
-      .finally(() =>
-        telemetry.emitMetric(
-          metric(`${name}Time`, new Date().valueOf() - startTime),
-        ),
-      )
-      .then(() => telemetry.emitMetric(metric(`${name}Error`, 0)))
-      .catch(() => telemetry.emitMetric(metric(`${name}Error`, 1)));
-    return result;
-  };
-
-// Instruments a handler to emit logging on invocation without changing its signature.
-const withLogging =
-  <H extends Handler, A extends Parameters<H>, B extends ReturnType<H>>(
-    logging: Logging,
-  ) =>
-  (name: string, handler: H) =>
-  (...args: A): B => {
-    logging.log(`[${name}] was called`);
-    return handler(...args);
-  };
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -168,94 +132,51 @@ export const standalone = (props: RuntimeProps) => {
       emitMetric: (metric) => lspConnection.telemetry.logEvent(metric),
     };
 
-    // TODO: This can probably be cleaned up a bit more.
-    // This type ensures that the signature of the handler function does not change, even if we instrument it with telemetry or logging
-    const withLspTelemetry: <
-      H extends Handler,
-      A extends Parameters<H>,
-      B extends ReturnType<H>,
-    >(
-      name: string,
-      handler: H,
-    ) => (...args: A) => B = withTelemetry(telemetry);
-    const withLspLogging: <
-      H extends Handler,
-      A extends Parameters<H>,
-      B extends ReturnType<H>,
-    >(
-      name: string,
-      handler: H,
-    ) => (...args: A) => B = withLogging(logging);
-    const instrument: <
-      H extends Handler,
-      A extends Parameters<H>,
-      B extends ReturnType<H>,
-    >(
-      name: string,
-      handler: H,
-    ) => (...args: A) => B = (name: string, handler: any) =>
-      withLspLogging(name, withLspTelemetry(name, handler));
-
     // Set up the workspace sync to use the LSP Text Document Sync capability
     const workspace: Workspace = {
-      getTextDocument: instrument("getTextDocument", async (uri) =>
-        documents.get(uri),
-      ),
+      getTextDocument: async (uri) => documents.get(uri),
     };
 
-    // Map the instrumented LSP client to the LSP feature.
+    // Map the LSP client to the LSP feature.
     const lsp: Lsp = {
       onInitialized: (handler) =>
-        lspConnection.onInitialized(
-          instrument("onInitialized", (p) => {
-            const workspaceCapabilities =
-              clientInitializeParams?.capabilities.workspace;
-            if (
-              workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration
-            ) {
-              // Ask the client to notify the server on configuration changes
-              lspConnection.client.register(
-                DidChangeConfigurationNotification.type,
-                undefined,
-              );
-            }
-            handler(p);
-          }),
-        ),
-      onCompletion: (handler) =>
-        lspConnection.onCompletion(instrument("onCompletion", handler)),
+        lspConnection.onInitialized((p) => {
+          const workspaceCapabilities =
+            clientInitializeParams?.capabilities.workspace;
+          if (
+            workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration
+          ) {
+            // Ask the client to notify the server on configuration changes
+            lspConnection.client.register(
+              DidChangeConfigurationNotification.type,
+              undefined,
+            );
+          }
+          handler(p);
+        }),
+      onCompletion: (handler) => lspConnection.onCompletion(handler),
       onInlineCompletion: (handler) =>
-        lspConnection.onRequest(
-          inlineCompletionRequestType,
-          instrument("onInlineCompletion", handler),
-        ),
+        lspConnection.onRequest(inlineCompletionRequestType, handler),
       didChangeConfiguration: (handler) =>
-        lspConnection.onDidChangeConfiguration(
-          instrument("didChangeConfiguration", handler),
-        ),
+        lspConnection.onDidChangeConfiguration(handler),
       onDidChangeTextDocument: (handler) =>
-        documentsObserver.callbacks.onDidChangeTextDocument(
-          instrument("onDidChangeTextDocument", handler),
-        ),
+        documentsObserver.callbacks.onDidChangeTextDocument(handler),
       onDidCloseTextDocument: (handler) =>
-        documentsObserver.callbacks.onDidCloseTextDocument(
-          instrument("onDidCloseTextDocument", handler),
-        ),
+        documentsObserver.callbacks.onDidCloseTextDocument(handler),
       workspace: {
-        getConfiguration: instrument("workspace.getConfiguration", (section) =>
+        getConfiguration: (section) =>
           lspConnection.workspace.getConfiguration(section),
-        ),
       },
       extensions: {
         onInlineCompletionWithReferences: (handler) =>
           lspConnection.onRequest(
             inlineCompletionWithReferencesRequestType,
-            instrument("onInlineCompletionWithReferences", handler),
+            handler,
           ),
         onLogInlineCompletionSessionResults: (handler) => {
           lspConnection.onNotification(
             logInlineCompletionSessionResultsNotificationType,
-            instrument("onLogInlineCompletionSessionResults", handler),
+            handler,
           );
         },
       },
