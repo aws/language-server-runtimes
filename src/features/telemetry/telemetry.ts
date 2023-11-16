@@ -20,16 +20,6 @@ type ErrorData = {
   httpStatusCode?: number;
 };
 
-export const metric = (
-  name: string,
-  data?: any,
-  result?: ResultType,
-  errorData?: ErrorData,
-): MetricEvent => ({
-  name,
-  data,
-});
-
 /**
  * The telemetry feature interface.
  */
