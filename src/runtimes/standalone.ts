@@ -22,7 +22,7 @@ import { RuntimeProps } from "./runtime";
 
 import {
   inlineCompletionWithReferencesRequestType,
-  logInlineCompelitionSessionResultsNotificationType,
+  logInlineCompletionSessionResultsNotificationType,
 } from "../features/lsp/inline-completions/protocolExtensions";
 import { observe } from "../features/lsp/textDocuments/textDocumentConnection";
 
@@ -252,10 +252,10 @@ export const standalone = (props: RuntimeProps) => {
             inlineCompletionWithReferencesRequestType,
             instrument("onInlineCompletionWithReferences", handler),
           ),
-        onLogInlineCompelitionSessionResults: (handler) => {
+        onLogInlineCompletionSessionResults: (handler) => {
           lspConnection.onNotification(
-            logInlineCompelitionSessionResultsNotificationType,
-            instrument("onLogInlineCompelitionSessionResults", handler),
+            logInlineCompletionSessionResultsNotificationType,
+            instrument("onLogInlineCompletionSessionResults", handler),
           );
         },
       },
