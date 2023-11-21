@@ -94,6 +94,10 @@ export interface LogInlineCompletionSessionResultsParams {
    * Total time when items from this completion session were visible in UI
    */
   totalSessionDisplayTime?: number;
+  /**
+   * Length of additional characters inputed by user from when the trigger happens to when the user decision was made
+   */
+  typeaheadLength?: number;
 }
 
 export const logInlineCompletionSessionResultsNotificationType =
