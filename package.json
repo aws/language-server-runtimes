@@ -25,6 +25,6 @@
     "sinon": "^15.1.0",
     "ts-mocha": "^10.0.0",
     "ts-sinon": "^2.0.2",
-    "typescript": "^5.2.2"
+    "typescript": "^5.3.3"
   }
 }
