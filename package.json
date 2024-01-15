@@ -9,7 +9,8 @@
     "test:unit": "ts-mocha -b 'src/**/*.test.ts'",
     "test:prettier": "prettier . --check",
     "test": "npm run test:prettier && npm run test:unit",
-    "fix:prettier": "prettier . --write"
+    "fix:prettier": "prettier . --write",
+    "prepare": "husky install"
   },
   "dependencies": {
     "jose": "^4.14.4",
@@ -21,6 +22,7 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.5.9",
     "assert": "^2.0.0",
+    "husky": "^8.0.3",
     "prettier": "3.0.3",
     "sinon": "^15.1.0",
     "ts-mocha": "^10.0.0",
