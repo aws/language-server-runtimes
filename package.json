@@ -23,7 +23,7 @@
     "@types/node": "^20.5.9",
     "assert": "^2.0.0",
     "husky": "^8.0.3",
-    "prettier": "3.0.3",
+    "prettier": "3.2.4",
     "sinon": "^15.1.0",
     "ts-mocha": "^10.0.0",
     "ts-sinon": "^2.0.2",
