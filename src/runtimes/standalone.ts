@@ -25,6 +25,11 @@ import {
 } from "../features/lsp/inline-completions/protocolExtensions";
 import { observe } from "../features/lsp/textDocuments/textDocumentConnection";
 
+import { access, mkdirSync, existsSync } from "fs";
+import { readdir, readFile, rm, stat, copyFile } from "fs/promises";
+import * as os from "os";
+import * as path from "path";
+
 /**
  * The runtime for standalone LSP-based servers.
  *
@@ -135,6 +140,48 @@ export const standalone = (props: RuntimeProps) => {
     // Set up the workspace sync to use the LSP Text Document Sync capability
     const workspace: Workspace = {
       getTextDocument: async (uri) => documents.get(uri),
+      // Get all workspace folders and return the workspace folder that contains the uri
+      getWorkspaceFolder: (uri) => {
+        const fileUrl = new URL(uri);
+        const normalizedFileUri = fileUrl.pathname || "";
+
+        const folders = clientInitializeParams.workspaceFolders;
+        if (!folders) return undefined;
+
+        for (const folder of folders) {
+          const folderUrl = new URL(folder.uri);
+          const normalizedFolderUri = folderUrl.pathname || "";
+          if (normalizedFileUri.startsWith(normalizedFolderUri)) {
+            return folder;
+          }
+        }
+      },
+      fs: {
+        copy: (src, dest) => {
+          const destDir = path.dirname(dest);
+          if (!existsSync(destDir)) {
+            mkdirSync(destDir, { recursive: true });
+          }
+          return copyFile(src, dest);
+        },
+        exists: (path) =>
+          new Promise((resolve) => {
+            access(path, (err) => {
+              if (!err) resolve(true);
+              resolve(false);
+            });
+          }),
+        getFileSize: (path) => stat(path),
+        getTempDirPath: () =>
+          path.join(
+            // https://github.com/aws/aws-toolkit-vscode/issues/240
+            os.type() === "Darwin" ? "/tmp" : os.tmpdir(),
+            "aws-language-servers",
+          ),
+        readdir: (path) => readdir(path, { withFileTypes: true }),
+        readFile: (path) => readFile(path, "utf-8"),
+        remove: (dir) => rm(dir, { recursive: true, force: true }),
+      },
     };
 
     // Map the LSP client to the LSP feature.
