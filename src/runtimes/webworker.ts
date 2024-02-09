@@ -71,6 +71,18 @@ export const webworker = (props: RuntimeProps) => {
   // Set up the workspace to use the LSP Text Documents component
   const workspace: Workspace = {
     getTextDocument: async (uri) => documents.get(uri),
+    getWorkspaceFolder: (_uri) =>
+      clientInitializeParams.workspaceFolders &&
+      clientInitializeParams.workspaceFolders[0],
+    fs: {
+      copy: (_src, _dest) => Promise.resolve(),
+      exists: (_path) => Promise.resolve(false),
+      getFileSize: (_path) => Promise.resolve({ size: 0 }),
+      getTempDirPath: () => "/tmp",
+      readFile: (_path) => Promise.resolve(""),
+      readdir: (_path) => Promise.resolve([]),
+      remove: (_dir) => Promise.resolve(),
+    },
   };
 
   // Map the LSP client to the LSP feature.
