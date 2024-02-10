@@ -1,46 +1,46 @@
-import assert from "assert";
-import sinon, { SinonStub } from "sinon";
-import { handleVersionArgument } from "./versioning";
+import assert from 'assert'
+import sinon, { SinonStub } from 'sinon'
+import { handleVersionArgument } from './versioning'
 
-describe("handleVersionArgument", () => {
-  let processExitStub: SinonStub;
-  let consoleLogStub: SinonStub;
-  const version = "1.0.0";
+describe('handleVersionArgument', () => {
+    let processExitStub: SinonStub
+    let consoleLogStub: SinonStub
+    const version = '1.0.0'
 
-  beforeEach(() => {
-    processExitStub = sinon.stub(process, "exit");
-    consoleLogStub = sinon.stub(console, "log");
-  });
+    beforeEach(() => {
+        processExitStub = sinon.stub(process, 'exit')
+        consoleLogStub = sinon.stub(console, 'log')
+    })
 
-  afterEach(() => {
-    processExitStub.restore();
-    consoleLogStub.restore();
-  });
+    afterEach(() => {
+        processExitStub.restore()
+        consoleLogStub.restore()
+    })
 
-  it("should log the version and exit when --version is in process.argv", () => {
-    process.argv = ["node", "script.js", "--version"];
+    it('should log the version and exit when --version is in process.argv', () => {
+        process.argv = ['node', 'script.js', '--version']
 
-    handleVersionArgument(version);
+        handleVersionArgument(version)
 
-    assert.strictEqual(consoleLogStub.calledOnceWithExactly(version), true);
-    assert.strictEqual(processExitStub.calledOnceWithExactly(0), true);
-  });
+        assert.strictEqual(consoleLogStub.calledOnceWithExactly(version), true)
+        assert.strictEqual(processExitStub.calledOnceWithExactly(0), true)
+    })
 
-  it("should log the version and exit when -v is in process.argv", () => {
-    process.argv = ["node", "script.js", "-v"];
+    it('should log the version and exit when -v is in process.argv', () => {
+        process.argv = ['node', 'script.js', '-v']
 
-    handleVersionArgument(version);
+        handleVersionArgument(version)
 
-    assert.strictEqual(consoleLogStub.calledOnceWithExactly(version), true);
-    assert.strictEqual(processExitStub.calledOnceWithExactly(0), true);
-  });
+        assert.strictEqual(consoleLogStub.calledOnceWithExactly(version), true)
+        assert.strictEqual(processExitStub.calledOnceWithExactly(0), true)
+    })
 
-  it("should do nothing when neither --version nor -v is in process.argv", () => {
-    process.argv = ["node", "script.js", "--stdio"];
+    it('should do nothing when neither --version nor -v is in process.argv', () => {
+        process.argv = ['node', 'script.js', '--stdio']
 
-    handleVersionArgument(version);
+        handleVersionArgument(version)
 
-    assert.strictEqual(consoleLogStub.called, false);
-    assert.strictEqual(processExitStub.called, false);
-  });
-});
+        assert.strictEqual(consoleLogStub.called, false)
+        assert.strictEqual(processExitStub.called, false)
+    })
+})
