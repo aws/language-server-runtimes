@@ -37,6 +37,13 @@ export const webworker = (props: RuntimeProps) => {
   // Initialize the LSP connection based on the supported LSP capabilities
   // TODO: make this dependent on the actual requirements of the
   // servers parameter.
+
+  const names = props.servers.map((s) => s.serverName);
+  const capabilities = Object.assign(
+    {},
+    ...props.servers.map((s) => s.customCapabilities),
+  );
+
   lspConnection.onInitialize((params: InitializeParams) => {
     clientInitializeParams = params;
     return {
@@ -53,6 +60,10 @@ export const webworker = (props: RuntimeProps) => {
           openClose: true,
           change: TextDocumentSyncKind.Incremental,
         },
+      },
+      awsCapabilities: {
+        awsLanguageServersNames: names,
+        ...capabilities,
       },
     };
   });

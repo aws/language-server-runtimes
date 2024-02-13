@@ -21,10 +21,14 @@ import {
  *
  * @returns A function that will be called when the client exits, used to dispose of any held resources.
  */
-export type Server = (features: {
-  credentialsProvider: CredentialsProvider;
-  lsp: Lsp;
-  workspace: Workspace;
-  logging: Logging;
-  telemetry: Telemetry;
-}) => () => void;
+export type Server = {
+  serverName: string;
+  customCapabilities: object;
+  (features: {
+    credentialsProvider: CredentialsProvider;
+    lsp: Lsp;
+    workspace: Workspace;
+    logging: Logging;
+    telemetry: Telemetry;
+  }): () => void;
+};
