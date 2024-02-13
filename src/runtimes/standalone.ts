@@ -108,8 +108,7 @@ export const standalone = (props: RuntimeProps) => {
       clientInitializeParams = params;
       return {
         serverInfo: {
-          // TODO: make this configurable
-          name: "AWS LSP Standalone",
+          name: props.name,
           // This indicates the standalone server version and is updated
           // every time the standalone or any of the servers update.
           // Major version updates only happen for backwards incompatible changes.
