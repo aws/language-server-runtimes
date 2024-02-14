@@ -21,6 +21,7 @@ import {
   logInlineCompletionSessionResultsNotificationType,
 } from "../features/lsp/inline-completions/protocolExtensions";
 import { observe } from "../features/lsp";
+import { InitializeHandler } from "./initialize";
 
 declare const self: WindowOrWorkerGlobalScope;
 
@@ -33,31 +34,9 @@ export const webworker = (props: RuntimeProps) => {
 
   const documentsObserver = observe(lspConnection);
   const documents = new TextDocuments(TextDocument);
-  let clientInitializeParams: InitializeParams;
 
-  // Initialize the LSP connection based on the supported LSP capabilities
-  // TODO: make this dependent on the actual requirements of the
-  // servers parameter.
-  lspConnection.onInitialize((params: InitializeParams) => {
-    clientInitializeParams = params;
-    return {
-      serverInfo: {
-        name: props.name,
-        // This indicates the webworker server version and is updated
-        // every time the runtime or any of the servers update.
-        // Major version updates only happen for backwards incompatible changes.
-        version: props.version,
-      },
-      capabilities: {
-        textDocumentSync: {
-          openClose: true,
-          change: TextDocumentSyncKind.Incremental,
-        },
-        hoverProvider: true,
-        diagnosticsProvider: true,
-      },
-    };
-  });
+  let initializeHandler = new InitializeHandler(props.version, props.name);
+  lspConnection.onInitialize(initializeHandler.onInitialize);
 
   // Set up logigng over LSP
   const logging: Logging = {
@@ -74,8 +53,8 @@ export const webworker = (props: RuntimeProps) => {
   const workspace: Workspace = {
     getTextDocument: async (uri) => documents.get(uri),
     getWorkspaceFolder: (_uri) =>
-      clientInitializeParams.workspaceFolders &&
-      clientInitializeParams.workspaceFolders[0],
+      initializeHandler.clientInitializeParams!.workspaceFolders &&
+      initializeHandler.clientInitializeParams!.workspaceFolders[0],
     fs: {
       copy: (_src, _dest) => Promise.resolve(),
       exists: (_path) => Promise.resolve(false),
@@ -89,10 +68,11 @@ export const webworker = (props: RuntimeProps) => {
 
   // Map the LSP client to the LSP feature.
   const lsp: Lsp = {
+    addInitializer: initializeHandler.addHandler,
     onInitialized: (handler) =>
       lspConnection.onInitialized((p) => {
         const workspaceCapabilities =
-          clientInitializeParams?.capabilities.workspace;
+          initializeHandler.clientInitializeParams?.capabilities.workspace;
         if (
           workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration
         ) {
