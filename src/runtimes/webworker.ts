@@ -110,6 +110,7 @@ export const webworker = (props: RuntimeProps) => {
       documentsObserver.callbacks.onDidChangeTextDocument(handler),
     onDidCloseTextDocument: (handler) =>
       lspConnection.onDidCloseTextDocument(handler),
+    onExecuteCommand: (handler) => lspConnection.onExecuteCommand(handler),
     workspace: {
       getConfiguration: (section) =>
         lspConnection.workspace.getConfiguration(section),
