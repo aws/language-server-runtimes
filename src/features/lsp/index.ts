@@ -55,12 +55,7 @@ export type Lsp = {
   ) => void;
   publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>;
   onHover: (
-    handler: ServerRequestHandler<
-      HoverParams,
-      Hover | null | undefined,
-      never,
-      void
-    >,
+    handler: RequestHandler<HoverParams, Hover | null | undefined, void>,
   ) => void;
   workspace: {
     getConfiguration: (section: string) => Promise<any>;
