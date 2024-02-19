@@ -27,6 +27,7 @@ The server runtime implementation acts as a proxy for LSP methods, which means i
 | Method | Support | Notes | 
 | ------ | ------- | ----- |
 | onInlineCompletion | Yes | Provide list of inline completion suggestions from the Server |
+| onExecuteCommand | Yes | Executes a custom command provided by the Server. Servers are advised to document custom commands they support in the package README. For a consistent experience, naming of the commands should consist of the main Server name and purpose of the command combined with `/` (forward slash) and written in camelCase format. Eg. `/helloWorld/logError` |
 
 ##### LSP Extensions
 | Method Name | Method | Params | Method Type | Response Type | Notes |
