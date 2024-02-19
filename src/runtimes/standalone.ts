@@ -209,6 +209,7 @@ export const standalone = (props: RuntimeProps) => {
         documentsObserver.callbacks.onDidChangeTextDocument(handler),
       onDidCloseTextDocument: (handler) =>
         documentsObserver.callbacks.onDidCloseTextDocument(handler),
+      onExecuteCommand: (handler) => lspConnection.onExecuteCommand(handler),
       workspace: {
         getConfiguration: (section) =>
           lspConnection.workspace.getConfiguration(section),

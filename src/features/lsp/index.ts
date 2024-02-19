@@ -5,6 +5,7 @@ import {
   DidChangeConfigurationParams,
   DidChangeTextDocumentParams,
   DidCloseTextDocumentParams,
+  ExecuteCommandParams,
   InitializedParams,
   InlineCompletionItem,
   InlineCompletionList,
@@ -48,6 +49,9 @@ export type Lsp = {
   ) => void;
   onDidCloseTextDocument: (
     handler: NotificationHandler<DidCloseTextDocumentParams>,
+  ) => void;
+  onExecuteCommand: (
+    handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>,
   ) => void;
   workspace: {
     getConfiguration: (section: string) => Promise<any>;
