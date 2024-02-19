@@ -12,4 +12,8 @@ export type RuntimeProps = {
    *  The list of servers to initialize and run
    */
   servers: Server[];
+  /**
+   * Name of the server used inside the runtime
+   */
+  name: string;
 };

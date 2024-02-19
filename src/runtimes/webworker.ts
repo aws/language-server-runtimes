@@ -42,8 +42,7 @@ export const webworker = (props: RuntimeProps) => {
     clientInitializeParams = params;
     return {
       serverInfo: {
-        // TODO: make this configurable
-        name: "AWS LSP Web Worker",
+        name: props.name,
         // This indicates the webworker server version and is updated
         // every time the runtime or any of the servers update.
         // Major version updates only happen for backwards incompatible changes.
@@ -112,6 +111,7 @@ export const webworker = (props: RuntimeProps) => {
       documentsObserver.callbacks.onDidChangeTextDocument(handler),
     onDidCloseTextDocument: (handler) =>
       lspConnection.onDidCloseTextDocument(handler),
+    onExecuteCommand: (handler) => lspConnection.onExecuteCommand(handler),
     workspace: {
       getConfiguration: (section) =>
         lspConnection.workspace.getConfiguration(section),

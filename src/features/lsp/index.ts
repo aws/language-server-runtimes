@@ -5,6 +5,7 @@ import {
   DidChangeConfigurationParams,
   DidChangeTextDocumentParams,
   DidCloseTextDocumentParams,
+  ExecuteCommandParams,
   Hover,
   HoverParams,
   InitializedParams,
@@ -56,6 +57,9 @@ export type Lsp = {
   publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>;
   onHover: (
     handler: RequestHandler<HoverParams, Hover | null | undefined, void>,
+  ) => void;
+  onExecuteCommand: (
+    handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>,
   ) => void;
   workspace: {
     getConfiguration: (section: string) => Promise<any>;

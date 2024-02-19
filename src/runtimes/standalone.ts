@@ -109,8 +109,7 @@ export const standalone = (props: RuntimeProps) => {
       clientInitializeParams = params;
       return {
         serverInfo: {
-          // TODO: make this configurable
-          name: "AWS LSP Standalone",
+          name: props.name,
           // This indicates the standalone server version and is updated
           // every time the standalone or any of the servers update.
           // Major version updates only happen for backwards incompatible changes.
@@ -217,6 +216,7 @@ export const standalone = (props: RuntimeProps) => {
         documentsObserver.callbacks.onDidChangeTextDocument(handler),
       onDidCloseTextDocument: (handler) =>
         documentsObserver.callbacks.onDidCloseTextDocument(handler),
+      onExecuteCommand: (handler) => lspConnection.onExecuteCommand(handler),
       workspace: {
         getConfiguration: (section) =>
           lspConnection.workspace.getConfiguration(section),
