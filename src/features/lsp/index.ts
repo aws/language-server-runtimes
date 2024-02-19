@@ -6,12 +6,16 @@ import {
   DidChangeTextDocumentParams,
   DidCloseTextDocumentParams,
   ExecuteCommandParams,
+  Hover,
+  HoverParams,
   InitializedParams,
   InlineCompletionItem,
   InlineCompletionList,
   InlineCompletionParams,
   NotificationHandler,
+  PublishDiagnosticsParams,
   RequestHandler,
+  ServerRequestHandler,
 } from "vscode-languageserver";
 import {
   InlineCompletionItemWithReferences,
@@ -49,6 +53,10 @@ export type Lsp = {
   ) => void;
   onDidCloseTextDocument: (
     handler: NotificationHandler<DidCloseTextDocumentParams>,
+  ) => void;
+  publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>;
+  onHover: (
+    handler: RequestHandler<HoverParams, Hover | null | undefined, void>,
   ) => void;
   onExecuteCommand: (
     handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>,

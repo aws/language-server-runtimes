@@ -1,6 +1,7 @@
 import {
   DidChangeConfigurationNotification,
   InitializeParams,
+  PublishDiagnosticsNotification,
   TextDocumentSyncKind,
   TextDocuments,
 } from "vscode-languageserver";
@@ -119,6 +120,12 @@ export const standalone = (props: RuntimeProps) => {
             openClose: true,
             change: TextDocumentSyncKind.Incremental,
           },
+          hoverProvider: true,
+          textDocument: {
+            publishDiagnostic: {
+              relatedInformation: true,
+            },
+          },
         },
       };
     });
@@ -214,6 +221,12 @@ export const standalone = (props: RuntimeProps) => {
         getConfiguration: (section) =>
           lspConnection.workspace.getConfiguration(section),
       },
+      publishDiagnostics: (params) =>
+        lspConnection.sendNotification(
+          PublishDiagnosticsNotification.method,
+          params,
+        ),
+      onHover: (handler) => lspConnection.onHover(handler),
       extensions: {
         onInlineCompletionWithReferences: (handler) =>
           lspConnection.onRequest(

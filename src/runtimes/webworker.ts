@@ -1,6 +1,7 @@
 import {
   DidChangeConfigurationNotification,
   InitializeParams,
+  PublishDiagnosticsNotification,
   TextDocumentSyncKind,
   TextDocuments,
 } from "vscode-languageserver";
@@ -115,6 +116,12 @@ export const webworker = (props: RuntimeProps) => {
       getConfiguration: (section) =>
         lspConnection.workspace.getConfiguration(section),
     },
+    publishDiagnostics: (params) =>
+      lspConnection.sendNotification(
+        PublishDiagnosticsNotification.method,
+        params,
+      ),
+    onHover: (handler) => lspConnection.onHover(handler),
     extensions: {
       onInlineCompletionWithReferences: (handler) =>
         lspConnection.onRequest(
