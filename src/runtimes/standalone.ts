@@ -121,11 +121,7 @@ export const standalone = (props: RuntimeProps) => {
             change: TextDocumentSyncKind.Incremental,
           },
           hoverProvider: true,
-          textDocument: {
-            publishDiagnostic: {
-              relatedInformation: true,
-            },
-          },
+          diagnosticsProvider: true,
         },
       };
     });

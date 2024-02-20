@@ -53,6 +53,8 @@ export const webworker = (props: RuntimeProps) => {
           openClose: true,
           change: TextDocumentSyncKind.Incremental,
         },
+        hoverProvider: true,
+        diagnosticsProvider: true,
       },
     };
   });
