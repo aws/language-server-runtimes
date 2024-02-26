@@ -26,7 +26,7 @@ import {
 } from "../features/lsp/inline-completions/protocolExtensions";
 import { observe } from "../features/lsp/textDocuments/textDocumentConnection";
 
-import { access, mkdirSync, existsSync } from "fs";
+import { access, mkdirSync, existsSync, statSync } from "fs";
 import { readdir, readFile, rm, stat, copyFile } from "fs/promises";
 import * as os from "os";
 import * as path from "path";
@@ -163,8 +163,9 @@ export const standalone = (props: RuntimeProps) => {
             os.type() === "Darwin" ? "/tmp" : os.tmpdir(),
             "aws-language-servers",
           ),
-        readdir: (path) => readdir(path, { withFileTypes: true }),
+        readdir: (path, recursive = false) => readdir(path, { withFileTypes: true, recursive }),
         readFile: (path) => readFile(path, "utf-8"),
+        isFile: (path) => statSync(path).isFile(),
         remove: (dir) => rm(dir, { recursive: true, force: true }),
       },
     };
