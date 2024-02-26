@@ -1,8 +1,6 @@
 import {
   DidChangeConfigurationNotification,
-  InitializeParams,
   PublishDiagnosticsNotification,
-  TextDocumentSyncKind,
   TextDocuments,
 } from "vscode-languageserver";
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -62,6 +60,7 @@ export const webworker = (props: RuntimeProps) => {
       getTempDirPath: () => "/tmp",
       readFile: (_path) => Promise.resolve(""),
       readdir: (_path) => Promise.resolve([]),
+      isFile: (_path) => false,
       remove: (_dir) => Promise.resolve(),
     },
   };
