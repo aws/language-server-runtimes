@@ -164,7 +164,7 @@ export const standalone = (props: RuntimeProps) => {
         readdir: (path, recursive = false) => readdir(path, { withFileTypes: true, recursive }),
         readFile: (path) => readFile(path, "utf-8"),
         remove: (dir) => rm(dir, { recursive: true, force: true }),
-        isFile: (path) => statSync(path).isFile(),
+        isFile: (path) => stat(path).then(({ isFile }) => isFile() ),
       },
     };
 

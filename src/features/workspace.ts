@@ -25,7 +25,7 @@ export type Workspace = {
     getTempDirPath: () => string;
     readdir: (path: string, recursive?: boolean) => Promise<Dirent[]>;
     readFile: (path: string) => Promise<string>;
-    isFile: (path: string) => boolean;
+    isFile: (path: string) => Promise<boolean>;
     remove: (dir: string) => Promise<void>;
   };
 };

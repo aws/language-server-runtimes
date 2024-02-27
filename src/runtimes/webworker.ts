@@ -60,7 +60,7 @@ export const webworker = (props: RuntimeProps) => {
       getTempDirPath: () => "/tmp",
       readFile: (_path) => Promise.resolve(""),
       readdir: (_path) => Promise.resolve([]),
-      isFile: (_path) => false,
+      isFile: (_path) => Promise.resolve(false),
       remove: (_dir) => Promise.resolve(),
     },
   };
