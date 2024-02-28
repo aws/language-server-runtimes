@@ -24,7 +24,7 @@ import {
 } from "../features/lsp/inline-completions/protocolExtensions";
 import { observe } from "../features/lsp/textDocuments/textDocumentConnection";
 
-import { access, mkdirSync, existsSync, statSync } from "fs";
+import { access, mkdirSync, existsSync } from "fs";
 import { readdir, readFile, rm, stat, copyFile } from "fs/promises";
 import * as os from "os";
 import * as path from "path";
