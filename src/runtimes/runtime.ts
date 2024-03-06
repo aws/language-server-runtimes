@@ -7,7 +7,7 @@ export type RuntimeProps = {
   /**
    * Version of the build artifact resulting from initialising the runtime with the list of servers
    */
-  version: string;
+  version?: string;
   /**
    *  The list of servers to initialize and run
    */
