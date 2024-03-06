@@ -33,7 +33,7 @@ export const webworker = (props: RuntimeProps) => {
   const documentsObserver = observe(lspConnection);
   const documents = new TextDocuments(TextDocument);
 
-  let initializeHandler = new InitializeHandler(props.version, props.name);
+  let initializeHandler = new InitializeHandler(props.name, props.version);
   lspConnection.onInitialize(initializeHandler.onInitialize);
 
   // Set up logigng over LSP

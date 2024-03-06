@@ -13,7 +13,7 @@ describe("InitializeHandler", () => {
   let initializeHandler: InitializeHandler;
 
   beforeEach(() => {
-    initializeHandler = new InitializeHandler("1.0.0", "AWS LSP Standalone");
+    initializeHandler = new InitializeHandler("AWS LSP Standalone", "1.0.0");
   });
 
   it("should store InitializeParam in a field", () => {

@@ -18,8 +18,8 @@ export class InitializeHandler {
   public clientInitializeParams?: InitializeParams;
 
   constructor(
-    private version: string,
     private name: string,
+    private version?: string,
   ) {}
 
   public onInitialize = async (

@@ -103,7 +103,7 @@ export const standalone = (props: RuntimeProps) => {
   function initializeRuntime() {
     const documents = new TextDocuments(TextDocument);
 
-    let initializeHandler = new InitializeHandler(props.version, props.name);
+    let initializeHandler = new InitializeHandler(props.name, props.version);
     lspConnection.onInitialize(initializeHandler.onInitialize);
 
     // Set up logging over LSP
