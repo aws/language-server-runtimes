@@ -161,8 +161,8 @@ export const standalone = (props: RuntimeProps) => {
             os.type() === "Darwin" ? "/tmp" : os.tmpdir(),
             "aws-language-servers",
           ),
-        readdir: (path, recursive = false) =>
-          readdir(path, { withFileTypes: true, recursive }),
+        readdir: (path) =>
+          readdir(path, { withFileTypes: true }),
         readFile: (path) => readFile(path, "utf-8"),
         remove: (dir) => rm(dir, { recursive: true, force: true }),
         isFile: (path) => stat(path).then(({ isFile }) => isFile()),
