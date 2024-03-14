@@ -434,7 +434,7 @@ describe("Auth", () => {
       };
       await assert.rejects(
         authHandlers.bearerUpdateHandler(updateBearerRequest),
-        /Header Parameter not allowed/,
+        /Header Parameter value not allowed/,
       );
       assert(!credentialsProvider.getCredentials("bearer"));
     });
