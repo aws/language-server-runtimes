@@ -1,12 +1,12 @@
-import { WorkspaceFolder } from "vscode-languageserver";
-import { TextDocument } from "vscode-languageserver-textdocument";
+import { WorkspaceFolder } from 'vscode-languageserver'
+import { TextDocument } from 'vscode-languageserver-textdocument'
 
 // Minimal version of fs.Dirent
 interface Dirent {
-  isFile(): boolean;
-  isDirectory(): boolean;
-  name: string;
-  path: string;
+    isFile(): boolean
+    isDirectory(): boolean
+    name: string
+    path: string
 }
 
 /**
@@ -16,16 +16,16 @@ interface Dirent {
  * workspace root.
  */
 export type Workspace = {
-  getTextDocument: (uri: string) => Promise<TextDocument | undefined>;
-  getWorkspaceFolder: (uri: string) => WorkspaceFolder | null | undefined;
-  fs: {
-    copy: (src: string, dest: string) => Promise<void>;
-    exists: (path: string) => Promise<boolean>;
-    getFileSize: (path: string) => Promise<{ size: number }>;
-    getTempDirPath: () => string;
-    readdir: (path: string) => Promise<Dirent[]>;
-    readFile: (path: string) => Promise<string>;
-    isFile: (path: string) => Promise<boolean>;
-    remove: (dir: string) => Promise<void>;
-  };
-};
+    getTextDocument: (uri: string) => Promise<TextDocument | undefined>
+    getWorkspaceFolder: (uri: string) => WorkspaceFolder | null | undefined
+    fs: {
+        copy: (src: string, dest: string) => Promise<void>
+        exists: (path: string) => Promise<boolean>
+        getFileSize: (path: string) => Promise<{ size: number }>
+        getTempDirPath: () => string
+        readdir: (path: string, recursive?: boolean) => Promise<Dirent[]>
+        readFile: (path: string) => Promise<string>
+        isFile: (path: string) => Promise<boolean>
+        remove: (dir: string) => Promise<void>
+    }
+}

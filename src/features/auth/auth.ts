@@ -1,16 +1,12 @@
 import { jwtDecrypt } from "jose";
 import { Connection } from "vscode-languageserver";
 import { CredentialsEncoding } from "./standalone/encryption";
-
-export type IamCredentials = {
-  readonly accessKeyId: string;
-  readonly secretAccessKey: string;
-  readonly sessionToken?: string;
-};
-
-export type BearerCredentials = {
-  readonly token: string;
-};
+import {
+  IamCredentials,
+  BearerCredentials,
+  UpdateCredentialsParams,
+  ConnectionMetadata,
+} from "../../protocol";
 
 export type CredentialsType = "iam" | "bearer";
 export type Credentials = IamCredentials | BearerCredentials;
@@ -31,14 +27,6 @@ export function isBearerCredentials(
   return (credentials as BearerCredentials)?.token !== undefined;
 }
 
-export interface SsoProfileData {
-  startUrl?: string;
-}
-
-export interface ConnectionMetadata {
-  sso?: SsoProfileData;
-}
-
 export interface CredentialsProvider {
   hasCredentials: (type: CredentialsType) => boolean;
   getCredentials: (type: CredentialsType) => Credentials | undefined;
@@ -52,14 +40,6 @@ export const credentialsProtocolMethodNames = {
   bearerCredentialsDelete: "aws/credentials/token/delete",
   getConnectionMetadata: "aws/credentials/getConnectionMetadata",
 };
-
-export interface UpdateCredentialsRequest {
-  // Plaintext Credentials (for browser based environments) or encrypted JWT token
-  data: string | Credentials;
-  // If the payload is encrypted
-  // Defaults to false if undefined or null
-  encrypted?: boolean;
-}
 
 export class Auth {
   private iamCredentials: IamCredentials | undefined;
@@ -129,7 +109,7 @@ export class Auth {
 
     this.connection.onRequest(
       credentialsProtocolMethodNames.iamCredentialsUpdate,
-      async (request: UpdateCredentialsRequest) => {
+      async (request: UpdateCredentialsParams) => {
         const iamCredentials = request.encrypted
           ? await this.decodeCredentialsRequestToken<IamCredentials>(request)
           : (request.data as IamCredentials);
@@ -162,7 +142,7 @@ export class Auth {
 
     this.connection.onRequest(
       credentialsProtocolMethodNames.bearerCredentialsUpdate,
-      async (request: UpdateCredentialsRequest) => {
+      async (request: UpdateCredentialsParams) => {
         const bearerCredentials = request.encrypted
           ? await this.decodeCredentialsRequestToken<BearerCredentials>(request)
           : (request.data as BearerCredentials);
@@ -205,7 +185,7 @@ export class Auth {
   }
 
   private async decodeCredentialsRequestToken<T>(
-    request: UpdateCredentialsRequest,
+    request: UpdateCredentialsParams,
   ): Promise<T> {
     this.connection.console.info(
       "Runtime: Decoding encrypted credentials token",

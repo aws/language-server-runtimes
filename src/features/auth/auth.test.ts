@@ -5,13 +5,15 @@ import { Duplex } from "stream";
 import { Connection, createConnection } from "vscode-languageserver/node";
 import {
   Auth,
-  BearerCredentials,
   CredentialsProvider,
   CredentialsType,
-  IamCredentials,
-  UpdateCredentialsRequest,
   credentialsProtocolMethodNames,
 } from "./auth";
+import {
+  BearerCredentials,
+  IamCredentials,
+  UpdateCredentialsParams,
+} from "../../protocol";
 
 class TestStream extends Duplex {
   _write(chunk: string, _encoding: string, done: () => void) {
@@ -24,22 +26,22 @@ class TestStream extends Duplex {
 
 const authHandlers = {
   iamUpdateHandler: async (
-    request: UpdateCredentialsRequest,
+    request: UpdateCredentialsParams,
   ): Promise<void | Error> => {},
   iamDeleteHandler: () => {},
   bearerUpdateHandler: async (
-    request: UpdateCredentialsRequest,
+    request: UpdateCredentialsParams,
   ): Promise<void | Error> => {},
   bearerDeleteHandler: () => {},
 };
 
 function clearHandlers() {
   authHandlers.iamUpdateHandler = async (
-    request: UpdateCredentialsRequest,
+    request: UpdateCredentialsParams,
   ): Promise<void | Error> => {};
   authHandlers.iamDeleteHandler = () => {};
   authHandlers.bearerUpdateHandler = async (
-    request: UpdateCredentialsRequest,
+    request: UpdateCredentialsParams,
   ): Promise<void | Error> => {};
   authHandlers.bearerDeleteHandler = () => {};
 }
@@ -101,7 +103,7 @@ describe("Auth", () => {
   });
 
   it("Handles IAM credentials", async () => {
-    const updateRequest: UpdateCredentialsRequest = {
+    const updateRequest: UpdateCredentialsParams = {
       data: iamCredentials,
       encrypted: false,
     };
@@ -121,7 +123,7 @@ describe("Auth", () => {
   });
 
   it("Handles Set Bearer credentials request", async () => {
-    const updateRequest: UpdateCredentialsRequest = {
+    const updateRequest: UpdateCredentialsParams = {
       data: bearerCredentials,
       encrypted: false,
     };
@@ -156,7 +158,7 @@ describe("Auth", () => {
       },
     );
 
-    const updateRequest: UpdateCredentialsRequest = {
+    const updateRequest: UpdateCredentialsParams = {
       data: bearerCredentials,
       encrypted: false,
     };
@@ -186,7 +188,7 @@ describe("Auth", () => {
       },
     );
 
-    const updateRequest: UpdateCredentialsRequest = {
+    const updateRequest: UpdateCredentialsParams = {
       data: bearerCredentials,
       encrypted: false,
     };
@@ -207,7 +209,7 @@ describe("Auth", () => {
   });
 
   it("Handles Bearer credentials delete request", (done) => {
-    const updateRequest: UpdateCredentialsRequest = {
+    const updateRequest: UpdateCredentialsParams = {
       data: bearerCredentials,
       encrypted: false,
     };
@@ -236,7 +238,7 @@ describe("Auth", () => {
       accessKeyId: "testKey",
       sessionToken: "testSession",
     };
-    const updateIamRequest: UpdateCredentialsRequest = {
+    const updateIamRequest: UpdateCredentialsParams = {
       data: malformedIamCredentials as IamCredentials,
       encrypted: false,
     };
@@ -255,7 +257,7 @@ describe("Auth", () => {
     const malformedBearerCredentials = {
       token: undefined as unknown,
     };
-    const updateBearerRequest: UpdateCredentialsRequest = {
+    const updateBearerRequest: UpdateCredentialsParams = {
       data: malformedBearerCredentials as BearerCredentials,
       encrypted: false,
     };
@@ -272,7 +274,7 @@ describe("Auth", () => {
 
   describe("Credentials provider", () => {
     it("Prevents modifying IAM credentials object", async () => {
-      const updateIamRequest: UpdateCredentialsRequest = {
+      const updateIamRequest: UpdateCredentialsParams = {
         data: iamCredentials,
         encrypted: false,
       };
@@ -297,7 +299,7 @@ describe("Auth", () => {
     });
 
     it("Prevents modifying Bearer credentials object", async () => {
-      const updateBearerRequest: UpdateCredentialsRequest = {
+      const updateBearerRequest: UpdateCredentialsParams = {
         data: bearerCredentials,
         encrypted: false,
       };
@@ -345,7 +347,7 @@ describe("Auth", () => {
 
   describe("Encrypted credentials", () => {
     it("Rejects when encrypted flag is set wrong", async () => {
-      const updateIamRequest: UpdateCredentialsRequest = {
+      const updateIamRequest: UpdateCredentialsParams = {
         data: iamCredentials as IamCredentials,
         encrypted: true,
       };
@@ -376,7 +378,7 @@ describe("Auth", () => {
         .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
         .encrypt(encryptionKey);
 
-      const updateIamRequest: UpdateCredentialsRequest = {
+      const updateIamRequest: UpdateCredentialsParams = {
         data: jwt,
         encrypted: true,
       };
@@ -402,7 +404,7 @@ describe("Auth", () => {
         .setProtectedHeader({ alg: "dir", enc: "A256GCM" })
         .encrypt(encryptionKey);
 
-      const updateBearerRequest: UpdateCredentialsRequest = {
+      const updateBearerRequest: UpdateCredentialsParams = {
         data: jwt,
         encrypted: true,
       };
@@ -428,7 +430,7 @@ describe("Auth", () => {
         .setProtectedHeader({ alg: "dir", enc: "A128CBC-HS256" })
         .encrypt(encryptionKey);
 
-      const updateBearerRequest: UpdateCredentialsRequest = {
+      const updateBearerRequest: UpdateCredentialsParams = {
         data: jwt,
         encrypted: true,
       };
@@ -456,7 +458,7 @@ describe("Auth", () => {
         .setExpirationTime(new Date().getTime() / 1000 - 70) //not allowed
         .encrypt(encryptionKey);
 
-      const updateBearerRequest: UpdateCredentialsRequest = {
+      const updateBearerRequest: UpdateCredentialsParams = {
         data: jwt,
         encrypted: true,
       };

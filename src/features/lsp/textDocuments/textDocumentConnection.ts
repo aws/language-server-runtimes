@@ -1,32 +1,26 @@
-import { Observable, fromEventPattern, share } from "rxjs";
+import { Observable, fromEventPattern, share } from 'rxjs'
+import { NotificationHandler, RequestHandler, TextEdit } from 'vscode-languageserver'
 import {
-  DidChangeTextDocumentParams,
-  DidCloseTextDocumentParams,
-  DidOpenTextDocumentParams,
-  DidSaveTextDocumentParams,
-  NotificationHandler,
-  RequestHandler,
-  TextEdit,
-  WillSaveTextDocumentParams,
-} from "vscode-languageserver";
-import { TextDocumentConnection } from "vscode-languageserver/lib/common/textDocuments";
+    DidChangeTextDocumentParams,
+    DidCloseTextDocumentParams,
+    DidOpenTextDocumentParams,
+    DidSaveTextDocumentParams,
+    WillSaveTextDocumentParams,
+} from '../../../protocol'
+import { TextDocumentConnection } from 'vscode-languageserver/lib/common/textDocuments'
 
 // Filter out only the handlers that return void to avoid the request/response format,
 // which would not support multiple handlers since it requires disambiguating the handler
 // responsible for responding.
 type TextDocumentNotifications = {
-  [key in keyof TextDocumentConnection]: ReturnType<
-    Parameters<TextDocumentConnection[key]>[0]
-  > extends void
-    ? key
-    : never;
-}[keyof TextDocumentConnection];
+    [key in keyof TextDocumentConnection]: ReturnType<Parameters<TextDocumentConnection[key]>[0]> extends void
+        ? key
+        : never
+}[keyof TextDocumentConnection]
 
 type TextDocumentObservable = {
-  [key in TextDocumentNotifications]: Observable<
-    Parameters<Parameters<TextDocumentConnection[key]>[0]>[0]
-  >;
-};
+    [key in TextDocumentNotifications]: Observable<Parameters<Parameters<TextDocumentConnection[key]>[0]>[0]>
+}
 
 /**
  * Wrap a standard LSP {TextDocumentConnection}, that only supports a single callback for each operation,
@@ -44,71 +38,57 @@ type TextDocumentObservable = {
  * @returns A wrapper around the {TextDocumentConnection} providing both a callback and an observable interface
  */
 export const observe = (
-  connection: TextDocumentConnection,
+    connection: TextDocumentConnection
 ): { callbacks: TextDocumentConnection } & TextDocumentObservable => {
-  const onDidChangeTextDocument = fromEventPattern<DidChangeTextDocumentParams>(
-    connection.onDidChangeTextDocument,
-  ).pipe(share());
-  const onDidOpenTextDocument = fromEventPattern<DidOpenTextDocumentParams>(
-    connection.onDidOpenTextDocument,
-  ).pipe(share());
-  const onDidCloseTextDocument = fromEventPattern<DidCloseTextDocumentParams>(
-    connection.onDidCloseTextDocument,
-  ).pipe(share());
-  const onWillSaveTextDocument = fromEventPattern<WillSaveTextDocumentParams>(
-    connection.onWillSaveTextDocument,
-  ).pipe(share());
-  const onDidSaveTextDocument = fromEventPattern<DidSaveTextDocumentParams>(
-    connection.onDidSaveTextDocument,
-  ).pipe(share());
+    const onDidChangeTextDocument = fromEventPattern<DidChangeTextDocumentParams>(
+        connection.onDidChangeTextDocument
+    ).pipe(share())
+    const onDidOpenTextDocument = fromEventPattern<DidOpenTextDocumentParams>(connection.onDidOpenTextDocument).pipe(
+        share()
+    )
+    const onDidCloseTextDocument = fromEventPattern<DidCloseTextDocumentParams>(connection.onDidCloseTextDocument).pipe(
+        share()
+    )
+    const onWillSaveTextDocument = fromEventPattern<WillSaveTextDocumentParams>(connection.onWillSaveTextDocument).pipe(
+        share()
+    )
+    const onDidSaveTextDocument = fromEventPattern<DidSaveTextDocumentParams>(connection.onDidSaveTextDocument).pipe(
+        share()
+    )
 
-  return {
-    callbacks: {
-      onDidChangeTextDocument: (
-        handler: NotificationHandler<DidChangeTextDocumentParams>,
-      ) => {
-        const subscription = onDidChangeTextDocument.subscribe(handler);
-        return { dispose: () => subscription.unsubscribe() };
-      },
-      onDidOpenTextDocument: (
-        handler: NotificationHandler<DidOpenTextDocumentParams>,
-      ) => {
-        const subscription = onDidOpenTextDocument.subscribe(handler);
-        return { dispose: () => subscription.unsubscribe() };
-      },
-      onDidCloseTextDocument: (
-        handler: NotificationHandler<DidCloseTextDocumentParams>,
-      ) => {
-        const subscription = onDidCloseTextDocument.subscribe(handler);
-        return { dispose: () => subscription.unsubscribe() };
-      },
-      onWillSaveTextDocument: (
-        handler: NotificationHandler<WillSaveTextDocumentParams>,
-      ) => {
-        const subscription = onWillSaveTextDocument.subscribe(handler);
-        return { dispose: () => subscription.unsubscribe() };
-      },
-      onDidSaveTextDocument: (
-        handler: NotificationHandler<DidSaveTextDocumentParams>,
-      ) => {
-        const subscription = onDidSaveTextDocument.subscribe(handler);
-        return { dispose: () => subscription.unsubscribe() };
-      },
-      onWillSaveTextDocumentWaitUntil: (
-        handler: RequestHandler<
-          WillSaveTextDocumentParams,
-          TextEdit[] | undefined | null,
-          void
-        >,
-      ) => {
-        return connection.onWillSaveTextDocumentWaitUntil(handler);
-      },
-    },
+    return {
+        callbacks: {
+            onDidChangeTextDocument: (handler: NotificationHandler<DidChangeTextDocumentParams>) => {
+                const subscription = onDidChangeTextDocument.subscribe(handler)
+                return { dispose: () => subscription.unsubscribe() }
+            },
+            onDidOpenTextDocument: (handler: NotificationHandler<DidOpenTextDocumentParams>) => {
+                const subscription = onDidOpenTextDocument.subscribe(handler)
+                return { dispose: () => subscription.unsubscribe() }
+            },
+            onDidCloseTextDocument: (handler: NotificationHandler<DidCloseTextDocumentParams>) => {
+                const subscription = onDidCloseTextDocument.subscribe(handler)
+                return { dispose: () => subscription.unsubscribe() }
+            },
+            onWillSaveTextDocument: (handler: NotificationHandler<WillSaveTextDocumentParams>) => {
+                const subscription = onWillSaveTextDocument.subscribe(handler)
+                return { dispose: () => subscription.unsubscribe() }
+            },
+            onDidSaveTextDocument: (handler: NotificationHandler<DidSaveTextDocumentParams>) => {
+                const subscription = onDidSaveTextDocument.subscribe(handler)
+                return { dispose: () => subscription.unsubscribe() }
+            },
+            onWillSaveTextDocumentWaitUntil: (
+                handler: RequestHandler<WillSaveTextDocumentParams, TextEdit[] | undefined | null, void>
+            ) => {
+                return connection.onWillSaveTextDocumentWaitUntil(handler)
+            },
+        },
 
-    onDidChangeTextDocument,
-    onDidOpenTextDocument,
-    onDidCloseTextDocument,
-    onWillSaveTextDocument,
-    onDidSaveTextDocument,
-  };
-};
+        onDidChangeTextDocument,
+        onDidOpenTextDocument,
+        onDidCloseTextDocument,
+        onWillSaveTextDocument,
+        onDidSaveTextDocument,
+    }
+}
