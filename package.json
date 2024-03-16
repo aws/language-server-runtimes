@@ -31,7 +31,7 @@
         "@types/mocha": "^10.0.1",
         "@types/node": "^20.5.9",
         "assert": "^2.0.0",
-        "husky": "^8.0.3",
+        "husky": "^9.0.11",
         "prettier": "3.2.5",
         "sinon": "^17.0.1",
         "ts-mocha": "^10.0.0",
