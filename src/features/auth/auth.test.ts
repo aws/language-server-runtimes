@@ -335,7 +335,10 @@ describe('Auth', () => {
                 data: jwt,
                 encrypted: true,
             }
-            await assert.rejects(authHandlers.bearerUpdateHandler(updateBearerRequest), /Header Parameter not allowed/)
+            await assert.rejects(
+                authHandlers.bearerUpdateHandler(updateBearerRequest),
+                /Header Parameter value not allowed/
+            )
             assert(!credentialsProvider.getCredentials('bearer'))
         })
 

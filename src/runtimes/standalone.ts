@@ -1,6 +1,7 @@
 import {
     DidChangeConfigurationNotification,
-    NotificationType,
+    ProgressToken,
+    ProgressType,
     PublishDiagnosticsNotification,
     TextDocuments,
 } from 'vscode-languageserver'
@@ -29,7 +30,7 @@ import { access, mkdirSync, existsSync } from 'fs'
 import { readdir, readFile, rm, stat, copyFile } from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
-import { chatRequestType, endChatRequestType, quickActionRequestType } from '../features/chat/types'
+import { ChatParams, chatRequestType, endChatRequestType, quickActionRequestType } from '../features/chat/types'
 import { InitializeHandler } from './initialize'
 
 /**
@@ -153,7 +154,7 @@ export const standalone = (props: RuntimeProps) => {
                         os.type() === 'Darwin' ? '/tmp' : os.tmpdir(),
                         'aws-language-servers'
                     ),
-                readdir: (path, recursive = false) => readdir(path, { withFileTypes: true, recursive }),
+                readdir: path => readdir(path, { withFileTypes: true }),
                 readFile: path => readFile(path, 'utf-8'),
                 remove: dir => rm(dir, { recursive: true, force: true }),
                 isFile: path => stat(path).then(({ isFile }) => isFile()),
@@ -161,7 +162,7 @@ export const standalone = (props: RuntimeProps) => {
         }
 
         const chat: Chat = {
-            onChatPrompt: handler => lspConnection.onRequest(chatRequestType, handler),
+            onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
             onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
             onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
         }
@@ -188,8 +189,8 @@ export const standalone = (props: RuntimeProps) => {
                 getConfiguration: section => lspConnection.workspace.getConfiguration(section),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
-            sendNotification: <P>(type: NotificationType<P>, params: P) => {
-                return lspConnection.sendNotification(type, params)
+            sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                return lspConnection.sendProgress(type, token, value)
             },
             onHover: handler => lspConnection.onHover(handler),
             extensions: {

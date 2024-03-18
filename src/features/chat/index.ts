@@ -2,9 +2,16 @@ import { NotificationHandler, RequestHandler } from 'vscode-languageserver'
 import {
     ChatParams,
     ChatResult,
+    CopyCodeToClipboardParams,
     EndChatParams,
     EndChatResult,
+    FeedbackParams,
+    InfoLinkClickParams,
+    InsertToCursorPositionParams,
+    LinkClickParams,
     QuickActionParams,
+    QuickActionResult,
+    SourceLinkClickParams,
     TabEventParams,
     VoteParams,
 } from './types'
@@ -13,24 +20,22 @@ import {
  * The Chat feature interface. Provides access to chat features
  */
 export type Chat = {
-    onChatPrompt: (handler: RequestHandler<ChatParams, ChatResult | undefined | null, void>) => void // send result as partials and then send complete message
+    // Requests
+    onChatPrompt: (handler: RequestHandler<ChatParams, ChatResult | undefined | null, ChatResult>) => void
     onEndChat: (handler: RequestHandler<EndChatParams, EndChatResult, void>) => void
-    onQuickAction: (handler: RequestHandler<QuickActionParams, ChatResult, void>) => void
-
+    onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     // Notifications
-    onSendFeedback?: (handler: NotificationHandler<VoteParams>) => void
+    onSendFeedback?: (handler: NotificationHandler<FeedbackParams>) => void
     onReady?: (handler: NotificationHandler<void>) => void
     onTabAdd?: (handler: NotificationHandler<TabEventParams>) => void
     onTabChange?: (handler: NotificationHandler<TabEventParams>) => void
     onTabRemove?: (handler: NotificationHandler<TabEventParams>) => void
     onVote?: (handler: NotificationHandler<VoteParams>) => void
-
+    onCodeInsertToCursorPosition?: (handler: NotificationHandler<InsertToCursorPositionParams>) => void
+    onCopyCodeToClipboard?: (handler: NotificationHandler<CopyCodeToClipboardParams>) => void
+    onLinkClick?: (handler: NotificationHandler<LinkClickParams>) => void
+    onInfoLinkClick?: (handler: NotificationHandler<InfoLinkClickParams>) => void
+    onSourceLinkClick?: (handler: NotificationHandler<SourceLinkClickParams>) => void
     // todo
-    onChatItemEngagement?: any
-    onCodeInsertToCursorPosition?: any
-    onCopyCodeToClipboard?: any
     onFollowUpClicked?: any
-    onLinkClick?: any
-    onInfoLinkClick?: any
-    onSourceLinkClick?: any
 }

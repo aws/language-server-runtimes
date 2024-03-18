@@ -1,6 +1,7 @@
 import {
     DidChangeConfigurationNotification,
-    NotificationType,
+    ProgressToken,
+    ProgressType,
     PublishDiagnosticsNotification,
     TextDocuments,
 } from 'vscode-languageserver'
@@ -60,7 +61,7 @@ export const webworker = (props: RuntimeProps) => {
     }
 
     const chat: Chat = {
-        onChatPrompt: handler => lspConnection.onRequest(chatRequestType, handler),
+        onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
         onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
         onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
     }
@@ -87,8 +88,8 @@ export const webworker = (props: RuntimeProps) => {
             getConfiguration: section => lspConnection.workspace.getConfiguration(section),
         },
         publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
-        sendNotification: <P>(type: NotificationType<P>, params: P) => {
-            return lspConnection.sendNotification(type, params)
+        sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+            return lspConnection.sendProgress(type, token, value)
         },
         onHover: handler => lspConnection.onHover(handler),
         extensions: {

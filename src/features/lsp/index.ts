@@ -14,20 +14,18 @@ import {
     InlineCompletionItem,
     InlineCompletionList,
     InlineCompletionParams,
-    LSPAny,
     NotificationHandler,
     PublishDiagnosticsParams,
     RequestHandler,
-    ServerRequestHandler,
     ServerCapabilities,
-    NotificationType,
+    ProgressType,
+    ProgressToken,
 } from 'vscode-languageserver'
 import {
     InlineCompletionItemWithReferences,
     InlineCompletionListWithReferences,
     LogInlineCompletionSessionResultsParams,
 } from './inline-completions/protocolExtensions'
-
 export { observe } from './textDocuments/textDocumentConnection'
 
 export type PartialServerCapabilities<T = any> = Pick<ServerCapabilities<T>, 'completionProvider' | 'hoverProvider'>
@@ -63,7 +61,7 @@ export type Lsp = {
     onDidChangeTextDocument: (handler: NotificationHandler<DidChangeTextDocumentParams>) => void
     onDidCloseTextDocument: (handler: NotificationHandler<DidCloseTextDocumentParams>) => void
     publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>
-    sendNotification: <P>(type: NotificationType<P>, params: P) => Promise<void>
+    sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => Promise<void>
     onHover: (handler: RequestHandler<HoverParams, Hover | null | undefined, void>) => void
     onExecuteCommand: (handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>) => void
     workspace: {

@@ -58,29 +58,29 @@ export class TestFeatures {
     async start(server: Server) {
         this.disposables.push(server(this))
         return Promise.resolve(this).then(f => {
-            this.lsp.onInitialized.args[0][0]({})
+            this.lsp.onInitialized.args[0]?.[0]({})
             return f
         })
     }
 
     async doInlineCompletion(params: InlineCompletionParams, token: CancellationToken) {
-        return this.lsp.onInlineCompletion.args[0][0](params, token)
+        return this.lsp.onInlineCompletion.args[0]?.[0](params, token)
     }
 
     async doCompletion(params: CompletionParams, token: CancellationToken) {
-        return this.lsp.onCompletion.args[0][0](params, token)
+        return this.lsp.onCompletion.args[0]?.[0](params, token)
     }
 
     async doInlineCompletionWithReferences(
         ...args: Parameters<Parameters<Lsp['extensions']['onInlineCompletionWithReferences']>[0]>
     ) {
-        return this.lsp.extensions.onInlineCompletionWithReferences.args[0][0](...args)
+        return this.lsp.extensions.onInlineCompletionWithReferences.args[0]?.[0](...args)
     }
 
     async doLogInlineCompletionSessionResults(
         ...args: Parameters<Parameters<Lsp['extensions']['onLogInlineCompletionSessionResults']>[0]>
     ) {
-        return this.lsp.extensions.onLogInlineCompletionSessionResults.args[0][0](...args)
+        return this.lsp.extensions.onLogInlineCompletionSessionResults.args[0]?.[0](...args)
     }
 
     openDocument(document: TextDocument) {
@@ -91,22 +91,19 @@ export class TestFeatures {
     async doChangeConfiguration() {
         // Force the call to handle after the current task completes
         await undefined
-        this.lsp.didChangeConfiguration.args[0][0]({ settings: undefined })
+        this.lsp.didChangeConfiguration.args[0]?.[0]({ settings: undefined })
         return this
     }
 
     async doChangeTextDocument(params: DidChangeTextDocumentParams) {
         // Force the call to handle after the current task completes
         await undefined
-        this.lsp.onDidChangeTextDocument.args[0][0](params)
+        this.lsp.onDidChangeTextDocument.args[0]?.[0](params)
         return this
     }
 
     async doExecuteCommand(params: ExecuteCommandParams, token: CancellationToken) {
-        // Force the call to handle after the current task completes
-        await undefined
-        this.lsp.onExecuteCommand.args[0][0](params, token)
-        return this
+        return this.lsp.onExecuteCommand.args[0]?.[0](params, token)
     }
 
     async simulateTyping(uri: string, text: string) {
@@ -132,7 +129,7 @@ export class TestFeatures {
 
             // Force the call to handle after the current task completes
             await undefined
-            this.lsp.onDidChangeTextDocument.args[0][0]({
+            this.lsp.onDidChangeTextDocument.args[0]?.[0]({
                 textDocument: {
                     uri,
                     version: document.version,
