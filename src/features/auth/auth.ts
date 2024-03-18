@@ -3,6 +3,9 @@ import { Connection } from 'vscode-languageserver'
 import { CredentialsEncoding } from './standalone/encryption'
 import { IamCredentials, BearerCredentials, UpdateCredentialsParams, ConnectionMetadata } from '../../protocol'
 
+// Exports for Capability implementor
+export { IamCredentials, BearerCredentials, UpdateCredentialsParams, ConnectionMetadata }
+
 export type CredentialsType = 'iam' | 'bearer'
 export type Credentials = IamCredentials | BearerCredentials
 

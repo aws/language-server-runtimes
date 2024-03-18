@@ -23,6 +23,10 @@ import {
     RequestHandler,
 } from '../../protocol'
 
+// Re-export whole surface of LSP protocol used in Runtimes.
+// This is needed for LSP features as we pass messages down.
+export * from '../../protocol/lsp'
+
 export { observe } from './textDocuments/textDocumentConnection'
 
 export type PartialServerCapabilities<T = any> = Pick<ServerCapabilities<T>, 'completionProvider' | 'hoverProvider'>

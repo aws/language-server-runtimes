@@ -1,4 +1,4 @@
-import { Server } from './server'
+import { Server } from '../features/server'
 
 /**
  * Properties used for runtime initialisation
