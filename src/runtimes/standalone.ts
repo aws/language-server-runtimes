@@ -5,8 +5,8 @@ import {
     inlineCompletionWithReferencesRequestType,
     logInlineCompletionSessionResultsNotificationType,
     inlineCompletionRequestType,
+    TextDocument,
 } from '../protocol'
-import { TextDocument } from 'vscode-languageserver-textdocument'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
     EncryptionInitialization,

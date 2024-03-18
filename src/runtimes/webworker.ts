@@ -5,8 +5,8 @@ import {
     inlineCompletionWithReferencesRequestType,
     logInlineCompletionSessionResultsNotificationType,
     inlineCompletionRequestType,
+    TextDocument,
 } from '../protocol'
-import { TextDocument } from 'vscode-languageserver-textdocument'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import { Logging, Lsp, Telemetry, Workspace } from '../features'
 import { Auth } from '../features/auth/auth'

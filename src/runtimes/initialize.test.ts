@@ -1,5 +1,11 @@
-import { CancellationToken, ResponseError } from 'vscode-languageserver'
-import { InitializeError, InitializeParams, InitializeResult, TextDocumentSyncKind } from '../protocol'
+import {
+    CancellationToken,
+    InitializeError,
+    InitializeParams,
+    InitializeResult,
+    TextDocumentSyncKind,
+    ResponseError,
+} from '../protocol'
 import { InitializeHandler } from './initialize'
 import assert from 'assert'
 

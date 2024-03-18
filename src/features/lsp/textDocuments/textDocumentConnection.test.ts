@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { CancellationToken, NotificationHandler, RequestHandler, TextEdit } from 'vscode-languageserver'
+import { CancellationToken, NotificationHandler, RequestHandler, TextEdit } from '../../../protocol'
 import {
     DidChangeTextDocumentParams,
     DidCloseTextDocumentParams,

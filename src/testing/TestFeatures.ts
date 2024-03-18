@@ -1,14 +1,14 @@
 import { CredentialsProvider, Logging, Lsp, Telemetry, Workspace } from '../features'
 import { Server } from '../runtimes'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
-import { CancellationToken } from 'vscode-languageserver'
 import {
+    CancellationToken,
     CompletionParams,
     DidChangeTextDocumentParams,
     ExecuteCommandParams,
     InlineCompletionParams,
+    TextDocument,
 } from '../protocol'
-import { TextDocument } from 'vscode-languageserver-textdocument'
 
 /**
  * A test helper package to test Server implementations. Accepts a single callback

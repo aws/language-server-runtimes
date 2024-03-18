@@ -1,5 +1,10 @@
-import { InlineCompletionItem, InlineCompletionList } from 'vscode-languageserver'
-import { InlineCompletionParams, ProtocolRequestType, InlineCompletionRegistrationOptions } from './lsp'
+import {
+    InlineCompletionItem,
+    InlineCompletionList,
+    InlineCompletionParams,
+    ProtocolRequestType,
+    InlineCompletionRegistrationOptions,
+} from './lsp'
 
 /**
  * inlineCompletionRequestType defines the custom method that the language client

@@ -1,29 +1,26 @@
 import {
     CompletionItem,
     CompletionList,
-    Hover,
     InlineCompletionItem,
-    InlineCompletionList,
-    NotificationHandler,
-    RequestHandler,
-} from 'vscode-languageserver'
-
-import {
     CompletionParams,
     DidChangeConfigurationParams,
     DidChangeTextDocumentParams,
     DidCloseTextDocumentParams,
     ExecuteCommandParams,
+    Hover,
     HoverParams,
     InitializeError,
     InitializeParams,
     InitializedParams,
+    InlineCompletionList,
     InlineCompletionParams,
+    NotificationHandler,
     PublishDiagnosticsParams,
     ServerCapabilities,
     InlineCompletionItemWithReferences,
     InlineCompletionListWithReferences,
     LogInlineCompletionSessionResultsParams,
+    RequestHandler,
 } from '../../protocol'
 
 export { observe } from './textDocuments/textDocumentConnection'

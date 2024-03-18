@@ -1,5 +1,12 @@
-import { RequestHandler, CancellationToken, ResponseError } from 'vscode-languageserver'
-import { InitializeParams, InitializeError, InitializeResult, TextDocumentSyncKind } from '../protocol'
+import {
+    CancellationToken,
+    InitializeParams,
+    InitializeError,
+    InitializeResult,
+    TextDocumentSyncKind,
+    RequestHandler,
+    ResponseError,
+} from '../protocol'
 import { PartialInitializeResult } from '../features/lsp'
 
 export class InitializeHandler {

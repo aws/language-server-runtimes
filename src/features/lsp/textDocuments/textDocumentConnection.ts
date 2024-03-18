@@ -1,11 +1,13 @@
 import { Observable, fromEventPattern, share } from 'rxjs'
-import { NotificationHandler, RequestHandler, TextEdit } from 'vscode-languageserver'
 import {
     DidChangeTextDocumentParams,
     DidCloseTextDocumentParams,
     DidOpenTextDocumentParams,
     DidSaveTextDocumentParams,
     WillSaveTextDocumentParams,
+    NotificationHandler,
+    RequestHandler,
+    TextEdit,
 } from '../../../protocol'
 import { TextDocumentConnection } from 'vscode-languageserver/lib/common/textDocuments'
 
