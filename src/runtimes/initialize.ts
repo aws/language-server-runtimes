@@ -7,7 +7,7 @@ import {
     RequestHandler,
     ResponseError,
 } from '../protocol'
-import { PartialInitializeResult } from '../features/lsp'
+import { PartialInitializeResult } from '../server-interface'
 
 export class InitializeHandler {
     private handlers: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>[] = []

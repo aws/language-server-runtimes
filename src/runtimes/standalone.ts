@@ -13,14 +13,14 @@ import {
     readEncryptionDetails,
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
-} from '../features/auth/standalone/encryption'
-import { Logging, Lsp, Telemetry, Workspace } from '../features'
-import { Auth, CredentialsProvider } from '../features/auth/auth'
+} from './auth/standalone/encryption'
+import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider } from '../server-interface'
+import { Auth } from './auth'
 
-import { handleVersionArgument } from '../features/versioning'
+import { handleVersionArgument } from './versioning'
 import { RuntimeProps } from './runtime'
 
-import { observe } from '../features/lsp/textDocuments/textDocumentConnection'
+import { observe } from './lsp'
 
 import { access, mkdirSync, existsSync } from 'fs'
 import { readdir, readFile, rm, stat, copyFile } from 'fs/promises'

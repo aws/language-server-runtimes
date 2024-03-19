@@ -1,13 +1,15 @@
 import { jwtDecrypt } from 'jose'
 import { Connection } from 'vscode-languageserver'
 import { CredentialsEncoding } from './standalone/encryption'
-import { IamCredentials, BearerCredentials, UpdateCredentialsParams, ConnectionMetadata } from '../../protocol'
-
-// Exports for Capability implementor
-export { IamCredentials, BearerCredentials, UpdateCredentialsParams, ConnectionMetadata }
-
-export type CredentialsType = 'iam' | 'bearer'
-export type Credentials = IamCredentials | BearerCredentials
+import { UpdateCredentialsParams } from '../../protocol'
+import {
+    IamCredentials,
+    BearerCredentials,
+    ConnectionMetadata,
+    Credentials,
+    CredentialsType,
+    CredentialsProvider,
+} from '../../server-interface'
 
 export function isIamCredentials(credentials: Credentials): credentials is IamCredentials {
     const iamCredentials = credentials as IamCredentials
@@ -18,12 +20,7 @@ export function isBearerCredentials(credentials: Credentials): credentials is Be
     return (credentials as BearerCredentials)?.token !== undefined
 }
 
-export interface CredentialsProvider {
-    hasCredentials: (type: CredentialsType) => boolean
-    getCredentials: (type: CredentialsType) => Credentials | undefined
-    getConnectionMetadata: () => ConnectionMetadata | undefined
-}
-
+// TODO: Define methods and mesage types in Protocol module
 export const credentialsProtocolMethodNames = {
     iamCredentialsUpdate: 'aws/credentials/iam/update',
     iamCredentialsDelete: 'aws/credentials/iam/delete',

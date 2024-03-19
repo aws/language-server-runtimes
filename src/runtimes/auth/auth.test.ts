@@ -3,8 +3,9 @@ import { randomBytes } from 'node:crypto'
 import * as jose from 'jose'
 import { Duplex } from 'stream'
 import { Connection, createConnection } from 'vscode-languageserver/node'
-import { Auth, CredentialsProvider, CredentialsType, credentialsProtocolMethodNames } from './auth'
-import { BearerCredentials, IamCredentials, UpdateCredentialsParams } from '../../protocol'
+import { Auth, credentialsProtocolMethodNames } from './auth'
+import { UpdateCredentialsParams } from '../../protocol'
+import { IamCredentials, BearerCredentials, CredentialsType, CredentialsProvider } from '../../server-interface'
 
 class TestStream extends Duplex {
     _write(chunk: string, _encoding: string, done: () => void) {

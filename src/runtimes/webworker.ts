@@ -8,12 +8,12 @@ import {
     TextDocument,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
-import { Logging, Lsp, Telemetry, Workspace } from '../features'
-import { Auth } from '../features/auth/auth'
+import { Logging, Lsp, Telemetry, Workspace } from '../server-interface'
+import { Auth } from './auth'
 
 import { RuntimeProps } from './runtime'
 
-import { observe } from '../features/lsp'
+import { observe } from './lsp'
 import { InitializeHandler } from './initialize'
 
 declare const self: WindowOrWorkerGlobalScope

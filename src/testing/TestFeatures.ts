@@ -1,5 +1,4 @@
-import { CredentialsProvider, Logging, Lsp, Telemetry, Workspace } from '../features'
-import { Server } from '../runtimes'
+import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
     CancellationToken,
