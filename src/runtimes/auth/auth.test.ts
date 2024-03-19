@@ -3,9 +3,17 @@ import { randomBytes } from 'node:crypto'
 import * as jose from 'jose'
 import { Duplex } from 'stream'
 import { Connection, createConnection } from 'vscode-languageserver/node'
-import { Auth, credentialsProtocolMethodNames } from './auth'
+import { Auth } from './auth'
 import { UpdateCredentialsParams } from '../../protocol'
 import { IamCredentials, BearerCredentials, CredentialsType, CredentialsProvider } from '../../server-interface'
+
+export const credentialsProtocolMethodNames = {
+    iamCredentialsUpdate: 'aws/credentials/iam/update',
+    iamCredentialsDelete: 'aws/credentials/iam/delete',
+    bearerCredentialsUpdate: 'aws/credentials/token/update',
+    bearerCredentialsDelete: 'aws/credentials/token/delete',
+    getConnectionMetadata: 'aws/credentials/getConnectionMetadata',
+}
 
 class TestStream extends Duplex {
     _write(chunk: string, _encoding: string, done: () => void) {
@@ -31,19 +39,19 @@ function clearHandlers() {
 }
 
 const serverLspConnectionMock = <Connection>{
-    onRequest: (method: string, handler: any) => {
-        if (method === credentialsProtocolMethodNames.iamCredentialsUpdate) {
+    onRequest: (requestType: any, handler: any) => {
+        if (requestType.method === credentialsProtocolMethodNames.iamCredentialsUpdate) {
             authHandlers.iamUpdateHandler = handler
         }
-        if (method === credentialsProtocolMethodNames.bearerCredentialsUpdate) {
+        if (requestType.method === credentialsProtocolMethodNames.bearerCredentialsUpdate) {
             authHandlers.bearerUpdateHandler = handler
         }
     },
-    onNotification: (method: string, handler: any) => {
-        if (method === credentialsProtocolMethodNames.iamCredentialsDelete) {
+    onNotification: (requestType: any, handler: any) => {
+        if (requestType.method === credentialsProtocolMethodNames.iamCredentialsDelete) {
             authHandlers.iamDeleteHandler = handler
         }
-        if (method === credentialsProtocolMethodNames.bearerCredentialsDelete) {
+        if (requestType.method === credentialsProtocolMethodNames.bearerCredentialsDelete) {
             authHandlers.bearerDeleteHandler = handler
         }
     },
