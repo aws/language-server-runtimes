@@ -1,0 +1,5 @@
+{
+    "name": "@amzn/language-server-runtimes-server-interface",
+    "private": true,
+    "main": "../out/server-interface/index.js"
+}

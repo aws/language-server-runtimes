@@ -1,0 +1,5 @@
+{
+    "name": "@amzn/language-server-runtimes-testing",
+    "private": true,
+    "main": "../out/testing/index.js"
+}
