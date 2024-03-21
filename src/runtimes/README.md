@@ -1,6 +1,6 @@
-## AWS Language server runtimes
+## AWS Language Server Runtimes Implementation
 
-This folder contains implementation of AWS Language server runtimes and Runtimes features.
+Implementation of AWS Language Server runtimes and Runtimes features.
 
 Each runtime implements a LSP server and opens communication channel with client over LSP connection. Runtime initialised all registered Capabilities.
 
@@ -10,3 +10,6 @@ Runtime implementation acts as a intermediate layer between Runtime Client and a
 The runtime implements message passing between Client application and injected Servers, and interface with both by predefined APIs:
 * **Runtime Protocol**: a protocol to define communication between Runtime and Client application (e.g. Runtime<->AWS Toolkit extension). It uses LSP (and JSON-RPC) connection as a transport.
 * **Runtime Server Interface**: defines an interface of the Server and features exposed to Runtime Server developers (e.g. Runtime<->AWS CodeWhisperer server).
+
+
+See main project [README](https://github.com/aws/language-server-runtimes/blob/main/README.md) for more detailed explanation of the architecture.

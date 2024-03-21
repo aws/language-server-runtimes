@@ -4,17 +4,18 @@ Language Server Runtimes is a JSON-RPC based protocol for interactions between s
 
 Language Server Runtimes supports a number of host environments that each have their own underlying transport mechanisms and environment considerations, which must also support JSON-RPC communication. To see the differences between host environments, see [Runtime Host Environments](README.md#runtime-host-environments).
 
-### Terminology
+## Terminology
 
 The server runtime will provide “Features” which refers to the Language Server Runtimes core feature (eg. LSP, Logging, etc). These features will be injected on top of the Server business logic implementation at build time. [Capabilities](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#capabilities) are a set of language features provided by an LSP.
 
-### Server initialization flow and features negotiation
+## Project structure
+The project source code is split into next directories:
 
-Language Server Runtimes uses LSP abstracts to create a JSON-RPC connection between client and server. We use the `Initialize` LSP lifecycle method to provide initialization options to the server.
-
-Features will be instantiated and configured during execution of the `Initialize` flow of the main connection.
-
-Client will send the `Initialize` LSP request with custom options to configure features in the optional [`InitializeParams.initializationOptions`](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initializeParams) property. The configuration passed here will influence implementation details of different capabilities defined below. `initializationOptions` can be processed by the runtime and used to initialize features according to their implementation details. For information on which options are used, please see Initilization sections in each feature.
+- `/src`: This directory contains all the source code of the project.
+  - `/protocol`: JSON-RPC-based Runtime protocol implementation in Typescript, which defines the communication between Runtime and Runtime Clients (e.g. AWS Toolkit extension).
+  - `/runtimes`: implementation of several runtimes (standalone, webworker) and features, that are exposed to Runtime Servers developed by Server implementors.
+  - `/server-interface`: defines interfaces of features, that Runtime provides to Runtime Servers implementors.
+  - `/testing`: testing helper for Server implementors.
 
 ## Features
 
@@ -136,6 +137,14 @@ TBD
 ## Runtime Host Environments
 
 Servers typically run as processes or web workers. Details are provided below on how to initialize each type of server runtime.
+
+### Server initialization flow and features negotiation
+
+Language Server Runtimes uses LSP abstracts to create a JSON-RPC connection between client and server. We use the `Initialize` LSP lifecycle method to provide initialization options to the server.
+
+Features will be instantiated and configured during execution of the `Initialize` flow of the main connection.
+
+Client will send the `Initialize` LSP request with custom options to configure features in the optional [`InitializeParams.initializationOptions`](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initializeParams) property. The configuration passed here will influence implementation details of different capabilities defined below. `initializationOptions` can be processed by the runtime and used to initialize features according to their implementation details. For information on which options are used, please see Initilization sections in each feature.
 
 ### Standalone Server
 

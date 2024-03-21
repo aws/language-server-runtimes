@@ -4,3 +4,5 @@ This module contains types, that define interfaces of features available to Serv
 
 Server capabilities uses on Runtimes Protocol as a source of truth for types that used in both Server interface and Runtime Protocol.
 Some features in Server interface pass payload received from Client unmodified, e.g. in LSP feature.
+
+See main [README](https://github.com/aws/language-server-runtimes/blob/main/README.md) for more details.

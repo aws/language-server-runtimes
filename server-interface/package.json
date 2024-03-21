@@ -1,5 +1,6 @@
 {
     "name": "@amzn/language-server-runtimes-server-interface",
     "private": true,
+    "description": "Helper file to flatten import paths in dependant packages",
     "main": "../out/server-interface/index.js"
 }
