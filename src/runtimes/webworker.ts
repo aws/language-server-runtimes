@@ -72,6 +72,8 @@ export const webworker = (props: RuntimeProps) => {
         onCompletion: handler => lspConnection.onCompletion(handler),
         onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
         didChangeConfiguration: handler => lspConnection.onDidChangeConfiguration(handler),
+        onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
+        onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
         onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
         onDidCloseTextDocument: handler => lspConnection.onDidCloseTextDocument(handler),
         onExecuteCommand: handler => lspConnection.onExecuteCommand(handler),

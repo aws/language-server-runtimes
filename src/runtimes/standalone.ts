@@ -173,6 +173,8 @@ export const standalone = (props: RuntimeProps) => {
             onCompletion: handler => lspConnection.onCompletion(handler),
             onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
             didChangeConfiguration: handler => lspConnection.onDidChangeConfiguration(handler),
+            onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
+            onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
             onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
             onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
             onExecuteCommand: handler => lspConnection.onExecuteCommand(handler),

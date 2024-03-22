@@ -5,7 +5,10 @@ import {
     CancellationToken,
     CompletionParams,
     DidChangeTextDocumentParams,
+    DidOpenTextDocumentParams,
+    DocumentFormattingParams,
     ExecuteCommandParams,
+    HoverParams,
     InlineCompletionParams,
 } from 'vscode-languageserver'
 import { TextDocument } from 'vscode-languageserver-textdocument'
@@ -69,6 +72,14 @@ export class TestFeatures {
         return this.lsp.onCompletion.args[0]?.[0](params, token)
     }
 
+    async doFormat(params: DocumentFormattingParams, token: CancellationToken) {
+        return this.lsp.onDidFormatDocument.args[0]?.[0](params, token)
+    }
+
+    async doHover(params: HoverParams, token: CancellationToken) {
+        return this.lsp.onHover.args[0]?.[0](params, token)
+    }
+
     async doInlineCompletionWithReferences(
         ...args: Parameters<Parameters<Lsp['extensions']['onInlineCompletionWithReferences']>[0]>
     ) {
@@ -97,6 +108,13 @@ export class TestFeatures {
         // Force the call to handle after the current task completes
         await undefined
         this.lsp.onDidChangeTextDocument.args[0]?.[0](params)
+        return this
+    }
+
+    async doOpenTextDocument(params: DidOpenTextDocumentParams) {
+        // Force the call to handle after the current task completes
+        await undefined
+        this.lsp.onDidOpenTextDocument.args[0]?.[0](params)
         return this
     }
 

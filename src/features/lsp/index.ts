@@ -14,12 +14,13 @@ import {
     InlineCompletionItem,
     InlineCompletionList,
     InlineCompletionParams,
-    LSPAny,
     NotificationHandler,
     PublishDiagnosticsParams,
     RequestHandler,
-    ServerRequestHandler,
     ServerCapabilities,
+    DidOpenTextDocumentParams,
+    DocumentFormattingParams,
+    TextEdit,
 } from 'vscode-languageserver'
 import {
     InlineCompletionItemWithReferences,
@@ -59,6 +60,10 @@ export type Lsp = {
         handler: RequestHandler<CompletionParams, CompletionItem[] | CompletionList | undefined | null, void>
     ) => void
     didChangeConfiguration: (handler: NotificationHandler<DidChangeConfigurationParams>) => void
+    onDidFormatDocument: (
+        handler: RequestHandler<DocumentFormattingParams, TextEdit[] | undefined | null, never>
+    ) => void
+    onDidOpenTextDocument: (handler: NotificationHandler<DidOpenTextDocumentParams>) => void
     onDidChangeTextDocument: (handler: NotificationHandler<DidChangeTextDocumentParams>) => void
     onDidCloseTextDocument: (handler: NotificationHandler<DidCloseTextDocumentParams>) => void
     publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>
