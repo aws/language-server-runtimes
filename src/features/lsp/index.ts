@@ -18,6 +18,9 @@ import {
     PublishDiagnosticsParams,
     RequestHandler,
     ServerCapabilities,
+    DidOpenTextDocumentParams,
+    DocumentFormattingParams,
+    TextEdit,
     ProgressType,
     ProgressToken,
 } from 'vscode-languageserver'
@@ -58,6 +61,10 @@ export type Lsp = {
         handler: RequestHandler<CompletionParams, CompletionItem[] | CompletionList | undefined | null, void>
     ) => void
     didChangeConfiguration: (handler: NotificationHandler<DidChangeConfigurationParams>) => void
+    onDidFormatDocument: (
+        handler: RequestHandler<DocumentFormattingParams, TextEdit[] | undefined | null, never>
+    ) => void
+    onDidOpenTextDocument: (handler: NotificationHandler<DidOpenTextDocumentParams>) => void
     onDidChangeTextDocument: (handler: NotificationHandler<DidChangeTextDocumentParams>) => void
     onDidCloseTextDocument: (handler: NotificationHandler<DidCloseTextDocumentParams>) => void
     publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>
