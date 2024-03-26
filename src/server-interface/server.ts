@@ -1,4 +1,4 @@
-import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider } from '.'
+import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat } from '.'
 
 /**
  * Servers are used to provide features to the client.
@@ -16,6 +16,7 @@ import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider } from '.'
  * @returns A function that will be called when the client exits, used to dispose of any held resources.
  */
 export type Server = (features: {
+    chat: Chat
     credentialsProvider: CredentialsProvider
     lsp: Lsp
     workspace: Workspace

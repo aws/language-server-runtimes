@@ -1,11 +1,30 @@
 import { TextDocuments } from 'vscode-languageserver'
 import {
     DidChangeConfigurationNotification,
+    ProgressToken,
+    ProgressType,
     PublishDiagnosticsNotification,
     inlineCompletionWithReferencesRequestType,
     logInlineCompletionSessionResultsNotificationType,
     inlineCompletionRequestType,
     TextDocument,
+
+    // Chat protocol
+    chatRequestType,
+    copyCodeToClipboardNotificationType,
+    endChatRequestType,
+    feedbackNotificationType,
+    followUpClickNotificationType,
+    infoLinkClickNotificationType,
+    insertToCursorPositionNotificationType,
+    linkClickNotificationType,
+    quickActionRequestType,
+    readyNotificationType,
+    sourceLinkClickNotificationType,
+    tabAddNotificationType,
+    tabChangeNotificationType,
+    tabRemoveNotificationType,
+    voteNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -14,7 +33,7 @@ import {
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
 } from './auth/standalone/encryption'
-import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider } from '../server-interface'
+import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat } from '../server-interface'
 import { Auth } from './auth'
 
 import { handleVersionArgument } from './versioning'
@@ -156,6 +175,26 @@ export const standalone = (props: RuntimeProps) => {
             },
         }
 
+        const chat: Chat = {
+            onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
+            onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
+            onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
+            onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
+            onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
+            onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
+            onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
+            onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
+            onVote: handler => lspConnection.onNotification(voteNotificationType.method, handler),
+            onCodeInsertToCursorPosition: handler =>
+                lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
+            onCopyCodeToClipboard: handler =>
+                lspConnection.onNotification(copyCodeToClipboardNotificationType.method, handler),
+            onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
+            onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
+            onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
+            onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
+        }
+
         // Map the LSP client to the LSP feature.
         const lsp: Lsp = {
             addInitializer: initializeHandler.addHandler,
@@ -171,6 +210,8 @@ export const standalone = (props: RuntimeProps) => {
             onCompletion: handler => lspConnection.onCompletion(handler),
             onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
             didChangeConfiguration: handler => lspConnection.onDidChangeConfiguration(handler),
+            onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
+            onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
             onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
             onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
             onExecuteCommand: handler => lspConnection.onExecuteCommand(handler),
@@ -178,6 +219,9 @@ export const standalone = (props: RuntimeProps) => {
                 getConfiguration: section => lspConnection.workspace.getConfiguration(section),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
+            sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                return lspConnection.sendProgress(type, token, value)
+            },
             onHover: handler => lspConnection.onHover(handler),
             extensions: {
                 onInlineCompletionWithReferences: handler =>
@@ -191,7 +235,7 @@ export const standalone = (props: RuntimeProps) => {
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         // Initialize every Server
-        const disposables = props.servers.map(s => s({ credentialsProvider, lsp, workspace, telemetry, logging }))
+        const disposables = props.servers.map(s => s({ chat, credentialsProvider, lsp, workspace, telemetry, logging }))
 
         // Free up any resources or threads used by Servers
         lspConnection.onExit(() => {

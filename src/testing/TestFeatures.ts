@@ -1,10 +1,13 @@
-import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace } from '../server-interface'
+import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace, Chat } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
     CancellationToken,
     CompletionParams,
     DidChangeTextDocumentParams,
+    DidOpenTextDocumentParams,
+    DocumentFormattingParams,
     ExecuteCommandParams,
+    HoverParams,
     InlineCompletionParams,
     TextDocument,
 } from '../protocol'
@@ -19,6 +22,7 @@ import {
  * testing the effects and responses.
  */
 export class TestFeatures {
+    chat: StubbedInstance<Chat>
     credentialsProvider: StubbedInstance<CredentialsProvider>
     // TODO: This needs to improve, somehow sinon doesn't stub nested objects
     lsp: StubbedInstance<Lsp> & {
@@ -36,6 +40,7 @@ export class TestFeatures {
     private disposables: (() => void)[] = []
 
     constructor() {
+        this.chat = stubInterface<Chat>()
         this.credentialsProvider = stubInterface<CredentialsProvider>()
         this.lsp = stubInterface<
             Lsp & { workspace: StubbedInstance<Lsp['workspace']> } & {
@@ -68,6 +73,14 @@ export class TestFeatures {
         return this.lsp.onCompletion.args[0]?.[0](params, token)
     }
 
+    async doFormat(params: DocumentFormattingParams, token: CancellationToken) {
+        return this.lsp.onDidFormatDocument.args[0]?.[0](params, token)
+    }
+
+    async doHover(params: HoverParams, token: CancellationToken) {
+        return this.lsp.onHover.args[0]?.[0](params, token)
+    }
+
     async doInlineCompletionWithReferences(
         ...args: Parameters<Parameters<Lsp['extensions']['onInlineCompletionWithReferences']>[0]>
     ) {
@@ -96,6 +109,13 @@ export class TestFeatures {
         // Force the call to handle after the current task completes
         await undefined
         this.lsp.onDidChangeTextDocument.args[0]?.[0](params)
+        return this
+    }
+
+    async doOpenTextDocument(params: DidOpenTextDocumentParams) {
+        // Force the call to handle after the current task completes
+        await undefined
+        this.lsp.onDidOpenTextDocument.args[0]?.[0](params)
         return this
     }
 

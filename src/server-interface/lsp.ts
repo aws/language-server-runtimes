@@ -21,6 +21,11 @@ import {
     InlineCompletionListWithReferences,
     LogInlineCompletionSessionResultsParams,
     RequestHandler,
+    DidOpenTextDocumentParams,
+    DocumentFormattingParams,
+    TextEdit,
+    ProgressType,
+    ProgressToken,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -57,9 +62,14 @@ export type Lsp = {
         handler: RequestHandler<CompletionParams, CompletionItem[] | CompletionList | undefined | null, void>
     ) => void
     didChangeConfiguration: (handler: NotificationHandler<DidChangeConfigurationParams>) => void
+    onDidFormatDocument: (
+        handler: RequestHandler<DocumentFormattingParams, TextEdit[] | undefined | null, never>
+    ) => void
+    onDidOpenTextDocument: (handler: NotificationHandler<DidOpenTextDocumentParams>) => void
     onDidChangeTextDocument: (handler: NotificationHandler<DidChangeTextDocumentParams>) => void
     onDidCloseTextDocument: (handler: NotificationHandler<DidCloseTextDocumentParams>) => void
     publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>
+    sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => Promise<void>
     onHover: (handler: RequestHandler<HoverParams, Hover | null | undefined, void>) => void
     onExecuteCommand: (handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>) => void
     workspace: {
