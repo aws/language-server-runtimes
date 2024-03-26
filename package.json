@@ -19,13 +19,16 @@
         "node": ">=18.0.0"
     },
     "scripts": {
+        "clean": "rm -rf out",
         "compile": "tsc --build",
-        "prepack": "npm run compile",
-        "test:unit": "ts-mocha -b 'src/**/*.test.ts'",
-        "test:prettier": "prettier . --check",
-        "test": "npm run test:prettier && npm run test:unit",
         "fix:prettier": "prettier . --write",
-        "prepare": "husky install"
+        "prepare": "husky install",
+        "prepub:copyFiles": "cp .npmignore CHANGELOG.md LICENSE NOTICE README.md SECURITY.md package.json out/",
+        "prepub": "npm run clean && npm run test && npm run compile && npm run prepub:copyFiles",
+        "pub": "cd out && npm publish",
+        "test:prettier": "prettier . --check",
+        "test:unit": "ts-mocha -b 'src/**/*.test.ts'",
+        "test": "npm run test:prettier && npm run test:unit"
     },
     "dependencies": {
         "jose": "^5.2.3",
