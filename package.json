@@ -28,7 +28,9 @@
         "pub": "cd out && npm publish",
         "test:prettier": "prettier . --check",
         "test:unit": "ts-mocha -b 'src/**/*.test.ts'",
-        "test": "npm run test:prettier && npm run test:unit"
+        "test": "npm run test:prettier && npm run test:unit",
+        "preversion": "npm run test",
+        "version": "npm run compile && git add -A ."
     },
     "dependencies": {
         "jose": "^5.2.3",
