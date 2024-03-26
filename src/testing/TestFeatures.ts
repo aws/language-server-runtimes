@@ -1,4 +1,4 @@
-import { CredentialsProvider, Logging, Lsp, Telemetry, Workspace } from '../features'
+import { Chat, CredentialsProvider, Logging, Lsp, Telemetry, Workspace } from '../features'
 import { Server } from '../runtimes'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
@@ -20,6 +20,7 @@ import { TextDocument } from 'vscode-languageserver-textdocument'
  * testing the effects and responses.
  */
 export class TestFeatures {
+    chat: StubbedInstance<Chat>
     credentialsProvider: StubbedInstance<CredentialsProvider>
     // TODO: This needs to improve, somehow sinon doesn't stub nested objects
     lsp: StubbedInstance<Lsp> & {
@@ -37,6 +38,7 @@ export class TestFeatures {
     private disposables: (() => void)[] = []
 
     constructor() {
+        this.chat = stubInterface<Chat>()
         this.credentialsProvider = stubInterface<CredentialsProvider>()
         this.lsp = stubInterface<
             Lsp & { workspace: StubbedInstance<Lsp['workspace']> } & {

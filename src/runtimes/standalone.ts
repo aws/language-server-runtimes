@@ -1,5 +1,7 @@
 import {
     DidChangeConfigurationNotification,
+    ProgressToken,
+    ProgressType,
     PublishDiagnosticsNotification,
     TextDocuments,
 } from 'vscode-languageserver'
@@ -11,7 +13,7 @@ import {
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
 } from '../features/auth/standalone/encryption'
-import { Logging, Lsp, Telemetry, Workspace } from '../features'
+import { Logging, Lsp, Telemetry, Workspace, Chat } from '../features'
 import { inlineCompletionRequestType } from '../features/lsp/inline-completions/futureProtocol'
 import { Auth, CredentialsProvider } from '../features/auth/auth'
 
@@ -28,6 +30,23 @@ import { access, mkdirSync, existsSync } from 'fs'
 import { readdir, readFile, rm, stat, copyFile } from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
+import {
+    chatRequestType,
+    copyCodeToClipboardNotificationType,
+    endChatRequestType,
+    feedbackNotificationType,
+    followUpClickNotificationType,
+    infoLinkClickNotificationType,
+    insertToCursorPositionNotificationType,
+    linkClickNotificationType,
+    quickActionRequestType,
+    readyNotificationType,
+    sourceLinkClickNotificationType,
+    tabAddNotificationType,
+    tabChangeNotificationType,
+    tabRemoveNotificationType,
+    voteNotificationType,
+} from '../features/chat/types'
 import { InitializeHandler } from './initialize'
 
 /**
@@ -158,6 +177,26 @@ export const standalone = (props: RuntimeProps) => {
             },
         }
 
+        const chat: Chat = {
+            onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
+            onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
+            onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
+            onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
+            onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
+            onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
+            onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
+            onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
+            onVote: handler => lspConnection.onNotification(voteNotificationType.method, handler),
+            onCodeInsertToCursorPosition: handler =>
+                lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
+            onCopyCodeToClipboard: handler =>
+                lspConnection.onNotification(copyCodeToClipboardNotificationType.method, handler),
+            onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
+            onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
+            onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
+            onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
+        }
+
         // Map the LSP client to the LSP feature.
         const lsp: Lsp = {
             addInitializer: initializeHandler.addHandler,
@@ -180,6 +219,9 @@ export const standalone = (props: RuntimeProps) => {
                 getConfiguration: section => lspConnection.workspace.getConfiguration(section),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
+            sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                return lspConnection.sendProgress(type, token, value)
+            },
             onHover: handler => lspConnection.onHover(handler),
             extensions: {
                 onInlineCompletionWithReferences: handler =>
@@ -193,7 +235,7 @@ export const standalone = (props: RuntimeProps) => {
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         // Initialize every Server
-        const disposables = props.servers.map(s => s({ credentialsProvider, lsp, workspace, telemetry, logging }))
+        const disposables = props.servers.map(s => s({ chat, credentialsProvider, lsp, workspace, telemetry, logging }))
 
         // Free up any resources or threads used by Servers
         lspConnection.onExit(() => {

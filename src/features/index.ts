@@ -1,3 +1,4 @@
+export { Chat } from './chat'
 export { CredentialsProvider } from './auth/auth'
 export { Logging } from './logging'
 export { Lsp } from './lsp'
