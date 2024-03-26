@@ -17,7 +17,23 @@ import {
     logInlineCompletionSessionResultsNotificationType,
 } from '../features/lsp/inline-completions/protocolExtensions'
 import { observe } from '../features/lsp'
-import { chatRequestType, endChatRequestType, quickActionRequestType } from '../features/chat/types'
+import {
+    chatRequestType,
+    endChatRequestType,
+    quickActionRequestType,
+    followUpClickNotificationType,
+    sourceLinkClickNotificationType,
+    infoLinkClickNotificationType,
+    linkClickNotificationType,
+    copyCodeToClipboardNotificationType,
+    insertToCursorPositionNotificationType,
+    feedbackNotificationType,
+    voteNotificationType,
+    readyNotificationType,
+    tabChangeNotificationType,
+    tabAddNotificationType,
+    tabRemoveNotificationType,
+} from '../features/chat/types'
 import { InitializeHandler } from './initialize'
 
 declare const self: WindowOrWorkerGlobalScope
@@ -64,6 +80,20 @@ export const webworker = (props: RuntimeProps) => {
         onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
         onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
         onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
+        onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
+        onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
+        onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
+        onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
+        onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
+        onVote: handler => lspConnection.onNotification(voteNotificationType.method, handler),
+        onCodeInsertToCursorPosition: handler =>
+            lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
+        onCopyCodeToClipboard: handler =>
+            lspConnection.onNotification(copyCodeToClipboardNotificationType.method, handler),
+        onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
+        onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
+        onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
+        onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
     }
 
     // Map the LSP client to the LSP feature.

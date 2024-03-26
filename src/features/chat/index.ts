@@ -6,13 +6,16 @@ import {
     EndChatParams,
     EndChatResult,
     FeedbackParams,
+    FollowUpClickParams,
     InfoLinkClickParams,
     InsertToCursorPositionParams,
     LinkClickParams,
     QuickActionParams,
     QuickActionResult,
     SourceLinkClickParams,
-    TabEventParams,
+    TabChangeParams,
+    TabAddParams,
+    TabRemoveParams,
     VoteParams,
 } from './types'
 
@@ -25,17 +28,16 @@ export type Chat = {
     onEndChat: (handler: RequestHandler<EndChatParams, EndChatResult, void>) => void
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     // Notifications
-    onSendFeedback?: (handler: NotificationHandler<FeedbackParams>) => void
-    onReady?: (handler: NotificationHandler<void>) => void
-    onTabAdd?: (handler: NotificationHandler<TabEventParams>) => void
-    onTabChange?: (handler: NotificationHandler<TabEventParams>) => void
-    onTabRemove?: (handler: NotificationHandler<TabEventParams>) => void
-    onVote?: (handler: NotificationHandler<VoteParams>) => void
-    onCodeInsertToCursorPosition?: (handler: NotificationHandler<InsertToCursorPositionParams>) => void
-    onCopyCodeToClipboard?: (handler: NotificationHandler<CopyCodeToClipboardParams>) => void
-    onLinkClick?: (handler: NotificationHandler<LinkClickParams>) => void
-    onInfoLinkClick?: (handler: NotificationHandler<InfoLinkClickParams>) => void
-    onSourceLinkClick?: (handler: NotificationHandler<SourceLinkClickParams>) => void
-    // todo
-    onFollowUpClicked?: any
+    onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
+    onReady: (handler: NotificationHandler<void>) => void
+    onTabAdd: (handler: NotificationHandler<TabAddParams>) => void
+    onTabChange: (handler: NotificationHandler<TabChangeParams>) => void
+    onTabRemove: (handler: NotificationHandler<TabRemoveParams>) => void
+    onVote: (handler: NotificationHandler<VoteParams>) => void
+    onCodeInsertToCursorPosition: (handler: NotificationHandler<InsertToCursorPositionParams>) => void
+    onCopyCodeToClipboard: (handler: NotificationHandler<CopyCodeToClipboardParams>) => void
+    onLinkClick: (handler: NotificationHandler<LinkClickParams>) => void
+    onInfoLinkClick: (handler: NotificationHandler<InfoLinkClickParams>) => void
+    onSourceLinkClick: (handler: NotificationHandler<SourceLinkClickParams>) => void
+    onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
 }
