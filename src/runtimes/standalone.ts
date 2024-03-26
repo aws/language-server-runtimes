@@ -1,36 +1,15 @@
+import { TextDocuments } from 'vscode-languageserver'
 import {
     DidChangeConfigurationNotification,
     ProgressToken,
     ProgressType,
     PublishDiagnosticsNotification,
-    TextDocuments,
-} from 'vscode-languageserver'
-import { TextDocument } from 'vscode-languageserver-textdocument'
-import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
-import {
-    EncryptionInitialization,
-    readEncryptionDetails,
-    shouldWaitForEncryptionKey,
-    validateEncryptionDetails,
-} from '../features/auth/standalone/encryption'
-import { Logging, Lsp, Telemetry, Workspace, Chat } from '../features'
-import { inlineCompletionRequestType } from '../features/lsp/inline-completions/futureProtocol'
-import { Auth, CredentialsProvider } from '../features/auth/auth'
-
-import { handleVersionArgument } from '../features/versioning'
-import { RuntimeProps } from './runtime'
-
-import {
     inlineCompletionWithReferencesRequestType,
     logInlineCompletionSessionResultsNotificationType,
-} from '../features/lsp/inline-completions/protocolExtensions'
-import { observe } from '../features/lsp/textDocuments/textDocumentConnection'
+    inlineCompletionRequestType,
+    TextDocument,
 
-import { access, mkdirSync, existsSync } from 'fs'
-import { readdir, readFile, rm, stat, copyFile } from 'fs/promises'
-import * as os from 'os'
-import * as path from 'path'
-import {
+    // Chat protocol
     chatRequestType,
     copyCodeToClipboardNotificationType,
     endChatRequestType,
@@ -46,7 +25,26 @@ import {
     tabChangeNotificationType,
     tabRemoveNotificationType,
     voteNotificationType,
-} from '../features/chat/types'
+} from '../protocol'
+import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
+import {
+    EncryptionInitialization,
+    readEncryptionDetails,
+    shouldWaitForEncryptionKey,
+    validateEncryptionDetails,
+} from './auth/standalone/encryption'
+import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat } from '../server-interface'
+import { Auth } from './auth'
+
+import { handleVersionArgument } from './versioning'
+import { RuntimeProps } from './runtime'
+
+import { observe } from './lsp'
+
+import { access, mkdirSync, existsSync } from 'fs'
+import { readdir, readFile, rm, stat, copyFile } from 'fs/promises'
+import * as os from 'os'
+import * as path from 'path'
 import { InitializeHandler } from './initialize'
 
 /**

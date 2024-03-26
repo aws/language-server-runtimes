@@ -4,7 +4,7 @@ import {
     InlineCompletionRegistrationOptions,
     ProtocolNotificationType,
     ProtocolRequestType,
-} from 'vscode-languageserver'
+} from './lsp'
 
 export type InlineCompletionWithReferencesParams = InlineCompletionParams & {
     // No added parameters

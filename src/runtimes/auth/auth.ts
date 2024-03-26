@@ -1,19 +1,22 @@
 import { jwtDecrypt } from 'jose'
 import { Connection } from 'vscode-languageserver'
 import { CredentialsEncoding } from './standalone/encryption'
-
-export type IamCredentials = {
-    readonly accessKeyId: string
-    readonly secretAccessKey: string
-    readonly sessionToken?: string
-}
-
-export type BearerCredentials = {
-    readonly token: string
-}
-
-export type CredentialsType = 'iam' | 'bearer'
-export type Credentials = IamCredentials | BearerCredentials
+import {
+    UpdateCredentialsParams,
+    iamCredentialsUpdateRequestType,
+    iamCredentialsDeleteNotificationType,
+    bearerCredentialsUpdateRequestType,
+    bearerCredentialsDeleteNotificationType,
+    getConnectionMetadataRequestType,
+} from '../../protocol'
+import {
+    IamCredentials,
+    BearerCredentials,
+    ConnectionMetadata,
+    Credentials,
+    CredentialsType,
+    CredentialsProvider,
+} from '../../server-interface'
 
 export function isIamCredentials(credentials: Credentials): credentials is IamCredentials {
     const iamCredentials = credentials as IamCredentials
@@ -22,36 +25,6 @@ export function isIamCredentials(credentials: Credentials): credentials is IamCr
 
 export function isBearerCredentials(credentials: Credentials): credentials is BearerCredentials {
     return (credentials as BearerCredentials)?.token !== undefined
-}
-
-export interface SsoProfileData {
-    startUrl?: string
-}
-
-export interface ConnectionMetadata {
-    sso?: SsoProfileData
-}
-
-export interface CredentialsProvider {
-    hasCredentials: (type: CredentialsType) => boolean
-    getCredentials: (type: CredentialsType) => Credentials | undefined
-    getConnectionMetadata: () => ConnectionMetadata | undefined
-}
-
-export const credentialsProtocolMethodNames = {
-    iamCredentialsUpdate: 'aws/credentials/iam/update',
-    iamCredentialsDelete: 'aws/credentials/iam/delete',
-    bearerCredentialsUpdate: 'aws/credentials/token/update',
-    bearerCredentialsDelete: 'aws/credentials/token/delete',
-    getConnectionMetadata: 'aws/credentials/getConnectionMetadata',
-}
-
-export interface UpdateCredentialsRequest {
-    // Plaintext Credentials (for browser based environments) or encrypted JWT token
-    data: string | Credentials
-    // If the payload is encrypted
-    // Defaults to false if undefined or null
-    encrypted?: boolean
 }
 
 export class Auth {
@@ -118,24 +91,21 @@ export class Auth {
     private registerIamCredentialsUpdateHandlers(): void {
         this.connection.console.info('Runtime: Registering IAM credentials update handler')
 
-        this.connection.onRequest(
-            credentialsProtocolMethodNames.iamCredentialsUpdate,
-            async (request: UpdateCredentialsRequest) => {
-                const iamCredentials = request.encrypted
-                    ? await this.decodeCredentialsRequestToken<IamCredentials>(request)
-                    : (request.data as IamCredentials)
+        this.connection.onRequest(iamCredentialsUpdateRequestType, async (request: UpdateCredentialsParams) => {
+            const iamCredentials = request.encrypted
+                ? await this.decodeCredentialsRequestToken<IamCredentials>(request)
+                : (request.data as IamCredentials)
 
-                if (isIamCredentials(iamCredentials)) {
-                    this.setCredentials(iamCredentials)
-                    this.connection.console.info('Runtime: Successfully saved IAM credentials')
-                } else {
-                    this.iamCredentials = undefined
-                    throw new Error('Invalid IAM credentials')
-                }
+            if (isIamCredentials(iamCredentials)) {
+                this.setCredentials(iamCredentials)
+                this.connection.console.info('Runtime: Successfully saved IAM credentials')
+            } else {
+                this.iamCredentials = undefined
+                throw new Error('Invalid IAM credentials')
             }
-        )
+        })
 
-        this.connection.onNotification(credentialsProtocolMethodNames.iamCredentialsDelete, () => {
+        this.connection.onNotification(iamCredentialsDeleteNotificationType, () => {
             this.iamCredentials = undefined
             this.connection.console.info('Runtime: Deleted IAM credentials')
         })
@@ -144,26 +114,23 @@ export class Auth {
     private registerBearerCredentialsUpdateHandlers(): void {
         this.connection.console.info('Runtime: Registering bearer credentials update handler')
 
-        this.connection.onRequest(
-            credentialsProtocolMethodNames.bearerCredentialsUpdate,
-            async (request: UpdateCredentialsRequest) => {
-                const bearerCredentials = request.encrypted
-                    ? await this.decodeCredentialsRequestToken<BearerCredentials>(request)
-                    : (request.data as BearerCredentials)
+        this.connection.onRequest(bearerCredentialsUpdateRequestType, async (request: UpdateCredentialsParams) => {
+            const bearerCredentials = request.encrypted
+                ? await this.decodeCredentialsRequestToken<BearerCredentials>(request)
+                : (request.data as BearerCredentials)
 
-                if (isBearerCredentials(bearerCredentials)) {
-                    this.setCredentials(bearerCredentials)
-                    this.connection.console.info('Runtime: Successfully saved bearer credentials')
+            if (isBearerCredentials(bearerCredentials)) {
+                this.setCredentials(bearerCredentials)
+                this.connection.console.info('Runtime: Successfully saved bearer credentials')
 
-                    await this.requestConnectionMetadata()
-                } else {
-                    this.bearerCredentials = undefined
-                    throw new Error('Invalid bearer credentials')
-                }
+                await this.requestConnectionMetadata()
+            } else {
+                this.bearerCredentials = undefined
+                throw new Error('Invalid bearer credentials')
             }
-        )
+        })
 
-        this.connection.onNotification(credentialsProtocolMethodNames.bearerCredentialsDelete, () => {
+        this.connection.onNotification(bearerCredentialsDeleteNotificationType, () => {
             this.bearerCredentials = undefined
             this.connectionMetadata = undefined
             this.connection.console.info('Runtime: Deleted bearer credentials')
@@ -183,7 +150,7 @@ export class Auth {
         }
     }
 
-    private async decodeCredentialsRequestToken<T>(request: UpdateCredentialsRequest): Promise<T> {
+    private async decodeCredentialsRequestToken<T>(request: UpdateCredentialsParams): Promise<T> {
         this.connection.console.info('Runtime: Decoding encrypted credentials token')
         if (!this.key) {
             throw new Error('No encryption key')
@@ -206,9 +173,7 @@ export class Auth {
 
     private async requestConnectionMetadata() {
         try {
-            const connectionMetadata = await this.connection.sendRequest<ConnectionMetadata>(
-                credentialsProtocolMethodNames.getConnectionMetadata
-            )
+            const connectionMetadata = await this.connection.sendRequest(getConnectionMetadataRequestType)
 
             this.connectionMetadata = connectionMetadata
             this.connection.console.info('Runtime: Connection metadata updated')

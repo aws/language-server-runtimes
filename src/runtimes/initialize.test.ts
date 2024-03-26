@@ -3,9 +3,9 @@ import {
     InitializeError,
     InitializeParams,
     InitializeResult,
-    ResponseError,
     TextDocumentSyncKind,
-} from 'vscode-languageserver'
+    ResponseError,
+} from '../protocol'
 import { InitializeHandler } from './initialize'
 import assert from 'assert'
 

@@ -4,11 +4,11 @@ import {
     DidCloseTextDocumentParams,
     DidOpenTextDocumentParams,
     DidSaveTextDocumentParams,
+    WillSaveTextDocumentParams,
     NotificationHandler,
     RequestHandler,
     TextEdit,
-    WillSaveTextDocumentParams,
-} from 'vscode-languageserver'
+} from '../../../protocol'
 import { TextDocumentConnection } from 'vscode-languageserver/lib/common/textDocuments'
 
 // Filter out only the handlers that return void to avoid the request/response format,

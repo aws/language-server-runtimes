@@ -1,13 +1,13 @@
 import {
-    RequestHandler,
+    CancellationToken,
     InitializeParams,
     InitializeError,
-    CancellationToken,
     InitializeResult,
     TextDocumentSyncKind,
+    RequestHandler,
     ResponseError,
-} from 'vscode-languageserver'
-import { PartialInitializeResult } from '../features/lsp'
+} from '../protocol'
+import { PartialInitializeResult } from '../server-interface'
 
 export class InitializeHandler {
     private handlers: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>[] = []

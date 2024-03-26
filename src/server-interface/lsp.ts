@@ -1,6 +1,7 @@
 import {
     CompletionItem,
     CompletionList,
+    InlineCompletionItem,
     CompletionParams,
     DidChangeConfigurationParams,
     DidChangeTextDocumentParams,
@@ -11,25 +12,25 @@ import {
     InitializeError,
     InitializeParams,
     InitializedParams,
-    InlineCompletionItem,
     InlineCompletionList,
     InlineCompletionParams,
     NotificationHandler,
     PublishDiagnosticsParams,
-    RequestHandler,
     ServerCapabilities,
+    InlineCompletionItemWithReferences,
+    InlineCompletionListWithReferences,
+    LogInlineCompletionSessionResultsParams,
+    RequestHandler,
     DidOpenTextDocumentParams,
     DocumentFormattingParams,
     TextEdit,
     ProgressType,
     ProgressToken,
-} from 'vscode-languageserver'
-import {
-    InlineCompletionItemWithReferences,
-    InlineCompletionListWithReferences,
-    LogInlineCompletionSessionResultsParams,
-} from './inline-completions/protocolExtensions'
-export { observe } from './textDocuments/textDocumentConnection'
+} from '../protocol'
+
+// Re-export whole surface of LSP protocol used in Runtimes.
+// This is needed for LSP features as we pass messages down.
+export * from '../protocol/lsp'
 
 export type PartialServerCapabilities<T = any> = Pick<ServerCapabilities<T>, 'completionProvider' | 'hoverProvider'>
 export type PartialInitializeResult<T = any> = {

@@ -1,5 +1,4 @@
-import { WorkspaceFolder } from 'vscode-languageserver'
-import { TextDocument } from 'vscode-languageserver-textdocument'
+import { TextDocument, WorkspaceFolder } from '../protocol'
 
 // Minimal version of fs.Dirent
 interface Dirent {

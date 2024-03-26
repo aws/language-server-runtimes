@@ -1,15 +1,12 @@
 import assert from 'assert'
+import { CancellationToken, NotificationHandler, RequestHandler, TextEdit } from '../../../protocol'
 import {
-    CancellationToken,
     DidChangeTextDocumentParams,
     DidCloseTextDocumentParams,
     DidOpenTextDocumentParams,
     DidSaveTextDocumentParams,
-    NotificationHandler,
-    RequestHandler,
-    TextEdit,
     WillSaveTextDocumentParams,
-} from 'vscode-languageserver'
+} from '../../../protocol'
 import { TextDocumentConnection } from 'vscode-languageserver/lib/common/textDocuments'
 import { observe } from './textDocumentConnection'
 

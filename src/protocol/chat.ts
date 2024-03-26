@@ -1,4 +1,4 @@
-import { ProgressToken, ProtocolNotificationType, ProtocolRequestType } from 'vscode-languageserver'
+import { ProgressToken, ProtocolNotificationType, ProtocolRequestType } from './lsp'
 
 // Chat Data Model
 export interface ChatItemAction {

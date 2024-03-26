@@ -1,23 +1,15 @@
+import { TextDocuments } from 'vscode-languageserver'
 import {
     DidChangeConfigurationNotification,
     ProgressToken,
     ProgressType,
     PublishDiagnosticsNotification,
-    TextDocuments,
-} from 'vscode-languageserver'
-import { TextDocument } from 'vscode-languageserver-textdocument'
-import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
-import { Chat, Logging, Lsp, Telemetry, Workspace } from '../features'
-import { inlineCompletionRequestType } from '../features/lsp/inline-completions/futureProtocol'
-import { Auth } from '../features/auth/auth'
-
-import { RuntimeProps } from './runtime'
-import {
     inlineCompletionWithReferencesRequestType,
     logInlineCompletionSessionResultsNotificationType,
-} from '../features/lsp/inline-completions/protocolExtensions'
-import { observe } from '../features/lsp'
-import {
+    inlineCompletionRequestType,
+    TextDocument,
+
+    // Chat protocol
     chatRequestType,
     endChatRequestType,
     quickActionRequestType,
@@ -33,7 +25,14 @@ import {
     tabChangeNotificationType,
     tabAddNotificationType,
     tabRemoveNotificationType,
-} from '../features/chat/types'
+} from '../protocol'
+import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
+import { Chat, Logging, Lsp, Telemetry, Workspace } from '../server-interface'
+import { Auth } from './auth'
+
+import { RuntimeProps } from './runtime'
+
+import { observe } from './lsp'
 import { InitializeHandler } from './initialize'
 
 declare const self: WindowOrWorkerGlobalScope

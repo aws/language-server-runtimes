@@ -1,5 +1,4 @@
-import { Chat, CredentialsProvider, Logging, Lsp, Telemetry, Workspace } from '../features'
-import { Server } from '../runtimes'
+import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace, Chat } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
     CancellationToken,
@@ -10,8 +9,8 @@ import {
     ExecuteCommandParams,
     HoverParams,
     InlineCompletionParams,
-} from 'vscode-languageserver'
-import { TextDocument } from 'vscode-languageserver-textdocument'
+    TextDocument,
+} from '../protocol'
 
 /**
  * A test helper package to test Server implementations. Accepts a single callback

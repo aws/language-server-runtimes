@@ -1,4 +1,4 @@
-import { NotificationHandler, RequestHandler } from 'vscode-languageserver'
+import { NotificationHandler, RequestHandler } from '../protocol'
 import {
     ChatParams,
     ChatResult,
@@ -17,7 +17,7 @@ import {
     TabAddParams,
     TabRemoveParams,
     VoteParams,
-} from './types'
+} from '../protocol'
 
 /**
  * The Chat feature interface. Provides access to chat features
