@@ -134,6 +134,62 @@ TBD
 TBD
 
 
+### Chat
+The runtime defines Chat interface that allow runtime server implementors to define handlers for chat events to enable conversational experiences. Chat data types are mostly modeled after [mynah-ui](https://github.com/aws/mynah-ui), an event driven UI library designed for chat experiences. `mynah-ui` is the suggested UI library to be used on the destination. However the Chat interface is generic enough to be compatible with other UI approaches
+
+#### Initialization
+The runtime supports chat by default
+
+#### Feature Specification
+| Description |	Method | Params | Method type | Response Type |
+| ----------- | ------ | ------ | ----------- | ------------- |
+| Send chat prompt | `aws/chat/sendChatPrompt` | `ChatParams` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `ChatResult` |
+| End conversation | `aws/chat/endChat` | `EndChatParams` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `EndChatResult` |
+| Send chat quick action | `aws/chat/sendChatQuickAction` | `QuickActionParams` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) | `ChatResult` |
+| Send chat UI ready event | `aws/chat/ready` | n/a | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send chat vote event | `aws/chat/vote` | `VoteParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send chat feedback event | `aws/chat/feedback` | `FeedbackParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send tab add event | `aws/chat/tabAdd` | `TabAddParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send active tab change event | `aws/chat/tabChange` | `TabChangeParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send tab remove event | `aws/chat/tabRemove` | `TabRemoveParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send insert to cursor position event | `aws/chat/insertToCursorPosition` | `InsertToCursorPositionParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send copy code to clipboard event | `aws/chat/copyCodeToClipboard` | `CopyCodeToClipboardParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send link click event | `aws/chat/linkClick` | `LinkClickParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send info link click event | `aws/chat/infoLinkClick` | `InfoLinkClickParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send source link click event | `aws/chat/sourceLinkClick` | `SourceLinkClickParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send followup chat item click event | `aws/chat/followUpClick` | `FollowUpClickParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+
+
+```ts
+export interface ChatPrompt {
+    prompt?: string
+    escapedPrompt?: string
+    command?: string
+}
+
+export interface ChatParams {
+    tabId: string
+    prompt: ChatPrompt
+    partialResultToken?: ProgressToken
+}
+
+export interface ChatResult {
+    body?: string
+    messageId?: string
+    canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
+    relatedContent?: {
+        title?: string
+        content: SourceLink[]
+    }
+    followUp?: {
+        text?: string
+        options?: ChatItemAction[]
+    }
+    codeReference?: ReferenceTrackerInformation[]
+}
+```
+Complete Chat parameter and result interfaces can be found in [chat.ts](src/protocol/chat.ts)
+
 ## Runtime Host Environments
 
 Servers typically run as processes or web workers. Details are provided below on how to initialize each type of server runtime.
