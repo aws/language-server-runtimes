@@ -45,7 +45,8 @@ import { access, mkdirSync, existsSync } from 'fs'
 import { readdir, readFile, rm, stat, copyFile } from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
-import { InitializeHandler } from './initialize'
+import { LspRouter } from './lsp/router/lspRouter'
+import { LspServer } from './lsp/router/lspServer'
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -112,9 +113,6 @@ export const standalone = (props: RuntimeProps) => {
     function initializeRuntime() {
         const documents = new TextDocuments(TextDocument)
 
-        let initializeHandler = new InitializeHandler(props.name, props.version)
-        lspConnection.onInitialize(initializeHandler.onInitialize)
-
         // Set up logging over LSP
         // TODO: set up Logging once implemented
         const logging: Logging = {
@@ -122,7 +120,6 @@ export const standalone = (props: RuntimeProps) => {
         }
 
         // Set up telemetry over LSP
-
         const telemetry: Telemetry = {
             emitMetric: metric => lspConnection.telemetry.logEvent(metric),
         }
@@ -135,7 +132,7 @@ export const standalone = (props: RuntimeProps) => {
                 const fileUrl = new URL(uri)
                 const normalizedFileUri = fileUrl.pathname || ''
 
-                const folders = initializeHandler.clientInitializeParams!.workspaceFolders
+                const folders = lspRouter.clientInitializeParams!.workspaceFolders
                 if (!folders) return undefined
 
                 for (const folder of folders) {
@@ -195,47 +192,58 @@ export const standalone = (props: RuntimeProps) => {
             onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
         }
 
-        // Map the LSP client to the LSP feature.
-        const lsp: Lsp = {
-            addInitializer: initializeHandler.addHandler,
-            onInitialized: handler =>
-                lspConnection.onInitialized(p => {
-                    const workspaceCapabilities = initializeHandler.clientInitializeParams?.capabilities.workspace
-                    if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
-                        // Ask the client to notify the server on configuration changes
-                        lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
-                    }
-                    handler(p)
-                }),
-            onCompletion: handler => lspConnection.onCompletion(handler),
-            onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
-            didChangeConfiguration: handler => lspConnection.onDidChangeConfiguration(handler),
-            onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
-            onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
-            onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
-            onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
-            onExecuteCommand: handler => lspConnection.onExecuteCommand(handler),
-            workspace: {
-                getConfiguration: section => lspConnection.workspace.getConfiguration(section),
-            },
-            publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
-            sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
-                return lspConnection.sendProgress(type, token, value)
-            },
-            onHover: handler => lspConnection.onHover(handler),
-            extensions: {
-                onInlineCompletionWithReferences: handler =>
-                    lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
-                onLogInlineCompletionSessionResults: handler => {
-                    lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
-                },
-            },
-        }
-
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
+        // Create router that will be routing LSP events from the client to server(s)
+        const lspRouter = new LspRouter(lspConnection, props.name, props.version)
+
         // Initialize every Server
-        const disposables = props.servers.map(s => s({ chat, credentialsProvider, lsp, workspace, telemetry, logging }))
+        const disposables = props.servers.map(s => {
+            // Create server representation, processing LSP event handlers, in runtimes
+            // and add it to the LSP router
+            const lspServer = new LspServer()
+            lspRouter.servers.push(lspServer)
+
+            // Set up LSP events handlers per server
+            const lsp: Lsp = {
+                addInitializer: lspServer.addInitializeHandler,
+                onInitialized: handler =>
+                    lspConnection.onInitialized(p => {
+                        const workspaceCapabilities = lspRouter.clientInitializeParams?.capabilities.workspace
+                        if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
+                            // Ask the client to notify the server on configuration changes
+                            lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
+                        }
+                        handler(p)
+                    }),
+                onCompletion: handler => lspConnection.onCompletion(handler),
+                onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
+                didChangeConfiguration: handler => lspConnection.onDidChangeConfiguration(handler),
+                onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
+                onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
+                onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
+                onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
+                onExecuteCommand: handler => lspServer.addExecuteCommandHandler,
+                workspace: {
+                    getConfiguration: section => lspConnection.workspace.getConfiguration(section),
+                },
+                publishDiagnostics: params =>
+                    lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
+                sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                    return lspConnection.sendProgress(type, token, value)
+                },
+                onHover: handler => lspConnection.onHover(handler),
+                extensions: {
+                    onInlineCompletionWithReferences: handler =>
+                        lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
+                    onLogInlineCompletionSessionResults: handler => {
+                        lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
+                    },
+                },
+            }
+
+            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging })
+        })
 
         // Free up any resources or threads used by Servers
         lspConnection.onExit(() => {
