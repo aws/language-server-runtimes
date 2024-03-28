@@ -5,8 +5,6 @@ import {
     InitializeParams,
     RequestHandler,
     ResponseError,
-    ServerRequestHandler,
-    WorkDoneProgressReporter,
 } from 'vscode-languageserver'
 import { PartialInitializeResult, PartialServerCapabilities } from '../../../server-interface/lsp'
 import { asPromise } from './util'
@@ -16,13 +14,13 @@ export class LspServer {
     private executeCommandHandler?: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
     private serverCapabilities?: PartialServerCapabilities
 
-    public addInitializeHandler = (
+    public setInitializeHandler = (
         handler: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
     ): void => {
         this.initializeHandler = handler
     }
 
-    public addExecuteCommandHandler = (
+    public setExecuteCommandHandler = (
         handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
     ): void => {
         this.executeCommandHandler = handler

@@ -206,7 +206,7 @@ export const standalone = (props: RuntimeProps) => {
 
             // Set up LSP events handlers per server
             const lsp: Lsp = {
-                addInitializer: lspServer.addInitializeHandler,
+                addInitializer: lspServer.setInitializeHandler,
                 onInitialized: handler =>
                     lspConnection.onInitialized(p => {
                         const workspaceCapabilities = lspRouter.clientInitializeParams?.capabilities.workspace
@@ -223,7 +223,7 @@ export const standalone = (props: RuntimeProps) => {
                 onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
                 onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
                 onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
-                onExecuteCommand: handler => lspServer.addExecuteCommandHandler,
+                onExecuteCommand: handler => lspServer.setExecuteCommandHandler,
                 workspace: {
                     getConfiguration: section => lspConnection.workspace.getConfiguration(section),
                 },

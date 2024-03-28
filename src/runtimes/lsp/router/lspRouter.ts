@@ -7,7 +7,6 @@ import {
     InitializeResult,
     ResponseError,
     TextDocumentSyncKind,
-    WorkDoneProgressReporter,
 } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { mergeObjects } from './util'
@@ -59,11 +58,11 @@ export class LspRouter {
         params: ExecuteCommandParams,
         token: CancellationToken
     ): Promise<any | undefined | null> => {
-        this.servers.forEach(async s => {
+        for (const s of this.servers) {
             const [executed, result] = await s.tryExecuteCommand(params, token)
             if (executed) {
                 return result
             }
-        })
+        }
     }
 }
