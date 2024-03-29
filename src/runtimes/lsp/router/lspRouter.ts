@@ -43,7 +43,8 @@ export class LspRouter {
             },
         }
 
-        const responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
+        let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
+        responsesList = responsesList.filter(r => r != undefined)
         if (responsesList.some(el => el instanceof ResponseError)) {
             return responsesList.find(el => el instanceof ResponseError) as ResponseError<InitializeError>
         }

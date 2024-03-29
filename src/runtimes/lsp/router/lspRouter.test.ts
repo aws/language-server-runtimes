@@ -75,6 +75,26 @@ describe('LspRouter', () => {
             assert.deepStrictEqual(result, expected)
         })
 
+        it('should return the default response when server with no handler is registered', async () => {
+            lspRouter.servers.push(newServer({}))
+            const result = await initializeHandler({} as InitializeParams, {} as CancellationToken)
+
+            const expected = {
+                serverInfo: {
+                    name: 'AWS LSP Standalone',
+                    version: '1.0.0',
+                },
+                capabilities: {
+                    textDocumentSync: {
+                        openClose: true,
+                        change: TextDocumentSyncKind.Incremental,
+                    },
+                    hoverProvider: true,
+                },
+            }
+            assert.deepStrictEqual(result, expected)
+        })
+
         it('should merge handler results with the default response', async () => {
             const handler1 = () => {
                 return {
