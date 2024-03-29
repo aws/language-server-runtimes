@@ -5,7 +5,7 @@ import {
     InitializeParams,
     RequestHandler,
     ResponseError,
-} from 'vscode-languageserver'
+} from '../../../protocol'
 import { PartialInitializeResult, PartialServerCapabilities } from '../../../server-interface/lsp'
 import { asPromise } from './util'
 

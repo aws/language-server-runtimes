@@ -1,13 +1,13 @@
 import {
     CancellationToken,
-    Connection,
     ExecuteCommandParams,
     InitializeError,
     InitializeParams,
     InitializeResult,
     ResponseError,
     TextDocumentSyncKind,
-} from 'vscode-languageserver/node'
+} from '../../../protocol'
+import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { mergeObjects } from './util'
 
