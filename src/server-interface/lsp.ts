@@ -32,7 +32,10 @@ import {
 // This is needed for LSP features as we pass messages down.
 export * from '../protocol/lsp'
 
-export type PartialServerCapabilities<T = any> = Pick<ServerCapabilities<T>, 'completionProvider' | 'hoverProvider'>
+export type PartialServerCapabilities<T = any> = Pick<
+    ServerCapabilities<T>,
+    'completionProvider' | 'hoverProvider' | 'executeCommandProvider'
+>
 export type PartialInitializeResult<T = any> = {
     capabilities: PartialServerCapabilities<T>
 }
