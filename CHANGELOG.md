@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.1] - 2024-04-03
+
+- Add routing to `LSP.executeCommand` server runtimes implementation: not runtimes will route LSP commands for execution to server between multiple registered servers
+
 ## [0.2.0] - 2024-03-26
 
 - Refactored repository directories structure to better match project architecture
