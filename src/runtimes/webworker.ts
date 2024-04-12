@@ -95,10 +95,6 @@ export const webworker = (props: RuntimeProps) => {
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
     }
 
-<<<<<<< HEAD
-    
-=======
->>>>>>> cdd2072 (Enable injection of credentials provider)
     let credentialsProvider: CredentialsProvider
     if (props.credentialsProvider) {
         credentialsProvider = props.credentialsProvider

@@ -17,11 +17,7 @@ export type RuntimeProps = {
      */
     name: string
     /**
-<<<<<<< HEAD
-     * Credential provider to overwrite the default Auth mechanism over LSP. 
-=======
      * Credential provider to overwrite the default Auth mechanism over LSP.
->>>>>>> cdd2072 (Enable injection of credentials provider)
      */
     credentialsProvider?: CredentialsProvider
 }
