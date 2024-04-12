@@ -146,11 +146,11 @@ describe('Auth', () => {
         const auth = new Auth(serverConnection)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-        assert(!credentialsProvider.getConnectionMetadata())
+        assert(!credentialsProvider.getConnectionMetadata!())
 
         await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
 
-        assert.deepEqual(credentialsProvider.getConnectionMetadata(), CONNECTION_METADATA)
+        assert.deepEqual(credentialsProvider.getConnectionMetadata!(), CONNECTION_METADATA)
     })
 
     it('Updates Bearer credentials on failed get connection metadata request', async () => {
@@ -168,7 +168,7 @@ describe('Auth', () => {
 
         await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
 
-        assert.deepEqual(credentialsProvider.getConnectionMetadata(), undefined)
+        assert.deepEqual(credentialsProvider.getConnectionMetadata!(), undefined)
         assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
     })
 

@@ -27,7 +27,7 @@ import {
     tabRemoveNotificationType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
-import { Chat, Logging, Lsp, Telemetry, Workspace } from '../server-interface'
+import { Chat, CredentialsProvider, Logging, Lsp, Telemetry, Workspace } from '../server-interface'
 import { Auth } from './auth'
 
 import { RuntimeProps } from './runtime'
@@ -95,9 +95,18 @@ export const webworker = (props: RuntimeProps) => {
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
     }
 
-    // Set up auth without encryption
-    const auth = new Auth(lspConnection)
-    const credentialsProvider = auth.getCredentialsProvider()
+<<<<<<< HEAD
+    
+=======
+>>>>>>> cdd2072 (Enable injection of credentials provider)
+    let credentialsProvider: CredentialsProvider
+    if (props.credentialsProvider) {
+        credentialsProvider = props.credentialsProvider
+    } else {
+        // Set up auth without encryption
+        const auth = new Auth(lspConnection)
+        credentialsProvider = auth.getCredentialsProvider()
+    }
 
     // Initialize every Server
     const disposables = props.servers.map(s => {
