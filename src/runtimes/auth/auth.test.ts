@@ -4,7 +4,7 @@ import * as jose from 'jose'
 import { Duplex } from 'stream'
 import { Connection, createConnection } from 'vscode-languageserver/node'
 import { Auth } from './auth'
-import { UpdateCredentialsParams } from '../../protocol'
+import { ParameterStructures, UpdateCredentialsParams } from '../../protocol'
 import { IamCredentials, BearerCredentials, CredentialsType, CredentialsProvider } from '../../server-interface'
 
 export const credentialsProtocolMethodNames = {
@@ -111,6 +111,27 @@ describe('Auth', () => {
         authHandlers.iamDeleteHandler()
         assert(!credentialsProvider.hasCredentials('iam'))
         assert(credentialsProvider.getCredentials('iam') === undefined)
+    })
+
+    it('Handles Set Bearer credentials request when parameters sent by position', async () => {
+        const updateRequest: UpdateCredentialsParams = {
+            data: bearerCredentials,
+            encrypted: false,
+        }
+        const auth = new Auth(serverConnection)
+        const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+
+        assert(!credentialsProvider.hasCredentials('bearer'))
+
+        // @ts-ignore
+        await clientConnection.sendRequest(
+            credentialsProtocolMethodNames.bearerCredentialsUpdate,
+            ParameterStructures.byPosition,
+            updateRequest
+        )
+
+        assert(credentialsProvider.hasCredentials('bearer'))
+        assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
     })
 
     it('Handles Set Bearer credentials request', async () => {
