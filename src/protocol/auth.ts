@@ -1,4 +1,9 @@
-import { ProtocolRequestType, ProtocolNotificationType0, ProtocolRequestType0 } from './lsp'
+import {
+    ProtocolRequestType,
+    ProtocolNotificationType0,
+    ProtocolRequestType0,
+    AutoParameterStructuresProtocolRequestType,
+} from './lsp'
 
 export type IamCredentials = {
     readonly accessKeyId: string
@@ -26,13 +31,17 @@ export interface UpdateCredentialsParams {
     encrypted?: boolean
 }
 
-export const iamCredentialsUpdateRequestType = new ProtocolRequestType<UpdateCredentialsParams, null, void, void, void>(
-    'aws/credentials/iam/update'
-)
+export const iamCredentialsUpdateRequestType = new AutoParameterStructuresProtocolRequestType<
+    UpdateCredentialsParams,
+    null,
+    void,
+    void,
+    void
+>('aws/credentials/iam/update')
 
 export const iamCredentialsDeleteNotificationType = new ProtocolNotificationType0<void>('aws/credentials/iam/delete')
 
-export const bearerCredentialsUpdateRequestType = new ProtocolRequestType<
+export const bearerCredentialsUpdateRequestType = new AutoParameterStructuresProtocolRequestType<
     UpdateCredentialsParams,
     null,
     void,
