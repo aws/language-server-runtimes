@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.2] - 2024-04-16
+
+- Fixed Auth feature: allowed params by-name and by-position
+
 ## [0.2.1] - 2024-04-03
 
 - Add routing to `LSP.executeCommand` server runtimes implementation: not runtimes will route LSP commands for execution to server between multiple registered servers
