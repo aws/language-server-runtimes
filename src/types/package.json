@@ -1,0 +1,19 @@
+{
+    "name": "@aws/language-server-runtimes-types",
+    "version": "0.0.1",
+    "description": "Type definitions in Language Servers and Runtimes for AWS",
+    "main": "out/index.js",
+    "scripts": {
+        "compile": "tsc --build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/aws/language-server-runtimes",
+        "directory": "src/types"
+    },
+    "author": "Amazon Web Services",
+    "license": "Apache-2.0",
+    "dependencies": {
+        "vscode-languageserver-protocol": "^3.17.5"
+    }
+}

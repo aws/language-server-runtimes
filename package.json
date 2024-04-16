@@ -7,7 +7,11 @@
         "protocol",
         "runtimes",
         "server-interface",
-        "testing"
+        "testing",
+        "types"
+    ],
+    "workspaces": [
+        "src/types"
     ],
     "repository": {
         "type": "git",
@@ -20,7 +24,7 @@
     },
     "scripts": {
         "clean": "rm -rf out",
-        "compile": "tsc --build",
+        "compile": "tsc --build && npm run compile --workspaces --if-present",
         "fix:prettier": "prettier . --write",
         "prepare": "husky install",
         "prepub:copyFiles": "cp .npmignore CHANGELOG.md LICENSE NOTICE README.md SECURITY.md package.json out/",

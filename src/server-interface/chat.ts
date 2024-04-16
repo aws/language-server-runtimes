@@ -17,7 +17,7 @@ import {
     TabAddParams,
     TabRemoveParams,
     VoteParams,
-} from '../protocol'
+} from '../types'
 
 /**
  * The Chat feature interface. Provides access to chat features
