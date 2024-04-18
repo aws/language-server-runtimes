@@ -15,7 +15,7 @@ import {
     TabChangeParams,
     TabRemoveParams,
     VoteParams,
-} from '../types/chat'
+} from '@aws/language-server-runtimes-types'
 import { ProtocolNotificationType, ProtocolRequestType } from './lsp'
 
 export const chatRequestType = new ProtocolRequestType<ChatParams, ChatResult, ChatResult, void, void>(

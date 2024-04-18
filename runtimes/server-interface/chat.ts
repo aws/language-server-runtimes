@@ -17,7 +17,7 @@ import {
     TabAddParams,
     TabRemoveParams,
     VoteParams,
-} from '../types'
+} from '@aws/language-server-runtimes-types'
 
 /**
  * The Chat feature interface. Provides access to chat features
