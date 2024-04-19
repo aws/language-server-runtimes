@@ -128,7 +128,8 @@ export const webworker = (props: RuntimeProps) => {
             onExecuteCommand: lspServer.setExecuteCommandHandler,
             workspace: {
                 getConfiguration: section => lspConnection.workspace.getConfiguration(section),
-                onDidChangeWorkspaceFolders: handler => lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.method, handler)
+                onDidChangeWorkspaceFolders: handler =>
+                    lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.method, handler),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
