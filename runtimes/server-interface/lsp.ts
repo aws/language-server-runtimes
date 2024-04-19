@@ -26,6 +26,7 @@ import {
     TextEdit,
     ProgressType,
     ProgressToken,
+    DidChangeWorkspaceFoldersParams,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -77,6 +78,7 @@ export type Lsp = {
     onExecuteCommand: (handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>) => void
     workspace: {
         getConfiguration: (section: string) => Promise<any>
+        onDidChangeWorkspaceFolders: (handler: NotificationHandler<DidChangeWorkspaceFoldersParams>) => void
     }
     extensions: {
         onInlineCompletionWithReferences: (
