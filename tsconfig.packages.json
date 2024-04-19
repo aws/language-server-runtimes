@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "target": "ES2016",
+        "declaration": true,
+        "sourceMap": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "composite": true,
+        "esModuleInterop": true
+    },
+    "exclude": ["node_modules"]
+}

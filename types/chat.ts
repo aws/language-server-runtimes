@@ -1,6 +1,7 @@
-import { ProgressToken, ProtocolNotificationType, ProtocolRequestType } from './lsp'
+import { ProgressToken } from 'vscode-languageserver-protocol'
 
 // Chat Data Model
+
 export interface ChatItemAction {
     pillText: string
     prompt?: string
@@ -46,6 +47,7 @@ export interface FeedbackPayload {
 export type CodeSelectionType = 'selection' | 'block'
 
 // LSP Types
+
 export interface ChatParams {
     tabId: string
     prompt: ChatPrompt
@@ -65,26 +67,16 @@ export interface ChatResult {
     }
     codeReference?: ReferenceTrackerInformation[]
 }
-export const chatRequestType = new ProtocolRequestType<ChatParams, ChatResult, ChatResult, void, void>(
-    'aws/chat/sendChatPrompt'
-)
 
 export type EndChatParams = { tabId: string }
 export type EndChatResult = boolean
-export const endChatRequestType = new ProtocolRequestType<EndChatParams, EndChatResult, never, void, void>(
-    'aws/chat/endChat'
-)
 
 export interface QuickActionParams {
     tabId: string
     quickAction: string
     prompt?: string
 }
-export const quickActionRequestType = new ProtocolRequestType<QuickActionParams, ChatResult, ChatResult, void, void>(
-    'aws/chat/sendChatQuickAction'
-)
 
-export const readyNotificationType = new ProtocolNotificationType<void, void>('aws/chat/ready')
 // Currently the QuickAction result and ChatResult share the same shape
 export interface QuickActionResult extends ChatResult {}
 
@@ -93,27 +85,22 @@ export interface VoteParams {
     messageId: string
     vote: VoteType
 }
-export const voteNotificationType = new ProtocolNotificationType<VoteParams, void>('aws/chat/vote')
 
 export interface FeedbackParams {
     tabId: string
     messageId: string
     feedbackPayload: FeedbackPayload
 }
-export const feedbackNotificationType = new ProtocolNotificationType<FeedbackParams, void>('aws/chat/feedback')
 
 export interface TabEventParams {
     tabId: string
 }
 
 export interface TabAddParams extends TabEventParams {}
-export const tabAddNotificationType = new ProtocolNotificationType<TabAddParams, void>('aws/chat/tabAdd')
 
 export interface TabChangeParams extends TabEventParams {}
-export const tabChangeNotificationType = new ProtocolNotificationType<TabChangeParams, void>('aws/chat/tabChange')
 
 export interface TabRemoveParams extends TabEventParams {}
-export const tabRemoveNotificationType = new ProtocolNotificationType<TabRemoveParams, void>('aws/chat/tabRemove')
 
 export interface InsertToCursorPositionParams {
     tabId: string
@@ -122,16 +109,10 @@ export interface InsertToCursorPositionParams {
     type?: CodeSelectionType
     referenceTrackerInformation?: ReferenceTrackerInformation[]
 }
-export const insertToCursorPositionNotificationType = new ProtocolNotificationType<InsertToCursorPositionParams, void>(
-    'aws/chat/insertToCursorPosition'
-)
 
 // Currently CopyCodeToClipboardParams and InsertToCursorPositionParams have the same shape
 // Exporting the two interfaces separately makes future interface changes easier
 export interface CopyCodeToClipboardParams extends InsertToCursorPositionParams {}
-export const copyCodeToClipboardNotificationType = new ProtocolNotificationType<CopyCodeToClipboardParams, void>(
-    'aws/chat/copyCodeToClipboard'
-)
 
 export interface LinkClickParams {
     tabId: string
@@ -139,23 +120,12 @@ export interface LinkClickParams {
     link: string
     mouseEvent?: MouseEvent
 }
-export const linkClickNotificationType = new ProtocolNotificationType<LinkClickParams, void>('aws/chat/linkClick')
-
 export interface InfoLinkClickParams extends LinkClickParams {}
-export const infoLinkClickNotificationType = new ProtocolNotificationType<InfoLinkClickParams, void>(
-    'aws/chat/infoLinkClick'
-)
 
 export interface SourceLinkClickParams extends LinkClickParams {}
-export const sourceLinkClickNotificationType = new ProtocolNotificationType<SourceLinkClickParams, void>(
-    'aws/chat/sourceLinkClick'
-)
 
 export interface FollowUpClickParams {
     tabId: string
     messageId: string
     followUp: ChatItemAction
 }
-export const followUpClickNotificationType = new ProtocolNotificationType<FollowUpClickParams, void>(
-    'aws/chat/followUpClick'
-)
