@@ -9,5 +9,14 @@
         "rootDir": "./src",
         "outDir": "./out",
         "declaration": true
-    }
+    },
+    "files": [],
+    "references": [
+        {
+            "path": "./types"
+        },
+        {
+            "path": "./runtimes"
+        }
+    ]
 }

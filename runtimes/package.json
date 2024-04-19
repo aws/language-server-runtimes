@@ -1,7 +1,7 @@
 {
-    "name": "@amzn/monorepo-language-server-runtimes",
-    "version": "1.0.0",
-    "description": "A monorepo for Language Servers Runtimes for AWS",
+    "name": "@aws/language-server-runtimes",
+    "version": "0.2.2",
+    "description": "Runtimes to host Language Servers for AWS",
     "files": [
         "out",
         "protocol",
@@ -9,13 +9,10 @@
         "server-interface",
         "testing"
     ],
-    "workspaces": [
-        "types",
-        "runtimes"
-    ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/aws/language-server-runtimes"
+        "url": "https://github.com/aws/language-server-runtimes",
+        "directory": "runtimes"
     },
     "author": "Amazon Web Services",
     "license": "Apache-2.0",
@@ -23,14 +20,27 @@
         "node": ">=18.0.0"
     },
     "scripts": {
-        "clean": "ts-node ./script/clean.ts",
+        "clean": "rm -rf out/",
         "compile": "tsc --build",
         "fix:prettier": "prettier . --write",
         "prepare": "husky install",
+        "prepub:copyFiles": "cp ../.npmignore ../CHANGELOG.md ../LICENSE ../NOTICE ../README.md ../SECURITY.md package.json out/",
+        "prepub": "npm run clean && npm run test && npm run compile && npm run prepub:copyFiles",
+        "pub": "cd out && npm publish",
         "test:prettier": "prettier . --check",
-        "test": "npm run test:prettier && npm run test --workspaces --if-present",
+        "test:unit": "ts-mocha -b './**/*.test.ts'",
+        "test": "npm run test:prettier && npm run test:unit",
         "preversion": "npm run test",
         "version": "npm run compile && git add -A ."
+    },
+    "dependencies": {
+        "@aws/language-server-runtimes-types": "0.0.1",
+        "jose": "^5.2.3",
+        "rxjs": "^7.8.1",
+        "vscode-languageserver": "^9.0.1",
+        "vscode-languageserver-protocol": "^3.17.5",
+        "vscode-languageserver-textdocument": "^1.0.11",
+        "vscode-languageserver-types": "^3.17.5"
     },
     "devDependencies": {
         "@types/mocha": "^10.0.1",
