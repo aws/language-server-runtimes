@@ -1,6 +1,7 @@
-import { DidChangeWorkspaceFoldersNotification, TextDocuments } from 'vscode-languageserver'
+import { TextDocuments } from 'vscode-languageserver'
 import {
     DidChangeConfigurationNotification,
+    DidChangeWorkspaceFoldersNotification,
     ProgressToken,
     ProgressType,
     PublishDiagnosticsNotification,
