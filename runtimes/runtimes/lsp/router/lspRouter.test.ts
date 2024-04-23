@@ -69,7 +69,6 @@ describe('LspRouter', () => {
                         openClose: true,
                         change: TextDocumentSyncKind.Incremental,
                     },
-                    hoverProvider: true,
                 },
             }
             assert.deepStrictEqual(result, expected)
@@ -89,7 +88,6 @@ describe('LspRouter', () => {
                         openClose: true,
                         change: TextDocumentSyncKind.Incremental,
                     },
-                    hoverProvider: true,
                 },
             }
             assert.deepStrictEqual(result, expected)
@@ -105,9 +103,7 @@ describe('LspRouter', () => {
             }
             const handler2 = () => {
                 return Promise.resolve({
-                    capabilities: {
-                        hoverProvider: true,
-                    },
+                    capabilities: {},
                     extraField: 'extraValue',
                 })
             }
@@ -128,7 +124,6 @@ describe('LspRouter', () => {
                         change: TextDocumentSyncKind.Incremental,
                     },
                     completionProvider: { resolveProvider: true },
-                    hoverProvider: true,
                 },
                 extraField: 'extraValue',
             }
@@ -168,7 +163,6 @@ describe('LspRouter', () => {
                         change: TextDocumentSyncKind.Incremental,
                     },
                     completionProvider: { resolveProvider: true },
-                    hoverProvider: true,
                 },
             }
 

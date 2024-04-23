@@ -39,7 +39,6 @@ export class LspRouter {
                     openClose: true,
                     change: TextDocumentSyncKind.Incremental,
                 },
-                hoverProvider: true,
             },
         }
 
