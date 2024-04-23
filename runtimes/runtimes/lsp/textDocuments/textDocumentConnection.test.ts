@@ -144,7 +144,7 @@ describe('TextDocumentConnection', () => {
         })
     })
 
-    describe('onWillSaeTextDocumentWaitUntil', () => {
+    describe('onWillSaveTextDocumentWaitUntil', () => {
         it('supports only last handler', () => {
             const connection = observe(testConnection)
             connection.callbacks.onWillSaveTextDocumentWaitUntil(p => {
