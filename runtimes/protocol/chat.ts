@@ -17,9 +17,14 @@ import {
     VoteParams,
     ProtocolNotificationType,
     ProtocolRequestType,
+    ProgressToken,
 } from './lsp'
 
-export const chatRequestType = new ProtocolRequestType<ChatParams, ChatResult, ChatResult, void, void>(
+export interface ChatRequest extends ChatParams {
+    partialResultToken?: ProgressToken
+}
+
+export const chatRequestType = new ProtocolRequestType<ChatRequest, ChatResult, ChatResult, void, void>(
     'aws/chat/sendChatPrompt'
 )
 

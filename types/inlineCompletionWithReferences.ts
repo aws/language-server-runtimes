@@ -1,10 +1,8 @@
-import { InlineCompletionItem, InlineCompletionParams } from 'vscode-languageserver-protocol'
+import { InlineCompletionItem } from 'vscode-languageserver-types'
 
-export type InlineCompletionWithReferencesParams = InlineCompletionParams & {}
 /**
  * Extend InlineCompletionItem to include optional references.
  */
-
 export type InlineCompletionItemWithReferences = InlineCompletionItem & {
     /**
      * Identifier for the the recommendation returned by server.

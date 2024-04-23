@@ -1,12 +1,14 @@
 import {
-    InlineCompletionWithReferencesParams,
     InlineCompletionListWithReferences,
     InlineCompletionItemWithReferences,
     LogInlineCompletionSessionResultsParams,
     InlineCompletionRegistrationOptions,
     ProtocolNotificationType,
     ProtocolRequestType,
+    InlineCompletionParams,
 } from './lsp'
+
+export type InlineCompletionWithReferencesParams = InlineCompletionParams & {}
 
 export const inlineCompletionWithReferencesRequestType = new ProtocolRequestType<
     InlineCompletionWithReferencesParams,
