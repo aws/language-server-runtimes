@@ -4,7 +4,11 @@
     "description": "Type definitions in Language Servers and Runtimes for AWS",
     "main": "out/index.js",
     "scripts": {
-        "compile": "tsc --build"
+        "clean": "rm -rf out/",
+        "compile": "tsc --build",
+        "prepub:copyFiles": "cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
+        "prepub": "npm run clean && npm run compile && npm run prepub:copyFiles",
+        "pub": "cd out && npm publish"
     },
     "repository": {
         "type": "git",
