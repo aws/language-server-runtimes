@@ -1,7 +1,8 @@
 import { ParameterStructures, ProgressType, RegistrationType, RequestType } from 'vscode-languageserver-protocol'
 import { _EM } from 'vscode-jsonrpc'
 
-export { TextDocument, Position } from 'vscode-languageserver-textdocument'
+export * from '@aws/language-server-runtimes-types'
+export { TextDocument } from 'vscode-languageserver-textdocument'
 
 // LSP protocol is a core dependency for LSP feature provided by runtimes.
 // Since we aim to provide whole range of LSP specification for Clients and Capabilities,

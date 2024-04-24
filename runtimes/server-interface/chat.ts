@@ -1,5 +1,6 @@
-import { NotificationHandler, RequestHandler } from '../protocol'
 import {
+    NotificationHandler,
+    RequestHandler,
     ChatParams,
     ChatResult,
     CopyCodeToClipboardParams,
@@ -17,7 +18,7 @@ import {
     TabAddParams,
     TabRemoveParams,
     VoteParams,
-} from '@aws/language-server-runtimes-types'
+} from '../protocol'
 
 /**
  * The Chat feature interface. Provides access to chat features
