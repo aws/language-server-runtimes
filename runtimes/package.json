@@ -1,6 +1,6 @@
 {
     "name": "@aws/language-server-runtimes",
-    "version": "0.2.2",
+    "version": "0.2.3",
     "description": "Runtimes to host Language Servers for AWS",
     "files": [
         "out",
@@ -24,7 +24,7 @@
         "compile": "tsc --build",
         "fix:prettier": "prettier . --write",
         "prepare": "husky install",
-        "prepub:copyFiles": "cp ../.npmignore ../CHANGELOG.md ../LICENSE ../NOTICE ../README.md ../SECURITY.md package.json out/",
+        "prepub:copyFiles": "cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
         "prepub": "npm run clean && npm run test && npm run compile && npm run prepub:copyFiles",
         "pub": "cd out && npm publish",
         "test:prettier": "prettier . --check",
