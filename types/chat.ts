@@ -1,5 +1,3 @@
-import { ProgressToken } from 'vscode-languageserver-protocol'
-
 // Chat Data Model
 
 export interface ChatItemAction {
@@ -51,7 +49,6 @@ export type CodeSelectionType = 'selection' | 'block'
 export interface ChatParams {
     tabId: string
     prompt: ChatPrompt
-    partialResultToken?: ProgressToken
 }
 export interface ChatResult {
     body?: string
