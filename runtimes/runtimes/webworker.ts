@@ -26,6 +26,8 @@ import {
     tabChangeNotificationType,
     tabAddNotificationType,
     tabRemoveNotificationType,
+    // Workspace protocol
+    cursorStateChangeNotificationType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import { Chat, Logging, Lsp, Telemetry, Workspace } from '../server-interface'
@@ -74,6 +76,7 @@ export const webworker = (props: RuntimeProps) => {
             isFile: _path => Promise.resolve(false),
             remove: _dir => Promise.resolve(),
         },
+        onCursorStateChange: handler => lspConnection.onNotification(cursorStateChangeNotificationType, handler),
     }
 
     const chat: Chat = {

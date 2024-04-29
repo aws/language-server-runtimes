@@ -1,12 +1,7 @@
-import { TextDocument, WorkspaceFolder } from '../protocol'
+import { TextDocument } from 'vscode-languageserver-textdocument'
+import { Dirent, NotificationHandler, CursorStateChangeParams, WorkspaceFolder } from '../protocol'
 
-// Minimal version of fs.Dirent
-interface Dirent {
-    isFile(): boolean
-    isDirectory(): boolean
-    name: string
-    path: string
-}
+export * from '../protocol/workspace'
 
 /**
  * The Workspace feature interface. Provides access to currently
@@ -27,4 +22,5 @@ export type Workspace = {
         isFile: (path: string) => Promise<boolean>
         remove: (dir: string) => Promise<void>
     }
+    onCursorStateChange: (handler: NotificationHandler<CursorStateChangeParams>) => void
 }

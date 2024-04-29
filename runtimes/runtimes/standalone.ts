@@ -26,6 +26,7 @@ import {
     tabChangeNotificationType,
     tabRemoveNotificationType,
     voteNotificationType,
+    cursorStateChangeNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -171,6 +172,7 @@ export const standalone = (props: RuntimeProps) => {
                 remove: dir => rm(dir, { recursive: true, force: true }),
                 isFile: path => stat(path).then(({ isFile }) => isFile()),
             },
+            onCursorStateChange: handler => lspConnection.onNotification(cursorStateChangeNotificationType, handler),
         }
 
         const chat: Chat = {
