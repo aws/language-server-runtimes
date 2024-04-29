@@ -1,6 +1,5 @@
 // Chat Data Model
-
-import { PartialResultParams } from './lsp'
+import { Position, Range, TextDocumentIdentifier } from './lsp'
 
 export interface ChatItemAction {
     pillText: string
@@ -46,11 +45,18 @@ export interface FeedbackPayload {
 
 export type CodeSelectionType = 'selection' | 'block'
 
+export type CursorState = { position: Position } | { range: Range }
+
 // LSP Types
+interface PartialResultParams {
+    partialResultToken?: number | string
+}
 
 export interface ChatParams extends PartialResultParams {
     tabId: string
     prompt: ChatPrompt
+    cursorState?: CursorState[]
+    textDocument?: TextDocumentIdentifier
 }
 export interface ChatResult {
     body?: string
@@ -74,6 +80,8 @@ export interface QuickActionParams extends PartialResultParams {
     tabId: string
     quickAction: string
     prompt?: string
+    cursorState?: CursorState[]
+    textDocument?: TextDocumentIdentifier
 }
 
 // Currently the QuickAction result and ChatResult share the same shape
