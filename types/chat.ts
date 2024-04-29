@@ -1,5 +1,7 @@
 // Chat Data Model
 
+import { PartialResultParams } from './lsp'
+
 export interface ChatItemAction {
     pillText: string
     prompt?: string
@@ -46,7 +48,7 @@ export type CodeSelectionType = 'selection' | 'block'
 
 // LSP Types
 
-export interface ChatParams {
+export interface ChatParams extends PartialResultParams {
     tabId: string
     prompt: ChatPrompt
 }
@@ -68,7 +70,7 @@ export interface ChatResult {
 export type EndChatParams = { tabId: string }
 export type EndChatResult = boolean
 
-export interface QuickActionParams {
+export interface QuickActionParams extends PartialResultParams {
     tabId: string
     quickAction: string
     prompt?: string
