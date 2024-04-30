@@ -96,7 +96,6 @@ export const webworker = (props: RuntimeProps) => {
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
     }
 
-    
     let credentialsProvider: CredentialsProvider
     if (props.credentialsProvider) {
         credentialsProvider = props.credentialsProvider
