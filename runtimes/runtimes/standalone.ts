@@ -12,7 +12,6 @@ import {
 
     // Chat protocol
     chatRequestType,
-    copyCodeToClipboardNotificationType,
     endChatRequestType,
     feedbackNotificationType,
     followUpClickNotificationType,
@@ -25,7 +24,6 @@ import {
     tabAddNotificationType,
     tabChangeNotificationType,
     tabRemoveNotificationType,
-    voteNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -182,11 +180,8 @@ export const standalone = (props: RuntimeProps) => {
             onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
             onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
             onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
-            onVote: handler => lspConnection.onNotification(voteNotificationType.method, handler),
             onCodeInsertToCursorPosition: handler =>
                 lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
-            onCopyCodeToClipboard: handler =>
-                lspConnection.onNotification(copyCodeToClipboardNotificationType.method, handler),
             onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
             onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
             onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),

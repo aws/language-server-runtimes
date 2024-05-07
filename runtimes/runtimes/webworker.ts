@@ -18,10 +18,8 @@ import {
     sourceLinkClickNotificationType,
     infoLinkClickNotificationType,
     linkClickNotificationType,
-    copyCodeToClipboardNotificationType,
     insertToCursorPositionNotificationType,
     feedbackNotificationType,
-    voteNotificationType,
     readyNotificationType,
     tabChangeNotificationType,
     tabAddNotificationType,
@@ -85,11 +83,8 @@ export const webworker = (props: RuntimeProps) => {
         onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
         onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
         onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
-        onVote: handler => lspConnection.onNotification(voteNotificationType.method, handler),
         onCodeInsertToCursorPosition: handler =>
             lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
-        onCopyCodeToClipboard: handler =>
-            lspConnection.onNotification(copyCodeToClipboardNotificationType.method, handler),
         onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
         onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
         onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),

@@ -1,4 +1,5 @@
-import { ReferenceTrackerInformation, CodeSelectionType } from '@aws/language-server-runtimes-types'
+import { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
+export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
 
 export type AuthFollowUpType = 'full-auth' | 're-auth' | 'missing_scopes' | 'use-supported-auth'
 export function isValidAuthFollowUpType(value: string): value is AuthFollowUpType {
@@ -47,17 +48,6 @@ export interface SendToPromptParams {
 export interface SendToPromptMessage {
     command: typeof SEND_TO_PROMPT
     params: SendToPromptParams
-}
-
-export interface InsertToCursorPositionParams {
-    tabId: string
-    messageId: string
-    code?: string
-    type?: CodeSelectionType
-    referenceTrackerInformation?: ReferenceTrackerInformation[]
-    eventId?: string
-    codeBlockIndex?: number
-    totalCodeBlocks?: number
 }
 
 export interface InsertToCursorPositionMessage {

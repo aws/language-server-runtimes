@@ -3,7 +3,6 @@ import {
     RequestHandler,
     ChatParams,
     ChatResult,
-    CopyCodeToClipboardParams,
     EndChatParams,
     EndChatResult,
     FeedbackParams,
@@ -17,7 +16,6 @@ import {
     TabChangeParams,
     TabAddParams,
     TabRemoveParams,
-    VoteParams,
 } from '../protocol'
 
 /**
@@ -34,9 +32,7 @@ export type Chat = {
     onTabAdd: (handler: NotificationHandler<TabAddParams>) => void
     onTabChange: (handler: NotificationHandler<TabChangeParams>) => void
     onTabRemove: (handler: NotificationHandler<TabRemoveParams>) => void
-    onVote: (handler: NotificationHandler<VoteParams>) => void
     onCodeInsertToCursorPosition: (handler: NotificationHandler<InsertToCursorPositionParams>) => void
-    onCopyCodeToClipboard: (handler: NotificationHandler<CopyCodeToClipboardParams>) => void
     onLinkClick: (handler: NotificationHandler<LinkClickParams>) => void
     onInfoLinkClick: (handler: NotificationHandler<InfoLinkClickParams>) => void
     onSourceLinkClick: (handler: NotificationHandler<SourceLinkClickParams>) => void
