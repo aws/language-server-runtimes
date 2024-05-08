@@ -31,11 +31,6 @@ export interface ChatPrompt {
     command?: string
 }
 
-export enum VoteType {
-    UP = 'upvote',
-    DOWN = 'downvote',
-}
-
 export interface FeedbackPayload {
     messageId: string
     tabId: string
@@ -87,12 +82,6 @@ export interface QuickActionParams extends PartialResultParams {
 // Currently the QuickAction result and ChatResult share the same shape
 export interface QuickActionResult extends ChatResult {}
 
-export interface VoteParams {
-    tabId: string
-    messageId: string
-    vote: VoteType
-}
-
 export interface FeedbackParams {
     tabId: string
     messageId: string
@@ -115,11 +104,10 @@ export interface InsertToCursorPositionParams {
     code?: string
     type?: CodeSelectionType
     referenceTrackerInformation?: ReferenceTrackerInformation[]
+    eventId?: string
+    codeBlockIndex?: number
+    totalCodeBlocks?: number
 }
-
-// Currently CopyCodeToClipboardParams and InsertToCursorPositionParams have the same shape
-// Exporting the two interfaces separately makes future interface changes easier
-export interface CopyCodeToClipboardParams extends InsertToCursorPositionParams {}
 
 export interface LinkClickParams {
     tabId: string

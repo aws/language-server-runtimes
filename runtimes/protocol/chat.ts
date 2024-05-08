@@ -1,7 +1,6 @@
 import {
     ChatParams,
     ChatResult,
-    CopyCodeToClipboardParams,
     EndChatParams,
     EndChatResult,
     FeedbackParams,
@@ -14,7 +13,6 @@ import {
     TabAddParams,
     TabChangeParams,
     TabRemoveParams,
-    VoteParams,
     ProtocolNotificationType,
     ProtocolRequestType,
     ProgressToken,
@@ -38,8 +36,6 @@ export const quickActionRequestType = new ProtocolRequestType<QuickActionParams,
 
 export const readyNotificationType = new ProtocolNotificationType<void, void>('aws/chat/ready')
 
-export const voteNotificationType = new ProtocolNotificationType<VoteParams, void>('aws/chat/vote')
-
 export const feedbackNotificationType = new ProtocolNotificationType<FeedbackParams, void>('aws/chat/feedback')
 
 export const tabAddNotificationType = new ProtocolNotificationType<TabAddParams, void>('aws/chat/tabAdd')
@@ -51,11 +47,6 @@ export const tabRemoveNotificationType = new ProtocolNotificationType<TabRemoveP
 export const insertToCursorPositionNotificationType = new ProtocolNotificationType<InsertToCursorPositionParams, void>(
     'aws/chat/insertToCursorPosition'
 )
-
-export const copyCodeToClipboardNotificationType = new ProtocolNotificationType<CopyCodeToClipboardParams, void>(
-    'aws/chat/copyCodeToClipboard'
-)
-
 export const linkClickNotificationType = new ProtocolNotificationType<LinkClickParams, void>('aws/chat/linkClick')
 
 export const infoLinkClickNotificationType = new ProtocolNotificationType<InfoLinkClickParams, void>(
