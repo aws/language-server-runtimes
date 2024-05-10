@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.4] - 2024-05-10
+
+- Remove `onCopyCodeToClipboard` and `onVote` events from chat interface
+
 ## [0.2.3] - 2024-04-24
 
 - Added support for `didChangeWorkspaceFolders` notification to LSP feature
