@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.3] - 2024-05-10
+
+- Removed `VoteType`, `VoteParams` and `CopyCodeToClipboardParams` from Chat types
+
 ## [0.0.2] - 2024-05-06
 
 - Update Chat and QuickAction request parameter types
