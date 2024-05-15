@@ -2,13 +2,13 @@
     "name": "@aws/chat-client-ui-types",
     "version": "0.0.3",
     "description": "Type definitions for Chat UIs in Language Servers and Runtimes for AWS",
-    "main": "index.js",
+    "main": "/out/index.js",
     "scripts": {
         "clean": "rm -rf out/",
         "compile": "tsc --build",
-        "prepub:copyFiles": "cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
+        "prepub:copyFiles": "cp ../LICENSE ../NOTICE ../SECURITY.md .",
         "prepub": "npm run clean && npm run compile && npm run prepub:copyFiles",
-        "pub": "cd out && npm publish"
+        "pub": "npm publish"
     },
     "repository": {
         "type": "git",
