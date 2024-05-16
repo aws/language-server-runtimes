@@ -1,5 +1,13 @@
-import { CodeSelectionType, InsertToCursorPositionParams, ReferenceTrackerInformation } from '@aws/language-server-runtimes-types'
-export { CodeSelectionType, InsertToCursorPositionParams, ReferenceTrackerInformation } from '@aws/language-server-runtimes-types'
+import {
+    CodeSelectionType,
+    InsertToCursorPositionParams,
+    ReferenceTrackerInformation,
+} from '@aws/language-server-runtimes-types'
+export {
+    CodeSelectionType,
+    InsertToCursorPositionParams,
+    ReferenceTrackerInformation,
+} from '@aws/language-server-runtimes-types'
 
 export type AuthFollowUpType = 'full-auth' | 're-auth' | 'missing_scopes' | 'use-supported-auth'
 export function isValidAuthFollowUpType(value: string): value is AuthFollowUpType {
@@ -8,7 +16,7 @@ export function isValidAuthFollowUpType(value: string): value is AuthFollowUpTyp
 
 export enum RelevancyVoteType {
     UP = 'upvote',
-    DOWN = 'downvote'
+    DOWN = 'downvote',
 }
 
 export type GenericCommandVerb = 'Explain' | 'Refactor' | 'Fix' | 'Optimize'
@@ -73,20 +81,20 @@ export interface AuthFollowUpClickedMessage {
 }
 
 export interface CopyCodeToClipboardParams {
-    tabId: string,
-    messageId: string,
-    code?: string,
-    type?: CodeSelectionType,
-    referenceTrackerInformation?: ReferenceTrackerInformation[],
-    eventId:string,
-    codeBlockIndex?: number,
+    tabId: string
+    messageId: string
+    code?: string
+    type?: CodeSelectionType
+    referenceTrackerInformation?: ReferenceTrackerInformation[]
+    eventId: string
+    codeBlockIndex?: number
     totalCodeBlocks?: number
 }
 
 export interface VoteParams {
-    tabId: string,
-    messageId: string,
-    vote: RelevancyVoteType,
+    tabId: string
+    messageId: string
+    vote: RelevancyVoteType
     eventId?: string
 }
 

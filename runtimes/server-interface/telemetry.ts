@@ -1,4 +1,4 @@
-import { NotificationHandler } from "vscode-languageserver-protocol"
+import { NotificationHandler } from 'vscode-languageserver-protocol'
 
 export type Metric = {
     name: string
@@ -27,6 +27,6 @@ type ErrorData = {
  */
 export type Telemetry = {
     emitMetric: (metric: MetricEvent) => void
-    // Handles telemetry events sent from clients 
+    // Handles telemetry events sent from clients
     onClientTelemetry: (handler: NotificationHandler<any>) => void
 }
