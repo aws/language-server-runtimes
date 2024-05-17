@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.5] - 2024-05-17
+
+- Extend telemetry endpoint in the protocol and add handler in Telemetry feature  
+
 ## [0.2.4] - 2024-05-10
 
 - Remove `onCopyCodeToClipboard` and `onVote` events from chat interface
