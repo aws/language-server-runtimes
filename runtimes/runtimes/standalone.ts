@@ -9,6 +9,7 @@ import {
     logInlineCompletionSessionResultsNotificationType,
     inlineCompletionRequestType,
     TextDocument,
+    telemetryNotificationType,
 
     // Chat protocol
     chatRequestType,
@@ -121,6 +122,7 @@ export const standalone = (props: RuntimeProps) => {
         // Set up telemetry over LSP
         const telemetry: Telemetry = {
             emitMetric: metric => lspConnection.telemetry.logEvent(metric),
+            onClientTelemetry: handler => lspConnection.onNotification(telemetryNotificationType.method, handler),
         }
 
         // Set up the workspace sync to use the LSP Text Document Sync capability
