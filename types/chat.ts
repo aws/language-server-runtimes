@@ -19,8 +19,8 @@ export interface ReferenceTrackerInformation {
     repository?: string
     url?: string
     recommendationContentSpan?: {
-        start?: number
-        end?: number
+        start: number
+        end: number
     }
     information: string
 }
