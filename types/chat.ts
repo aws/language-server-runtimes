@@ -6,6 +6,7 @@ export interface ChatItemAction {
     prompt?: string
     disabled?: boolean
     description?: string
+    type?: string
 }
 
 export interface SourceLink {
@@ -84,8 +85,8 @@ export interface QuickActionResult extends ChatResult {}
 
 export interface FeedbackParams {
     tabId: string
-    messageId: string
     feedbackPayload: FeedbackPayload
+    eventId?: string
 }
 
 export interface TabEventParams {
@@ -109,15 +110,18 @@ export interface InsertToCursorPositionParams {
     totalCodeBlocks?: number
 }
 
-export interface LinkClickParams {
+export interface InfoLinkClickParams {
     tabId: string
-    messageId: string
     link: string
-    mouseEvent?: MouseEvent
+    eventId?: string
 }
-export interface InfoLinkClickParams extends LinkClickParams {}
+export interface LinkClickParams extends InfoLinkClickParams {
+    messageId: string
+}
 
-export interface SourceLinkClickParams extends LinkClickParams {}
+export interface SourceLinkClickParams extends InfoLinkClickParams {
+    messageId: string
+}
 
 export interface FollowUpClickParams {
     tabId: string
