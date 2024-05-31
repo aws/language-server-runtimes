@@ -16,6 +16,19 @@ import {
     ProtocolNotificationType,
     ProtocolRequestType,
     ProgressToken,
+    CHAT_REQUEST_METHOD,
+    END_CHAT_REQUEST_METHOD,
+    FEEDBACK_NOTIFICATION_METHOD,
+    FOLLOW_UP_CLICK_NOTIFICATION_METHOD,
+    INFO_LINK_CLICK_NOTIFICATION_METHOD,
+    INSERT_TO_CURSOR_POSITION_NOTIFICATION_METHOD,
+    LINK_CLICK_NOTIFICATION_METHOD,
+    QUICK_ACTION_REQUEST_METHOD,
+    READY_NOTIFICATION_METHOD,
+    SOURCE_LINK_CLICK_NOTIFICATION_METHOD,
+    TAB_ADD_NOTIFICATION_METHOD,
+    TAB_CHANGE_NOTIFICATION_METHOD,
+    TAB_REMOVE_NOTIFICATION_METHOD,
 } from './lsp'
 
 export interface ChatRequest extends ChatParams {
@@ -23,40 +36,35 @@ export interface ChatRequest extends ChatParams {
 }
 
 export const chatRequestType = new ProtocolRequestType<ChatRequest, ChatResult, ChatResult, void, void>(
-    'aws/chat/sendChatPrompt'
+    CHAT_REQUEST_METHOD
 )
-
 export const endChatRequestType = new ProtocolRequestType<EndChatParams, EndChatResult, never, void, void>(
-    'aws/chat/endChat'
+    END_CHAT_REQUEST_METHOD
 )
-
 export const quickActionRequestType = new ProtocolRequestType<QuickActionParams, ChatResult, ChatResult, void, void>(
-    'aws/chat/sendChatQuickAction'
+    QUICK_ACTION_REQUEST_METHOD
 )
-
-export const readyNotificationType = new ProtocolNotificationType<void, void>('aws/chat/ready')
-
-export const feedbackNotificationType = new ProtocolNotificationType<FeedbackParams, void>('aws/chat/feedback')
-
-export const tabAddNotificationType = new ProtocolNotificationType<TabAddParams, void>('aws/chat/tabAdd')
-
-export const tabChangeNotificationType = new ProtocolNotificationType<TabChangeParams, void>('aws/chat/tabChange')
-
-export const tabRemoveNotificationType = new ProtocolNotificationType<TabRemoveParams, void>('aws/chat/tabRemove')
-
+export const readyNotificationType = new ProtocolNotificationType<void, void>(READY_NOTIFICATION_METHOD)
+export const feedbackNotificationType = new ProtocolNotificationType<FeedbackParams, void>(FEEDBACK_NOTIFICATION_METHOD)
+export const tabAddNotificationType = new ProtocolNotificationType<TabAddParams, void>(TAB_ADD_NOTIFICATION_METHOD)
+export const tabChangeNotificationType = new ProtocolNotificationType<TabChangeParams, void>(
+    TAB_CHANGE_NOTIFICATION_METHOD
+)
+export const tabRemoveNotificationType = new ProtocolNotificationType<TabRemoveParams, void>(
+    TAB_REMOVE_NOTIFICATION_METHOD
+)
 export const insertToCursorPositionNotificationType = new ProtocolNotificationType<InsertToCursorPositionParams, void>(
-    'aws/chat/insertToCursorPosition'
+    INSERT_TO_CURSOR_POSITION_NOTIFICATION_METHOD
 )
-export const linkClickNotificationType = new ProtocolNotificationType<LinkClickParams, void>('aws/chat/linkClick')
-
+export const linkClickNotificationType = new ProtocolNotificationType<LinkClickParams, void>(
+    LINK_CLICK_NOTIFICATION_METHOD
+)
 export const infoLinkClickNotificationType = new ProtocolNotificationType<InfoLinkClickParams, void>(
-    'aws/chat/infoLinkClick'
+    INFO_LINK_CLICK_NOTIFICATION_METHOD
 )
-
 export const sourceLinkClickNotificationType = new ProtocolNotificationType<SourceLinkClickParams, void>(
-    'aws/chat/sourceLinkClick'
+    SOURCE_LINK_CLICK_NOTIFICATION_METHOD
 )
-
 export const followUpClickNotificationType = new ProtocolNotificationType<FollowUpClickParams, void>(
-    'aws/chat/followUpClick'
+    FOLLOW_UP_CLICK_NOTIFICATION_METHOD
 )
