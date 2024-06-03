@@ -1,6 +1,20 @@
 // Chat Data Model
 import { Position, Range, TextDocumentIdentifier } from './lsp'
 
+export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
+export const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
+export const QUICK_ACTION_REQUEST_METHOD = 'aws/chat/sendChatQuickAction'
+export const READY_NOTIFICATION_METHOD = 'aws/chat/ready'
+export const FEEDBACK_NOTIFICATION_METHOD = 'aws/chat/feedback'
+export const TAB_ADD_NOTIFICATION_METHOD = 'aws/chat/tabAdd'
+export const TAB_CHANGE_NOTIFICATION_METHOD = 'aws/chat/tabChange'
+export const TAB_REMOVE_NOTIFICATION_METHOD = 'aws/chat/tabRemove'
+export const INSERT_TO_CURSOR_POSITION_NOTIFICATION_METHOD = 'aws/chat/insertToCursorPosition'
+export const LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/linkClick'
+export const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
+export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
+export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
+
 export interface ChatItemAction {
     pillText: string
     prompt?: string
