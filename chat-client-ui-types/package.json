@@ -1,6 +1,6 @@
 {
     "name": "@aws/chat-client-ui-types",
-    "version": "0.0.3",
+    "version": "0.1.0",
     "description": "Type definitions for Chat UIs in Language Servers and Runtimes for AWS",
     "main": "/out/index.js",
     "scripts": {

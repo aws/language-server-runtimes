@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.1.0] - 2024-06-03
+
+- Update package folder structure
+- Consume latest `@aws/language-server-runtimes-types`
+
 ## [0.0.3] - 2024-05-10
 
 - Update `@aws/language-server-runtimes-types` to `0.0.3`
