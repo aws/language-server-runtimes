@@ -2,7 +2,7 @@
     "name": "@aws/chat-client-ui-types",
     "version": "0.0.3",
     "description": "Type definitions for Chat UIs in Language Servers and Runtimes for AWS",
-    "main": "/out/index.js",
+    "main": "./out/index.js",
     "scripts": {
         "clean": "rm -rf out/",
         "compile": "tsc --build",
