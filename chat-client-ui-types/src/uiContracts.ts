@@ -9,7 +9,7 @@ export function isValidAuthFollowUpType(value: string): value is AuthFollowUpTyp
 export type GenericCommandVerb = 'Explain' | 'Refactor' | 'Fix' | 'Optimize'
 export type TriggerType = 'hotkeys' | 'click' | 'contextMenu'
 
-export const TAB_ID_RECEIVED = 'triggerTabIdReceived'
+export const TRIGGER_TYPE_RECEIVED = 'triggerTypeReceived'
 export const SEND_TO_PROMPT = 'sendToPrompt'
 export const ERROR_MESSAGE = 'errorMessage'
 export const INSERT_TO_CURSOR_POSITION = 'insertToCursorPosition'
@@ -17,7 +17,7 @@ export const AUTH_FOLLOW_UP_CLICKED = 'authFollowUpClicked'
 export const GENERIC_COMMAND = 'genericCommand'
 
 export type UiMessageCommand =
-    | typeof TAB_ID_RECEIVED
+    | typeof TRIGGER_TYPE_RECEIVED
     | typeof SEND_TO_PROMPT
     | typeof ERROR_MESSAGE
     | typeof INSERT_TO_CURSOR_POSITION
@@ -29,16 +29,16 @@ export interface UiMessage {
     params?: UiMessageParams
 }
 
-export type UiMessageParams = TabIdReceivedParams | InsertToCursorPositionParams | AuthFollowUpClickedParams
+export type UiMessageParams = TriggerTypeReceivedParams | InsertToCursorPositionParams | AuthFollowUpClickedParams
 
-export interface TabIdReceivedParams {
+export interface TriggerTypeReceivedParams {
     triggerType: TriggerType
     tabId: string
 }
 
-export interface TabIdReceivedMessage {
-    command: typeof TAB_ID_RECEIVED
-    params: TabIdReceivedParams
+export interface TriggerTypeReceivedMessage {
+    command: typeof TRIGGER_TYPE_RECEIVED
+    params: TriggerTypeReceivedParams
 }
 
 export interface SendToPromptParams {
