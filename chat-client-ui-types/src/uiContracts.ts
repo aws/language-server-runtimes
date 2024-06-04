@@ -29,7 +29,12 @@ export interface UiMessage {
     params?: UiMessageParams
 }
 
-export type UiMessageParams = TriggerTypeReceivedParams | InsertToCursorPositionParams | AuthFollowUpClickedParams
+export type UiMessageParams =
+    | TriggerTypeReceivedParams
+    | InsertToCursorPositionParams
+    | AuthFollowUpClickedParams
+    | GenericCommandParams
+    | ErrorParams
 
 export interface TriggerTypeReceivedParams {
     triggerType: TriggerType
