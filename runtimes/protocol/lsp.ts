@@ -1,5 +1,11 @@
 import { _EM } from 'vscode-jsonrpc'
-import { InitializeResult as InitializeResultBase, ParameterStructures, ProgressType, RegistrationType, RequestType } from 'vscode-languageserver-protocol'
+import {
+    InitializeResult as InitializeResultBase,
+    ParameterStructures,
+    ProgressType,
+    RegistrationType,
+    RequestType,
+} from 'vscode-languageserver-protocol'
 import { QuickActionsOptions } from './chat'
 
 export * from '@aws/language-server-runtimes-types'
@@ -33,6 +39,7 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
         super(method, ParameterStructures.auto)
     }
 }
+
 
 /**
  * Custom AWS Runtimes InitializeResult object interface with extended options.

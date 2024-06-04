@@ -1,52 +1,53 @@
 import {
-    CHAT_REQUEST_METHOD,
     ChatParams,
     ChatResult,
-    END_CHAT_REQUEST_METHOD,
     EndChatParams,
     EndChatResult,
-    FEEDBACK_NOTIFICATION_METHOD,
-    FOLLOW_UP_CLICK_NOTIFICATION_METHOD,
     FeedbackParams,
     FollowUpClickParams,
-    INFO_LINK_CLICK_NOTIFICATION_METHOD,
-    INSERT_TO_CURSOR_POSITION_NOTIFICATION_METHOD,
     InfoLinkClickParams,
     InsertToCursorPositionParams,
-    LINK_CLICK_NOTIFICATION_METHOD,
     LinkClickParams,
-    ProgressToken,
-    ProtocolNotificationType,
-    ProtocolRequestType,
-    QUICK_ACTION_REQUEST_METHOD,
     QuickActionParams,
-    READY_NOTIFICATION_METHOD,
-    SOURCE_LINK_CLICK_NOTIFICATION_METHOD,
     SourceLinkClickParams,
-    TAB_ADD_NOTIFICATION_METHOD,
-    TAB_CHANGE_NOTIFICATION_METHOD,
-    TAB_REMOVE_NOTIFICATION_METHOD,
     TabAddParams,
     TabChangeParams,
     TabRemoveParams,
-} from './lsp';
+    ProtocolNotificationType,
+    ProtocolRequestType,
+    ProgressToken,
+    CHAT_REQUEST_METHOD,
+    END_CHAT_REQUEST_METHOD,
+    FEEDBACK_NOTIFICATION_METHOD,
+    FOLLOW_UP_CLICK_NOTIFICATION_METHOD,
+    INFO_LINK_CLICK_NOTIFICATION_METHOD,
+    INSERT_TO_CURSOR_POSITION_NOTIFICATION_METHOD,
+    LINK_CLICK_NOTIFICATION_METHOD,
+    QUICK_ACTION_REQUEST_METHOD,
+    READY_NOTIFICATION_METHOD,
+    SOURCE_LINK_CLICK_NOTIFICATION_METHOD,
+    TAB_ADD_NOTIFICATION_METHOD,
+    TAB_CHANGE_NOTIFICATION_METHOD,
+    TAB_REMOVE_NOTIFICATION_METHOD,
+} from './lsp'
+
 
 /**
  * Configuration object for chat quick action.
  */
 export interface QuickActionCommand {
-    command: string;
-    disabled?: boolean;
-    description?: string;
-    placeholder?: string;
+    command: string
+    disabled?: boolean
+    description?: string
+    placeholder?: string
 }
 
 /**
  * Configuration object for registering chat quick actions groups.
  */
 export interface QuickActionCommandGroup {
-    groupName?: string;
-    commands: QuickActionCommand[];
+    groupName?: string
+    commands: QuickActionCommand[]
 }
 
 /**

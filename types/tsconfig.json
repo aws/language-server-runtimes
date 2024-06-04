@@ -3,5 +3,6 @@
     "compilerOptions": {
         "rootDir": ".",
         "outDir": "./out"
-    }
+    },
+    "exclude": ["node_modules", "out"]
 }
