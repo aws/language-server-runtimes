@@ -40,7 +40,6 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
     }
 }
 
-
 /**
  * Custom AWS Runtimes InitializeResult object interface with extended options.
  */

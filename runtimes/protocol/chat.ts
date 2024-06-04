@@ -31,7 +31,6 @@ import {
     TAB_REMOVE_NOTIFICATION_METHOD,
 } from './lsp'
 
-
 /**
  * Configuration object for chat quick action.
  */
