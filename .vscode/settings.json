@@ -1,0 +1,12 @@
+{
+    "typescript.preferences.quoteStyle": "single",
+    "[typescript]": {
+        "editor.insertSpaces": true,
+        "editor.codeActionsOnSave": {
+            "source.fixAll.eslint": "explicit",
+            // "source.organizeImports": "explicit",
+            // "source.sortMembers": "explicit"
+        },
+        "editor.formatOnSave": true
+    }
+}
