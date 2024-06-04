@@ -1,5 +1,6 @@
-import { ParameterStructures, ProgressType, RegistrationType, RequestType } from 'vscode-languageserver-protocol'
 import { _EM } from 'vscode-jsonrpc'
+import { InitializeResult as InitializeResultBase, ParameterStructures, ProgressType, RegistrationType, RequestType } from 'vscode-languageserver-protocol'
+import { QuickActionsOptions } from './chat'
 
 export * from '@aws/language-server-runtimes-types'
 export { TextDocument } from 'vscode-languageserver-textdocument'
@@ -12,8 +13,8 @@ export { TextDocument } from 'vscode-languageserver-textdocument'
 export * from 'vscode-languageserver-protocol'
 
 // Custom Runtimes LSP extensions
-export * from './inlineCompletions'
 export * from './inlineCompletionWithReferences'
+export * from './inlineCompletions'
 
 // AutoParameterStructuresProtocolRequestType allows ParameterStructures both by-name and by-position
 export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
@@ -30,5 +31,20 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 
     public constructor(method: string) {
         super(method, ParameterStructures.auto)
+    }
+}
+
+/**
+ * Custom AWS Runtimes InitializeResult object interface with extended options.
+ */
+export interface InitializeResult extends InitializeResultBase {
+    /**
+     * The server signals custom AWS Runtimes capabilities it supports.
+     */
+    awsServerCapabilities?: {
+        /**
+         * The server provides quick actions support.
+         */
+        chatQuickActionsProvider?: QuickActionsOptions
     }
 }

@@ -176,6 +176,7 @@ export const standalone = (props: RuntimeProps) => {
         const chat: Chat = {
             onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
             onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
+            // TODO: consider adding LSP router for quick actions in case multiple servers providing actions
             onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
             onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
             onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),

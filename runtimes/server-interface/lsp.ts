@@ -1,44 +1,48 @@
 import {
     CompletionItem,
     CompletionList,
-    InlineCompletionItem,
     CompletionParams,
     DidChangeConfigurationParams,
     DidChangeTextDocumentParams,
+    DidChangeWorkspaceFoldersParams,
     DidCloseTextDocumentParams,
+    DidOpenTextDocumentParams,
+    DocumentFormattingParams,
     ExecuteCommandParams,
     Hover,
     HoverParams,
     InitializeError,
     InitializeParams,
     InitializedParams,
-    InlineCompletionList,
-    InlineCompletionParams,
-    NotificationHandler,
-    PublishDiagnosticsParams,
-    ServerCapabilities,
+    InlineCompletionItem,
     InlineCompletionItemWithReferences,
+    InlineCompletionList,
     InlineCompletionListWithReferences,
+    InlineCompletionParams,
     LogInlineCompletionSessionResultsParams,
-    RequestHandler,
-    DidOpenTextDocumentParams,
-    DocumentFormattingParams,
-    TextEdit,
-    ProgressType,
+    NotificationHandler,
     ProgressToken,
-    DidChangeWorkspaceFoldersParams,
-} from '../protocol'
+    ProgressType,
+    PublishDiagnosticsParams,
+    QuickActionsOptions,
+    RequestHandler,
+    ServerCapabilities,
+    TextEdit,
+} from '../protocol';
 
 // Re-export whole surface of LSP protocol used in Runtimes.
 // This is needed for LSP features as we pass messages down.
-export * from '../protocol/lsp'
+export * from '../protocol/lsp';
 
 export type PartialServerCapabilities<T = any> = Pick<
     ServerCapabilities<T>,
     'completionProvider' | 'hoverProvider' | 'executeCommandProvider'
 >
 export type PartialInitializeResult<T = any> = {
-    capabilities: PartialServerCapabilities<T>
+    capabilities: PartialServerCapabilities<T>,
+    awsServerCapabilities?: {
+        chatQuickActionsProvider?: QuickActionsOptions,
+    }
 }
 
 // Using `RequestHandler` here from `vscode-languageserver-protocol` which doesn't support partial progress.

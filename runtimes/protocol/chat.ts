@@ -1,35 +1,63 @@
 import {
+    CHAT_REQUEST_METHOD,
     ChatParams,
     ChatResult,
+    END_CHAT_REQUEST_METHOD,
     EndChatParams,
     EndChatResult,
-    FeedbackParams,
-    FollowUpClickParams,
-    InfoLinkClickParams,
-    InsertToCursorPositionParams,
-    LinkClickParams,
-    QuickActionParams,
-    SourceLinkClickParams,
-    TabAddParams,
-    TabChangeParams,
-    TabRemoveParams,
-    ProtocolNotificationType,
-    ProtocolRequestType,
-    ProgressToken,
-    CHAT_REQUEST_METHOD,
-    END_CHAT_REQUEST_METHOD,
     FEEDBACK_NOTIFICATION_METHOD,
     FOLLOW_UP_CLICK_NOTIFICATION_METHOD,
+    FeedbackParams,
+    FollowUpClickParams,
     INFO_LINK_CLICK_NOTIFICATION_METHOD,
     INSERT_TO_CURSOR_POSITION_NOTIFICATION_METHOD,
+    InfoLinkClickParams,
+    InsertToCursorPositionParams,
     LINK_CLICK_NOTIFICATION_METHOD,
+    LinkClickParams,
+    ProgressToken,
+    ProtocolNotificationType,
+    ProtocolRequestType,
     QUICK_ACTION_REQUEST_METHOD,
+    QuickActionParams,
     READY_NOTIFICATION_METHOD,
     SOURCE_LINK_CLICK_NOTIFICATION_METHOD,
+    SourceLinkClickParams,
     TAB_ADD_NOTIFICATION_METHOD,
     TAB_CHANGE_NOTIFICATION_METHOD,
     TAB_REMOVE_NOTIFICATION_METHOD,
-} from './lsp'
+    TabAddParams,
+    TabChangeParams,
+    TabRemoveParams,
+} from './lsp';
+
+/**
+ * Configuration object for chat quick action.
+ */
+export interface QuickActionCommand {
+    command: string;
+    disabled?: boolean;
+    description?: string;
+    placeholder?: string;
+}
+
+/**
+ * Configuration object for registering chat quick actions groups.
+ */
+export interface QuickActionCommandGroup {
+    groupName?: string;
+    commands: QuickActionCommand[];
+}
+
+/**
+ * Registration options for a Chat QuickActionRequest.
+ */
+export interface QuickActionsOptions {
+    /**
+     * The chat quick actions groupd and commands to be executed on server.
+     */
+    quickActionsCommandGroups: QuickActionCommandGroup[]
+}
 
 export interface ChatRequest extends ChatParams {
     partialResultToken?: ProgressToken
