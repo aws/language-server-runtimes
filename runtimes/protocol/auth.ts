@@ -1,9 +1,9 @@
 import {
-    UpdateCredentialsParams,
+    AutoParameterStructuresProtocolRequestType,
     ConnectionMetadata,
     ProtocolNotificationType0,
     ProtocolRequestType0,
-    AutoParameterStructuresProtocolRequestType,
+    UpdateCredentialsParams,
 } from './lsp'
 
 export const iamCredentialsUpdateRequestType = new AutoParameterStructuresProtocolRequestType<
