@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.6] - 2024-06-05
+
+- Extend server handshake to register chat quick actions
+
 ## [0.2.5] - 2024-05-17
 
 - Extend telemetry endpoint in the protocol and add handler in Telemetry feature  

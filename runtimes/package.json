@@ -1,6 +1,6 @@
 {
     "name": "@aws/language-server-runtimes",
-    "version": "0.2.5",
+    "version": "0.2.6",
     "description": "Runtimes to host Language Servers for AWS",
     "files": [
         "out",
