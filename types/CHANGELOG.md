@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.5] = 2024-06-05
+
+- Move chat method names that were previously harcoded in the `runtimes` to `runtimes-types` as constants
+
 ## [0.0.4] = 2024-05-30
 
 - Update `ReferenceTrackerInformation`, `ChatItemAction`, `FeedbackParams`, `InfoLinkClickParams`, `LinkClickParams`, `SourceLinkClickParams` request parameter types
