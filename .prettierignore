@@ -2,3 +2,5 @@ node_modules/
 out/
 **/*.md
 package-lock.json
+.prettierrc
+.vscode
