@@ -1,5 +1,5 @@
-import { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
-export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
+import { InsertToCursorPositionParams, QuickActionsOptions } from '@aws/language-server-runtimes-types'
+export { InsertToCursorPositionParams, QuickActionsOptions } from '@aws/language-server-runtimes-types'
 
 export type AuthFollowUpType = 'full-auth' | 're-auth' | 'missing_scopes' | 'use-supported-auth'
 export function isValidAuthFollowUpType(value: string): value is AuthFollowUpType {
@@ -14,6 +14,7 @@ export const ERROR_MESSAGE = 'errorMessage'
 export const INSERT_TO_CURSOR_POSITION = 'insertToCursorPosition'
 export const AUTH_FOLLOW_UP_CLICKED = 'authFollowUpClicked'
 export const GENERIC_COMMAND = 'genericCommand'
+export const QUICK_ACTIONS_OPTIONS = 'quickActionsOptions'
 
 export type UiMessageCommand =
     | typeof SEND_TO_PROMPT
@@ -21,6 +22,7 @@ export type UiMessageCommand =
     | typeof INSERT_TO_CURSOR_POSITION
     | typeof AUTH_FOLLOW_UP_CLICKED
     | typeof GENERIC_COMMAND
+    | typeof QUICK_ACTIONS_OPTIONS
 
 export interface UiMessage {
     command: UiMessageCommand
@@ -32,6 +34,8 @@ export type UiMessageParams =
     | AuthFollowUpClickedParams
     | GenericCommandParams
     | ErrorParams
+    | SendToPromptParams
+    | QuickActionsOptions
 
 export interface SendToPromptParams {
     selection: string
@@ -81,4 +85,9 @@ export interface ErrorParams {
 export interface ErrorMessage {
     command: typeof ERROR_MESSAGE
     params: ErrorParams
+}
+
+export interface QuickActionsOptionsMessage {
+    command: typeof QUICK_ACTIONS_OPTIONS
+    params: QuickActionsOptions
 }

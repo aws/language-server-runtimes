@@ -6,7 +6,7 @@ import {
     RegistrationType,
     RequestType,
 } from 'vscode-languageserver-protocol'
-import { QuickActionsOptions } from './chat'
+import { QuickActionsOptions } from '@aws/language-server-runtimes-types'
 
 export * from '@aws/language-server-runtimes-types'
 export { TextDocument } from 'vscode-languageserver-textdocument'
