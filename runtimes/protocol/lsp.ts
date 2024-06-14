@@ -6,7 +6,7 @@ import {
     RegistrationType,
     RequestType,
 } from 'vscode-languageserver-protocol'
-import { QuickActionsOptions } from '@aws/language-server-runtimes-types'
+import { ChatOptions } from '@aws/language-server-runtimes-types'
 
 export * from '@aws/language-server-runtimes-types'
 export { TextDocument } from 'vscode-languageserver-textdocument'
@@ -48,9 +48,6 @@ export interface InitializeResult extends InitializeResultBase {
      * The server signals custom AWS Runtimes capabilities it supports.
      */
     awsServerCapabilities?: {
-        /**
-         * The server provides quick actions support.
-         */
-        chatQuickActionsProvider?: QuickActionsOptions
+        chatOptions?: ChatOptions
     }
 }

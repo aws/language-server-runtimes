@@ -24,7 +24,7 @@ import {
     ProgressToken,
     ProgressType,
     PublishDiagnosticsParams,
-    QuickActionsOptions,
+    ChatOptions,
     RequestHandler,
     ServerCapabilities,
     TextEdit,
@@ -41,7 +41,7 @@ export type PartialServerCapabilities<T = any> = Pick<
 export type PartialInitializeResult<T = any> = {
     capabilities: PartialServerCapabilities<T>
     awsServerCapabilities?: {
-        chatQuickActionsProvider?: QuickActionsOptions
+        chatOptions?: ChatOptions
     }
 }
 

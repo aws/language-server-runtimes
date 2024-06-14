@@ -107,11 +107,20 @@ export interface QuickActionCommandGroup {
 /**
  * Registration options for a Chat QuickActionRequest.
  */
-export interface QuickActionsOptions {
+export interface QuickActions {
     /**
      * The chat quick actions groups and commands to be executed on server.
      */
     quickActionsCommandGroups: QuickActionCommandGroup[]
+}
+
+/**
+ * Registration options regarding chat data
+ * Currently only contains the available quick actions provided by a server
+ * Can be extended in the future (e.g with default tab data)
+ */
+export interface ChatOptions {
+    quickActions?: QuickActions
 }
 
 export interface QuickActionParams extends PartialResultParams {
