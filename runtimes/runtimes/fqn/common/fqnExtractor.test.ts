@@ -1,9 +1,9 @@
 import * as fqn from '@aws/fully-qualified-names'
 import * as assert from 'assert'
 import sinon from 'ts-sinon'
-import { extract } from './fqnExtractor'
+import { findNames } from './fqnExtractor'
 
-describe('fqnExtractor.extract', () => {
+describe('fqnExtractor.findNames', () => {
     let typescriptStub: sinon.SinonStub
     let javaStub: sinon.SinonStub
     const tsResult = {}
@@ -21,8 +21,8 @@ describe('fqnExtractor.extract', () => {
     const mockFileText = `console.log('abc')`
 
     beforeEach(() => {
-        typescriptStub = sinon.stub(fqn.TypeScript, 'findNamesWithInExtent').callsFake(() => Promise.resolve(tsResult))
-        javaStub = sinon.stub(fqn.Java, 'findNamesWithInExtent').callsFake(() => Promise.resolve(javaResult))
+        typescriptStub = sinon.stub(fqn.TypeScript, 'findNames').callsFake(() => Promise.resolve(tsResult))
+        javaStub = sinon.stub(fqn.Java, 'findNames').callsFake(() => Promise.resolve(javaResult))
     })
 
     afterEach(() => {
@@ -32,19 +32,17 @@ describe('fqnExtractor.extract', () => {
 
     it('throws error with unsupported languageId', async () => {
         await assert.rejects(() =>
-            extract(fqn, {
+            findNames(fqn, {
                 languageId: 'lolcode' as any,
                 fileText: mockFileText,
-                selection: mockRange,
             })
         )
     })
 
     it('calls the corresponding fqn function', async () => {
-        let result = await extract(fqn, {
+        let result = await findNames(fqn, {
             languageId: 'typescript',
             fileText: mockFileText,
-            selection: mockRange,
         })
 
         sinon.assert.calledOnceWithMatch(typescriptStub, mockFileText, sinon.match.instanceOf(fqn.Extent))
@@ -52,15 +50,62 @@ describe('fqnExtractor.extract', () => {
         // reference check
         assert.strictEqual(result, tsResult)
 
-        result = await extract(fqn, {
+        result = await findNames(fqn, {
             languageId: 'java',
             fileText: mockFileText,
-            selection: mockRange,
         })
 
         sinon.assert.calledOnceWithMatch(javaStub, mockFileText, sinon.match.instanceOf(fqn.Extent))
 
         // reference check
         assert.strictEqual(result, javaResult)
+    })
+
+    describe('if range exists, findNamesWithInExtent', () => {
+        beforeEach(() => {
+            typescriptStub = sinon
+                .stub(fqn.TypeScript, 'findNamesWithInExtent')
+                .callsFake(() => Promise.resolve(tsResult))
+            javaStub = sinon.stub(fqn.Java, 'findNamesWithInExtent').callsFake(() => Promise.resolve(javaResult))
+        })
+
+        afterEach(() => {
+            typescriptStub.restore()
+            javaStub.restore()
+        })
+
+        it('throws error with unsupported languageId', async () => {
+            await assert.rejects(() =>
+                findNames(fqn, {
+                    languageId: 'lolcode' as any,
+                    fileText: mockFileText,
+                    selection: mockRange,
+                })
+            )
+        })
+
+        it('calls the corresponding fqn function', async () => {
+            let result = await findNames(fqn, {
+                languageId: 'typescript',
+                fileText: mockFileText,
+                selection: mockRange,
+            })
+
+            sinon.assert.calledOnceWithMatch(typescriptStub, mockFileText, sinon.match.instanceOf(fqn.Extent))
+
+            // reference check
+            assert.strictEqual(result, tsResult)
+
+            result = await findNames(fqn, {
+                languageId: 'java',
+                fileText: mockFileText,
+                selection: mockRange,
+            })
+
+            sinon.assert.calledOnceWithMatch(javaStub, mockFileText, sinon.match.instanceOf(fqn.Extent))
+
+            // reference check
+            assert.strictEqual(result, javaResult)
+        })
     })
 })

@@ -1,5 +1,6 @@
-import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace, Chat } from '../server-interface'
+import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace, Chat, ExtractFqn } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
+import sinon from 'sinon'
 import {
     CancellationToken,
     CompletionParams,
@@ -36,6 +37,7 @@ export class TestFeatures {
     documents: {
         [uri: string]: TextDocument
     }
+    extractFqn: sinon.SinonStub
 
     private disposables: (() => void)[] = []
 
@@ -52,6 +54,26 @@ export class TestFeatures {
         this.workspace = stubInterface<Workspace>()
         this.logging = stubInterface<Logging>()
         this.telemetry = stubInterface<Telemetry>()
+        this.extractFqn = sinon.stub().returns([
+            {
+                success: true,
+                data: {
+                    fullyQualified: {
+                        declaredSymbols: [],
+                        usedSymbols: [],
+                    },
+                    simple: {
+                        declaredSymbols: [],
+                        usedSymbols: [],
+                    },
+                    externalSimple: {
+                        declaredSymbols: [],
+                        usedSymbols: [],
+                    },
+                },
+            },
+            sinon.stub(),
+        ])
         this.documents = {}
 
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])

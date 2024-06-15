@@ -99,7 +99,7 @@ export const webworker = (props: RuntimeProps) => {
     const auth = new Auth(lspConnection)
     const credentialsProvider = auth.getCredentialsProvider()
 
-    const fqn = new FqnWorkerPool()
+    const fqnWorkerPool = new FqnWorkerPool()
 
     // Initialize every Server
     const disposables = props.servers.map(s => {
@@ -147,11 +147,20 @@ export const webworker = (props: RuntimeProps) => {
             },
         }
 
-        return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, fqn })
+        return s({
+            chat,
+            credentialsProvider,
+            lsp,
+            workspace,
+            telemetry,
+            logging,
+            extractFqn: input => fqnWorkerPool.extractFqn(input),
+        })
     })
 
     // Free up any resources or threads used by Servers
     lspConnection.onExit(() => {
+        fqnWorkerPool.dispose()
         disposables.forEach(d => d())
     })
 

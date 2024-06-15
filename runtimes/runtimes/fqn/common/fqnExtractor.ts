@@ -1,12 +1,16 @@
 import type * as Fqn from '@aws/fully-qualified-names'
-import { FqnExtractorInput, FqnExtractorOutput } from '../../../server-interface'
+import { ExtractFqnInput, ExtractFqnOutput } from '../../../server-interface'
 
-function extractNames(
+export async function findNamesWithinExtent(
     fqn: typeof Fqn,
-    languageId: FqnExtractorInput['languageId'],
-    fileText: string,
-    extent: Fqn.Extent
-): Promise<FqnExtractorOutput> {
+    input: Required<ExtractFqnInput>
+): Promise<ExtractFqnOutput> {
+    const { fileText, languageId, selection } = input
+
+    const startLocation = new fqn.Location(selection.start.line, selection.start.character)
+    const endLocation = new fqn.Location(selection.end.line, selection.end.character)
+    const extent = new fqn.Extent(startLocation, endLocation)
+
     switch (languageId) {
         case 'java':
             return fqn.Java.findNamesWithInExtent(fileText, extent)
@@ -24,12 +28,26 @@ function extractNames(
     }
 }
 
-export async function extract(fqn: typeof Fqn, input: FqnExtractorInput): Promise<FqnExtractorOutput> {
+export async function findNames(fqn: typeof Fqn, input: ExtractFqnInput): Promise<ExtractFqnOutput> {
     const { fileText, languageId, selection } = input
 
-    const startLocation = new fqn.Location(selection.start.line, selection.start.character)
-    const endLocation = new fqn.Location(selection.end.line, selection.end.character)
-    const extent = new fqn.Extent(startLocation, endLocation)
+    if (selection) {
+        return findNamesWithinExtent(fqn, { fileText, languageId, selection })
+    }
 
-    return extractNames(fqn, languageId, fileText, extent)
+    switch (languageId) {
+        case 'java':
+            return fqn.Java.findNames(fileText)
+        case 'javascript':
+        case 'javascriptreact':
+        case 'typescriptreact':
+            return fqn.Tsx.findNames(fileText)
+        case 'typescript':
+            return fqn.TypeScript.findNames(fileText)
+        case 'python':
+            return fqn.Python.findNames(fileText)
+        default:
+            // ideally unreachable
+            throw new Error(`Unsupported language: ${languageId}`)
+    }
 }

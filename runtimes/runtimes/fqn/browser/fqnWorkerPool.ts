@@ -1,8 +1,8 @@
-import { CancelFn, ExtractorResult, FqnExtractorInput, IFqnWorkerPool } from '../../../server-interface'
+import { ExtractFqnInput, IFqnWorkerPool, Cancellable, ExtractFqnResult } from '../../../server-interface'
 
 // TODO: implement logic for browser/webworker environment
 export class FqnWorkerPool implements IFqnWorkerPool {
-    public exec(_input: FqnExtractorInput): [Promise<ExtractorResult>, CancelFn] {
+    public extractFqn(_input: ExtractFqnInput): Cancellable<Promise<ExtractFqnResult>> {
         return [
             Promise.resolve({
                 success: true,

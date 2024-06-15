@@ -196,7 +196,7 @@ export const standalone = (props: RuntimeProps) => {
 
         // Create router that will be routing LSP events from the client to server(s)
         const lspRouter = new LspRouter(lspConnection, props.name, props.version)
-        const fqn = new FqnWorkerPool({ logger: logging })
+        const fqnWorkerPool = new FqnWorkerPool({ logger: logging })
 
         // Initialize every Server
         const disposables = props.servers.map(s => {
@@ -245,12 +245,20 @@ export const standalone = (props: RuntimeProps) => {
                 },
             }
 
-            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, fqn })
+            return s({
+                chat,
+                credentialsProvider,
+                lsp,
+                workspace,
+                telemetry,
+                logging,
+                extractFqn: input => fqnWorkerPool.extractFqn(input),
+            })
         })
 
         // Free up any resources or threads used by Servers
         lspConnection.onExit(() => {
-            fqn.dispose()
+            fqnWorkerPool.dispose()
             disposables.forEach(d => d())
         })
 

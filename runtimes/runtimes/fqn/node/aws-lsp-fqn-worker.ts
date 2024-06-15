@@ -1,12 +1,12 @@
 import * as fqn from '@aws/fully-qualified-names'
 import { worker } from 'workerpool'
 import { FQN_WORKER_ID } from '../common/defaults'
-import { extract } from '../common/fqnExtractor'
-import { FqnExtractorInput } from '../../../server-interface'
+import { findNames } from '../common/fqnExtractor'
+import { ExtractFqnInput } from '../../../server-interface'
 
-async function fqnWorker(input: FqnExtractorInput) {
+async function fqnWorker(input: ExtractFqnInput) {
     try {
-        const data = await extract(fqn, input)
+        const data = await findNames(fqn, input)
 
         return { data, success: true }
     } catch (e) {

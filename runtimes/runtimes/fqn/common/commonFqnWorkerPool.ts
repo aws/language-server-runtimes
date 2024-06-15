@@ -1,9 +1,9 @@
 import { pool, Pool } from 'workerpool'
 import { DEFAULT_MAX_QUEUE_SIZE, DEFAULT_MAX_WORKERS, DEFAULT_TIMEOUT, FQN_WORKER_ID } from './defaults'
 import {
-    CancelFn,
-    ExtractorResult,
-    FqnExtractorInput,
+    Cancellable,
+    ExtractFqnInput,
+    ExtractFqnResult,
     IFqnWorkerPool,
     Logging,
     WorkerPoolConfig,
@@ -24,7 +24,7 @@ export class CommonFqnWorkerPool implements IFqnWorkerPool {
         })
     }
 
-    public exec(input: FqnExtractorInput): [Promise<ExtractorResult>, CancelFn] {
+    public extractFqn(input: ExtractFqnInput): Cancellable<Promise<ExtractFqnResult>> {
         this.#logger?.log(`Extracting fully qualified names for ${input.languageId}`)
 
         const execPromise = this.#workerPool.exec(FQN_WORKER_ID, [input])
@@ -35,7 +35,7 @@ export class CommonFqnWorkerPool implements IFqnWorkerPool {
             new Promise(resolve => {
                 execPromise
                     .timeout(this.#timeout)
-                    .then(data => resolve(data as ExtractorResult))
+                    .then(data => resolve(data as ExtractFqnResult))
                     .catch(error => {
                         const errorMessage = `Encountered error while extracting fully qualified names: ${
                             error instanceof Error ? error.message : 'Unknown'

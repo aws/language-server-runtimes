@@ -21,7 +21,7 @@ export type Result<TData, TError> =
           error: TError
       }
 
-export type ExtractorResult = Result<FqnExtractorOutput, string>
+export type ExtractFqnResult = Result<ExtractFqnOutput, string>
 
 export interface FullyQualifiedName {
     source: string[]
@@ -39,7 +39,7 @@ export interface WorkerPoolConfig {
     workerPoolOptions?: WorkerPoolOptions
 }
 
-export interface FqnExtractorOutput {
+export interface ExtractFqnOutput {
     fullyQualified: {
         declaredSymbols: FullyQualifiedName[]
         usedSymbols: FullyQualifiedName[]
@@ -54,15 +54,19 @@ export interface FqnExtractorOutput {
     }
 }
 
-export interface FqnExtractorInput {
+export interface ExtractFqnInput {
     languageId: FqnSupportedLanguages
     fileText: string
-    selection: Range
+    selection?: Range
 }
 
 export type CancelFn = () => void
 
+export type Cancellable<T> = [T, CancelFn]
+
 export interface IFqnWorkerPool {
-    exec(input: FqnExtractorInput): [Promise<ExtractorResult>, CancelFn]
+    extractFqn: ExtractFqn
     dispose(): void
 }
+
+export type ExtractFqn = (input: ExtractFqnInput) => Cancellable<Promise<ExtractFqnResult>>
