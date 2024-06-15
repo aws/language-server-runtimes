@@ -1,4 +1,5 @@
 import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat } from '.'
+import { IFqnWorkerPool } from './fqn'
 
 /**
  * Servers are used to provide features to the client.
@@ -22,4 +23,5 @@ export type Server = (features: {
     workspace: Workspace
     logging: Logging
     telemetry: Telemetry
+    fqn: IFqnWorkerPool
 }) => () => void

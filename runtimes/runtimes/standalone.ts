@@ -34,6 +34,7 @@ import {
     validateEncryptionDetails,
 } from './auth/standalone/encryption'
 import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat } from '../server-interface'
+import { FqnWorkerPool } from './fqn/node'
 import { Auth } from './auth'
 
 import { handleVersionArgument } from './versioning'
@@ -117,6 +118,7 @@ export const standalone = (props: RuntimeProps) => {
         // TODO: set up Logging once implemented
         const logging: Logging = {
             log: message => lspConnection.console.info(`[${new Date().toISOString()}] ${message}`),
+            error: message => lspConnection.console.error(`[${new Date().toISOString()}] ${message}`),
         }
 
         // Set up telemetry over LSP
@@ -194,6 +196,7 @@ export const standalone = (props: RuntimeProps) => {
 
         // Create router that will be routing LSP events from the client to server(s)
         const lspRouter = new LspRouter(lspConnection, props.name, props.version)
+        const fqn = new FqnWorkerPool({ logger: logging })
 
         // Initialize every Server
         const disposables = props.servers.map(s => {
@@ -242,11 +245,12 @@ export const standalone = (props: RuntimeProps) => {
                 },
             }
 
-            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging })
+            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, fqn })
         })
 
         // Free up any resources or threads used by Servers
         lspConnection.onExit(() => {
+            fqn.dispose()
             disposables.forEach(d => d())
         })
 

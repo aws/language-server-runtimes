@@ -4,4 +4,5 @@
 export type Logging = {
     // TODO: Implement log levels
     log: (message: string) => void
+    error: (message: string) => void
 }
