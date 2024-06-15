@@ -34,11 +34,14 @@
         "version": "npm run compile && git add -A ."
     },
     "dependencies": {
+        "@aws/fully-qualified-names": "^2.1.4",
         "@aws/language-server-runtimes-types": "0.x.x",
         "jose": "^5.4.0",
         "rxjs": "^7.8.1",
         "vscode-languageserver": "^9.0.1",
-        "vscode-languageserver-protocol": "^3.17.5"
+        "vscode-languageserver-protocol": "^3.17.5",
+        "web-tree-sitter": "^0.20.8",
+        "workerpool": "^9.1.1"
     },
     "devDependencies": {
         "@types/mocha": "^10.0.1",

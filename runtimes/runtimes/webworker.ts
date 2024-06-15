@@ -35,6 +35,7 @@ import { RuntimeProps } from './runtime'
 import { observe } from './lsp'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
+import { FqnWorkerPool } from './fqn/browser'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -51,6 +52,7 @@ export const webworker = (props: RuntimeProps) => {
     // Set up logigng over LSP
     const logging: Logging = {
         log: message => lspConnection.console.info(`[${new Date().toISOString()}] ${message}`),
+        error: message => lspConnection.console.info(`[${new Date().toISOString()}] ${message}`),
     }
 
     // Set up telemetry over LSP
@@ -96,6 +98,8 @@ export const webworker = (props: RuntimeProps) => {
     // Set up auth without encryption
     const auth = new Auth(lspConnection)
     const credentialsProvider = auth.getCredentialsProvider()
+
+    const fqnWorkerPool = new FqnWorkerPool()
 
     // Initialize every Server
     const disposables = props.servers.map(s => {
@@ -143,11 +147,20 @@ export const webworker = (props: RuntimeProps) => {
             },
         }
 
-        return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging })
+        return s({
+            chat,
+            credentialsProvider,
+            lsp,
+            workspace,
+            telemetry,
+            logging,
+            extractFqn: input => fqnWorkerPool.extractFqn(input),
+        })
     })
 
     // Free up any resources or threads used by Servers
     lspConnection.onExit(() => {
+        fqnWorkerPool.dispose()
         disposables.forEach(d => d())
     })
 
