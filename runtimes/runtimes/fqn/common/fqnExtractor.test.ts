@@ -45,7 +45,7 @@ describe('fqnExtractor.findNames', () => {
             fileText: mockFileText,
         })
 
-        sinon.assert.calledOnceWithMatch(typescriptStub, mockFileText, sinon.match.instanceOf(fqn.Extent))
+        sinon.assert.calledOnceWithMatch(typescriptStub, mockFileText)
 
         // reference check
         assert.strictEqual(result, tsResult)
@@ -55,13 +55,16 @@ describe('fqnExtractor.findNames', () => {
             fileText: mockFileText,
         })
 
-        sinon.assert.calledOnceWithMatch(javaStub, mockFileText, sinon.match.instanceOf(fqn.Extent))
+        sinon.assert.calledOnceWithMatch(javaStub, mockFileText)
 
         // reference check
         assert.strictEqual(result, javaResult)
     })
 
-    describe('if range exists, findNamesWithInExtent', () => {
+    describe('calls findNamesWithInExtent if selection exists, which', () => {
+        let typescriptStub: sinon.SinonStub
+        let javaStub: sinon.SinonStub
+
         beforeEach(() => {
             typescriptStub = sinon
                 .stub(fqn.TypeScript, 'findNamesWithInExtent')
