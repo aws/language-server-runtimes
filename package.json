@@ -40,6 +40,7 @@
         "husky": "^9.0.11",
         "prettier": "3.3.2",
         "pretty-quick": "^4.0.0",
+        "shx": "^0.3.4",
         "sinon": "^18.0.0",
         "ts-mocha": "^10.0.0",
         "ts-sinon": "^2.0.2",
