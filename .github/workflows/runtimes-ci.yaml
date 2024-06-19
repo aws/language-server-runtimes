@@ -23,3 +23,20 @@ jobs:
             - name: Test
               run: |
                   npm run test
+    test-windows:
+        name: Test (Windows)
+        runs-on: windows-latest
+        steps:
+            - name: Sync Code
+              uses: actions/checkout@v4
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+            - name: Build
+              run: |
+                  npm ci
+                  npm run compile
+            - name: Test
+              run: |
+                  npm run test
