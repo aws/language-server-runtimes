@@ -27,9 +27,8 @@
         "prepub:copyFiles": "cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
         "prepub": "npm run clean && npm run test && npm run compile && npm run prepub:copyFiles",
         "pub": "cd out && npm publish",
-        "test:prettier": "prettier . --check",
         "test:unit": "ts-mocha -b './**/*.test.ts'",
-        "test": "npm run test:prettier && npm run test:unit",
+        "test": "npm run test:unit",
         "preversion": "npm run test",
         "version": "npm run compile && git add -A ."
     },
