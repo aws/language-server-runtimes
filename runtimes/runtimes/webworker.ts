@@ -78,8 +78,8 @@ export const webworker = (props: RuntimeProps) => {
 
     const chat: Chat = {
         onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
-        onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
-        onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
+        onEndChat: handler => lspConnection.onRequest(endChatRequestType.method, handler),
+        onQuickAction: handler => lspConnection.onRequest(quickActionRequestType.method, handler),
         onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
         onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
         onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
@@ -131,6 +131,10 @@ export const webworker = (props: RuntimeProps) => {
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                return lspConnection.sendProgress(type, token, value)
+            },
+            sendEncryptedProgress: async <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                // TODO, implement encryption if encryption is needed in webworker runtime
                 return lspConnection.sendProgress(type, token, value)
             },
             onHover: handler => lspConnection.onHover(handler),
