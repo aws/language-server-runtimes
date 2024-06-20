@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.7] - 2024-06-20
+
+- Introduce encrypted chat class into the standalone runtime that decrypts incoming chat requests and decrypts outgoing chat responses on the runtime level
+
 ## [0.2.6] - 2024-06-05
 
 - Extend server handshake to register chat quick actions
