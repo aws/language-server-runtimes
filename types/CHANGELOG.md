@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.6] = 2024-06-20
+
+- Move `ChatOptions` into `runtimes-types`
+- Introduce `EncryptedChatParams` and `EncryptedQuickActionParams` to be used by runtimes
+
 ## [0.0.5] = 2024-06-05
 
 - Move chat method names that were previously harcoded in the `runtimes` to `runtimes-types` as constants
