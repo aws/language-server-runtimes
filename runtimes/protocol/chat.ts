@@ -15,7 +15,6 @@ import {
     TabRemoveParams,
     ProtocolNotificationType,
     ProtocolRequestType,
-    ProgressToken,
     CHAT_REQUEST_METHOD,
     END_CHAT_REQUEST_METHOD,
     FEEDBACK_NOTIFICATION_METHOD,
@@ -29,6 +28,10 @@ import {
     TAB_ADD_NOTIFICATION_METHOD,
     TAB_CHANGE_NOTIFICATION_METHOD,
     TAB_REMOVE_NOTIFICATION_METHOD,
+    AutoParameterStructuresProtocolRequestType,
+    EncryptedChatParams,
+    EncryptedQuickActionParams,
+    QuickActionResult,
 } from './lsp'
 
 /**
@@ -59,19 +62,23 @@ export interface QuickActionsOptions {
     quickActionsCommandGroups: QuickActionCommandGroup[]
 }
 
-export interface ChatRequest extends ChatParams {
-    partialResultToken?: ProgressToken
-}
-
-export const chatRequestType = new ProtocolRequestType<ChatRequest, ChatResult, ChatResult, void, void>(
-    CHAT_REQUEST_METHOD
-)
+export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
+    ChatParams | EncryptedChatParams,
+    ChatResult | string,
+    ChatResult | string,
+    void,
+    void
+>(CHAT_REQUEST_METHOD)
 export const endChatRequestType = new ProtocolRequestType<EndChatParams, EndChatResult, never, void, void>(
     END_CHAT_REQUEST_METHOD
 )
-export const quickActionRequestType = new ProtocolRequestType<QuickActionParams, ChatResult, ChatResult, void, void>(
-    QUICK_ACTION_REQUEST_METHOD
-)
+export const quickActionRequestType = new AutoParameterStructuresProtocolRequestType<
+    QuickActionParams | EncryptedQuickActionParams,
+    QuickActionResult | string,
+    QuickActionResult | string,
+    void,
+    void
+>(QUICK_ACTION_REQUEST_METHOD)
 export const readyNotificationType = new ProtocolNotificationType<void, void>(READY_NOTIFICATION_METHOD)
 export const feedbackNotificationType = new ProtocolNotificationType<FeedbackParams, void>(FEEDBACK_NOTIFICATION_METHOD)
 export const tabAddNotificationType = new ProtocolNotificationType<TabAddParams, void>(TAB_ADD_NOTIFICATION_METHOD)

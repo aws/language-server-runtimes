@@ -29,12 +29,14 @@ import {
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
     EncryptionInitialization,
+    encryptObjectWithKey,
     readEncryptionDetails,
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
 } from './auth/standalone/encryption'
 import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat } from '../server-interface'
 import { Auth } from './auth'
+import { EncryptedChat } from './chat/encryptedChat'
 
 import { handleVersionArgument } from './versioning'
 import { RuntimeProps } from './runtime'
@@ -79,6 +81,7 @@ export const standalone = (props: RuntimeProps) => {
     const documentsObserver = observe(lspConnection)
 
     let auth: Auth
+    let chat: Chat
     initializeAuth()
 
     // Initialize Auth service
@@ -92,7 +95,8 @@ export const standalone = (props: RuntimeProps) => {
                     validateEncryptionDetails(encryptionDetails)
                     lspConnection.console.info('Runtime: Initializing runtime with encryption')
                     auth = new Auth(lspConnection, encryptionDetails.key, encryptionDetails.mode)
-                    initializeRuntime()
+                    chat = new EncryptedChat(lspConnection, encryptionDetails.key, encryptionDetails.mode)
+                    initializeRuntime(encryptionDetails.key)
                 },
                 error => {
                     console.error(error)
@@ -102,6 +106,7 @@ export const standalone = (props: RuntimeProps) => {
         } else {
             lspConnection.console.info('Runtime: Initializing runtime without encryption')
             auth = new Auth(lspConnection)
+
             initializeRuntime()
         }
     }
@@ -110,7 +115,7 @@ export const standalone = (props: RuntimeProps) => {
     // TODO: make this dependent on the actual requirements of the
     // capabilities parameter.
 
-    function initializeRuntime() {
+    function initializeRuntime(encryptionKey?: string) {
         const documents = new TextDocuments(TextDocument)
 
         // Set up logging over LSP
@@ -173,23 +178,6 @@ export const standalone = (props: RuntimeProps) => {
             },
         }
 
-        const chat: Chat = {
-            onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
-            onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
-            onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
-            onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
-            onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
-            onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
-            onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
-            onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
-            onCodeInsertToCursorPosition: handler =>
-                lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
-            onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
-            onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
-            onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
-            onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
-        }
-
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         // Create router that will be routing LSP events from the client to server(s)
@@ -229,7 +217,12 @@ export const standalone = (props: RuntimeProps) => {
                 },
                 publishDiagnostics: params =>
                     lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
-                sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                sendProgress: async <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                    if (encryptionKey) {
+                        const encryptedProgress = await encryptObjectWithKey(value as Object, encryptionKey)
+                        return lspConnection.sendProgress(type, token, encryptedProgress as P)
+                    }
+
                     return lspConnection.sendProgress(type, token, value)
                 },
                 onHover: handler => lspConnection.onHover(handler),
@@ -240,6 +233,28 @@ export const standalone = (props: RuntimeProps) => {
                         lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
                     },
                 },
+            }
+
+            if (!encryptionKey) {
+                chat = {
+                    onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
+                    onEndChat: handler => lspConnection.onRequest(endChatRequestType.method, handler),
+                    onQuickAction: handler => lspConnection.onRequest(quickActionRequestType.method, handler),
+                    onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
+                    onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
+                    onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
+                    onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
+                    onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
+                    onCodeInsertToCursorPosition: handler =>
+                        lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
+                    onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
+                    onInfoLinkClick: handler =>
+                        lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
+                    onSourceLinkClick: handler =>
+                        lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
+                    onFollowUpClicked: handler =>
+                        lspConnection.onNotification(followUpClickNotificationType.method, handler),
+                }
             }
 
             return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging })
