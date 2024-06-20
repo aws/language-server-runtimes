@@ -51,29 +51,32 @@ export class EncryptedChat implements Chat {
     }
 
     public onChatPrompt(handler: RequestHandler<ChatParams, ChatResult | null | undefined, ChatResult>) {
-        this.connection.onRequest(chatRequestType, async (request: ChatParams | EncryptedChatParams) => {
-            request = request as EncryptedChatParams
-            // decrypt the request params
-            let decryptedRequest = (await this.decodeRequest(request)) as ChatParams
+        this.connection.onRequest(
+            chatRequestType,
+            async (request: ChatParams | EncryptedChatParams, cancellationToken: CancellationToken) => {
+                request = request as EncryptedChatParams
+                // decrypt the request params
+                let decryptedRequest = (await this.decodeRequest(request)) as ChatParams
 
-            // make sure we don't lose the partial result token
-            if (request.partialResultToken) {
-                decryptedRequest.partialResultToken = request.partialResultToken
+                // make sure we don't lose the partial result token
+                if (request.partialResultToken) {
+                    decryptedRequest.partialResultToken = request.partialResultToken
+                }
+
+                // call the handler with plaintext
+                const response = (await handler(decryptedRequest, cancellationToken)) as ChatResult
+                // encrypt the response
+                const encryptedResponse = await this.encryptObject(response as JWTPayload)
+                // send it back
+                return encryptedResponse
             }
-
-            // call the handler with plaintext
-            const response = (await handler(decryptedRequest, CancellationToken.None)) as ChatResult
-            // encrypt the response
-            const encryptedResponse = await this.encryptObject(response as JWTPayload)
-            // send it back
-            return encryptedResponse
-        })
+        )
     }
 
     public onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
         this.connection.onRequest(
             quickActionRequestType,
-            async (request: QuickActionParams | EncryptedQuickActionParams) => {
+            async (request: QuickActionParams | EncryptedQuickActionParams, cancellationToken: CancellationToken) => {
                 request = request as EncryptedQuickActionParams
                 // decrypt the request params
                 let decryptedRequest = (await this.decodeRequest(request)) as QuickActionParams
@@ -84,7 +87,7 @@ export class EncryptedChat implements Chat {
                 }
 
                 // call the handler with plaintext
-                const response = (await handler(decryptedRequest, CancellationToken.None)) as QuickActionResult
+                const response = (await handler(decryptedRequest, cancellationToken)) as QuickActionResult
                 // encrypt the response
                 const encryptedResponse = await this.encryptObject(response as JWTPayload)
                 // send it back
