@@ -64,7 +64,7 @@ export class EncryptedChat implements Chat {
             // call the handler with plaintext
             const response = (await handler(decryptedRequest, CancellationToken.None)) as ChatResult
             // encrypt the response
-            const encryptedResponse = await this.encryptRequest(response as JWTPayload)
+            const encryptedResponse = await this.encryptObject(response as JWTPayload)
             // send it back
             return encryptedResponse
         })
@@ -86,7 +86,7 @@ export class EncryptedChat implements Chat {
                 // call the handler with plaintext
                 const response = (await handler(decryptedRequest, CancellationToken.None)) as QuickActionResult
                 // encrypt the response
-                const encryptedResponse = await this.encryptRequest(response as JWTPayload)
+                const encryptedResponse = await this.encryptObject(response as JWTPayload)
                 // send it back
                 return encryptedResponse
             }
@@ -147,8 +147,8 @@ export class EncryptedChat implements Chat {
         throw new Error('Encoding mode not implemented')
     }
 
-    private async encryptRequest(request: JWTPayload): Promise<string> {
-        const encryptedJWT = await new EncryptJWT(request)
+    private async encryptObject(object: JWTPayload): Promise<string> {
+        const encryptedJWT = await new EncryptJWT(object)
             .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
             .encrypt(this.key)
         return encryptedJWT

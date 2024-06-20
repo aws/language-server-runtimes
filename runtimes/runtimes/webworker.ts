@@ -133,10 +133,6 @@ export const webworker = (props: RuntimeProps) => {
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
                 return lspConnection.sendProgress(type, token, value)
             },
-            sendEncryptedProgress: async <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
-                // TODO, implement encryption if encryption is needed in webworker runtime
-                return lspConnection.sendProgress(type, token, value)
-            },
             onHover: handler => lspConnection.onHover(handler),
             extensions: {
                 onInlineCompletionWithReferences: handler =>

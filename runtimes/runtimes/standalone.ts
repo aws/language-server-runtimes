@@ -29,6 +29,7 @@ import {
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
     EncryptionInitialization,
+    encryptObjectWithKey,
     readEncryptionDetails,
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
@@ -48,7 +49,6 @@ import * as os from 'os'
 import * as path from 'path'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
-import { CompactEncrypt } from 'jose'
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -106,25 +106,6 @@ export const standalone = (props: RuntimeProps) => {
         } else {
             lspConnection.console.info('Runtime: Initializing runtime without encryption')
             auth = new Auth(lspConnection)
-
-            chat = {
-                onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
-                onEndChat: handler => lspConnection.onRequest(endChatRequestType.method, handler),
-                onQuickAction: handler => lspConnection.onRequest(quickActionRequestType.method, handler),
-                onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
-                onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
-                onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
-                onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
-                onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
-                onCodeInsertToCursorPosition: handler =>
-                    lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
-                onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
-                onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
-                onSourceLinkClick: handler =>
-                    lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
-                onFollowUpClicked: handler =>
-                    lspConnection.onNotification(followUpClickNotificationType.method, handler),
-            }
 
             initializeRuntime()
         }
@@ -236,16 +217,14 @@ export const standalone = (props: RuntimeProps) => {
                 },
                 publishDiagnostics: params =>
                     lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
-                sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
-                    return lspConnection.sendProgress(type, token, value)
-                },
-                sendEncryptedProgress: async <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
+                sendProgress: async <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
                     if (encryptionKey) {
-                        const encryptedProgress = await encryptRequest(value as Object, encryptionKey)
+                        const encryptedProgress = await encryptObjectWithKey(value as Object, encryptionKey)
                         return lspConnection.sendProgress(type, token, encryptedProgress as P)
                     }
-                },
 
+                    return lspConnection.sendProgress(type, token, value)
+                },
                 onHover: handler => lspConnection.onHover(handler),
                 extensions: {
                     onInlineCompletionWithReferences: handler =>
@@ -254,6 +233,28 @@ export const standalone = (props: RuntimeProps) => {
                         lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
                     },
                 },
+            }
+
+            if (!encryptionKey) {
+                chat = {
+                    onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
+                    onEndChat: handler => lspConnection.onRequest(endChatRequestType.method, handler),
+                    onQuickAction: handler => lspConnection.onRequest(quickActionRequestType.method, handler),
+                    onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
+                    onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
+                    onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
+                    onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
+                    onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
+                    onCodeInsertToCursorPosition: handler =>
+                        lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
+                    onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
+                    onInfoLinkClick: handler =>
+                        lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
+                    onSourceLinkClick: handler =>
+                        lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
+                    onFollowUpClicked: handler =>
+                        lspConnection.onNotification(followUpClickNotificationType.method, handler),
+                }
             }
 
             return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging })
@@ -268,10 +269,4 @@ export const standalone = (props: RuntimeProps) => {
         documents.listen(documentsObserver.callbacks)
         lspConnection.listen()
     }
-}
-
-async function encryptRequest(request: Object, key: string): Promise<string> {
-    const payload = new TextEncoder().encode(JSON.stringify(request))
-    const keyBuffer = Buffer.from(key, 'base64')
-    return new CompactEncrypt(payload).setProtectedHeader({ alg: 'dir', enc: 'A256GCM' }).encrypt(keyBuffer)
 }
