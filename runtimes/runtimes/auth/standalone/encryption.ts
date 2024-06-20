@@ -1,4 +1,5 @@
 import { Readable } from 'stream'
+import { CompactEncrypt } from 'jose'
 
 export function shouldWaitForEncryptionKey(): boolean {
     return process.argv.some(arg => arg === '--set-credentials-encryption-key')
@@ -84,4 +85,13 @@ export function readEncryptionDetails(stream: Readable): Promise<EncryptionIniti
 
         stream.on('readable', onStreamIsReadable)
     })
+}
+
+/**
+ * Encrypt an object with the provided key
+ */
+export function encryptObjectWithKey(request: Object, key: string): Promise<string> {
+    const payload = new TextEncoder().encode(JSON.stringify(request))
+    const keyBuffer = Buffer.from(key, 'base64')
+    return new CompactEncrypt(payload).setProtectedHeader({ alg: 'dir', enc: 'A256GCM' }).encrypt(keyBuffer)
 }

@@ -78,8 +78,8 @@ export const webworker = (props: RuntimeProps) => {
 
     const chat: Chat = {
         onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
-        onEndChat: handler => lspConnection.onRequest(endChatRequestType, handler),
-        onQuickAction: handler => lspConnection.onRequest(quickActionRequestType, handler),
+        onEndChat: handler => lspConnection.onRequest(endChatRequestType.method, handler),
+        onQuickAction: handler => lspConnection.onRequest(quickActionRequestType.method, handler),
         onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
         onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
         onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),

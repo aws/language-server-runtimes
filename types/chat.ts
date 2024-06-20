@@ -68,6 +68,11 @@ export interface ChatParams extends PartialResultParams {
     cursorState?: CursorState[]
     textDocument?: TextDocumentIdentifier
 }
+
+export interface EncryptedChatParams extends PartialResultParams {
+    message: string
+}
+
 export interface ChatResult {
     body?: string
     messageId?: string
@@ -129,6 +134,10 @@ export interface QuickActionParams extends PartialResultParams {
     prompt?: string
     cursorState?: CursorState[]
     textDocument?: TextDocumentIdentifier
+}
+
+export interface EncryptedQuickActionParams extends PartialResultParams {
+    message: string
 }
 
 // Currently the QuickAction result and ChatResult share the same shape
