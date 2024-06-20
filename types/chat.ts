@@ -91,6 +91,43 @@ export interface ChatResult {
 export type EndChatParams = { tabId: string }
 export type EndChatResult = boolean
 
+/**
+ * Configuration object for chat quick action.
+ */
+export interface QuickActionCommand {
+    command: string
+    disabled?: boolean
+    description?: string
+    placeholder?: string
+}
+
+/**
+ * Configuration object for registering chat quick actions groups.
+ */
+export interface QuickActionCommandGroup {
+    groupName?: string
+    commands: QuickActionCommand[]
+}
+
+/**
+ * Registration options for a Chat QuickActionRequest.
+ */
+export interface QuickActions {
+    /**
+     * The chat quick actions groups and commands to be executed on server.
+     */
+    quickActionsCommandGroups: QuickActionCommandGroup[]
+}
+
+/**
+ * Registration options regarding chat data
+ * Currently only contains the available quick actions provided by a server
+ * Can be extended in the future (e.g with default tab data)
+ */
+export interface ChatOptions {
+    quickActions?: QuickActions
+}
+
 export interface QuickActionParams extends PartialResultParams {
     tabId: string
     quickAction: string
