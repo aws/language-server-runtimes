@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.0.6] - 2024-06-20
+
+- Introduce `CHAT_OPTIONS` contract to allow sending chat options like available quick actions to the UI
+
 ## [0.0.5] - 2024-06-05
 
 - Removed `tabIdReceived` from contracts
