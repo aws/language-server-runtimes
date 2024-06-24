@@ -90,8 +90,50 @@ export function readEncryptionDetails(stream: Readable): Promise<EncryptionIniti
 /**
  * Encrypt an object with the provided key
  */
-export function encryptObjectWithKey(request: Object, key: string): Promise<string> {
+export function encryptObjectWithKey(request: Object, key: string, alg?: string, enc?: string): Promise<string> {
     const payload = new TextEncoder().encode(JSON.stringify(request))
     const keyBuffer = Buffer.from(key, 'base64')
-    return new CompactEncrypt(payload).setProtectedHeader({ alg: 'dir', enc: 'A256GCM' }).encrypt(keyBuffer)
+    return new CompactEncrypt(payload)
+        .setProtectedHeader({ alg: alg ?? 'dir', enc: enc ?? 'A256GCM' })
+        .encrypt(keyBuffer)
+}
+
+/**
+ * Check if a message is an encrypted JWE message with the provided key management algorithm and encoding
+ * As per RFC-7516:
+ *  When using the JWE Compact Serialization, the
+ *  JWE Protected Header, the JWE Encrypted Key, the JWE
+ *  Initialization Vector, the JWE Ciphertext, and the JWE
+ *  Authentication Tag are represented as base64url-encoded values
+ *  in that order, with each value being separated from the next by
+ *  a single period ('.') character, resulting in exactly four
+ *  delimiting period characters being used
+ * This function checks if the payload is separated by 4 periods and
+ * Decodes the protected header and verifies that it contains the given key management and content encryption algorithms
+ */
+export function isMessageJWEEncrypted(message: string, algorithm: string, encoding: string) {
+    // Check if the message has five parts separated by periods
+    const parts = message.split('.')
+    if (parts.length !== 5) {
+        return false
+    }
+
+    try {
+        // Decode the protected header (first part of the message)
+        const protectedHeader = JSON.parse(Buffer.from(parts[0], 'base64url').toString('utf-8'))
+
+        // Check if the header contains the expected fields
+        if (
+            protectedHeader.alg &&
+            protectedHeader.enc &&
+            protectedHeader.alg == algorithm &&
+            protectedHeader.enc == encoding
+        ) {
+            return true
+        }
+    } catch (e) {
+        return false
+    }
+
+    return false
 }

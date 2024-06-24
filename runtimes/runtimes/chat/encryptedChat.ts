@@ -1,145 +1,121 @@
-import { jwtDecrypt, EncryptJWT, JWTPayload } from 'jose'
+import { jwtDecrypt } from 'jose'
 import { Connection } from 'vscode-languageserver'
 import {
     ChatParams,
     ChatResult,
-    EndChatParams,
-    FeedbackParams,
-    FollowUpClickParams,
-    InfoLinkClickParams,
-    InsertToCursorPositionParams,
-    LinkClickParams,
-    NotificationHandler,
     QuickActionParams,
     QuickActionResult,
     RequestHandler,
-    SourceLinkClickParams,
-    TabAddParams,
-    TabChangeParams,
-    TabRemoveParams,
     chatRequestType,
-    feedbackNotificationType,
-    readyNotificationType,
-    tabAddNotificationType,
-    tabChangeNotificationType,
-    tabRemoveNotificationType,
-    insertToCursorPositionNotificationType,
-    linkClickNotificationType,
-    infoLinkClickNotificationType,
-    sourceLinkClickNotificationType,
-    followUpClickNotificationType,
-    endChatRequestType,
     CancellationToken,
     EncryptedChatParams,
     EncryptedQuickActionParams,
     quickActionRequestType,
+    ResponseError,
+    LSPErrorCodes,
 } from '../../protocol'
-import { Chat } from '../../server-interface'
-import { CredentialsEncoding } from '../auth/standalone/encryption'
+import { CredentialsEncoding, encryptObjectWithKey, isMessageJWEEncrypted } from '../auth/standalone/encryption'
+import { BaseChat } from './baseChat'
 
-export class EncryptedChat implements Chat {
-    private key: Buffer
-    private encoding: CredentialsEncoding | undefined
+// Default JWE configuration
+const KEY_MANAGEMENT_ALGORITHM = 'dir'
+const CONTENT_ENCRYPTION_ALGORITHM = 'A256GCM'
+
+type EncryptedRequestParams = EncryptedQuickActionParams | EncryptedChatParams
+
+export class EncryptedChat extends BaseChat {
+    // Store key as both string and buffer since both are used
+    private keyBuffer: Buffer
 
     constructor(
-        private readonly connection: Connection,
-        key: string,
-        encoding?: CredentialsEncoding
+        connection: Connection,
+        private key: string,
+        private encoding?: CredentialsEncoding
     ) {
-        this.key = Buffer.from(key, 'base64')
-        this.encoding = encoding
+        super(connection)
+        this.keyBuffer = Buffer.from(key, 'base64')
     }
 
     public onChatPrompt(handler: RequestHandler<ChatParams, ChatResult | null | undefined, ChatResult>) {
-        this.connection.onRequest(
-            chatRequestType,
-            async (request: ChatParams | EncryptedChatParams, cancellationToken: CancellationToken) => {
-                request = request as EncryptedChatParams
-                // decrypt the request params
-                let decryptedRequest = (await this.decodeRequest(request)) as ChatParams
-
-                // make sure we don't lose the partial result token
-                if (request.partialResultToken) {
-                    decryptedRequest.partialResultToken = request.partialResultToken
-                }
-
-                // call the handler with plaintext
-                const response = (await handler(decryptedRequest, cancellationToken)) as ChatResult
-                // encrypt the response
-                const encryptedResponse = await this.encryptObject(response as JWTPayload)
-                // send it back
-                return encryptedResponse
-            }
-        )
+        this.registerEncryptedRequestHandler<
+            EncryptedChatParams,
+            ChatParams,
+            ChatResult | null | undefined,
+            ChatResult
+        >(chatRequestType, handler)
     }
 
     public onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
-        this.connection.onRequest(
+        this.registerEncryptedRequestHandler<EncryptedQuickActionParams, QuickActionParams, QuickActionResult, void>(
             quickActionRequestType,
-            async (request: QuickActionParams | EncryptedQuickActionParams, cancellationToken: CancellationToken) => {
-                request = request as EncryptedQuickActionParams
-                // decrypt the request params
-                let decryptedRequest = (await this.decodeRequest(request)) as QuickActionParams
+            handler
+        )
+    }
 
-                // make sure we don't lose the partial result token
-                if (request.partialResultToken) {
-                    decryptedRequest.partialResultToken = request.partialResultToken
+    private registerEncryptedRequestHandler<
+        EncryptedRequestType extends EncryptedRequestParams,
+        DecryptedRequestType extends ChatParams | QuickActionParams,
+        ResponseType,
+        ErrorType,
+    >(requestType: any, handler: RequestHandler<DecryptedRequestType, ResponseType, ErrorType>) {
+        this.connection.onRequest(
+            requestType,
+            async (request: EncryptedRequestType | DecryptedRequestType, cancellationToken: CancellationToken) => {
+                // Verify the request is encrypted as expected
+                if (this.instanceOfEncryptedParams<EncryptedRequestType>(request)) {
+                    // Decrypt request
+                    const decryptedRequest = await this.decodeRequest<DecryptedRequestType>(request)
+
+                    // Preserve the partial result token
+                    if (request.partialResultToken) {
+                        decryptedRequest.partialResultToken = request.partialResultToken
+                    }
+
+                    // Call the handler with decrypted params
+                    const response = await handler(decryptedRequest, cancellationToken)
+
+                    // If response is null or undefined, return it as is
+                    if (!response) {
+                        return response
+                    }
+
+                    // Encrypt the response and return it
+                    const encryptedResponse = await encryptObjectWithKey(
+                        response,
+                        this.key,
+                        KEY_MANAGEMENT_ALGORITHM,
+                        CONTENT_ENCRYPTION_ALGORITHM
+                    )
+
+                    return encryptedResponse
                 }
 
-                // call the handler with plaintext
-                const response = (await handler(decryptedRequest, cancellationToken)) as QuickActionResult
-                // encrypt the response
-                const encryptedResponse = await this.encryptObject(response as JWTPayload)
-                // send it back
-                return encryptedResponse
+                return new ResponseError<ResponseType>(
+                    LSPErrorCodes.ServerCancelled,
+                    'The request was not encrypted correctly'
+                )
             }
         )
     }
-    public onEndChat(handler: RequestHandler<EndChatParams, boolean, void>) {
-        return this.connection.onRequest(endChatRequestType, handler)
+
+    private instanceOfEncryptedParams<T>(object: any): object is T {
+        if ('message' in object && typeof object['message'] === `string`) {
+            return isMessageJWEEncrypted(object.message, KEY_MANAGEMENT_ALGORITHM, CONTENT_ENCRYPTION_ALGORITHM)
+        }
+
+        return false
     }
 
-    public onSendFeedback(handler: NotificationHandler<FeedbackParams>) {
-        this.connection.onNotification(feedbackNotificationType.method, handler)
-    }
-    public onReady(handler: NotificationHandler<void>) {
-        this.connection.onNotification(readyNotificationType.method, handler)
-    }
-    public onTabAdd(handler: NotificationHandler<TabAddParams>) {
-        this.connection.onNotification(tabAddNotificationType.method, handler)
-    }
-    public onTabChange(handler: NotificationHandler<TabChangeParams>) {
-        this.connection.onNotification(tabChangeNotificationType.method, handler)
-    }
-    public onTabRemove(handler: NotificationHandler<TabRemoveParams>) {
-        this.connection.onNotification(tabRemoveNotificationType.method, handler)
-    }
-    public onCodeInsertToCursorPosition(handler: NotificationHandler<InsertToCursorPositionParams>) {
-        this.connection.onNotification(insertToCursorPositionNotificationType.method, handler)
-    }
-    public onLinkClick(handler: NotificationHandler<LinkClickParams>) {
-        this.connection.onNotification(linkClickNotificationType.method, handler)
-    }
-    public onInfoLinkClick(handler: NotificationHandler<InfoLinkClickParams>) {
-        this.connection.onNotification(infoLinkClickNotificationType.method, handler)
-    }
-    public onSourceLinkClick(handler: NotificationHandler<SourceLinkClickParams>) {
-        this.connection.onNotification(sourceLinkClickNotificationType.method, handler)
-    }
-    public onFollowUpClicked(handler: NotificationHandler<FollowUpClickParams>) {
-        this.connection.onNotification(followUpClickNotificationType.method, handler)
-    }
-
-    private async decodeRequest<T>(request: EncryptedChatParams | EncryptedQuickActionParams): Promise<T> {
+    private async decodeRequest<T>(request: EncryptedRequestParams): Promise<T> {
         if (!this.key) {
             throw new Error('No encryption key')
         }
 
         if (this.encoding === 'JWT') {
-            const result = await jwtDecrypt(request.message, this.key, {
-                clockTolerance: 60, // Allow up to 60 seconds to account for clock differences
-                contentEncryptionAlgorithms: ['A256GCM'],
-                keyManagementAlgorithms: ['dir'],
+            const result = await jwtDecrypt(request.message, this.keyBuffer, {
+                clockTolerance: 60,
+                contentEncryptionAlgorithms: [CONTENT_ENCRYPTION_ALGORITHM],
+                keyManagementAlgorithms: [KEY_MANAGEMENT_ALGORITHM],
             })
 
             if (!result.payload) {
@@ -148,12 +124,5 @@ export class EncryptedChat implements Chat {
             return result.payload as T
         }
         throw new Error('Encoding mode not implemented')
-    }
-
-    private async encryptObject(object: JWTPayload): Promise<string> {
-        const encryptedJWT = await new EncryptJWT(object)
-            .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
-            .encrypt(this.key)
-        return encryptedJWT
     }
 }
