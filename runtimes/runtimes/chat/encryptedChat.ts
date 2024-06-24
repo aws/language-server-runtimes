@@ -64,7 +64,14 @@ export class EncryptedChat extends BaseChat {
                 // Verify the request is encrypted as expected
                 if (this.instanceOfEncryptedParams<EncryptedRequestType>(request)) {
                     // Decrypt request
-                    const decryptedRequest = await this.decodeRequest<DecryptedRequestType>(request)
+                    let decryptedRequest
+                    try {
+                        decryptedRequest = await this.decodeRequest<DecryptedRequestType>(request)
+                    } catch (err: unknown) {
+                        let errorMessage = 'Request could not be decrypted'
+                        if (err instanceof Error) errorMessage = err.message
+                        return new ResponseError<ResponseType>(LSPErrorCodes.ServerCancelled, errorMessage)
+                    }
 
                     // Preserve the partial result token
                     if (request.partialResultToken) {
