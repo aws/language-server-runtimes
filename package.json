@@ -35,7 +35,7 @@
         "version": "npm run compile && git add -A ."
     },
     "devDependencies": {
-        "@types/mocha": "^10.0.1",
+        "@types/mocha": "^10.0.7",
         "@types/node": "^20.14.2",
         "assert": "^2.0.0",
         "husky": "^9.0.11",
