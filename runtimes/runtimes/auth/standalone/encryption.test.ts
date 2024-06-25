@@ -2,6 +2,7 @@ import { Readable } from 'stream'
 import assert from 'assert'
 import {
     EncryptionInitialization,
+    isMessageJWEEncrypted,
     readEncryptionDetails,
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
@@ -123,5 +124,53 @@ describe('shouldWaitForEncryptionKey', () => {
         assert.strictEqual(shouldWaitForEncryptionKey(), false)
 
         process.argv = originalArgv
+    })
+})
+
+describe('isMessageJWEEncrypted', () => {
+    it('should return false if the message does not have 5 parts separated by periods', () => {
+        const message = 'part1.part2.part3.part4'
+        const result = isMessageJWEEncrypted(message, 'alg', 'enc')
+        assert.strictEqual(result, false)
+    })
+
+    it('should return false if the protected header is not valid base64url', () => {
+        const message = 'invalid..part2.part3.part4.part5'
+        const result = isMessageJWEEncrypted(message, 'alg', 'enc')
+        assert.strictEqual(result, false)
+    })
+
+    it('should return false if the protected header is not a valid JSON', () => {
+        const message = 'aW52YWxpZA==.part2.part3.part4.part5' // "invalid" in base64url
+        const result = isMessageJWEEncrypted(message, 'alg', 'enc')
+        assert.strictEqual(result, false)
+    })
+
+    it('should return false if the protected header does not contain the expected fields', () => {
+        const header = Buffer.from(JSON.stringify({ wrongField: 'value' })).toString('base64url')
+        const message = `${header}.part2.part3.part4.part5`
+        const result = isMessageJWEEncrypted(message, 'alg', 'enc')
+        assert.strictEqual(result, false)
+    })
+
+    it('should return false if the protected header contains wrong algorithm', () => {
+        const header = Buffer.from(JSON.stringify({ alg: 'wrongAlg', enc: 'enc' })).toString('base64url')
+        const message = `${header}.part2.part3.part4.part5`
+        const result = isMessageJWEEncrypted(message, 'alg', 'enc')
+        assert.strictEqual(result, false)
+    })
+
+    it('should return false if the protected header contains wrong encoding', () => {
+        const header = Buffer.from(JSON.stringify({ alg: 'alg', enc: 'wrongEnc' })).toString('base64url')
+        const message = `${header}.part2.part3.part4.part5`
+        const result = isMessageJWEEncrypted(message, 'alg', 'enc')
+        assert.strictEqual(result, false)
+    })
+
+    it('should return true if the protected header contains the expected algorithm and encoding', () => {
+        const header = Buffer.from(JSON.stringify({ alg: 'alg', enc: 'enc' })).toString('base64url')
+        const message = `${header}.part2.part3.part4.part5`
+        const result = isMessageJWEEncrypted(message, 'alg', 'enc')
+        assert.strictEqual(result, true)
     })
 })

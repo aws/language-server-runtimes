@@ -10,21 +10,6 @@ import {
     inlineCompletionRequestType,
     TextDocument,
     telemetryNotificationType,
-
-    // Chat protocol
-    chatRequestType,
-    endChatRequestType,
-    feedbackNotificationType,
-    followUpClickNotificationType,
-    infoLinkClickNotificationType,
-    insertToCursorPositionNotificationType,
-    linkClickNotificationType,
-    quickActionRequestType,
-    readyNotificationType,
-    sourceLinkClickNotificationType,
-    tabAddNotificationType,
-    tabChangeNotificationType,
-    tabRemoveNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -49,6 +34,7 @@ import * as os from 'os'
 import * as path from 'path'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
+import { BaseChat } from './chat/baseChat'
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -236,25 +222,7 @@ export const standalone = (props: RuntimeProps) => {
             }
 
             if (!encryptionKey) {
-                chat = {
-                    onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
-                    onEndChat: handler => lspConnection.onRequest(endChatRequestType.method, handler),
-                    onQuickAction: handler => lspConnection.onRequest(quickActionRequestType.method, handler),
-                    onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
-                    onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
-                    onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
-                    onTabChange: handler => lspConnection.onNotification(tabChangeNotificationType.method, handler),
-                    onTabRemove: handler => lspConnection.onNotification(tabRemoveNotificationType.method, handler),
-                    onCodeInsertToCursorPosition: handler =>
-                        lspConnection.onNotification(insertToCursorPositionNotificationType.method, handler),
-                    onLinkClick: handler => lspConnection.onNotification(linkClickNotificationType.method, handler),
-                    onInfoLinkClick: handler =>
-                        lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
-                    onSourceLinkClick: handler =>
-                        lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
-                    onFollowUpClicked: handler =>
-                        lspConnection.onNotification(followUpClickNotificationType.method, handler),
-                }
+                chat = new BaseChat(lspConnection)
             }
 
             return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging })
