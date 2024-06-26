@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.8] - 2024-06-26
+
+- Update error handling in encrypted chat 
+
 ## [0.2.7] - 2024-06-20
 
 - Introduce encrypted chat class into the standalone runtime that decrypts incoming chat requests and decrypts outgoing chat responses on the runtime level
