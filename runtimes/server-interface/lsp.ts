@@ -38,7 +38,7 @@ export * from '../protocol/lsp'
 
 export type PartialServerCapabilities<T = any> = Pick<
     ServerCapabilities<T>,
-    'completionProvider' | 'hoverProvider' | 'executeCommandProvider'
+    'completionProvider' | 'hoverProvider' | 'executeCommandProvider' | 'semanticTokensProvider'
 >
 export type PartialInitializeResult<T = any> = {
     capabilities: PartialServerCapabilities<T>
