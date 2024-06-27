@@ -10,6 +10,7 @@ import {
     inlineCompletionRequestType,
     TextDocument,
     telemetryNotificationType,
+    SemanticTokensRequest,
 
     // Chat protocol
     chatRequestType,
@@ -124,6 +125,7 @@ export const webworker = (props: RuntimeProps) => {
             onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
             onDidCloseTextDocument: handler => lspConnection.onDidCloseTextDocument(handler),
             onExecuteCommand: lspServer.setExecuteCommandHandler,
+            onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
             workspace: {
                 getConfiguration: section => lspConnection.workspace.getConfiguration(section),
                 onDidChangeWorkspaceFolders: handler =>

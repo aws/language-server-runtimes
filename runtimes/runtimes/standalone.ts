@@ -10,6 +10,7 @@ import {
     inlineCompletionRequestType,
     TextDocument,
     telemetryNotificationType,
+    SemanticTokensRequest,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -196,6 +197,7 @@ export const standalone = (props: RuntimeProps) => {
                 onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
                 onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
                 onExecuteCommand: lspServer.setExecuteCommandHandler,
+                onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
                 workspace: {
                     getConfiguration: section => lspConnection.workspace.getConfiguration(section),
                     onDidChangeWorkspaceFolders: handler =>

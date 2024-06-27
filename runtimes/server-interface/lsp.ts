@@ -28,6 +28,8 @@ import {
     RequestHandler,
     ServerCapabilities,
     TextEdit,
+    SemanticTokensParams,
+    SemanticTokens,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -80,6 +82,7 @@ export type Lsp = {
     sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => Promise<void>
     onHover: (handler: RequestHandler<HoverParams, Hover | null | undefined, void>) => void
     onExecuteCommand: (handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>) => void
+    onSemanticTokens: (handler: RequestHandler<SemanticTokensParams, SemanticTokens | null, void>) => void
     workspace: {
         getConfiguration: (section: string) => Promise<any>
         onDidChangeWorkspaceFolders: (handler: NotificationHandler<DidChangeWorkspaceFoldersParams>) => void
