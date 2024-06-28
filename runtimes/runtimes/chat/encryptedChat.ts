@@ -81,8 +81,8 @@ export class EncryptedChat extends BaseChat {
                     // Call the handler with decrypted params
                     const response = await handler(decryptedRequest, cancellationToken)
 
-                    // If response is null or undefined, return it as is
-                    if (!response) {
+                    // If response is null, undefined or a response error, return it as is
+                    if (!response || response instanceof ResponseError) {
                         return response
                     }
 
