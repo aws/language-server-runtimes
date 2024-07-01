@@ -9,6 +9,7 @@ import {
     ExecuteCommandParams,
     HoverParams,
     InlineCompletionParams,
+    SemanticTokensParams,
     TextDocument,
 } from '../protocol'
 
@@ -71,6 +72,10 @@ export class TestFeatures {
 
     async doCompletion(params: CompletionParams, token: CancellationToken) {
         return this.lsp.onCompletion.args[0]?.[0](params, token)
+    }
+
+    async doSemanticTokens(params: SemanticTokensParams, token: CancellationToken) {
+        return this.lsp.onSemanticTokens.args[0]?.[0](params, token)
     }
 
     async doFormat(params: DocumentFormattingParams, token: CancellationToken) {
