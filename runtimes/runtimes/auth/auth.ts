@@ -41,6 +41,7 @@ export class Auth {
         key?: string,
         encoding?: CredentialsEncoding
     ) {
+        console.log('Auth: Calling real Auth constructor')
         if (key) {
             this.key = Buffer.from(key, 'base64')
             this.credentialsEncoding = encoding

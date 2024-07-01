@@ -1,4 +1,4 @@
-import { TextDocuments } from 'vscode-languageserver'
+import { Connection, TextDocuments } from 'vscode-languageserver'
 import {
     DidChangeConfigurationNotification,
     DidChangeWorkspaceFoldersNotification,
@@ -237,4 +237,11 @@ export const standalone = (props: RuntimeProps) => {
         documents.listen(documentsObserver.callbacks)
         lspConnection.listen()
     }
+}
+
+export const testAuth = () => {
+    // @ts-ignore
+    const A = new Auth({ foo: 'bar' } as Connection)
+
+    return A
 }

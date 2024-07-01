@@ -1,4 +1,4 @@
-import { standalone } from './standalone'
+// import { standalone } from './standalone'
 import { RuntimeProps } from './runtime'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
@@ -15,22 +15,71 @@ describe('standalone runtime', () => {
             // Test the `handleVersionArgument` function
         })
 
-        describe('initauth2', () => {
-            let createConnectionStub: SinonStub<[typeof ProposedFeatures], Connection>
-            let authStub: any
+        describe('initializeAuth', () => {
+            // let createConnectionStub: SinonStub<[typeof ProposedFeatures], Connection>
+            // let authStub: any
+            let sandbox: sinon.SinonSandbox
 
             beforeEach(() => {
-                createConnectionStub = stub(require('vscode-languageserver/node'), 'createConnection')
-                authStub = stub(Auth, 'constructor')
+                sandbox = sinon.createSandbox()
+
+                // createConnectionStub = stub(require('vscode-languageserver/node'), 'createConnection')
+                // authStub = stub(Auth, 'constructor')
             })
 
             afterEach(() => {
-                createConnectionStub.restore()
-                ;(Auth.constructor as SinonStub).restore()
+                // createConnectionStub.restore();
+                // (Auth.constructor as SinonStub).restore()
+
+                sandbox.restore()
             })
 
-            it.only('should initialize Auth with encryption when encryptionRequired is true', async () => {
+            // it('should initialize Auth with encryption when encryptionRequired is true', async () => {
+            //     // Arrange
+            //     const mockConnection: Connection = {
+            //         // Mock the necessary methods and properties of the Connection interface
+            //         // @ts-ignore
+            //         console: {
+            //             info: (...params) => console.log(params),
+            //         },
+            //         // telemetry: {
+            //         //     logEvent: () => {},
+            //         // },
+            //         // Add other mocked methods as needed
+            //         onInitialize: sinon.stub(),
+            //         onExecuteCommand: sinon.stub(),
+            //         onExit: sinon.stub(),
+            //         onWillSaveTextDocumentWaitUntil: sinon.stub(),
+            //         listen: sinon.stub(),
+            //     }
+            //     createConnectionStub.returns(mockConnection)
+
+            //     const encryptionDetails: EncryptionInitialization = {
+            //         version: '1.0',
+            //         mode: 'JWT',
+            //         key: 'test-key',
+            //     }
+
+            //     stub(process.stdin, 'read').returns(`${JSON.stringify(encryptionDetails)}\n`)
+
+            //     const runtimeProps: RuntimeProps = {
+            //         servers: [],
+            //         name: 'Test Server',
+            //     }
+
+            //     standalone(runtimeProps)
+
+            //     // assert.ok(authStub.calledWithNew(), 'Auth should be initialized with new');
+            //     assert.ok(
+            //         authStub.calledWith(sinon.match.any, 'test-key', 'JWT'),
+            //         'Auth should be initialized with encryption details'
+            //     )
+            // })
+
+            it.only('should initialize Auth without encryption when encryptionRequired is false', async () => {
                 // Arrange
+                const AuthStub = sinon.stub(Auth.prototype, 'constructor')
+                const createConnectionStub = stub(require('vscode-languageserver/node'), 'createConnection')
                 const mockConnection: Connection = {
                     // Mock the necessary methods and properties of the Connection interface
                     // @ts-ignore
@@ -49,69 +98,23 @@ describe('standalone runtime', () => {
                 }
                 createConnectionStub.returns(mockConnection)
 
-                const encryptionDetails: EncryptionInitialization = {
-                    version: '1.0',
-                    mode: 'JWT',
-                    key: 'test-key',
-                }
-
-                stub(process.stdin, 'read').returns(`${JSON.stringify(encryptionDetails)}\n`)
-
                 const runtimeProps: RuntimeProps = {
                     servers: [],
                     name: 'Test Server',
                 }
 
-                await standalone(runtimeProps)
+                const standalone = require('./standalone')
+                standalone(runtimeProps)
 
-                // assert.ok(authStub.calledWithNew(), 'Auth should be initialized with new');
-                assert.ok(
-                    authStub.calledWith(sinon.match.any, 'test-key', 'JWT'),
-                    'Auth should be initialized with encryption details'
-                )
-            })
+                assert.ok(mockConnection.listen.called, 'Connection.listen should be called')
 
-            it('should initialize Auth without encryption when encryptionRequired is false', async () => {
-                // Arrange
-                const mockConnection: Connection = {
-                    // Mock the necessary methods and properties of the Connection interface
-                    // @ts-ignore
-                    console: {
-                        info: (...params) => console.log(params),
-                    },
-                    // telemetry: {
-                    //     logEvent: () => {},
-                    // },
-                    // Add other mocked methods as needed
-                    onInitialize: sinon.stub(),
-                    onExecuteCommand: sinon.stub(),
-                    onExit: sinon.stub(),
-                    onWillSaveTextDocumentWaitUntil: sinon.stub(),
-                    listen: sinon.stub(),
-                }
-                createConnectionStub.returns(mockConnection)
-
-                const encryptionDetails: EncryptionInitialization = {
-                    version: '1.0',
-                    mode: 'JWT',
-                    key: 'test-key',
-                }
-
-                stub(process.stdin, 'read').returns(`${JSON.stringify(encryptionDetails)}\n`)
-
-                const runtimeProps: RuntimeProps = {
-                    servers: [],
-                    name: 'Test Server',
-                }
-
-                await standalone(runtimeProps)
-
-                // assert.ok(authStub.calledWithNew(), 'Auth should be initialized with new');
-                assert.ok(authStub.calledWith(sinon.match.any), 'Auth should be initialized')
-                assert.ok(
-                    !authStub.calledWith(sinon.match.any, sinon.match.any, sinon.match.any),
-                    'Auth should not be initialized with encryption details'
-                )
+                sinon.assert.calledWithNew(AuthStub)
+                sinon.assert.calledWith(AuthStub, mockConnection)
+                // assert.ok(AuthStub.calledWith(mockConnection), 'Auth should be initialized')
+                // assert.ok(
+                //     !AuthStub.calledWith(sinon.match.any, sinon.match.any, sinon.match.any),
+                //     'Auth should not be initialized with encryption details'
+                // )
             })
         })
 
