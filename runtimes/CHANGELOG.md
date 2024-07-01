@@ -1,5 +1,10 @@
 # Changelog
 
+
+## [0.2.9] - 2024-07-01
+
+- Make sure errors are returned correctly in encrypted chat
+
 ## [0.2.8] - 2024-06-26
 
 - Update error handling in encrypted chat 
