@@ -1,5 +1,8 @@
 # Changelog
 
+## [0.2.10] - 2024-07-01
+
+- Added support for `textDocument/semanticTokens/full` [LSP feature](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#semanticTokens_fullRequest)
 
 ## [0.2.9] - 2024-07-01
 
