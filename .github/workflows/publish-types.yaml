@@ -1,0 +1,13 @@
+name: Publish Types Package to npmjs
+
+on:
+  push:
+    tags:
+      - 'language-server-runtimes-types/v**'
+
+jobs:
+  publish:
+    uses: ./.github/workflows/publish-to-npm.yaml
+    with:
+      workspace: 'types'
+    secrets: inherit
