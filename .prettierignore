@@ -4,3 +4,4 @@ out/
 package-lock.json
 .prettierrc
 .vscode
+.github/workflows/**
