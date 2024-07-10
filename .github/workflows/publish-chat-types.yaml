@@ -1,4 +1,4 @@
-name: Publish Types Package to npmjs
+name: Publish Chat Client UI Types Package to npmjs
 
 on:
   push:

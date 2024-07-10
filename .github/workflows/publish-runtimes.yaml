@@ -1,4 +1,4 @@
-name: Publish Types Package to npmjs
+name: Publish Runtimes Package to npmjs
 
 on:
   push:
