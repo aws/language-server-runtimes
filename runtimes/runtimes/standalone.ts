@@ -214,6 +214,7 @@ export const standalone = (props: RuntimeProps) => {
                     return lspConnection.sendProgress(type, token, value)
                 },
                 onHover: handler => lspConnection.onHover(handler),
+                onSignatureHelp: handler => lspConnection.onSignatureHelp(handler),
                 extensions: {
                     onInlineCompletionWithReferences: handler =>
                         lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),

@@ -30,6 +30,8 @@ import {
     TextEdit,
     SemanticTokensParams,
     SemanticTokens,
+    SignatureHelp,
+    SignatureHelpParams,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -38,7 +40,11 @@ export * from '../protocol/lsp'
 
 export type PartialServerCapabilities<T = any> = Pick<
     ServerCapabilities<T>,
-    'completionProvider' | 'hoverProvider' | 'executeCommandProvider' | 'semanticTokensProvider'
+    | 'completionProvider'
+    | 'hoverProvider'
+    | 'executeCommandProvider'
+    | 'semanticTokensProvider'
+    | 'signatureHelpProvider'
 >
 export type PartialInitializeResult<T = any> = {
     capabilities: PartialServerCapabilities<T>
@@ -83,6 +89,7 @@ export type Lsp = {
     onHover: (handler: RequestHandler<HoverParams, Hover | null | undefined, void>) => void
     onExecuteCommand: (handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>) => void
     onSemanticTokens: (handler: RequestHandler<SemanticTokensParams, SemanticTokens | null, void>) => void
+    onSignatureHelp: (handler: RequestHandler<SignatureHelpParams, SignatureHelp | null | undefined, void>) => void
     workspace: {
         getConfiguration: (section: string) => Promise<any>
         onDidChangeWorkspaceFolders: (handler: NotificationHandler<DidChangeWorkspaceFoldersParams>) => void

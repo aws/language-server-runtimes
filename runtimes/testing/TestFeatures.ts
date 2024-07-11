@@ -11,6 +11,7 @@ import {
     InlineCompletionParams,
     SemanticTokensParams,
     TextDocument,
+    SignatureHelpParams,
 } from '../protocol'
 
 /**
@@ -84,6 +85,10 @@ export class TestFeatures {
 
     async doHover(params: HoverParams, token: CancellationToken) {
         return this.lsp.onHover.args[0]?.[0](params, token)
+    }
+
+    async doSignatureHelp(params: SignatureHelpParams, token: CancellationToken) {
+        return this.lsp.onSignatureHelp.args[0]?.[0](params, token)
     }
 
     async doInlineCompletionWithReferences(
