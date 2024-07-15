@@ -98,12 +98,15 @@ describe('LspRouter', () => {
                 return {
                     capabilities: {
                         completionProvider: { resolveProvider: true },
+                        executeCommandProvider: { commands: ['log', 'test'] },
                     },
                 }
             }
             const handler2 = () => {
                 return Promise.resolve({
-                    capabilities: {},
+                    capabilities: {
+                        executeCommandProvider: { commands: ['run'] },
+                    },
                     extraField: 'extraValue',
                 })
             }
@@ -124,6 +127,7 @@ describe('LspRouter', () => {
                         change: TextDocumentSyncKind.Incremental,
                     },
                     completionProvider: { resolveProvider: true },
+                    executeCommandProvider: { commands: ['run', 'log', 'test'] },
                 },
                 extraField: 'extraValue',
             }
