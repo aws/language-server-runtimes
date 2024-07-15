@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.11] - 2024-07-15
+
+- Fixed InitializeResult merge logic to account for arrays in the initiliaze handlers
+
 ## [0.2.10] - 2024-07-01
 
 - Added support for `textDocument/semanticTokens/full` [LSP feature](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#semanticTokens_fullRequest)
