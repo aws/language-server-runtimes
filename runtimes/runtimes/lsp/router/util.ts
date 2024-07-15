@@ -25,11 +25,13 @@ export function asPromise(value: any): Promise<any> {
 }
 
 export function mergeObjects(obj1: any, obj2: any) {
-    const merged: any = {}
+    let merged: any = {}
 
     for (let key in obj1) {
         if (obj1.hasOwnProperty(key)) {
-            if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
+            if (Array.isArray(obj1) && Array.isArray(obj2)) {
+                merged = [...new Set([...obj1, ...obj2])]
+            } else if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
                 merged[key] = mergeObjects(obj1[key], obj2[key])
             } else {
                 merged[key] = obj1[key]
@@ -41,7 +43,9 @@ export function mergeObjects(obj1: any, obj2: any) {
     }
 
     for (let key in obj2) {
-        if (obj2.hasOwnProperty(key) && !obj1.hasOwnProperty(key)) {
+        if (Array.isArray(obj1) && Array.isArray(obj2)) {
+            continue
+        } else if (obj2.hasOwnProperty(key) && !obj1.hasOwnProperty(key)) {
             merged[key] = obj2[key]
         }
     }
