@@ -74,9 +74,7 @@ export class EncryptedChat extends BaseChat {
                     }
 
                     // Preserve the partial result token
-                    if (request.partialResultToken) {
-                        decryptedRequest.partialResultToken = request.partialResultToken
-                    }
+                    decryptedRequest.partialResultToken = request.partialResultToken
 
                     // Call the handler with decrypted params
                     const response = await handler(decryptedRequest, cancellationToken)
