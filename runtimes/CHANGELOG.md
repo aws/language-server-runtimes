@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.12] - 2024-07-19
+
+- Add onSignatureHelp request handler
+- Fix chat runtime to allow "0" to be used as a partial token in chat request 
+
 ## [0.2.11] - 2024-07-15
 
 - Fixed InitializeResult merge logic to account for arrays in the initiliaze handlers
