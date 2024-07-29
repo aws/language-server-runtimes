@@ -48,7 +48,7 @@
         "sinon": "^18.0.0",
         "ts-mocha": "^10.0.0",
         "ts-sinon": "^2.0.2",
-        "typescript": "^5.5.3"
+        "typescript": "^5.5.4"
     },
     "typesVersions": {
         "*": {
