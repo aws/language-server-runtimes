@@ -41,7 +41,7 @@
     },
     "devDependencies": {
         "@types/mocha": "^10.0.7",
-        "@types/node": "^20.14.10",
+        "@types/node": "^22.0.0",
         "assert": "^2.0.0",
         "husky": "^9.1.1",
         "prettier": "3.3.3",
