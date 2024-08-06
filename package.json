@@ -38,7 +38,7 @@
         "@types/mocha": "^10.0.7",
         "@types/node": "^22.1.0",
         "assert": "^2.0.0",
-        "husky": "^9.1.1",
+        "husky": "^9.1.4",
         "prettier": "3.3.3",
         "pretty-quick": "^4.0.0",
         "shx": "^0.3.4",
