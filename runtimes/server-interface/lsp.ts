@@ -35,6 +35,8 @@ import {
     ShowMessageParams,
     ShowMessageRequestParams,
     MessageActionItem,
+    ShowDocumentParams,
+    ShowDocumentResult,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -100,6 +102,7 @@ export type Lsp = {
     window: {
         showMessage: (params: ShowMessageParams) => Promise<void>
         showMessageRequest: (params: ShowMessageRequestParams) => Promise<MessageActionItem | null>
+        showDocument: (params: ShowDocumentParams) => Promise<ShowDocumentResult>
     }
     extensions: {
         onInlineCompletionWithReferences: (

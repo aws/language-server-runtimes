@@ -13,6 +13,7 @@ import {
     SemanticTokensRequest,
     ShowMessageNotification,
     ShowMessageRequest,
+    ShowDocumentRequest,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -208,6 +209,7 @@ export const standalone = (props: RuntimeProps) => {
                 window: {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
                     showMessageRequest: params => lspConnection.sendRequest(ShowMessageRequest.method, params),
+                    showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
                 },
                 publishDiagnostics: params =>
                     lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),

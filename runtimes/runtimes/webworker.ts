@@ -28,6 +28,7 @@ import {
     tabRemoveNotificationType,
     ShowMessageNotification,
     ShowMessageRequest,
+    ShowDocumentRequest,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import { Chat, Logging, Lsp, Telemetry, Workspace } from '../server-interface'
@@ -136,6 +137,7 @@ export const webworker = (props: RuntimeProps) => {
             window: {
                 showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
                 showMessageRequest: params => lspConnection.sendRequest(ShowMessageRequest.method, params),
+                showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
