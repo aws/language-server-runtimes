@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.13] - 2024-08-16
+
+- Add support for window/showDocument, window/showMessage and window/showMessageRequest LSP handler
+
 ## [0.2.12] - 2024-07-19
 
 - Add onSignatureHelp request handler
