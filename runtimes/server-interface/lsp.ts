@@ -32,6 +32,11 @@ import {
     SemanticTokens,
     SignatureHelp,
     SignatureHelpParams,
+    ShowMessageParams,
+    ShowMessageRequestParams,
+    MessageActionItem,
+    ShowDocumentParams,
+    ShowDocumentResult,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -93,6 +98,11 @@ export type Lsp = {
     workspace: {
         getConfiguration: (section: string) => Promise<any>
         onDidChangeWorkspaceFolders: (handler: NotificationHandler<DidChangeWorkspaceFoldersParams>) => void
+    }
+    window: {
+        showMessage: (params: ShowMessageParams) => Promise<void>
+        showMessageRequest: (params: ShowMessageRequestParams) => Promise<MessageActionItem | null>
+        showDocument: (params: ShowDocumentParams) => Promise<ShowDocumentResult>
     }
     extensions: {
         onInlineCompletionWithReferences: (
