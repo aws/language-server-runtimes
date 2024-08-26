@@ -1,5 +1,6 @@
 import { _EM } from 'vscode-jsonrpc'
 import {
+    InitializeParams as _InitializeParamsBase,
     InitializeResult as InitializeResultBase,
     ParameterStructures,
     ProgressType,
@@ -37,6 +38,38 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 
     public constructor(method: string) {
         super(method, ParameterStructures.auto)
+    }
+}
+
+/**
+ * Extra Client information passed during initialization handshake from Client to Server.
+ */
+export interface AWSClientInitializationOptions {
+    /**
+     * Custom client branding information.
+     */
+    product?: {
+        name: string
+        version: string
+    }
+    /**
+     * Custom client host platform information.
+     */
+    platform?: {
+        name: string
+        version: string
+    }
+    clientId?: string
+}
+
+/**
+ * Extended AWS Runtimes InitializeParams interface,
+ * sent from Client to Server as part of [`initialize`](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize) request
+ */
+export interface InitializeParams extends _InitializeParamsBase {
+    initializationOptions?: {
+        [key: string]: any
+        aws: AWSClientInitializationOptions
     }
 }
 

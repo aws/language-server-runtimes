@@ -1,4 +1,5 @@
 import {
+    AWSClientInitializationOptions,
     CancellationToken,
     ExecuteCommandParams,
     InitializeError,
@@ -10,6 +11,8 @@ import {
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { mergeObjects } from './util'
+
+const USER_AGENT_PREFIX = 'AWS-LS-Runtime'
 
 export class LspRouter {
     public clientInitializeParams?: InitializeParams
@@ -42,7 +45,20 @@ export class LspRouter {
             },
         }
 
-        let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
+        let responsesList = await Promise.all(
+            this.servers.map(s =>
+                s.initialize(
+                    {
+                        ...params,
+                        // Inject Runtimes-computed metadata, shareable by all servers.
+                        awsRuntimeMetadata: {
+                            customUserAgent: this.getUserAgent(params.initializationOptions?.aws),
+                        },
+                    },
+                    token
+                )
+            )
+        )
         responsesList = responsesList.filter(r => r != undefined)
         if (responsesList.some(el => el instanceof ResponseError)) {
             return responsesList.find(el => el instanceof ResponseError) as ResponseError<InitializeError>
@@ -64,5 +80,32 @@ export class LspRouter {
                 return result
             }
         }
+    }
+
+    getUserAgent = (params?: AWSClientInitializationOptions): string => {
+        const items: String[] = []
+
+        // Standard prefix for all Language Server Runtimes artifacts
+        items.push(USER_AGENT_PREFIX)
+
+        // Fields, specific to runtime artifact
+        items.push(`${this.name}/${this.version}`)
+
+        // Compute client-specific suffix
+        const { product, platform, clientId } = params || {}
+
+        if (product?.name && product?.version) {
+            items.push(`${product.name}/${product.version}`)
+        }
+
+        if (platform?.name && platform?.version) {
+            items.push(`${platform.name}/${platform.version}`)
+        }
+
+        if (clientId) {
+            items.push(`CliendId/${clientId}`)
+        }
+
+        return items.join(' ')
     }
 }

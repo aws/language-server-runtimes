@@ -12,7 +12,7 @@ import {
     Hover,
     HoverParams,
     InitializeError,
-    InitializeParams,
+    InitializeParams as _ProtocolInitializeParams,
     InitializedParams,
     InlineCompletionItem,
     InlineCompletionItemWithReferences,
@@ -55,6 +55,21 @@ export type PartialInitializeResult<T = any> = {
     capabilities: PartialServerCapabilities<T>
     awsServerCapabilities?: {
         chatOptions?: ChatOptions
+    }
+}
+
+/**
+ * Extended InitializeParams passed to Capability Server implementation from Language Server Runtime.
+ * Custom runtime metadata is mixed in to the data passed down from the client and is extended with shared data,
+ * standardized in runtime implementation and shared by all servers.
+ */
+export interface InitializeParams extends _ProtocolInitializeParams {
+    awsRuntimeMetadata?: {
+        /**
+         * Custom UserAgent value computed by the Runtime. Standard for all servers.
+         * Suitable for setting predictable UserAgent for HTTP requests or configuring AWS SDK calls.
+         */
+        customUserAgent?: string
     }
 }
 
