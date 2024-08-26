@@ -60,13 +60,13 @@ export type PartialInitializeResult<T = any> = {
 
 /**
  * Extended InitializeParams passed to Capability Server implementation from Language Server Runtime.
- * Custom runtime metadata is mixed in to the data passed down from the client and is extended with shared data,
- * standardized in runtime implementation and shared by all servers.
+ * Custom runtime metadata is mixed in to the data passed down from the client,
+ * standardized by runtimes implementation and shared with all servers.
  */
 export interface InitializeParams extends _ProtocolInitializeParams {
     awsRuntimeMetadata?: {
         /**
-         * Custom UserAgent value computed by the Runtime. Standard for all servers.
+         * Custom UserAgent value, computed by the Runtime.
          * Suitable for setting predictable UserAgent for HTTP requests or configuring AWS SDK calls.
          */
         customUserAgent?: string

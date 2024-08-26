@@ -53,12 +53,15 @@ export interface AWSClientInitializationOptions {
         version: string
     }
     /**
-     * Custom client host platform information.
+     * Client host platform information.
      */
     platform?: {
         name: string
         version: string
     }
+    /**
+     * Custom Client ID value, set based on client extension internal business logic.
+     */
     clientId?: string
 }
 
