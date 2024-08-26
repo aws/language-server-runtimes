@@ -32,7 +32,8 @@
         "prepare": "husky install .husky",
         "test": "npm run test --workspaces --if-present",
         "preversion": "npm run test",
-        "version": "npm run compile && git add -A ."
+        "version": "npm run compile && git add -A .",
+        "watch": "tsc --build --watch"
     },
     "devDependencies": {
         "@types/mocha": "^10.0.7",
