@@ -12,7 +12,7 @@ import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { mergeObjects } from './util'
 
-const USER_AGENT_PREFIX = 'AWS-LS-Runtime'
+const USER_AGENT_PREFIX = 'AWS-Language-Servers'
 
 export class LspRouter {
     public clientInitializeParams?: InitializeParams
@@ -88,11 +88,16 @@ export class LspRouter {
         items.push(USER_AGENT_PREFIX)
 
         // Fields specific to runtime artifact
-        items.push(`${this.name || 'UNKNOWN'}/${this.version || 'UNKNOWN'}`)
+        if (this.version) {
+            items.push(`${this.name}/${this.version}`)
+        } else {
+            items.push(`${this.name}`)
+        }
 
         // Compute client-specific suffix
-        const { customUserAgentSuffix = '' } = opts
-        items.push(customUserAgentSuffix)
+        if (opts.customUserAgentSuffix) {
+            items.push(opts.customUserAgentSuffix)
+        }
 
         return items.join(' ')
     }
