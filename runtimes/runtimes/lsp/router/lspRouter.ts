@@ -82,6 +82,8 @@ export class LspRouter {
     }
 
     getUserAgent = (opts: AWSClientInitializationOptions = {}): string => {
+        const format = (s: string) => s.replace(/\s/g, '-')
+
         const items: String[] = []
 
         // Standard prefix for all Language Server Runtimes artifacts
@@ -89,14 +91,26 @@ export class LspRouter {
 
         // Fields specific to runtime artifact
         if (this.version) {
-            items.push(`${this.name}/${this.version}`)
+            items.push(`${format(this.name)}/${this.version}`)
         } else {
-            items.push(`${this.name}`)
+            items.push(format(this.name))
         }
 
         // Compute client-specific suffix
-        if (opts.customUserAgentSuffix) {
-            items.push(opts.customUserAgentSuffix)
+        // Missing required data fields are replaced with 'UNKNOWN' token
+        // Whitespaces in product.name and platform.name are replaced to '-'
+        const { product, platform, clientId } = opts
+
+        if (product) {
+            items.push(`${product.name ? format(product.name) : 'UNKNOWN'}/${product.version || 'UNKNOWN'}`)
+        }
+
+        if (platform) {
+            items.push(`${platform.name ? format(platform.name) : 'UNKNOWN'}/${platform.version || 'UNKNOWN'}`)
+        }
+
+        if (clientId) {
+            items.push(`ClientId/${clientId}`)
         }
 
         return items.join(' ')

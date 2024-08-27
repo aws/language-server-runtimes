@@ -209,35 +209,7 @@ describe('LspRouter', () => {
                 assert(
                     initializeHandlerStub.calledWith({
                         awsRuntimeMetadata: {
-                            customUserAgent: 'AWS-Language-Servers AWS LSP Standalone/1.0.0',
-                        },
-                    })
-                )
-            })
-
-            it('should append custom client suffix to customUserAgent', async () => {
-                const initializeHandlerStub = sinon.stub().returns({
-                    capabilities: {},
-                })
-                lspRouter.servers.push(
-                    newServer({
-                        initializeHandler: initializeHandlerStub,
-                    })
-                )
-                const params = {
-                    initializationOptions: {
-                        aws: {
-                            customUserAgentSuffix: 'test-suffix/0.1.2',
-                        },
-                    },
-                } as InitializeParams
-                await initializeHandler(params, {} as CancellationToken)
-
-                assert(
-                    initializeHandlerStub.calledWith({
-                        ...params,
-                        awsRuntimeMetadata: {
-                            customUserAgent: 'AWS-Language-Servers AWS LSP Standalone/1.0.0 test-suffix/0.1.2',
+                            customUserAgent: 'AWS-Language-Servers AWS-LSP-Standalone/1.0.0',
                         },
                     })
                 )
@@ -272,7 +244,74 @@ describe('LspRouter', () => {
                 assert(
                     initializeServerHandlerStub.calledWith({
                         awsRuntimeMetadata: {
-                            customUserAgent: 'AWS-Language-Servers AWS LSP Standalone',
+                            customUserAgent: 'AWS-Language-Servers AWS-LSP-Standalone',
+                        },
+                    })
+                )
+            })
+
+            it('should append custom suffix to customUserAgent based on initializationOptions.aws data', async () => {
+                const initializeHandlerStub = sinon.stub().returns({
+                    capabilities: {},
+                })
+                lspRouter.servers.push(
+                    newServer({
+                        initializeHandler: initializeHandlerStub,
+                    })
+                )
+                const params = {
+                    initializationOptions: {
+                        aws: {
+                            product: {
+                                name: 'Test Client Product',
+                                version: '0.1.2',
+                            },
+                            platform: {
+                                name: 'Test Platform',
+                                version: '1.2.3',
+                            },
+                            clientId: 'test-client-id',
+                        },
+                    },
+                } as InitializeParams
+                await initializeHandler(params, {} as CancellationToken)
+
+                assert(
+                    initializeHandlerStub.calledWith({
+                        ...params,
+                        awsRuntimeMetadata: {
+                            customUserAgent:
+                                'AWS-Language-Servers AWS-LSP-Standalone/1.0.0 Test-Client-Product/0.1.2 Test-Platform/1.2.3 ClientId/test-client-id',
+                        },
+                    })
+                )
+            })
+
+            it('should fallback to UNKNOWN value, when product or platform fields are missing', async () => {
+                const initializeHandlerStub = sinon.stub().returns({
+                    capabilities: {},
+                })
+                lspRouter.servers.push(
+                    newServer({
+                        initializeHandler: initializeHandlerStub,
+                    })
+                )
+                const params = {
+                    initializationOptions: {
+                        aws: {
+                            product: {},
+                            platform: {},
+                        },
+                    },
+                } as InitializeParams
+                await initializeHandler(params, {} as CancellationToken)
+
+                assert(
+                    initializeHandlerStub.calledWith({
+                        ...params,
+                        awsRuntimeMetadata: {
+                            customUserAgent:
+                                'AWS-Language-Servers AWS-LSP-Standalone/1.0.0 UNKNOWN/UNKNOWN UNKNOWN/UNKNOWN',
                         },
                     })
                 )
