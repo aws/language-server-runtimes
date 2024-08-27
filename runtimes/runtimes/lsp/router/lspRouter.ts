@@ -50,7 +50,6 @@ export class LspRouter {
                 s.initialize(
                     {
                         ...params,
-                        // Inject Runtimes-computed metadata, shareable by all servers.
                         awsRuntimeMetadata: {
                             customUserAgent: this.getUserAgent(params.initializationOptions?.aws),
                         },
@@ -82,29 +81,18 @@ export class LspRouter {
         }
     }
 
-    getUserAgent = (params?: AWSClientInitializationOptions): string => {
+    getUserAgent = (opts: AWSClientInitializationOptions = {}): string => {
         const items: String[] = []
 
         // Standard prefix for all Language Server Runtimes artifacts
         items.push(USER_AGENT_PREFIX)
 
-        // Fields, specific to runtime artifact
-        items.push(`${this.name}/${this.version}`)
+        // Fields specific to runtime artifact
+        items.push(`${this.name || 'UNKNOWN'}/${this.version || 'UNKNOWN'}`)
 
         // Compute client-specific suffix
-        const { product, platform, clientId } = params || {}
-
-        if (product?.name && product?.version) {
-            items.push(`${product.name}/${product.version}`)
-        }
-
-        if (platform?.name && platform?.version) {
-            items.push(`${platform.name}/${platform.version}`)
-        }
-
-        if (clientId) {
-            items.push(`CliendId/${clientId}`)
-        }
+        const { customUserAgentSuffix = '' } = opts
+        items.push(customUserAgentSuffix)
 
         return items.join(' ')
     }

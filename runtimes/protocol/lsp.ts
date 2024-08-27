@@ -46,23 +46,10 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
  */
 export interface AWSClientInitializationOptions {
     /**
-     * Custom client branding information.
+     * Custom UserAgent suffix value, computed by client and passed down to Server implementations at startup.
+     * The value can be used by Servers to setup custom user agent headers for HTTP or AWS SDK calls.
      */
-    product?: {
-        name: string
-        version: string
-    }
-    /**
-     * Client host platform information.
-     */
-    platform?: {
-        name: string
-        version: string
-    }
-    /**
-     * Custom Client ID value, set based on client extension internal business logic.
-     */
-    clientId?: string
+    customUserAgentSuffix?: string
 }
 
 /**
