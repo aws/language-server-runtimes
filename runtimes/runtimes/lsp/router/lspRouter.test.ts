@@ -262,15 +262,15 @@ describe('LspRouter', () => {
                 const params = {
                     initializationOptions: {
                         aws: {
-                            product: {
+                            clientInfo: {
                                 name: 'Test Client Product',
                                 version: '0.1.2',
+                                clientId: 'test-client-id',
                             },
-                            platform: {
+                            platformInfo: {
                                 name: 'Test Platform',
                                 version: '1.2.3',
                             },
-                            clientId: 'test-client-id',
                         },
                     },
                 } as InitializeParams
@@ -299,8 +299,8 @@ describe('LspRouter', () => {
                 const params = {
                     initializationOptions: {
                         aws: {
-                            product: {},
-                            platform: {},
+                            clientInfo: {},
+                            platformInfo: {},
                         },
                     },
                 } as InitializeParams

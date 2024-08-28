@@ -1,5 +1,6 @@
 import {
-    AWSClientInitializationOptions,
+    AWSClientInfoInitializationOptions,
+    AWSInitializationOptions,
     CancellationToken,
     ExecuteCommandParams,
     InitializeError,
@@ -81,7 +82,7 @@ export class LspRouter {
         }
     }
 
-    getUserAgent = (opts: AWSClientInitializationOptions = {}): string => {
+    getUserAgent = (opts?: AWSInitializationOptions): string => {
         const format = (s: string) => s.replace(/\s/g, '-')
 
         const items: String[] = []
@@ -99,18 +100,18 @@ export class LspRouter {
         // Compute client-specific suffix
         // Missing required data fields are replaced with 'UNKNOWN' token
         // Whitespaces in product.name and platform.name are replaced to '-'
-        const { product, platform, clientId } = opts
+        const { clientInfo: client, platformInfo: platform } = opts || {}
 
-        if (product) {
-            items.push(`${product.name ? format(product.name) : 'UNKNOWN'}/${product.version || 'UNKNOWN'}`)
+        if (client) {
+            items.push(`${client.name ? format(client.name) : 'UNKNOWN'}/${client.version || 'UNKNOWN'}`)
         }
 
         if (platform) {
             items.push(`${platform.name ? format(platform.name) : 'UNKNOWN'}/${platform.version || 'UNKNOWN'}`)
         }
 
-        if (clientId) {
-            items.push(`ClientId/${clientId}`)
+        if (client?.clientId) {
+            items.push(`ClientId/${client?.clientId}`)
         }
 
         return items.join(' ')

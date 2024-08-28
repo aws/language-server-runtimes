@@ -42,33 +42,36 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 }
 
 /**
- * Extra Client information passed during initialization handshake from Client to Server.
+ * Custom Client extension information passed during initialization handshake from Client to Server.
  */
-export interface AWSClientInitializationOptions {
+export interface AWSClientInfoInitializationOptions {
     /**
-     * Custom client branding information.
+     * Client extension name, may contain spaces.
      */
-    product?: {
-        /**
-         * Product name, may contain spaces.
-         */
-        name: string
-        version: string
-    }
-    /**
-     * Client host platform information.
-     */
-    platform?: {
-        /**
-         * Platform name, may contain spaces.
-         */
-        name: string
-        version: string
-    }
+    name: string
+    version: string
     /**
      * Custom Client ID value, set based on client extension internal business logic.
+     * Can be used to uniquely identify installations of Client extension.
      */
     clientId?: string
+}
+
+/**
+ * Information about a Platform or environment.
+ * Use it to pass information about IDE or text editor, in which Client extension is running.
+ */
+export interface AWSPlatformInitializationOptions {
+    /**
+     * Platform name, may contain spaces.
+     */
+    name: string
+    version: string
+}
+
+export interface AWSInitializationOptions {
+    clientInfo?: AWSClientInfoInitializationOptions
+    platformInfo?: AWSPlatformInitializationOptions
 }
 
 /**
@@ -78,7 +81,7 @@ export interface AWSClientInitializationOptions {
 export interface InitializeParams extends _InitializeParamsBase {
     initializationOptions?: {
         [key: string]: any
-        aws: AWSClientInitializationOptions
+        aws: AWSInitializationOptions
     }
 }
 
