@@ -1,7 +1,7 @@
 import { _EM } from 'vscode-jsonrpc'
 import {
     InitializeParams as _InitializeParamsBase,
-    InitializeResult as InitializeResultBase,
+    InitializeResult as _InitializeResultBase,
     ParameterStructures,
     ProgressType,
     RegistrationType,
@@ -42,36 +42,52 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 }
 
 /**
- * Custom Client extension information passed during initialization handshake from Client to Server.
+ * Custom Client extension information passed during initialization from Client to Server.
+ * Use to identify extension and pass additional data, not available in standard InitializeParams object.
  */
-export interface AWSClientInfoInitializationOptions {
+export interface ClientExtensionInfo {
     /**
-     * Client extension name, may contain spaces.
+     * Client Extension name, which is used for managing and interacting with AWS Language Server.
+     * May contain spaces.
      */
     name: string
-    version: string
+
     /**
-     * Custom Client ID value, set based on client extension internal business logic.
-     * Can be used to uniquely identify installations of Client extension.
+     * Client extension version.
      */
-    clientId?: string
+    version: string
+
+    /**
+     * Unique extension installation ID, as defined by the client extension.
+     */
+    extensionInstallationId?: string
+
+    /**
+     * Information about a client platform (editor or tool), in which extension runs.
+     * Use to pass additional or customised information, not available from standard InitializeParams.clientInfo field.
+     */
+    clientPlatform?: AWSClientPlatformInfo
 }
 
 /**
- * Information about a Platform or environment.
- * Use it to pass information about IDE or text editor, in which Client extension is running.
+ * Information about the client application, in which Client extension is running.
+ * Standard LSP supports passing information about client environment in InitializeParams.clientInfo field during initialization,
+ * but the values can not be modified by custom extensions.
  */
-export interface AWSPlatformInitializationOptions {
+export interface AWSClientPlatformInfo {
     /**
-     * Platform name, may contain spaces.
+     * Client platform name, defined by client extension in which it is running.
+     * May contain spaces.
      */
     name: string
+    /**
+     * Client platform version.
+     */
     version: string
 }
 
 export interface AWSInitializationOptions {
-    clientInfo?: AWSClientInfoInitializationOptions
-    platformInfo?: AWSPlatformInitializationOptions
+    clientExtensionInfo?: ClientExtensionInfo
 }
 
 /**
@@ -88,7 +104,7 @@ export interface InitializeParams extends _InitializeParamsBase {
 /**
  * Custom AWS Runtimes InitializeResult object interface with extended options.
  */
-export interface InitializeResult extends InitializeResultBase {
+export interface InitializeResult extends _InitializeResultBase {
     /**
      * The server signals custom AWS Runtimes capabilities it supports.
      */

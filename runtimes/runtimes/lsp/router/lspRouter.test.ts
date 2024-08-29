@@ -1,6 +1,5 @@
 import {
     CancellationToken,
-    InitializeParams,
     InitializeError,
     RequestHandler,
     TextDocumentSyncKind,
@@ -12,7 +11,7 @@ import { Connection } from 'vscode-languageserver/node'
 import { LspRouter } from './lspRouter'
 import assert from 'assert'
 import sinon from 'sinon'
-import { PartialInitializeResult } from '../../../server-interface/lsp'
+import { PartialInitializeResult, InitializeParams } from '../../../server-interface/lsp'
 import { LspServer } from './lspServer'
 
 describe('LspRouter', () => {
@@ -194,128 +193,27 @@ describe('LspRouter', () => {
             assert.deepStrictEqual(result, error)
         })
 
-        describe('awsRuntimeMetadata parameter', () => {
-            it('should extend InitializeParams passed to servers with awsRuntimeMetadata', async () => {
-                const initializeHandlerStub = sinon.stub().returns({
-                    capabilities: {},
-                })
-                lspRouter.servers.push(
-                    newServer({
-                        initializeHandler: initializeHandlerStub,
-                    })
-                )
-                await initializeHandler({} as InitializeParams, {} as CancellationToken)
-
-                assert(
-                    initializeHandlerStub.calledWith({
-                        awsRuntimeMetadata: {
-                            customUserAgent: 'AWS-Language-Servers AWS-LSP-Standalone/1.0.0',
-                        },
-                    })
-                )
+        it('should extend InitializeParams passed to servers with awsRuntimeMetadata', async () => {
+            const initializeHandlerStub = sinon.stub().returns({
+                capabilities: {},
             })
-
-            it('should not add server version to userAgent if it is not set', async () => {
-                const lspConnection = <Connection>{
-                    onInitialize: (handler: any) => {},
-                    onExecuteCommand: (handler: any) => {},
-                }
-                const onInitializeSpy = sandbox.spy(lspConnection, 'onInitialize')
-
-                const lspRouterNoVersion = new LspRouter(lspConnection, 'AWS LSP Standalone')
-
-                initializeHandler = onInitializeSpy.getCall(0).args[0] as RequestHandler<
-                    InitializeParams,
-                    PartialInitializeResult,
-                    InitializeError
-                >
-
-                const initializeServerHandlerStub = sinon.stub().returns({
-                    capabilities: {},
+            lspRouter.servers.push(
+                newServer({
+                    initializeHandler: initializeHandlerStub,
                 })
-                lspRouterNoVersion.servers.push(
-                    newServer({
-                        initializeHandler: initializeServerHandlerStub,
-                    })
-                )
+            )
+            await initializeHandler({} as InitializeParams, {} as CancellationToken)
 
-                await initializeHandler({} as InitializeParams, {} as CancellationToken)
-
-                assert(
-                    initializeServerHandlerStub.calledWith({
-                        awsRuntimeMetadata: {
-                            customUserAgent: 'AWS-Language-Servers AWS-LSP-Standalone',
-                        },
-                    })
-                )
-            })
-
-            it('should append custom suffix to customUserAgent based on initializationOptions.aws data', async () => {
-                const initializeHandlerStub = sinon.stub().returns({
-                    capabilities: {},
-                })
-                lspRouter.servers.push(
-                    newServer({
-                        initializeHandler: initializeHandlerStub,
-                    })
-                )
-                const params = {
-                    initializationOptions: {
-                        aws: {
-                            clientInfo: {
-                                name: 'Test Client Product',
-                                version: '0.1.2',
-                                clientId: 'test-client-id',
-                            },
-                            platformInfo: {
-                                name: 'Test Platform',
-                                version: '1.2.3',
-                            },
+            assert(
+                initializeHandlerStub.calledWith({
+                    awsRuntimeMetadata: {
+                        serverInfo: {
+                            name: 'AWS LSP Standalone',
+                            version: '1.0.0',
                         },
                     },
-                } as InitializeParams
-                await initializeHandler(params, {} as CancellationToken)
-
-                assert(
-                    initializeHandlerStub.calledWith({
-                        ...params,
-                        awsRuntimeMetadata: {
-                            customUserAgent:
-                                'AWS-Language-Servers AWS-LSP-Standalone/1.0.0 Test-Client-Product/0.1.2 Test-Platform/1.2.3 ClientId/test-client-id',
-                        },
-                    })
-                )
-            })
-
-            it('should fallback to UNKNOWN value, when product or platform fields are missing', async () => {
-                const initializeHandlerStub = sinon.stub().returns({
-                    capabilities: {},
                 })
-                lspRouter.servers.push(
-                    newServer({
-                        initializeHandler: initializeHandlerStub,
-                    })
-                )
-                const params = {
-                    initializationOptions: {
-                        aws: {
-                            clientInfo: {},
-                            platformInfo: {},
-                        },
-                    },
-                } as InitializeParams
-                await initializeHandler(params, {} as CancellationToken)
-
-                assert(
-                    initializeHandlerStub.calledWith({
-                        ...params,
-                        awsRuntimeMetadata: {
-                            customUserAgent:
-                                'AWS-Language-Servers AWS-LSP-Standalone/1.0.0 UNKNOWN/UNKNOWN UNKNOWN/UNKNOWN',
-                        },
-                    })
-                )
-            })
+            )
         })
     })
 
