@@ -42,52 +42,49 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 }
 
 /**
- * Custom Client extension information passed during initialization from Client to Server.
- * Use to identify extension and pass additional data, not available in standard InitializeParams object.
+ * Extended Client information, passed from client extension to server at initialization.
+ * Use to pass additional information about Client Extension, which connects to Language Server,
+ * when information in default LSP request is not enough.
  */
-export interface ClientExtensionInfo {
+export interface ExtendedClientInfo {
     /**
-     * Client Extension name, which is used for managing and interacting with AWS Language Server.
-     * May contain spaces.
+     * Client environment name. May represent IDE or host platform of the Extension.
      */
     name: string
 
     /**
-     * Client extension version.
+     * Client environment version.
      */
     version: string
 
     /**
-     * Unique extension installation ID, as defined by the client extension.
+     * Information about Client Extension passed during initialization from Client to Server.
+     * Use to identify extension and pass additional data, not available in standard InitializeParams object.
      */
-    extensionInstallationId?: string
+    extension: {
+        /**
+         * Client Extension name, which is used for managing and interacting with AWS Language Server.
+         * May contain spaces.
+         */
+        name: string
+
+        /**
+         * Client extension version.
+         */
+        version: string
+    }
 
     /**
-     * Information about a client platform (editor or tool), in which extension runs.
-     * Use to pass additional or customised information, not available from standard InitializeParams.clientInfo field.
+     * Unique client Id, defined by the client extension.
      */
-    clientPlatform?: AWSClientPlatformInfo
-}
-
-/**
- * Information about the client application, in which Client extension is running.
- * Standard LSP supports passing information about client environment in InitializeParams.clientInfo field during initialization,
- * but the values can not be modified by custom extensions.
- */
-export interface AWSClientPlatformInfo {
-    /**
-     * Client platform name, defined by client extension in which it is running.
-     * May contain spaces.
-     */
-    name: string
-    /**
-     * Client platform version.
-     */
-    version: string
+    clientId?: string
 }
 
 export interface AWSInitializationOptions {
-    clientExtensionInfo?: ClientExtensionInfo
+    /**
+     * Additional clientInfo to extend or override default data passed by LSP Client.
+     */
+    clientInfo?: ExtendedClientInfo
 }
 
 /**
