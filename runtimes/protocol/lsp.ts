@@ -1,6 +1,7 @@
 import { _EM } from 'vscode-jsonrpc'
 import {
-    InitializeResult as InitializeResultBase,
+    InitializeParams as _InitializeParamsBase,
+    InitializeResult as _InitializeResultBase,
     ParameterStructures,
     ProgressType,
     RegistrationType,
@@ -41,9 +42,69 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 }
 
 /**
+ * Custom Client extension information passed during initialization from Client to Server.
+ * Use to identify extension and pass additional data, not available in standard InitializeParams object.
+ */
+export interface ClientExtensionInfo {
+    /**
+     * Client Extension name, which is used for managing and interacting with AWS Language Server.
+     * May contain spaces.
+     */
+    name: string
+
+    /**
+     * Client extension version.
+     */
+    version: string
+
+    /**
+     * Unique extension installation ID, as defined by the client extension.
+     */
+    extensionInstallationId?: string
+
+    /**
+     * Information about a client platform (editor or tool), in which extension runs.
+     * Use to pass additional or customised information, not available from standard InitializeParams.clientInfo field.
+     */
+    clientPlatform?: AWSClientPlatformInfo
+}
+
+/**
+ * Information about the client application, in which Client extension is running.
+ * Standard LSP supports passing information about client environment in InitializeParams.clientInfo field during initialization,
+ * but the values can not be modified by custom extensions.
+ */
+export interface AWSClientPlatformInfo {
+    /**
+     * Client platform name, defined by client extension in which it is running.
+     * May contain spaces.
+     */
+    name: string
+    /**
+     * Client platform version.
+     */
+    version: string
+}
+
+export interface AWSInitializationOptions {
+    clientExtensionInfo?: ClientExtensionInfo
+}
+
+/**
+ * Extended AWS Runtimes InitializeParams interface,
+ * sent from Client to Server as part of [`initialize`](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize) request
+ */
+export interface InitializeParams extends _InitializeParamsBase {
+    initializationOptions?: {
+        [key: string]: any
+        aws: AWSInitializationOptions
+    }
+}
+
+/**
  * Custom AWS Runtimes InitializeResult object interface with extended options.
  */
-export interface InitializeResult extends InitializeResultBase {
+export interface InitializeResult extends _InitializeResultBase {
     /**
      * The server signals custom AWS Runtimes capabilities it supports.
      */

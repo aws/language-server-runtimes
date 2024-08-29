@@ -12,7 +12,7 @@ import {
     Hover,
     HoverParams,
     InitializeError,
-    InitializeParams,
+    InitializeParams as _ProtocolInitializeParams,
     InitializedParams,
     InlineCompletionItem,
     InlineCompletionItemWithReferences,
@@ -55,6 +55,15 @@ export type PartialInitializeResult<T = any> = {
     capabilities: PartialServerCapabilities<T>
     awsServerCapabilities?: {
         chatOptions?: ChatOptions
+    }
+}
+
+export interface InitializeParams extends _ProtocolInitializeParams {
+    awsRuntimeMetadata?: {
+        serverInfo?: {
+            name: string
+            version?: string
+        }
     }
 }
 
