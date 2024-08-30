@@ -1,4 +1,4 @@
-import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace, Chat } from '../server-interface'
+import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace, Chat, Runtime } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
     CancellationToken,
@@ -38,6 +38,7 @@ export class TestFeatures {
     documents: {
         [uri: string]: TextDocument
     }
+    runtime: StubbedInstance<Runtime>
 
     private disposables: (() => void)[] = []
 
@@ -55,6 +56,7 @@ export class TestFeatures {
         this.logging = stubInterface<Logging>()
         this.telemetry = stubInterface<Telemetry>()
         this.documents = {}
+        this.runtime = stubInterface<Runtime>()
 
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
     }
