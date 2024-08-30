@@ -2,11 +2,10 @@ import {
     CancellationToken,
     ExecuteCommandParams,
     InitializeError,
-    InitializeParams,
     RequestHandler,
     ResponseError,
 } from '../../../protocol'
-import { PartialInitializeResult, PartialServerCapabilities } from '../../../server-interface/lsp'
+import { InitializeParams, PartialInitializeResult, PartialServerCapabilities } from '../../../server-interface/lsp'
 import { asPromise } from './util'
 
 export class LspServer {

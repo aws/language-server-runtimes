@@ -1,6 +1,5 @@
 import {
     CancellationToken,
-    InitializeParams,
     InitializeError,
     RequestHandler,
     TextDocumentSyncKind,
@@ -12,7 +11,7 @@ import { Connection } from 'vscode-languageserver/node'
 import { LspRouter } from './lspRouter'
 import assert from 'assert'
 import sinon from 'sinon'
-import { PartialInitializeResult } from '../../../server-interface/lsp'
+import { PartialInitializeResult, InitializeParams } from '../../../server-interface/lsp'
 import { LspServer } from './lspServer'
 
 describe('LspRouter', () => {
@@ -192,6 +191,29 @@ describe('LspRouter', () => {
             const result = await initializeHandler({} as InitializeParams, {} as CancellationToken)
 
             assert.deepStrictEqual(result, error)
+        })
+
+        it('should extend InitializeParams passed to servers with awsRuntimeMetadata', async () => {
+            const initializeHandlerStub = sinon.stub().returns({
+                capabilities: {},
+            })
+            lspRouter.servers.push(
+                newServer({
+                    initializeHandler: initializeHandlerStub,
+                })
+            )
+            await initializeHandler({} as InitializeParams, {} as CancellationToken)
+
+            assert(
+                initializeHandlerStub.calledWith({
+                    awsRuntimeMetadata: {
+                        serverInfo: {
+                            name: 'AWS LSP Standalone',
+                            version: '1.0.0',
+                        },
+                    },
+                })
+            )
         })
     })
 

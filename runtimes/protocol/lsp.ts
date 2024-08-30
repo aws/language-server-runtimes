@@ -1,6 +1,7 @@
 import { _EM } from 'vscode-jsonrpc'
 import {
-    InitializeResult as InitializeResultBase,
+    InitializeParams as _InitializeParamsBase,
+    InitializeResult as _InitializeResultBase,
     ParameterStructures,
     ProgressType,
     RegistrationType,
@@ -41,9 +42,66 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 }
 
 /**
+ * Extended Client information, passed from client extension to server at initialization.
+ * Use to pass additional information about Client Extension, which connects to Language Server,
+ * when information in default LSP request is not enough.
+ */
+export interface ExtendedClientInfo {
+    /**
+     * Client environment name. May represent IDE or host platform of the Extension.
+     */
+    name: string
+
+    /**
+     * Client environment version.
+     */
+    version: string
+
+    /**
+     * Information about Client Extension passed during initialization from Client to Server.
+     * Use to identify extension and pass additional data, not available in standard InitializeParams object.
+     */
+    extension: {
+        /**
+         * Client Extension name, which is used for managing and interacting with AWS Language Server.
+         * May contain spaces.
+         */
+        name: string
+
+        /**
+         * Client extension version.
+         */
+        version: string
+    }
+
+    /**
+     * Unique client Id, defined by the client extension.
+     */
+    clientId?: string
+}
+
+export interface AWSInitializationOptions {
+    /**
+     * Additional clientInfo to extend or override default data passed by LSP Client.
+     */
+    clientInfo?: ExtendedClientInfo
+}
+
+/**
+ * Extended AWS Runtimes InitializeParams interface,
+ * sent from Client to Server as part of [`initialize`](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#initialize) request
+ */
+export interface InitializeParams extends _InitializeParamsBase {
+    initializationOptions?: {
+        [key: string]: any
+        aws: AWSInitializationOptions
+    }
+}
+
+/**
  * Custom AWS Runtimes InitializeResult object interface with extended options.
  */
-export interface InitializeResult extends InitializeResultBase {
+export interface InitializeResult extends _InitializeResultBase {
     /**
      * The server signals custom AWS Runtimes capabilities it supports.
      */
