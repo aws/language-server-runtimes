@@ -1,12 +1,14 @@
+export type ServerInfo = {
+    name: string
+    version?: string
+}
+
 /**
  * The Runtime feature interface.
  */
-export type Runtime = {
+export interface Runtime {
     /**
      * Information about runtime server, set in runtime props at build time.
      */
-    serverInfo: {
-        name: string
-        version?: string
-    }
+    serverInfo: ServerInfo
 }
