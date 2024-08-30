@@ -23,7 +23,7 @@ import {
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
 } from './auth/standalone/encryption'
-import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat } from '../server-interface'
+import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat, Runtime } from '../server-interface'
 import { Auth } from './auth'
 import { EncryptedChat } from './chat/encryptedChat'
 
@@ -170,6 +170,13 @@ export const standalone = (props: RuntimeProps) => {
 
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
+        const runtime: Runtime = {
+            serverInfo: {
+                name: props.name,
+                version: props.version,
+            },
+        }
+
         // Create router that will be routing LSP events from the client to server(s)
         const lspRouter = new LspRouter(lspConnection, props.name, props.version)
 
@@ -236,7 +243,7 @@ export const standalone = (props: RuntimeProps) => {
                 chat = new BaseChat(lspConnection)
             }
 
-            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging })
+            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, runtime })
         })
 
         // Free up any resources or threads used by Servers

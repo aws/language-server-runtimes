@@ -31,7 +31,7 @@ import {
     ShowDocumentRequest,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
-import { Chat, Logging, Lsp, Telemetry, Workspace } from '../server-interface'
+import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace } from '../server-interface'
 import { Auth } from './auth'
 
 import { RuntimeProps } from './runtime'
@@ -100,6 +100,12 @@ export const webworker = (props: RuntimeProps) => {
     // Set up auth without encryption
     const auth = new Auth(lspConnection)
     const credentialsProvider = auth.getCredentialsProvider()
+    const runtime: Runtime = {
+        serverInfo: {
+            name: props.name,
+            version: props.version,
+        },
+    }
 
     // Initialize every Server
     const disposables = props.servers.map(s => {
@@ -154,7 +160,7 @@ export const webworker = (props: RuntimeProps) => {
             },
         }
 
-        return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging })
+        return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, runtime })
     })
 
     // Free up any resources or threads used by Servers

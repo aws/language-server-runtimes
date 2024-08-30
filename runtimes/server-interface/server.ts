@@ -1,4 +1,4 @@
-import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat } from '.'
+import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat, Runtime } from '.'
 
 /**
  * Servers are used to provide features to the client.
@@ -22,4 +22,5 @@ export type Server = (features: {
     workspace: Workspace
     logging: Logging
     telemetry: Telemetry
+    runtime: Runtime
 }) => () => void

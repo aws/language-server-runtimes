@@ -192,29 +192,6 @@ describe('LspRouter', () => {
 
             assert.deepStrictEqual(result, error)
         })
-
-        it('should extend InitializeParams passed to servers with awsRuntimeMetadata', async () => {
-            const initializeHandlerStub = sinon.stub().returns({
-                capabilities: {},
-            })
-            lspRouter.servers.push(
-                newServer({
-                    initializeHandler: initializeHandlerStub,
-                })
-            )
-            await initializeHandler({} as InitializeParams, {} as CancellationToken)
-
-            assert(
-                initializeHandlerStub.calledWith({
-                    awsRuntimeMetadata: {
-                        serverInfo: {
-                            name: 'AWS LSP Standalone',
-                            version: '1.0.0',
-                        },
-                    },
-                })
-            )
-        })
     })
 
     describe('executeCommand', () => {
