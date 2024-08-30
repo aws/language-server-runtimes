@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.14] - 2024-08-30
+
+- Extend LSP InitializeParams with custom `initializationInfo.aws` object to accept more custom data from client
+- Add new `Runtime` Feature, passed from runtime to Server impementation during initialization
+
 ## [0.2.13] - 2024-08-16
 
 - Add support for window/showDocument, window/showMessage and window/showMessageRequest LSP handler
