@@ -29,12 +29,11 @@ export class LspRouter {
         token: CancellationToken
     ): Promise<InitializeResult | ResponseError<InitializeError>> => {
         this.clientInitializeParams = params
-        const serverInfo = {
-            name: this.name,
-            version: this.version,
-        }
         const defaultResponse: InitializeResult = {
-            serverInfo,
+            serverInfo: {
+                name: this.name,
+                version: this.version,
+            },
             capabilities: {
                 textDocumentSync: {
                     openClose: true,
@@ -42,14 +41,7 @@ export class LspRouter {
                 },
             },
         }
-        const serverInitializeParams = {
-            ...params,
-            awsRuntimeMetadata: {
-                serverInfo,
-            },
-        }
-
-        let responsesList = await Promise.all(this.servers.map(s => s.initialize(serverInitializeParams, token)))
+        let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
         responsesList = responsesList.filter(r => r != undefined)
         if (responsesList.some(el => el instanceof ResponseError)) {
             return responsesList.find(el => el instanceof ResponseError) as ResponseError<InitializeError>
