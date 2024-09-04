@@ -39,6 +39,12 @@ import * as path from 'path'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
+import { checkAWSConfigFile } from './util/sharedConfigFile'
+
+// Honor shared aws config file
+if (checkAWSConfigFile()) {
+    process.env.AWS_SDK_LOAD_CONFIG = '1'
+}
 
 /**
  * The runtime for standalone LSP-based servers.
