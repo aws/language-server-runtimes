@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.15] - 2024-09-06
+
+- Honor shared aws config file in the standalone runtime
+
 ## [0.2.14] - 2024-08-30
 
 - Extend LSP InitializeParams with custom `initializationInfo.aws` object to accept more custom data from client
