@@ -1,4 +1,5 @@
 import { Server } from '../server-interface'
+import { AuthManagmentServiceHandlerFactory } from './services/authManagementService'
 
 /**
  * Properties used for runtime initialisation
@@ -16,4 +17,12 @@ export type RuntimeProps = {
      * Name of the server used inside the runtime
      */
     name: string
+    /**
+     * Implementation handlers for runtimes services, providing features that are isolated from Server implementations
+     * Services allow to inject specific implemenations of a functionality that mush be served by only one implementation
+     * and can not be broadcasted to multiple implementations.
+     */
+    services?: {
+        auth?: AuthManagmentServiceHandlerFactory
+    }
 }

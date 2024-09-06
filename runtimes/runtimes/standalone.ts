@@ -39,6 +39,7 @@ import * as path from 'path'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
+import { AuthManagementService } from './services/authManagementService'
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -72,6 +73,7 @@ export const standalone = (props: RuntimeProps) => {
 
     let auth: Auth
     let chat: Chat
+    let authManagementService: AuthManagementService
     initializeAuth()
 
     // Initialize Auth service
@@ -87,6 +89,16 @@ export const standalone = (props: RuntimeProps) => {
                     auth = new Auth(lspConnection, encryptionDetails.key, encryptionDetails.mode)
                     chat = new EncryptedChat(lspConnection, encryptionDetails.key, encryptionDetails.mode)
                     initializeRuntime(encryptionDetails.key)
+
+                    // Initialize optional services.Auth Service
+                    if (props.services?.auth) {
+                        authManagementService = new AuthManagementService(
+                            lspConnection,
+                            props.services.auth,
+                            encryptionDetails.key,
+                            encryptionDetails.mode
+                        )
+                    }
                 },
                 error => {
                     console.error(error)
@@ -96,6 +108,10 @@ export const standalone = (props: RuntimeProps) => {
         } else {
             lspConnection.console.info('Runtime: Initializing runtime without encryption')
             auth = new Auth(lspConnection)
+
+            if (props.services?.auth) {
+                authManagementService = new AuthManagementService(lspConnection, props.services.auth)
+            }
 
             initializeRuntime()
         }
