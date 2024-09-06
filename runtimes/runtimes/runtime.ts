@@ -1,5 +1,5 @@
 import { Server } from '../server-interface'
-import { AuthManagmentServiceHandlerFactory } from './services/authManagementService'
+import { AuthManagmentServiceHandlerFactory } from './services/authManagement'
 
 /**
  * Properties used for runtime initialisation

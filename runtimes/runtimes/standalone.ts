@@ -39,7 +39,7 @@ import * as path from 'path'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
-import { AuthManagementService } from './services/authManagementService'
+import { AuthManagement } from './services/authManagement'
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -72,8 +72,8 @@ export const standalone = (props: RuntimeProps) => {
     const documentsObserver = observe(lspConnection)
 
     let auth: Auth
+    let authManagement: AuthManagement
     let chat: Chat
-    let authManagementService: AuthManagementService
     initializeAuth()
 
     // Initialize Auth service
@@ -92,7 +92,7 @@ export const standalone = (props: RuntimeProps) => {
 
                     // Initialize optional services.Auth Service
                     if (props.services?.auth) {
-                        authManagementService = new AuthManagementService(
+                        authManagement = new AuthManagement(
                             lspConnection,
                             props.services.auth,
                             encryptionDetails.key,
@@ -110,7 +110,7 @@ export const standalone = (props: RuntimeProps) => {
             auth = new Auth(lspConnection)
 
             if (props.services?.auth) {
-                authManagementService = new AuthManagementService(lspConnection, props.services.auth)
+                authManagement = new AuthManagement(lspConnection, props.services.auth)
             }
 
             initializeRuntime()

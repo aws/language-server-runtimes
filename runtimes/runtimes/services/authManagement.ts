@@ -20,7 +20,7 @@ export type AuthManagmentServiceHandlerFactory = () => {
 /**
  * Service registers LSP method handlers and binds them to registered Service implementation handlers.
  */
-export class AuthManagementService {
+export class AuthManagement {
     constructor(
         private readonly connection: Connection,
         private readonly handlersFactory: AuthManagmentServiceHandlerFactory,

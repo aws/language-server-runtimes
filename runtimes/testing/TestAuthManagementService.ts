@@ -1,4 +1,4 @@
-import { AuthManagmentServiceHandlerFactory } from '../runtimes/services/authManagementService'
+import { AuthManagmentServiceHandlerFactory } from '../runtimes/services/authManagement'
 import { ListProfilesParams } from '../protocol/authManagement'
 
 /**
