@@ -45,6 +45,15 @@ import { checkAWSConfigFile } from './util/sharedConfigFile'
 if (checkAWSConfigFile()) {
     process.env.AWS_SDK_LOAD_CONFIG = '1'
 }
+import { IdentityManagement } from '../server-interface/identity-management'
+import {
+    getSsoTokenRequestType,
+    invalidateSsoTokenRequestType,
+    listProfilesRequestType,
+    ssoTokenChangedRequestType,
+    updateProfilesRequestType,
+    updateSsoTokenManagementRequestType,
+} from '../protocol/identity-management'
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -249,7 +258,17 @@ export const standalone = (props: RuntimeProps) => {
                 chat = new BaseChat(lspConnection)
             }
 
-            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, runtime })
+            const identityManagement: IdentityManagement = {
+                onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
+                onUpdateProfile: handler => lspConnection.onRequest(updateProfilesRequestType, handler),
+                onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
+                onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+                onUpdateSsoTokenManagement: handler =>
+                    lspConnection.onRequest(updateSsoTokenManagementRequestType, handler),
+                sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+            }
+
+            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, runtime, identityManagement })
         })
 
         // Free up any resources or threads used by Servers
