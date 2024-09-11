@@ -39,6 +39,15 @@ import { RuntimeProps } from './runtime'
 import { observe } from './lsp'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
+import {
+    getSsoTokenRequestType,
+    invalidateSsoTokenRequestType,
+    listProfilesRequestType,
+    ssoTokenChangedRequestType,
+    updateProfilesRequestType,
+    updateSsoTokenManagementRequestType,
+} from '../protocol/identity-management'
+import { IdentityManagement } from '../server-interface/identity-management'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -160,7 +169,17 @@ export const webworker = (props: RuntimeProps) => {
             },
         }
 
-        return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, runtime })
+        const identityManagement: IdentityManagement = {
+            onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
+            onUpdateProfile: handler => lspConnection.onRequest(updateProfilesRequestType, handler),
+            onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
+            onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+            onUpdateSsoTokenManagement: handler =>
+                lspConnection.onRequest(updateSsoTokenManagementRequestType, handler),
+            sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+        }
+
+        return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, runtime, identityManagement })
     })
 
     // Free up any resources or threads used by Servers

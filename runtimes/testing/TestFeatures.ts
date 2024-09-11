@@ -13,6 +13,7 @@ import {
     TextDocument,
     SignatureHelpParams,
 } from '../protocol'
+import { IdentityManagement } from '../server-interface/identity-management'
 
 /**
  * A test helper package to test Server implementations. Accepts a single callback
@@ -39,6 +40,7 @@ export class TestFeatures {
         [uri: string]: TextDocument
     }
     runtime: StubbedInstance<Runtime>
+    identityManagement: StubbedInstance<IdentityManagement>
 
     private disposables: (() => void)[] = []
 
@@ -57,6 +59,7 @@ export class TestFeatures {
         this.telemetry = stubInterface<Telemetry>()
         this.documents = {}
         this.runtime = stubInterface<Runtime>()
+        this.identityManagement = stubInterface<IdentityManagement>()
 
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
     }
