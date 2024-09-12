@@ -200,6 +200,28 @@ export interface ChatResult {
 
 Complete Chat parameter and result interfaces can be found in [chat.ts](src/protocol/chat.ts)
 
+### Identity Management
+
+The Identity Management feature is designed to centralize the management of authentication and identity-related functionality. The APIs consist of:
+
+- Listing and managing user profiles and SSO sessions
+- Obtaining valid SSO access tokens, handling the PKCE login flow as needed
+- Controlling the lifetime and notifications for active SSO tokens
+- Invalidating cached SSO tokens
+
+#### Feature Specification
+
+| Description                          | Method                                  | Params                           | Method type                                                                                                                     | Response Type                    |
+| ------------------------------------ | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| List profiles                        | `aws/identity/listProfiles`             | `ListProfilesParams`             | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `ListProfilesResult`             |
+| Update profiles                      | `aws/identity/updateProfile`            | `UpdateProfileParams`            | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `UpdateProfileResult`            |
+| Get SSO token                        | `aws/identity/getSsoToken`              | `GetSsoTokenParams`              | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `GetSsoTokenResult`              |
+| Invalidate SSO token                 | `aws/identity/invalidateSsoToken`       | `InvalidateSsoTokenParams`       | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `InvalidateSsoTokenResult`       |
+| Update SSO Token Management config   | `aws/identity/updateSsoTokenManagement` | `UpdateSsoTokenManagementParams` | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `UpdateSsoTokenManagementResult` |
+| SSO token changed                    | `aws/identity/ssoTokenChanged`          | `SsoTokenChangedParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a                              |
+
+Complete Identity Management parameter and result interfaces can be found in [identity-management.ts](src/protocol/identity-management.ts)
+
 ## Runtime Host Environments
 
 Servers typically run as processes or web workers. Details are provided below on how to initialize each type of server runtime.
