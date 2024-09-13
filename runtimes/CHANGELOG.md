@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.16] - 2024-09-13
+
+- Extend the protocol and server interface with Identity Management feature 
+
 ## [0.2.15] - 2024-09-06
 
 - Honor shared aws config file in the standalone runtime
