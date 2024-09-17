@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.17] - 2024-09-17
+
+- Fix CVE-2024-45296: update `path-to-regexp` dependency
+
 ## [0.2.16] - 2024-09-13
 
 - Extend the protocol and server interface with Identity Management feature 
