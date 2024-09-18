@@ -117,5 +117,5 @@ export interface InitializeResult extends _InitializeResultBase {
  * Sent back to the client to signal available configuration values
  */
 export interface ConfigurationOptions {
-    configurations: string[]
+    sections: string[]
 }

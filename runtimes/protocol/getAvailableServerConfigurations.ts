@@ -9,5 +9,5 @@ export const getConfigurationFromServerRequestType = new ProtocolRequestType<
 >('aws/getConfigurationFromServer')
 
 export interface GetConfigurationFromServerParams {
-    scopes: string[] | string
+    section: string
 }

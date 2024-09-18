@@ -39,6 +39,7 @@ import {
     MessageActionItem,
     ShowDocumentParams,
     ShowDocumentResult,
+    LSPAny,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -118,6 +119,6 @@ export type Lsp = {
         onLogInlineCompletionSessionResults: (
             handler: NotificationHandler<LogInlineCompletionSessionResultsParams>
         ) => void
-        onGetConfigurationFromServer: (handler: RequestHandler<GetConfigurationFromServerParams, any[], void>) => void
+        onGetConfigurationFromServer: (handler: RequestHandler<GetConfigurationFromServerParams, LSPAny, void>) => void
     }
 }
