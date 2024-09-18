@@ -1,6 +1,6 @@
-import { LSPAny, ProtocolRequestType } from './lsp'
+import { AutoParameterStructuresProtocolRequestType, LSPAny } from './lsp'
 
-export const getConfigurationFromServerRequestType = new ProtocolRequestType<
+export const getConfigurationFromServerRequestType = new AutoParameterStructuresProtocolRequestType<
     GetConfigurationFromServerParams,
     LSPAny,
     never,

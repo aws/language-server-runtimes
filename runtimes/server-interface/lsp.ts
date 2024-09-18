@@ -45,6 +45,7 @@ import {
 // Re-export whole surface of LSP protocol used in Runtimes.
 // This is needed for LSP features as we pass messages down.
 export * from '../protocol/lsp'
+export { GetConfigurationFromServerParams } from '../protocol'
 
 export type PartialServerCapabilities<T = any> = Pick<
     ServerCapabilities<T>,

@@ -24,7 +24,7 @@ export class LspRouter {
     ) {
         lspConnection.onInitialize(this.initialize)
         lspConnection.onExecuteCommand(this.executeCommand)
-        lspConnection.onRequest(getConfigurationFromServerRequestType.method, this.handleGetConfigurationFromServer)
+        lspConnection.onRequest(getConfigurationFromServerRequestType, this.handleGetConfigurationFromServer)
     }
 
     initialize = async (
