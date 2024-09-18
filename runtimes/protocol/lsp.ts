@@ -20,7 +20,7 @@ export { TextDocument } from 'vscode-languageserver-textdocument'
 export * from 'vscode-languageserver-protocol'
 
 // Custom Runtimes LSP extensions
-export * from './getAvailableServerConfigurations'
+export * from './getConfigurationFromServer'
 export * from './inlineCompletionWithReferences'
 export * from './inlineCompletions'
 

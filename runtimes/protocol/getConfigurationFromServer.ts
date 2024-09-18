@@ -1,8 +1,8 @@
-import { ProtocolRequestType } from './lsp'
+import { LSPAny, ProtocolRequestType } from './lsp'
 
 export const getConfigurationFromServerRequestType = new ProtocolRequestType<
     GetConfigurationFromServerParams,
-    any[],
+    LSPAny,
     never,
     void,
     void

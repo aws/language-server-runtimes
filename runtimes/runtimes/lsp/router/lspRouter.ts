@@ -1,6 +1,8 @@
 import {
     CancellationToken,
     ExecuteCommandParams,
+    GetConfigurationFromServerParams,
+    getConfigurationFromServerRequestType,
     InitializeError,
     InitializeParams,
     InitializeResult,
@@ -22,6 +24,7 @@ export class LspRouter {
     ) {
         lspConnection.onInitialize(this.initialize)
         lspConnection.onExecuteCommand(this.executeCommand)
+        lspConnection.onRequest(getConfigurationFromServerRequestType.method, this.handleGetConfigurationFromServer)
     }
 
     initialize = async (
@@ -60,6 +63,15 @@ export class LspRouter {
     ): Promise<any | undefined | null> => {
         for (const s of this.servers) {
             const [executed, result] = await s.tryExecuteCommand(params, token)
+            if (executed) {
+                return result
+            }
+        }
+    }
+
+    handleGetConfigurationFromServer = async (params: GetConfigurationFromServerParams, token: CancellationToken) => {
+        for (const s of this.servers) {
+            const [executed, result] = await s.tryGetServerConfiguration(params, token)
             if (executed) {
                 return result
             }

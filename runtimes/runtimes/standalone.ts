@@ -247,9 +247,7 @@ export const standalone = (props: RuntimeProps) => {
                 onHover: handler => lspConnection.onHover(handler),
                 onSignatureHelp: handler => lspConnection.onSignatureHelp(handler),
                 extensions: {
-                    onGetConfigurationFromServer(handler) {
-                        lspConnection.onRequest(getConfigurationFromServerRequestType, handler)
-                    },
+                    onGetConfigurationFromServer: lspServer.setServerConfigurationHandler,
                     onInlineCompletionWithReferences: handler =>
                         lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
                     onLogInlineCompletionSessionResults: handler => {

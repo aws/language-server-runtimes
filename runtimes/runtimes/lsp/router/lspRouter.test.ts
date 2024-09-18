@@ -20,6 +20,7 @@ describe('LspRouter', () => {
     const lspConnection = <Connection>{
         onInitialize: (handler: any) => {},
         onExecuteCommand: (handler: any) => {},
+        onRequest: (handler: any) => {},
     }
     let initializeHandler: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
     let executeCommandHandler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
