@@ -75,7 +75,7 @@ export const webworker = (props: RuntimeProps) => {
     // Set up the workspace to use the LSP Text Documents component
     const workspace: Workspace = {
         getTextDocument: async uri => documents.get(uri),
-        getAllTextDocuments: async () => documents.all(),
+        getAllTextDocuments: () => documents.all(),
         getWorkspaceFolder: _uri =>
             lspRouter.clientInitializeParams!.workspaceFolders && lspRouter.clientInitializeParams!.workspaceFolders[0],
         fs: {
