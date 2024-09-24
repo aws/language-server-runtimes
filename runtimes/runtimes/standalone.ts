@@ -138,7 +138,7 @@ export const standalone = (props: RuntimeProps) => {
         // Set up the workspace sync to use the LSP Text Document Sync capability
         const workspace: Workspace = {
             getTextDocument: async uri => documents.get(uri),
-            getAllTextDocuments: () => documents.all(),
+            getAllTextDocuments: async () => documents.all(),
             // Get all workspace folders and return the workspace folder that contains the uri
             getWorkspaceFolder: uri => {
                 const fileUrl = new URL(uri)

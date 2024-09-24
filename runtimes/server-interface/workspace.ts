@@ -16,7 +16,7 @@ interface Dirent {
  */
 export type Workspace = {
     getTextDocument: (uri: string) => Promise<TextDocument | undefined>
-    getAllTextDocuments: () => TextDocument[]
+    getAllTextDocuments: () => Promise<TextDocument[]>
     getWorkspaceFolder: (uri: string) => WorkspaceFolder | null | undefined
     fs: {
         copy: (src: string, dest: string) => Promise<void>

@@ -62,6 +62,7 @@ export class TestFeatures {
         this.identityManagement = stubInterface<IdentityManagement>()
 
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
+        this.workspace.getAllTextDocuments.callsFake(async () => Object.values(this.documents))
     }
 
     async start(server: Server) {
