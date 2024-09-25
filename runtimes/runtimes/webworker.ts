@@ -1,6 +1,5 @@
 import { TextDocuments } from 'vscode-languageserver'
 import {
-    DidChangeConfigurationNotification,
     DidChangeWorkspaceFoldersNotification,
     ProgressToken,
     ProgressType,
@@ -29,7 +28,6 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
-    getConfigurationFromServerRequestType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace } from '../server-interface'
@@ -128,18 +126,10 @@ export const webworker = (props: RuntimeProps) => {
         // Set up LSP events handlers per server
         const lsp: Lsp = {
             addInitializer: lspServer.setInitializeHandler,
-            onInitialized: handler =>
-                lspConnection.onInitialized(p => {
-                    const workspaceCapabilities = lspRouter.clientInitializeParams?.capabilities.workspace
-                    if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
-                        // Ask the client to notify the server on configuration changes
-                        lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
-                    }
-                    handler(p)
-                }),
+            onInitialized: lspServer.setInitializedHandler,
             onCompletion: handler => lspConnection.onCompletion(handler),
             onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
-            didChangeConfiguration: handler => lspConnection.onDidChangeConfiguration(handler),
+            didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
             onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
             onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
             onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),

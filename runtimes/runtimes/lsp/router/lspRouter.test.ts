@@ -1,11 +1,13 @@
 import {
     CancellationToken,
-    InitializeError,
-    RequestHandler,
-    TextDocumentSyncKind,
-    InitializeResult,
-    ResponseError,
+    DidChangeConfigurationParams,
     ExecuteCommandParams,
+    GetConfigurationFromServerParams,
+    InitializeError,
+    InitializeResult,
+    RequestHandler,
+    ResponseError,
+    TextDocumentSyncKind,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspRouter } from './lspRouter'
@@ -19,11 +21,14 @@ describe('LspRouter', () => {
 
     const lspConnection = <Connection>{
         onInitialize: (handler: any) => {},
+        onInitialized: (handler: any) => {},
         onExecuteCommand: (handler: any) => {},
         onRequest: (handler: any) => {},
+        onDidChangeConfiguration: (handler: any) => {},
     }
-    let initializeHandler: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
+
     let executeCommandHandler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
+    let initializeHandler: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
 
     let lspRouter: LspRouter
 
@@ -239,16 +244,138 @@ describe('LspRouter', () => {
         })
     })
 
+    describe('onInitialized', () => {
+        it('should send InitializedNotification to all servers', () => {
+            const spy1 = sandbox.spy()
+            const spy2 = sandbox.spy()
+            const server1 = newServer({ initializedHandler: spy1 })
+            const server2 = newServer({ initializedHandler: spy2 })
+
+            lspRouter.servers = [server1, server2]
+            lspRouter.onInitialized({})
+
+            assert(spy1.calledOnce)
+            assert(spy2.calledOnce)
+        })
+    })
+
+    describe('didChangeConfiguration', () => {
+        it('should send DidChangeConfigurationNotification to all servers', () => {
+            const params: DidChangeConfigurationParams = {
+                settings: {},
+            }
+
+            const spy1 = sandbox.spy()
+            const spy2 = sandbox.spy()
+            const server1 = newServer({ didChangeConfigurationHandler: spy1 })
+            const server2 = newServer({ didChangeConfigurationHandler: spy2 })
+
+            lspRouter.servers = [server1, server2]
+            lspRouter.didChangeConfiguration(params)
+            assert(spy1.calledWith(params))
+            assert(spy2.calledWith(params))
+        })
+    })
+
+    describe('handleGetConfigurationFromServer', () => {
+        it('should return the result from the first server that handles the request', async () => {
+            const initHandler1 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: ['log'] },
+                    },
+                }
+            }
+            const initHandler2 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: ['log', 'test'] },
+                    },
+                }
+            }
+            const initHandler3 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: ['test'] },
+                    },
+                }
+            }
+
+            const servers = [
+                newServer({ initializeHandler: initHandler1, getServerConfigurationHandler: () => 'server1' }),
+                newServer({ initializeHandler: initHandler2, getServerConfigurationHandler: () => 'server2' }),
+                newServer({ initializeHandler: initHandler3, getServerConfigurationHandler: () => 'server3' }),
+            ]
+
+            for (const server of servers) {
+                lspRouter.servers.push(server)
+                await server.initialize({} as InitializeParams, {} as CancellationToken)
+            }
+
+            const params: GetConfigurationFromServerParams = { section: 'test' }
+            const result = await lspRouter.handleGetConfigurationFromServer(params, {} as CancellationToken)
+            assert.strictEqual(result, 'server2')
+        })
+
+        it('should return undefined if no server handles the request', async () => {
+            const initHandler1 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: [] },
+                    },
+                }
+            }
+            const initHandler2 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: ['log', 'test'] },
+                    },
+                }
+            }
+            const initHandler3 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: ['test'] },
+                    },
+                }
+            }
+
+            const servers = [
+                newServer({ initializeHandler: initHandler1, getServerConfigurationHandler: () => 'server1' }),
+                newServer({ initializeHandler: initHandler2, getServerConfigurationHandler: () => 'server2' }),
+                newServer({ initializeHandler: initHandler3, getServerConfigurationHandler: () => 'server3' }),
+            ]
+
+            for (const server of servers) {
+                lspRouter.servers.push(server)
+                await server.initialize({} as InitializeParams, {} as CancellationToken)
+            }
+
+            const params: GetConfigurationFromServerParams = { section: 'something' }
+            const result = await lspRouter.handleGetConfigurationFromServer(params, {} as CancellationToken)
+            assert.strictEqual(result, undefined)
+        })
+    })
+
     function newServer({
-        initializeHandler,
+        didChangeConfigurationHandler,
         executeCommandHandler,
+        getServerConfigurationHandler,
+        initializeHandler,
+        initializedHandler,
     }: {
-        initializeHandler?: any
+        didChangeConfigurationHandler?: any
         executeCommandHandler?: any
+        getServerConfigurationHandler?: any
+        initializeHandler?: any
+        initializedHandler?: any
     }) {
         const server = new LspServer()
-        server.setInitializeHandler(initializeHandler)
+        server.setDidChangeConfigurationHandler(didChangeConfigurationHandler)
         server.setExecuteCommandHandler(executeCommandHandler)
+        server.setServerConfigurationHandler(getServerConfigurationHandler)
+        server.setInitializeHandler(initializeHandler)
+        server.setInitializedHandler(initializedHandler)
         return server
     }
 })

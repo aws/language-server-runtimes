@@ -1,8 +1,11 @@
 import {
     CancellationToken,
+    DidChangeConfigurationParams,
     ExecuteCommandParams,
     GetConfigurationFromServerParams,
+    InitializedParams,
     InitializeError,
+    NotificationHandler,
     RequestHandler,
     ResponseError,
 } from '../../../protocol'
@@ -10,11 +13,21 @@ import { InitializeParams, PartialInitializeResult, PartialServerCapabilities } 
 import { asPromise } from './util'
 
 export class LspServer {
-    private initializeHandler?: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
+    private didChangeConfigurationHandler?: NotificationHandler<DidChangeConfigurationParams>
     private executeCommandHandler?: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
     private getServerConfigurationHandler?: RequestHandler<GetConfigurationFromServerParams, any, void>
+    private initializeHandler?: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
+    private initializedHandler?: NotificationHandler<InitializedParams>
     private serverCapabilities?: PartialServerCapabilities
     private awsServerCapabilities?: PartialInitializeResult['awsServerCapabilities']
+
+    public setInitializedHandler = (handler: NotificationHandler<InitializedParams>): void => {
+        this.initializedHandler = handler
+    }
+
+    public setDidChangeConfigurationHandler = (handler: NotificationHandler<DidChangeConfigurationParams>): void => {
+        this.didChangeConfigurationHandler = handler
+    }
 
     public setInitializeHandler = (
         handler: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
@@ -79,5 +92,17 @@ export class LspServer {
         }
 
         return [false, undefined]
+    }
+
+    public sendDidChangeConfigurationNotification = (params: DidChangeConfigurationParams): void => {
+        if (this.didChangeConfigurationHandler) {
+            this.didChangeConfigurationHandler(params)
+        }
+    }
+
+    public sendInitializedNotification = (params: InitializedParams): void => {
+        if (this.initializedHandler) {
+            this.initializedHandler(params)
+        }
     }
 }
