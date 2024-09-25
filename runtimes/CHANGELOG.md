@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.18] - 2024-09-25
+
+- Extend LSP interface with `getAvailableServerConfigurations` that allows clients to request available server configuration values
+- Extend `InitializeResult.awsServerCapabilities` with  `configurationProvider` field that allows servers to inform clients about available configuration fields
+- Add `getAllTextDocuments` method to Workspace
+- Add routing for `didChangeConfiguration` and `initialized` notifications to ensure all servers in a bundle get these notifications instead of the last server that registered a handler
+
 ## [0.2.17] - 2024-09-17
 
 - Fix CVE-2024-45296: update `path-to-regexp` dependency
