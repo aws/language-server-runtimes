@@ -1,8 +1,11 @@
 import {
     CancellationToken,
+    DidChangeConfigurationNotification,
+    DidChangeConfigurationParams,
     ExecuteCommandParams,
     GetConfigurationFromServerParams,
     getConfigurationFromServerRequestType,
+    InitializedParams,
     InitializeError,
     InitializeParams,
     InitializeResult,
@@ -18,12 +21,14 @@ export class LspRouter {
     public servers: LspServer[] = []
 
     constructor(
-        lspConnection: Connection,
+        private lspConnection: Connection,
         private name: string,
         private version?: string
     ) {
-        lspConnection.onInitialize(this.initialize)
+        lspConnection.onDidChangeConfiguration(this.didChangeConfiguration)
         lspConnection.onExecuteCommand(this.executeCommand)
+        lspConnection.onInitialize(this.initialize)
+        lspConnection.onInitialized(this.onInitialized)
         lspConnection.onRequest(getConfigurationFromServerRequestType, this.handleGetConfigurationFromServer)
     }
 
@@ -66,6 +71,24 @@ export class LspRouter {
             if (executed) {
                 return result
             }
+        }
+    }
+
+    didChangeConfiguration = (params: DidChangeConfigurationParams): void => {
+        for (const s of this.servers) {
+            s.sendDidChangeConfigurationNotification(params)
+        }
+    }
+
+    onInitialized = (params: InitializedParams): void => {
+        const workspaceCapabilities = this.clientInitializeParams?.capabilities.workspace
+        if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
+            // Ask the client to notify the server on configuration changes
+            this.lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
+        }
+
+        for (const s of this.servers) {
+            s.sendInitializedNotification(params)
         }
     }
 
