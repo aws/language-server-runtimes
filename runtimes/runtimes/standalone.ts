@@ -2,6 +2,7 @@ import { TextDocuments } from 'vscode-languageserver'
 import {
     DidChangeConfigurationNotification,
     DidChangeWorkspaceFoldersNotification,
+    getConfigurationFromServerRequestType,
     ProgressToken,
     ProgressType,
     PublishDiagnosticsNotification,
@@ -246,6 +247,7 @@ export const standalone = (props: RuntimeProps) => {
                 onHover: handler => lspConnection.onHover(handler),
                 onSignatureHelp: handler => lspConnection.onSignatureHelp(handler),
                 extensions: {
+                    onGetConfigurationFromServer: lspServer.setServerConfigurationHandler,
                     onInlineCompletionWithReferences: handler =>
                         lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
                     onLogInlineCompletionSessionResults: handler => {

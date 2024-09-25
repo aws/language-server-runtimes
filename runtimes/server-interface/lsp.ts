@@ -2,6 +2,7 @@ import {
     CompletionItem,
     CompletionList,
     CompletionParams,
+    ConfigurationOptions,
     DidChangeConfigurationParams,
     DidChangeTextDocumentParams,
     DidChangeWorkspaceFoldersParams,
@@ -9,6 +10,7 @@ import {
     DidOpenTextDocumentParams,
     DocumentFormattingParams,
     ExecuteCommandParams,
+    GetConfigurationFromServerParams,
     Hover,
     HoverParams,
     InitializeError,
@@ -37,11 +39,13 @@ import {
     MessageActionItem,
     ShowDocumentParams,
     ShowDocumentResult,
+    LSPAny,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
 // This is needed for LSP features as we pass messages down.
 export * from '../protocol/lsp'
+export { GetConfigurationFromServerParams } from '../protocol'
 
 export type PartialServerCapabilities<T = any> = Pick<
     ServerCapabilities<T>,
@@ -55,6 +59,7 @@ export type PartialInitializeResult<T = any> = {
     capabilities: PartialServerCapabilities<T>
     awsServerCapabilities?: {
         chatOptions?: ChatOptions
+        configurationProvider?: ConfigurationOptions
     }
 }
 
@@ -115,5 +120,6 @@ export type Lsp = {
         onLogInlineCompletionSessionResults: (
             handler: NotificationHandler<LogInlineCompletionSessionResultsParams>
         ) => void
+        onGetConfigurationFromServer: (handler: RequestHandler<GetConfigurationFromServerParams, LSPAny, void>) => void
     }
 }

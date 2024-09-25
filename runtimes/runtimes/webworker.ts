@@ -29,6 +29,7 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
+    getConfigurationFromServerRequestType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace } from '../server-interface'
@@ -161,6 +162,7 @@ export const webworker = (props: RuntimeProps) => {
             onHover: handler => lspConnection.onHover(handler),
             onSignatureHelp: handler => lspConnection.onSignatureHelp(handler),
             extensions: {
+                onGetConfigurationFromServer: lspServer.setServerConfigurationHandler,
                 onInlineCompletionWithReferences: handler =>
                     lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
                 onLogInlineCompletionSessionResults: handler => {

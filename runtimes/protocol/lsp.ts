@@ -107,5 +107,14 @@ export interface InitializeResult extends _InitializeResultBase {
      */
     awsServerCapabilities?: {
         chatOptions?: ChatOptions
+        configurationProvider?: ConfigurationOptions
     }
+}
+
+/**
+ * Configuration options for AWS Runtimes
+ * Sent back to the client to signal available configuration values
+ */
+export interface ConfigurationOptions {
+    sections: string[]
 }
