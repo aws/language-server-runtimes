@@ -43,7 +43,7 @@ import {
     invalidateSsoTokenRequestType,
     listProfilesRequestType,
     ssoTokenChangedRequestType,
-    updateProfilesRequestType,
+    updateProfileRequestType,
     updateSsoTokenManagementRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
@@ -164,7 +164,7 @@ export const webworker = (props: RuntimeProps) => {
 
         const identityManagement: IdentityManagement = {
             onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
-            onUpdateProfile: handler => lspConnection.onRequest(updateProfilesRequestType, handler),
+            onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
             onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
             onUpdateSsoTokenManagement: handler =>
