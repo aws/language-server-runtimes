@@ -1,5 +1,9 @@
 import { LSPErrorCodes, ProtocolNotificationType, ProtocolRequestType, ResponseError } from './lsp'
 
+// Do not export the types in this file from protocol/index.ts such that they appear for all consumers of the
+// protocol as these types are specific to clients using the aws-lsp-identity server and the server itself.
+// Consumers of these types should import from protocol/identity-management explicitly.
+
 // Errors
 export type E_UNKNOWN = 'E_UNKNOWN'
 export type E_TIMEOUT = 'E_TIMEOUT'
