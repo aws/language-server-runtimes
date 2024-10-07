@@ -18,10 +18,6 @@ import {
 } from '../protocol/identity-management'
 import { RequestHandler } from '../protocol'
 
-// As the aws-lsp-identity server needs access to all the param/result/error types for requests/notifications because
-// it is solely responsible for handling them, export all of the protocol/identity-management to server-interface/identity-management.
-// Do not export any types here to server-interface/index.ts as only the aws-lsp-identity server should be using these types.
-
 export * from '../protocol/identity-management'
 
 export type IdentityManagement = {
