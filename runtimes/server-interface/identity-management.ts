@@ -18,6 +18,8 @@ import {
 } from '../protocol/identity-management'
 import { RequestHandler } from '../protocol'
 
+export * from '../protocol/identity-management'
+
 export type IdentityManagement = {
     onListProfiles: (
         handler: RequestHandler<ListProfilesParams, ListProfilesResult | undefined | null, ListProfilesError>
