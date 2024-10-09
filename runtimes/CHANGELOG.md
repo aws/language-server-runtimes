@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.19] - 2024-10-09
+
+- Update Identity Management protocol definition
+- Export Identity Management interfaces in `server-interface`
+
 ## [0.2.18] - 2024-09-25
 
 - Extend LSP interface with `getAvailableServerConfigurations` that allows clients to request available server configuration values
