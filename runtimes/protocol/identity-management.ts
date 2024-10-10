@@ -57,18 +57,14 @@ export const ProfileKind = {
     Unknown: 'Unknown',
 } as const
 
-export interface Section {
-    name: string
-}
-
 // Profile and SsoSession use 'settings' property as namescope for their settings to avoid future
-// name conflicts with 'kind' and 'name' properties as well as making some setting iteration operations
-// easier.
+// name conflicts with 'kinds', 'name', and future properties as well as making some setting
+// iteration operations easier.
 
 export interface Profile {
-    kind: ProfileKind
+    kinds: ProfileKind[]
     name: string
-    settings: {
+    settings?: {
         region?: string
         sso_session?: string
     }
@@ -76,9 +72,9 @@ export interface Profile {
 
 export interface SsoSession {
     name: string
-    settings: {
-        sso_start_url: string
-        sso_region: string
+    settings?: {
+        sso_start_url?: string
+        sso_region?: string
         sso_registration_scopes?: string[]
     }
 }
@@ -115,15 +111,19 @@ export const listProfilesRequestType = new ProtocolRequestType<
 export interface UpdateProfileOptions {
     createNonexistentProfile?: boolean
     createNonexistentSsoSession?: boolean
+    ensureSsoAccountAccessScope?: boolean
     updateSharedSsoSession?: boolean
 }
 
 export const updateProfileOptionsDefaults = {
     createNonexistentProfile: true,
     createNonexistentSsoSession: true,
+    ensureSsoAccountAccessScope: true,
     updateSharedSsoSession: false,
 } satisfies UpdateProfileOptions
 
+// To change a setting, pass the new value set on it.  To delete a setting, set it to null or undefined.
+// Settings not provided are ignored, preserving the previous value, if any, in the shared config files.
 export interface UpdateProfileParams {
     profile: Profile
     ssoSession?: SsoSession
