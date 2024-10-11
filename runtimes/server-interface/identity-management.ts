@@ -1,18 +1,14 @@
 import {
-    GetSsoTokenError,
+    AwsResponseError,
     GetSsoTokenParams,
     GetSsoTokenResult,
-    InvalidateSsoTokenError,
     InvalidateSsoTokenParams,
     InvalidateSsoTokenResult,
-    ListProfilesError,
     ListProfilesParams,
     ListProfilesResult,
     SsoTokenChangedParams,
-    UpdateProfileError,
     UpdateProfileParams,
     UpdateProfileResult,
-    UpdateSsoTokenManagementError,
     UpdateSsoTokenManagementParams,
     UpdateSsoTokenManagementResult,
 } from '../protocol/identity-management'
@@ -22,30 +18,26 @@ export * from '../protocol/identity-management'
 
 export type IdentityManagement = {
     onListProfiles: (
-        handler: RequestHandler<ListProfilesParams, ListProfilesResult | undefined | null, ListProfilesError>
+        handler: RequestHandler<ListProfilesParams, ListProfilesResult | undefined | null, AwsResponseError>
     ) => void
 
     onUpdateProfile: (
-        handler: RequestHandler<UpdateProfileParams, UpdateProfileResult | undefined | null, UpdateProfileError>
+        handler: RequestHandler<UpdateProfileParams, UpdateProfileResult | undefined | null, AwsResponseError>
     ) => void
 
     onGetSsoToken: (
-        handler: RequestHandler<GetSsoTokenParams, GetSsoTokenResult | undefined | null, GetSsoTokenError>
+        handler: RequestHandler<GetSsoTokenParams, GetSsoTokenResult | undefined | null, AwsResponseError>
     ) => void
 
     onInvalidateSsoToken: (
-        handler: RequestHandler<
-            InvalidateSsoTokenParams,
-            InvalidateSsoTokenResult | undefined | null,
-            InvalidateSsoTokenError
-        >
+        handler: RequestHandler<InvalidateSsoTokenParams, InvalidateSsoTokenResult | undefined | null, AwsResponseError>
     ) => void
 
     onUpdateSsoTokenManagement: (
         handler: RequestHandler<
             UpdateSsoTokenManagementParams,
             UpdateSsoTokenManagementResult | undefined | null,
-            UpdateSsoTokenManagementError
+            AwsResponseError
         >
     ) => void
 
