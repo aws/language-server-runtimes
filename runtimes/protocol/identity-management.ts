@@ -1,24 +1,6 @@
 import { LSPErrorCodes, ProtocolNotificationType, ProtocolRequestType, ResponseError } from './lsp'
 
 // Errors
-export type E_UNKNOWN = 'E_UNKNOWN'
-export type E_TIMEOUT = 'E_TIMEOUT'
-export type E_RUNTIME_NOT_SUPPORTED = 'E_RUNTIME_NOT_SUPPORTED'
-export type E_ENCRYPTION_REQUIRED = 'E_ENCRYPTION_REQUIRED'
-export type E_CANNOT_READ_SHARED_CONFIG = 'E_CANNOT_READ_SHARED_CONFIG'
-export type E_CANNOT_WRITE_SHARED_CONFIG = 'E_CANNOT_WRITE_SHARED_CONFIG'
-export type E_CANNOT_READ_SSO_CACHE = 'E_CANNOT_READ_SSO_CACHE'
-export type E_CANNOT_WRITE_SSO_CACHE = 'E_CANNOT_WRITE_SSO_CACHE'
-export type E_PROFILE_NOT_FOUND = 'E_PROFILE_NOT_FOUND'
-export type E_CANNOT_CREATE_PROFILE = 'E_CANNOT_CREATE_PROFILE'
-export type E_CANNOT_OVERWRITE_PROFILE = 'E_CANNOT_OVERWRITE_PROFILE'
-export type E_INVALID_PROFILE = 'E_INVALID_PROFILE'
-export type E_SSO_SESSION_NOT_FOUND = 'E_SSO_SESSION_NOT_FOUND'
-export type E_CANNOT_CREATE_SSO_SESSION = 'E_CANNOT_CREATE_SSO_SESSION'
-export type E_CANNOT_OVERWRITE_SSO_SESSION = 'E_CANNOT_OVERWRITE_SSO_SESSION'
-export type E_INVALID_SSO_SESSION = 'E_INVALID_SSO_SESSION'
-export type E_INVALID_TOKEN = 'E_INVALID_TOKEN'
-
 export const AwsErrorCodes = {
     E_UNKNOWN: 'E_UNKNOWN',
     E_TIMEOUT: 'E_TIMEOUT',
@@ -43,9 +25,10 @@ export interface AwsResponseErrorData {
     awsErrorCode: string
 }
 
-export class AwsResponseError<D extends AwsResponseErrorData> extends ResponseError<D> {
-    constructor(messageOrError: unknown, data: D, code: number = LSPErrorCodes.RequestFailed) {
-        super(code, (messageOrError as object)?.toString(), data)
+export class AwsResponseError extends ResponseError<AwsResponseErrorData> {
+    constructor(message: string, data: AwsResponseErrorData, code: number = LSPErrorCodes.RequestFailed) {
+        super(code, message, data)
+        Object.setPrototypeOf(this, new.target.prototype)
     }
 }
 
@@ -88,22 +71,12 @@ export interface ListProfilesResult {
     ssoSessions: SsoSession[]
 }
 
-export interface ListProfilesErrorData extends AwsResponseErrorData {
-    awsErrorCode: E_UNKNOWN | E_TIMEOUT | E_RUNTIME_NOT_SUPPORTED | E_CANNOT_READ_SHARED_CONFIG
-}
-
-export class ListProfilesError extends AwsResponseError<ListProfilesErrorData> {
-    constructor(messageOrError: unknown, data: ListProfilesErrorData, code: number = LSPErrorCodes.RequestFailed) {
-        super(messageOrError, data, code)
-        Object.setPrototypeOf(this, new.target.prototype)
-    }
-}
-
+// Potential error codes: E_UNKNOWN | E_TIMEOUT | E_RUNTIME_NOT_SUPPORTED | E_CANNOT_READ_SHARED_CONFIG
 export const listProfilesRequestType = new ProtocolRequestType<
     ListProfilesParams,
     ListProfilesResult,
     never,
-    ListProfilesError,
+    AwsResponseError,
     void
 >('aws/identity/listProfiles')
 
@@ -134,33 +107,14 @@ export interface UpdateProfileResult {
     // Intentionally left blank
 }
 
-export interface UpdateProfileErrorData extends AwsResponseErrorData {
-    awsErrorCode:
-        | E_UNKNOWN
-        | E_TIMEOUT
-        | E_RUNTIME_NOT_SUPPORTED
-        | E_CANNOT_READ_SHARED_CONFIG
-        | E_CANNOT_WRITE_SHARED_CONFIG
-        | E_CANNOT_CREATE_PROFILE
-        | E_CANNOT_OVERWRITE_PROFILE
-        | E_CANNOT_CREATE_SSO_SESSION
-        | E_CANNOT_OVERWRITE_SSO_SESSION
-        | E_INVALID_PROFILE
-        | E_INVALID_SSO_SESSION
-}
-
-export class UpdateProfileError extends AwsResponseError<UpdateProfileErrorData> {
-    constructor(messageOrError: unknown, data: UpdateProfileErrorData, code: number = LSPErrorCodes.RequestFailed) {
-        super(messageOrError, data, code)
-        Object.setPrototypeOf(this, new.target.prototype)
-    }
-}
-
+// Potential error codes: E_UNKNOWN | E_TIMEOUT | E_RUNTIME_NOT_SUPPORTED | E_CANNOT_READ_SHARED_CONFIG
+//   E_CANNOT_WRITE_SHARED_CONFIG | E_CANNOT_CREATE_PROFILE | E_CANNOT_OVERWRITE_PROFILE | E_CANNOT_CREATE_SSO_SESSION
+//   E_CANNOT_OVERWRITE_SSO_SESSION | E_INVALID_PROFILE | E_INVALID_SSO_SESSION
 export const updateProfileRequestType = new ProtocolRequestType<
     UpdateProfileParams,
     UpdateProfileResult,
     never,
-    UpdateProfileError,
+    AwsResponseError,
     void
 >('aws/identity/updateProfile')
 
@@ -211,15 +165,12 @@ export interface GetSsoTokenResult {
     ssoToken: SsoToken
 }
 
-export interface GetSsoTokenError {
-    errorCode: E_UNKNOWN | E_TIMEOUT | E_ENCRYPTION_REQUIRED | E_INVALID_TOKEN
-}
-
+// Potential error codes: E_UNKNOWN | E_TIMEOUT | E_ENCRYPTION_REQUIRED | E_INVALID_TOKEN
 export const getSsoTokenRequestType = new ProtocolRequestType<
     GetSsoTokenParams,
     GetSsoTokenResult,
     never,
-    GetSsoTokenError,
+    AwsResponseError,
     void
 >('aws/identity/getSsoToken')
 
@@ -232,15 +183,12 @@ export interface InvalidateSsoTokenResult {
     // Intentionally left blank
 }
 
-export interface InvalidateSsoTokenError {
-    errorCode: E_UNKNOWN | E_TIMEOUT | E_CANNOT_READ_SSO_CACHE | E_CANNOT_WRITE_SSO_CACHE | E_INVALID_TOKEN
-}
-
+// Pontential error codes: E_UNKNOWN | E_TIMEOUT | E_CANNOT_READ_SSO_CACHE | E_CANNOT_WRITE_SSO_CACHE | E_INVALID_TOKEN
 export const invalidateSsoTokenRequestType = new ProtocolRequestType<
     InvalidateSsoTokenParams,
     InvalidateSsoTokenResult,
     never,
-    InvalidateSsoTokenError,
+    AwsResponseError,
     void
 >('aws/identity/invalidateSsoToken')
 
@@ -257,15 +205,12 @@ export interface UpdateSsoTokenManagementResult {
     readonly changeNotifications: boolean // returns state after call
 }
 
-export interface UpdateSsoTokenManagementError {
-    errorCode: E_UNKNOWN | E_TIMEOUT | E_INVALID_TOKEN
-}
-
+// Potential error codes: E_UNKNOWN | E_TIMEOUT | E_INVALID_TOKEN
 export const updateSsoTokenManagementRequestType = new ProtocolRequestType<
     UpdateSsoTokenManagementParams,
     UpdateSsoTokenManagementResult,
     never,
-    UpdateSsoTokenManagementError,
+    AwsResponseError,
     void
 >('aws/identity/updateSsoTokenManagement')
 
