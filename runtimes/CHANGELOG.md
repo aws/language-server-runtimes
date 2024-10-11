@@ -5,7 +5,7 @@
 ### Changed
 
 - Relax error codes in Identity Management protocol (#223).
-- Minor changed in Identity Management protocol (#222).
+- Minor changes in Identity Management protocol (#222).
 
 ## [0.2.19] - 2024-10-09
 
