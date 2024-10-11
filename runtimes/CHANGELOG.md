@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.20] - 2024-10-11
+
+### Changed
+
+- Relax error codes in Identity Management protocol (#223).
+- Minor changes in Identity Management protocol (#222).
+
 ## [0.2.19] - 2024-10-09
 
 - Update Identity Management protocol definition
