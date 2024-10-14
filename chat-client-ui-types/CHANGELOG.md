@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.0.7] - 2024-10-14
+
+### Added
+- `COPY_TO_CLIPBOARD` contract to send notification about copy events from the UI to destinations
+
 ## [0.0.6] - 2024-06-20
 
 - Introduce `CHAT_OPTIONS` contract to allow sending chat options like available quick actions to the UI
