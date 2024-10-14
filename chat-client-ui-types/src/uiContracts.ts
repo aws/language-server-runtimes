@@ -1,4 +1,9 @@
-import { InsertToCursorPositionParams, ChatOptions } from '@aws/language-server-runtimes-types'
+import {
+    InsertToCursorPositionParams,
+    ChatOptions,
+    CodeSelectionType,
+    ReferenceTrackerInformation,
+} from '@aws/language-server-runtimes-types'
 export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
 
 export type AuthFollowUpType = 'full-auth' | 're-auth' | 'missing_scopes' | 'use-supported-auth'
@@ -12,6 +17,7 @@ export type TriggerType = 'hotkeys' | 'click' | 'contextMenu'
 export const SEND_TO_PROMPT = 'sendToPrompt'
 export const ERROR_MESSAGE = 'errorMessage'
 export const INSERT_TO_CURSOR_POSITION = 'insertToCursorPosition'
+export const COPY_TO_CLIPBOARD = 'copyToClipboard'
 export const AUTH_FOLLOW_UP_CLICKED = 'authFollowUpClicked'
 export const GENERIC_COMMAND = 'genericCommand'
 export const CHAT_OPTIONS = 'chatOptions'
@@ -23,6 +29,7 @@ export type UiMessageCommand =
     | typeof AUTH_FOLLOW_UP_CLICKED
     | typeof GENERIC_COMMAND
     | typeof CHAT_OPTIONS
+    | typeof COPY_TO_CLIPBOARD
 
 export interface UiMessage {
     command: UiMessageCommand
@@ -36,6 +43,7 @@ export type UiMessageParams =
     | ErrorParams
     | SendToPromptParams
     | ChatOptions
+    | CopyCodeToClipboardParams
 
 export interface SendToPromptParams {
     selection: string
@@ -90,4 +98,20 @@ export interface ErrorMessage {
 export interface ChatOptionsMessage {
     command: typeof CHAT_OPTIONS
     params: ChatOptions
+}
+
+export interface CopyCodeToClipboardParams {
+    tabId: string
+    messageId: string
+    code?: string
+    type?: CodeSelectionType
+    referenceTrackerInformation?: ReferenceTrackerInformation[]
+    eventId?: string
+    codeBlockIndex?: number
+    totalCodeBlocks?: number
+}
+
+export interface CopyCodeToClipboardMessage {
+    command: typeof COPY_TO_CLIPBOARD
+    params: CopyCodeToClipboardParams
 }
