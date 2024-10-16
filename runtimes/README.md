@@ -223,7 +223,7 @@ The Identity Management feature is designed to centralize the management of auth
 
 Complete Identity Management parameter and result interfaces can be found in [identity-management.ts](src/protocol/identity-management.ts)
 
-### Notifications
+### Notification
 
 The notification feature can be used to send custom customer-facing notifications to clients. Notifications can contain actions, like show URL, but also followup actions, like request customer acknowledgement. When customer reacts to followup actions, asyncronous notification can be sent from client to server to notify server about this.
 
@@ -233,7 +233,7 @@ Notifications should be used in rare / exceptional cases that require customer a
 
 | Description                          | Method                                  | Params                           | Method type                                                                                                                     | Response Type                    |
 | ------------------------------------ | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
-| Show notifications to customer              | `aws/window/showNotifications`     | `NotificationsParams`           | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Show notification to customer              | `aws/window/showNotification`     | `NotificationParams`           | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
 | Send notification followup back to server   | `aws/window/notificationFollowup`  | `NotificationFollowupParams`    | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
 
 ## Runtime Host Environments
