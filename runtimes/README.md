@@ -223,6 +223,19 @@ The Identity Management feature is designed to centralize the management of auth
 
 Complete Identity Management parameter and result interfaces can be found in [identity-management.ts](src/protocol/identity-management.ts)
 
+### Notification
+
+The notification feature can be used to send custom customer-facing notifications to clients. Notifications can contain actions, like show URL, but also followup actions, like request customer acknowledgement. When customer reacts to followup actions, asyncronous notification can be sent from client to server to notify server about this.
+
+Notifications should be used in rare / exceptional cases that require customer attention (like some change happened or action recommended), but are not blocking the main flow. Clients can decide to throttle notifications, if too many are sent.
+
+#### Feature Specification
+
+| Description                          | Method                                  | Params                           | Method type                                                                                                                     | Response Type                    |
+| ------------------------------------ | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| Show notification to customer              | `aws/window/showNotification`     | `NotificationParams`           | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+| Send notification followup back to server   | `aws/window/notificationFollowup`  | `NotificationFollowupParams`    | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+
 ## Runtime Host Environments
 
 Servers typically run as processes or web workers. Details are provided below on how to initialize each type of server runtime.

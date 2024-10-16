@@ -1,4 +1,4 @@
-import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat, Runtime } from '.'
+import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat, Runtime, Notification } from '.'
 import { IdentityManagement } from './identity-management'
 
 /**
@@ -25,4 +25,5 @@ export type Server = (features: {
     telemetry: Telemetry
     runtime: Runtime
     identityManagement: IdentityManagement
+    notification: Notification
 }) => () => void

@@ -11,7 +11,7 @@ import {
     telemetryNotificationType,
     SemanticTokensRequest,
 
-    // Chat protocol
+    // Chat
     chatRequestType,
     endChatRequestType,
     quickActionRequestType,
@@ -28,9 +28,13 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
+
+    // Notification
+    showNotificationRequestType,
+    notificationFollowupRequestType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
-import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace } from '../server-interface'
+import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace, Notification } from '../server-interface'
 import { Auth } from './auth'
 
 import { RuntimeProps } from './runtime'
@@ -106,6 +110,12 @@ export const webworker = (props: RuntimeProps) => {
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
     }
 
+    const notification: Notification = {
+        showNotification: params => lspConnection.sendNotification(showNotificationRequestType.method, params),
+        onNotificationFollowup: handler =>
+            lspConnection.onNotification(notificationFollowupRequestType.method, handler),
+    }
+
     // Set up auth without encryption
     const auth = new Auth(lspConnection)
     const credentialsProvider = auth.getCredentialsProvider()
@@ -172,7 +182,17 @@ export const webworker = (props: RuntimeProps) => {
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
         }
 
-        return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, runtime, identityManagement })
+        return s({
+            chat,
+            credentialsProvider,
+            lsp,
+            workspace,
+            telemetry,
+            logging,
+            runtime,
+            identityManagement,
+            notification,
+        })
     })
 
     // Free up any resources or threads used by Servers

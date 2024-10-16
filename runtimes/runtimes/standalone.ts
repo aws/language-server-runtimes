@@ -13,6 +13,8 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
+    showNotificationRequestType,
+    notificationFollowupRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -22,7 +24,16 @@ import {
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
 } from './auth/standalone/encryption'
-import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat, Runtime } from '../server-interface'
+import {
+    Logging,
+    Lsp,
+    Telemetry,
+    Workspace,
+    CredentialsProvider,
+    Chat,
+    Runtime,
+    Notification,
+} from '../server-interface'
 import { Auth } from './auth'
 import { EncryptedChat } from './chat/encryptedChat'
 
@@ -183,6 +194,12 @@ export const standalone = (props: RuntimeProps) => {
             },
         }
 
+        const notification: Notification = {
+            showNotification: params => lspConnection.sendNotification(showNotificationRequestType.method, params),
+            onNotificationFollowup: handler =>
+                lspConnection.onNotification(notificationFollowupRequestType.method, handler),
+        }
+
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         const runtime: Runtime = {
@@ -261,7 +278,17 @@ export const standalone = (props: RuntimeProps) => {
                 sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
             }
 
-            return s({ chat, credentialsProvider, lsp, workspace, telemetry, logging, runtime, identityManagement })
+            return s({
+                chat,
+                credentialsProvider,
+                lsp,
+                workspace,
+                telemetry,
+                logging,
+                runtime,
+                identityManagement,
+                notification,
+            })
         })
 
         // Free up any resources or threads used by Servers

@@ -1,4 +1,14 @@
-import { Server, CredentialsProvider, Logging, Lsp, Telemetry, Workspace, Chat, Runtime } from '../server-interface'
+import {
+    Server,
+    CredentialsProvider,
+    Logging,
+    Lsp,
+    Telemetry,
+    Workspace,
+    Chat,
+    Runtime,
+    Notification,
+} from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
     CancellationToken,
@@ -41,6 +51,7 @@ export class TestFeatures {
     }
     runtime: StubbedInstance<Runtime>
     identityManagement: StubbedInstance<IdentityManagement>
+    notification: StubbedInstance<Notification>
 
     private disposables: (() => void)[] = []
 
@@ -60,6 +71,7 @@ export class TestFeatures {
         this.documents = {}
         this.runtime = stubInterface<Runtime>()
         this.identityManagement = stubInterface<IdentityManagement>()
+        this.notification = stubInterface<Notification>()
 
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
         this.workspace.getAllTextDocuments.callsFake(async () => Object.values(this.documents))

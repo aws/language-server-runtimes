@@ -85,6 +85,13 @@ export interface AWSInitializationOptions {
      * Additional clientInfo to extend or override default data passed by LSP Client.
      */
     clientInfo?: ExtendedClientInfo
+    /**
+     * Client data directory, used as an application data directory to store LSP server-specific data.
+     * LSP servers are expected to use the directory for storing their configuration files,
+     * temporary data, and user-specific settings.
+     * The directory is extected to maintain data across updates and re-installations.
+     */
+    dataDirectory?: string
 }
 
 /**
