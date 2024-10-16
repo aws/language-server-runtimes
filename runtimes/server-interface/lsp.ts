@@ -40,6 +40,8 @@ import {
     ShowDocumentParams,
     ShowDocumentResult,
     LSPAny,
+    ApplyWorkspaceEditParams,
+    ApplyWorkspaceEditResult,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -103,6 +105,7 @@ export type Lsp = {
     workspace: {
         getConfiguration: (section: string) => Promise<any>
         onDidChangeWorkspaceFolders: (handler: NotificationHandler<DidChangeWorkspaceFoldersParams>) => void
+        applyWorkspaceEdit: (params: ApplyWorkspaceEditParams) => Promise<ApplyWorkspaceEditResult>
     }
     window: {
         showMessage: (params: ShowMessageParams) => Promise<void>

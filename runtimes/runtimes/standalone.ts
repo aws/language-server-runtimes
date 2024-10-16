@@ -216,6 +216,7 @@ export const standalone = (props: RuntimeProps) => {
                 onExecuteCommand: lspServer.setExecuteCommandHandler,
                 onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
                 workspace: {
+                    applyWorkspaceEdit: params => lspConnection.workspace.applyEdit(params),
                     getConfiguration: section => lspConnection.workspace.getConfiguration(section),
                     onDidChangeWorkspaceFolders: handler =>
                         lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.method, handler),
