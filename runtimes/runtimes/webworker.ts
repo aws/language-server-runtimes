@@ -29,13 +29,12 @@ import {
     ShowMessageRequest,
     ShowDocumentRequest,
 
-    // Notifications
-    showNotificationsRequestType,
+    // Notification
+    showNotificationRequestType,
     notificationFollowupRequestType,
-    NotificationFollowupParams,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
-import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace, Notifications } from '../server-interface'
+import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace, Notification } from '../server-interface'
 import { Auth } from './auth'
 
 import { RuntimeProps } from './runtime'
@@ -111,8 +110,8 @@ export const webworker = (props: RuntimeProps) => {
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
     }
 
-    const notifications: Notifications = {
-        showNotifications: params => lspConnection.sendNotification(showNotificationsRequestType.method, params),
+    const notification: Notification = {
+        showNotification: params => lspConnection.sendNotification(showNotificationRequestType.method, params),
         onNotificationFollowup: handler =>
             lspConnection.onNotification(notificationFollowupRequestType.method, handler),
     }
@@ -192,7 +191,7 @@ export const webworker = (props: RuntimeProps) => {
             logging,
             runtime,
             identityManagement,
-            notifications,
+            notification,
         })
     })
 

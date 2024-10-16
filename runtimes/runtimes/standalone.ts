@@ -13,7 +13,7 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
-    showNotificationsRequestType,
+    showNotificationRequestType,
     notificationFollowupRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
@@ -32,7 +32,7 @@ import {
     CredentialsProvider,
     Chat,
     Runtime,
-    Notifications,
+    Notification,
 } from '../server-interface'
 import { Auth } from './auth'
 import { EncryptedChat } from './chat/encryptedChat'
@@ -194,8 +194,8 @@ export const standalone = (props: RuntimeProps) => {
             },
         }
 
-        const notifications: Notifications = {
-            showNotifications: params => lspConnection.sendNotification(showNotificationsRequestType.method, params),
+        const notification: Notification = {
+            showNotification: params => lspConnection.sendNotification(showNotificationRequestType.method, params),
             onNotificationFollowup: handler =>
                 lspConnection.onNotification(notificationFollowupRequestType.method, handler),
         }
@@ -287,7 +287,7 @@ export const standalone = (props: RuntimeProps) => {
                 logging,
                 runtime,
                 identityManagement,
-                notifications,
+                notification,
             })
         })
 

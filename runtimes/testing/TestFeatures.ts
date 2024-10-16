@@ -7,7 +7,7 @@ import {
     Workspace,
     Chat,
     Runtime,
-    Notifications,
+    Notification,
 } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
@@ -51,7 +51,7 @@ export class TestFeatures {
     }
     runtime: StubbedInstance<Runtime>
     identityManagement: StubbedInstance<IdentityManagement>
-    notifications: StubbedInstance<Notifications>
+    notification: StubbedInstance<Notification>
 
     private disposables: (() => void)[] = []
 
@@ -71,7 +71,7 @@ export class TestFeatures {
         this.documents = {}
         this.runtime = stubInterface<Runtime>()
         this.identityManagement = stubInterface<IdentityManagement>()
-        this.notifications = stubInterface<Notifications>()
+        this.notification = stubInterface<Notification>()
 
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
         this.workspace.getAllTextDocuments.callsFake(async () => Object.values(this.documents))

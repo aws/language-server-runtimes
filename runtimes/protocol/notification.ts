@@ -39,15 +39,11 @@ export interface AcknowledgeRequestAction extends NotificationAction {
     readonly type: typeof FollowupNotificationActionType.Acknowledge
 }
 
-export interface Notification {
+export interface NotificationParams {
     readonly id?: string
     readonly type: MessageType
     readonly content: NotificationContent
     readonly actions?: NotificationAction[]
-}
-
-export interface NotificationsParams {
-    readonly notifications: Notification[]
 }
 
 export interface NotificationFollowupParams {
@@ -56,17 +52,17 @@ export interface NotificationFollowupParams {
 }
 
 /**
- * showNotificationsRequestType defines the custom method that the language server
+ * showNotificationRequestType defines the custom method that the language server
  * sends to the client to provide notifications to show to customers.
  */
-export const showNotificationsRequestType = new ProtocolNotificationType<NotificationsParams, void>(
-    'aws/window/showNotifications'
+export const showNotificationRequestType = new ProtocolNotificationType<NotificationParams, void>(
+    'aws/window/showNotification'
 )
 
 /**
  * notificationFollowupRequestType defines the custom method that the language client
  * sends to the server to provide asynchronous customer followup to notification shown.
- * This method is optional per notification, as not notifications require followup.
+ * This method is optional per notification, as not all notifications require followup.
  */
 export const notificationFollowupRequestType = new ProtocolNotificationType<NotificationFollowupParams, void>(
     'aws/window/notificationFollowup'
