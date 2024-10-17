@@ -43,7 +43,7 @@ import { RuntimeProps } from './runtime'
 import { observe } from './lsp'
 
 import { access, mkdirSync, existsSync } from 'fs'
-import { readdir, readFile, rm, stat, copyFile } from 'fs/promises'
+import { readdir, readFile, rm, stat, copyFile, writeFile, appendFile, mkdir } from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
 import { LspRouter } from './lsp/router/lspRouter'
@@ -191,6 +191,9 @@ export const standalone = (props: RuntimeProps) => {
                 readFile: path => readFile(path, 'utf-8'),
                 remove: dir => rm(dir, { recursive: true, force: true }),
                 isFile: path => stat(path).then(({ isFile }) => isFile()),
+                writeFile: (file, data, options?) => writeFile(file, data, options),
+                appendFile: (path, data, options?) => appendFile(path, data, options),
+                mkdir: (path, options?) => mkdir(path, options),
             },
         }
 
