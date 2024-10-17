@@ -162,6 +162,8 @@ export interface TabRemoveParams extends TabEventParams {}
 export interface InsertToCursorPositionParams {
     tabId: string
     messageId: string
+    cursorPosition?: Position
+    textDocument?: TextDocumentIdentifier
     code?: string
     type?: CodeSelectionType
     referenceTrackerInformation?: ReferenceTrackerInformation[]
