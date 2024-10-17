@@ -1,4 +1,6 @@
+import { FileHandle } from 'fs/promises'
 import { TextDocument, WorkspaceFolder } from '../protocol'
+import { MakeDirectoryOptions, WriteFileOptions } from 'fs'
 
 // Minimal version of fs.Dirent
 interface Dirent {
@@ -27,5 +29,16 @@ export type Workspace = {
         readFile: (path: string) => Promise<string>
         isFile: (path: string) => Promise<boolean>
         remove: (dir: string) => Promise<void>
+        writeFile: (
+            file: FileHandle | string | Buffer | URL,
+            data: string | NodeJS.ArrayBufferView,
+            options?: WriteFileOptions
+        ) => Promise<void>
+        appendFile: (
+            path: FileHandle | string | Buffer | URL,
+            data: string | Uint8Array,
+            options?: WriteFileOptions
+        ) => Promise<void>
+        mkdir: (path: string | Buffer | URL, options?: MakeDirectoryOptions) => Promise<string | undefined>
     }
 }
