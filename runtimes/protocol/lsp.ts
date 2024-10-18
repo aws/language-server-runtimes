@@ -86,12 +86,16 @@ export interface AWSInitializationOptions {
      */
     clientInfo?: ExtendedClientInfo
     /**
-     * Client data directory, used as an application data directory to store LSP server-specific data.
-     * LSP servers are expected to use the directory for storing their configuration files,
-     * temporary data, and user-specific settings.
-     * The directory is extected to maintain data across updates and re-installations.
+     * Client data folder, used as an application data folder to store LSP server-specific data.
+     * LSP servers are expected to use the folder for storing their configuration files,
+     * temporary data, and user-specific settings. Servers should create subfolder
+     * within the client data folder for storing server-specific data.
+     *
+     * The folder is expected to be created by client, separate folder per application
+     * (e.g. multiple IDEs on a client machine should not share the same folder),
+     * and is extected to maintain data across updates and re-installations.
      */
-    dataDirectory?: string
+    clientDataFolder?: string
 }
 
 /**
