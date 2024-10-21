@@ -191,8 +191,8 @@ export const standalone = (props: RuntimeProps) => {
                 readFile: path => readFile(path, 'utf-8'),
                 remove: dir => rm(dir, { recursive: true, force: true }),
                 isFile: path => stat(path).then(({ isFile }) => isFile()),
-                writeFile: (file, data, options?) => writeFile(file, data, options),
-                appendFile: (path, data, options?) => appendFile(path, data, options),
+                writeFile: (path, data) => writeFile(path, data),
+                appendFile: (path, data) => appendFile(path, data),
                 mkdir: (path, options?) => mkdir(path, options),
             },
         }

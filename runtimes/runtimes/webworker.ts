@@ -90,8 +90,8 @@ export const webworker = (props: RuntimeProps) => {
             readdir: _path => Promise.resolve([]),
             isFile: _path => Promise.resolve(false),
             remove: _dir => Promise.resolve(),
-            writeFile: (_file, _data, _options?) => Promise.resolve(),
-            appendFile: (_path, _data, _options?) => Promise.resolve(),
+            writeFile: (_path, _data) => Promise.resolve(),
+            appendFile: (_path, _data) => Promise.resolve(),
             mkdir: (_path, _options?) => Promise.resolve(''),
         },
     }
