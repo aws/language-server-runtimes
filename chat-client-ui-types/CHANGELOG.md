@@ -1,5 +1,11 @@
 # Changelog
 
+
+## [0.0.8] - 2024-10-22
+
+### Updated
+- Update `@aws/language-server-runtimes-types` dependency from 0.0.6 to 0.0.7
+
 ## [0.0.7] - 2024-10-14
 
 ### Added
