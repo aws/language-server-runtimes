@@ -27,5 +27,8 @@ export type Workspace = {
         readFile: (path: string) => Promise<string>
         isFile: (path: string) => Promise<boolean>
         remove: (dir: string) => Promise<void>
+        writeFile: (path: string, data: string) => Promise<void>
+        appendFile: (path: string, data: string) => Promise<void>
+        mkdir: (path: string, options?: { recursive: boolean }) => Promise<string | undefined>
     }
 }
