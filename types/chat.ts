@@ -121,11 +121,12 @@ export interface QuickActions {
 
 /**
  * Registration options regarding chat data
- * Currently only contains the available quick actions provided by a server
- * Can be extended in the future (e.g with default tab data)
+ * Currently contains the available quick actions provided by a server
+ * and the default tab data to be shown to the user in the chat UI
  */
 export interface ChatOptions {
     quickActions?: QuickActions
+    defaultTabData?: ChatResult
 }
 
 export interface QuickActionParams extends PartialResultParams {
@@ -162,6 +163,8 @@ export interface TabRemoveParams extends TabEventParams {}
 export interface InsertToCursorPositionParams {
     tabId: string
     messageId: string
+    cursorPosition?: Position
+    textDocument?: TextDocumentIdentifier
     code?: string
     type?: CodeSelectionType
     referenceTrackerInformation?: ReferenceTrackerInformation[]
