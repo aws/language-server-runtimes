@@ -15,6 +15,7 @@ import {
     ShowDocumentRequest,
     showNotificationRequestType,
     notificationFollowupRequestType,
+    InitializeParams,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -181,6 +182,61 @@ export const standalone = (props: RuntimeProps) => {
                         })
                     }),
                 getFileSize: path => stat(path),
+                getServerDataFolder: serverName => {
+                    const initializeParams = lspRouter.clientInitializeParams
+                    const clientSpecifiedLocation = initializeParams?.initializationOptions?.aws.clientDataFolder
+                    if (clientSpecifiedLocation) {
+                        return path.join(clientSpecifiedLocation, serverName)
+                    }
+
+                    const clientFolderName = getClientNameFromParams(initializeParams)
+                    const standardizedClientFolderName = standardizeFileName(clientFolderName)
+
+                    const appDataFolder = getPlatformAppDataFolder()
+                    return appDataFolder
+                        ? path.join(appDataFolder, standardizedClientFolderName, serverName)
+                        : path.join(os.homedir(), `.${standardizedClientFolderName}`, serverName)
+
+                    function getPlatformAppDataFolder(): string {
+                        const platform = process.platform
+                        switch (platform) {
+                            case 'win32':
+                                return process.env.APPDATA || path.join(os.homedir(), 'AppData', 'Roaming')
+
+                            case 'darwin':
+                                return path.join(os.homedir(), 'Library', 'Application Support')
+
+                            case 'linux':
+                                return process.env.XDG_DATA_HOME || path.join(os.homedir(), '.local', 'share')
+
+                            default:
+                                return ''
+                        }
+                    }
+
+                    function getClientNameFromParams(initializeParams: InitializeParams | undefined): string {
+                        const clientInfo = initializeParams?.clientInfo
+                        const awsClientInfo = initializeParams?.initializationOptions?.aws.clientInfo
+
+                        return [
+                            awsClientInfo?.name || clientInfo?.name || '',
+                            awsClientInfo?.version || clientInfo?.version || '',
+                            awsClientInfo?.extension.name || '',
+                            awsClientInfo?.extension.version || '',
+                        ]
+                            .filter(Boolean)
+                            .join('_')
+                    }
+
+                    function standardizeFileName(clientFolderName: string): string {
+                        return clientFolderName
+                            .toLowerCase()
+                            .replace(/[^a-zA-Z0-9]/g, '_') // Replace non-alphanumeric characters with an underscore
+                            .replace(/_+/g, '_') // Replace multiple underscore characters with a single one
+                            .replace(/^_+|_+$/g, '') // Trim underscore characters
+                            .slice(0, 255) // Reduce the filename to avoid exceeding filesystem limits
+                    }
+                },
                 getTempDirPath: () =>
                     path.join(
                         // https://github.com/aws/aws-toolkit-vscode/issues/240

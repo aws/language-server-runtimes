@@ -22,6 +22,7 @@ export type Workspace = {
         copy: (src: string, dest: string) => Promise<void>
         exists: (path: string) => Promise<boolean>
         getFileSize: (path: string) => Promise<{ size: number }>
+        getServerDataFolder: (serverName: string) => string
         getTempDirPath: () => string
         readdir: (path: string) => Promise<Dirent[]>
         readFile: (path: string) => Promise<string>
