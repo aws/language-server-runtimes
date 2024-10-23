@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.21] - 2024-10-23
+
+### Added
+- Add `workspace/applyEdit` functionality to the LSP interface
+- Add `writeFile`, `appendFile` and `mkdir` functionality to `workspace.fs`
+- Create `Notification` interface for servers
+
+### Changed
+- Update `@aws/language-server-runtimes-types` dependency from 0.0.6 to 0.0.7
+
 ## [0.2.20] - 2024-10-11
 
 ### Changed
