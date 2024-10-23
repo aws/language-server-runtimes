@@ -9,8 +9,6 @@ import {
     SsoTokenChangedParams,
     UpdateProfileParams,
     UpdateProfileResult,
-    UpdateSsoTokenManagementParams,
-    UpdateSsoTokenManagementResult,
 } from '../protocol/identity-management'
 import { RequestHandler } from '../protocol'
 
@@ -31,14 +29,6 @@ export type IdentityManagement = {
 
     onInvalidateSsoToken: (
         handler: RequestHandler<InvalidateSsoTokenParams, InvalidateSsoTokenResult | undefined | null, AwsResponseError>
-    ) => void
-
-    onUpdateSsoTokenManagement: (
-        handler: RequestHandler<
-            UpdateSsoTokenManagementParams,
-            UpdateSsoTokenManagementResult | undefined | null,
-            AwsResponseError
-        >
     ) => void
 
     sendSsoTokenChanged: (params: SsoTokenChangedParams) => void

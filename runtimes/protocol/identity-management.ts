@@ -2,23 +2,29 @@ import { LSPErrorCodes, ProtocolNotificationType, ProtocolRequestType, ResponseE
 
 // Errors
 export const AwsErrorCodes = {
-    E_UNKNOWN: 'E_UNKNOWN',
-    E_TIMEOUT: 'E_TIMEOUT',
-    E_RUNTIME_NOT_SUPPORTED: 'E_RUNTIME_NOT_SUPPORTED',
-    E_ENCRYPTION_REQUIRED: 'E_ENCRYPTION_REQUIRED',
-    E_CANNOT_READ_SHARED_CONFIG: 'E_CANNOT_READ_SHARED_CONFIG',
-    E_CANNOT_WRITE_SHARED_CONFIG: 'E_CANNOT_WRITE_SHARED_CONFIG',
-    E_CANNOT_READ_SSO_CACHE: 'E_CANNOT_READ_SSO_CACHE',
-    E_CANNOT_WRITE_SSO_CACHE: 'E_CANNOT_WRITE_SSO_CACHE',
-    E_PROFILE_NOT_FOUND: 'E_PROFILE_NOT_FOUND',
     E_CANNOT_CREATE_PROFILE: 'E_CANNOT_CREATE_PROFILE',
-    E_CANNOT_OVERWRITE_PROFILE: 'E_CANNOT_OVERWRITE_PROFILE',
-    E_INVALID_PROFILE: 'E_INVALID_PROFILE',
-    E_SSO_SESSION_NOT_FOUND: 'E_SSO_SESSION_NOT_FOUND',
     E_CANNOT_CREATE_SSO_SESSION: 'E_CANNOT_CREATE_SSO_SESSION',
+    E_CANNOT_OVERWRITE_PROFILE: 'E_CANNOT_OVERWRITE_PROFILE',
     E_CANNOT_OVERWRITE_SSO_SESSION: 'E_CANNOT_OVERWRITE_SSO_SESSION',
+    E_CANNOT_READ_SHARED_CONFIG: 'E_CANNOT_READ_SHARED_CONFIG',
+    E_CANNOT_READ_SSO_CACHE: 'E_CANNOT_READ_SSO_CACHE',
+    E_CANNOT_REFRESH_SSO_TOKEN: 'E_CANNOT_REFRESH_SSO_TOKEN',
+    E_CANNOT_REGISTER_CLIENT: 'E_CANNOT_REGISTER_CLIENT',
+    E_CANNOT_CREATE_SSO_TOKEN: 'E_CANNOT_CREATE_SSO_TOKEN',
+    E_CANNOT_WRITE_SHARED_CONFIG: 'E_CANNOT_WRITE_SHARED_CONFIG',
+    E_CANNOT_WRITE_SSO_CACHE: 'E_CANNOT_WRITE_SSO_CACHE',
+    E_ENCRYPTION_REQUIRED: 'E_ENCRYPTION_REQUIRED',
+    E_INVALID_PROFILE: 'E_INVALID_PROFILE',
+    E_INVALID_SSO_CLIENT: 'E_INVALID_SSO_CLIENT',
     E_INVALID_SSO_SESSION: 'E_INVALID_SSO_SESSION',
-    E_INVALID_TOKEN: 'E_INVALID_TOKEN',
+    E_INVALID_SSO_TOKEN: 'E_INVALID_SSO_TOKEN',
+    E_PROFILE_NOT_FOUND: 'E_PROFILE_NOT_FOUND',
+    E_RUNTIME_NOT_SUPPORTED: 'E_RUNTIME_NOT_SUPPORTED',
+    E_SSO_SESSION_NOT_FOUND: 'E_SSO_SESSION_NOT_FOUND',
+    E_SSO_TOKEN_EXPIRED: 'E_SSO_TOKEN_EXPIRED',
+    E_SSO_TOKEN_SOURCE_NOT_SUPPORTED: 'E_SSO_TOKEN_SOURCE_NOT_SUPPORTED',
+    E_TIMEOUT: 'E_TIMEOUT',
+    E_UNKNOWN: 'E_UNKNOWN',
 } as const
 
 export interface AwsResponseErrorData {
@@ -132,32 +138,32 @@ export const SsoTokenSourceKind = {
 } as const
 
 export interface AwsBuilderIdSsoTokenSource {
-    readonly kind: AwsBuilderIdSsoTokenSourceKind
-    clientName: string
+    kind: AwsBuilderIdSsoTokenSourceKind
+    ssoRegistrationScopes: string[]
 }
 
 export interface IamIdentityCenterSsoTokenSource {
-    readonly kind: IamIdentityCenterSsoTokenSourceKind
-    clientName: string
-    issuerUrl: string
-    region: string
+    kind: IamIdentityCenterSsoTokenSourceKind
+    profileName: string
 }
 
 export interface GetSsoTokenOptions {
-    autoRefresh?: boolean // default is true
-    changeNotifications?: boolean // default is true
-    loginOnInvalidToken?: boolean // default is true
+    loginOnInvalidToken?: boolean
 }
+
+export const getSsoTokenOptionsDefaults = {
+    loginOnInvalidToken: true,
+} satisfies GetSsoTokenOptions
 
 export interface GetSsoTokenParams {
     source: IamIdentityCenterSsoTokenSource | AwsBuilderIdSsoTokenSource
-    scopes?: string[]
+    clientName: string
     options?: GetSsoTokenOptions
 }
 
 export interface SsoToken {
-    readonly id: SsoTokenId
-    readonly accessToken: string // This field is encrypted with JWT like 'update'
+    id: SsoTokenId
+    accessToken: string // This field is encrypted with JWT like 'update'
     // Additional fields captured in token cache file may be added here in the future
 }
 
@@ -176,7 +182,7 @@ export const getSsoTokenRequestType = new ProtocolRequestType<
 
 // invalidateSsoToken
 export interface InvalidateSsoTokenParams {
-    readonly ssoTokenId: SsoTokenId
+    ssoTokenId: SsoTokenId
 }
 
 export interface InvalidateSsoTokenResult {
@@ -192,46 +198,19 @@ export const invalidateSsoTokenRequestType = new ProtocolRequestType<
     void
 >('aws/identity/invalidateSsoToken')
 
-// updateSsoTokenManagement
-export interface UpdateSsoTokenManagementParams {
-    readonly ssoTokenId: SsoTokenId
-    autoRefresh?: boolean // no change if not set
-    changeNotifications?: boolean // no change if not set
-}
-
-export interface UpdateSsoTokenManagementResult {
-    readonly ssoTokenId: SsoTokenId // same as supplied request params value
-    readonly autoRefresh: boolean // returns state after call
-    readonly changeNotifications: boolean // returns state after call
-}
-
-// Potential error codes: E_UNKNOWN | E_TIMEOUT | E_INVALID_TOKEN
-export const updateSsoTokenManagementRequestType = new ProtocolRequestType<
-    UpdateSsoTokenManagementParams,
-    UpdateSsoTokenManagementResult,
-    never,
-    AwsResponseError,
-    void
->('aws/identity/updateSsoTokenManagement')
-
 // ssoTokenChanged
-export type Created = 'Created'
 export type Refreshed = 'Refreshed'
-export type Expired = 'Expired'
-export type Invalidated = 'Invalidated'
 
-export type SsoTokenChangedKind = Created | Refreshed | Expired | Invalidated
+export type SsoTokenChangedKind = Refreshed
 
 export const SsoTokenChangedKind = {
-    Created: 'Created',
-    Refreshed: 'Refreshed',
     Expired: 'Expired',
-    Invalidated: 'Invalidated',
+    Refreshed: 'Refreshed',
 } as const
 
 export interface SsoTokenChangedParams {
-    readonly kind: SsoTokenChangedKind
-    readonly ssoTokenId: SsoTokenId
+    kind: SsoTokenChangedKind
+    ssoTokenId: SsoTokenId
 }
 
 export const ssoTokenChangedRequestType = new ProtocolNotificationType<SsoTokenChangedParams, void>(
