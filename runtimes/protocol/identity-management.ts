@@ -199,9 +199,10 @@ export const invalidateSsoTokenRequestType = new ProtocolRequestType<
 >('aws/identity/invalidateSsoToken')
 
 // ssoTokenChanged
+export type Expired = 'Expired'
 export type Refreshed = 'Refreshed'
 
-export type SsoTokenChangedKind = Refreshed
+export type SsoTokenChangedKind = Refreshed | Expired
 
 export const SsoTokenChangedKind = {
     Expired: 'Expired',
