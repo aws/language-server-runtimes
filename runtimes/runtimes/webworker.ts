@@ -126,6 +126,7 @@ export const webworker = (props: RuntimeProps) => {
             name: props.name,
             version: props.version,
         },
+        platform: 'browser',
     }
 
     // Initialize every Server

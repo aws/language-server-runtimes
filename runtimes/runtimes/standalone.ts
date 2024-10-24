@@ -16,10 +16,7 @@ import {
     showNotificationRequestType,
     notificationFollowupRequestType,
     CancellationToken,
-    HandlerResult,
-    AwsResponseError,
     GetSsoTokenParams,
-    GetSsoTokenResult,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -61,8 +58,6 @@ import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
-import runtime from 'jose/dist/types/util/runtime'
-import { async } from 'rxjs'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -214,6 +209,7 @@ export const standalone = (props: RuntimeProps) => {
                 name: props.name,
                 version: props.version,
             },
+            platform: os.platform(),
         }
 
         // Create router that will be routing LSP events from the client to server(s)
