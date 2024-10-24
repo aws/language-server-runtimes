@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.22] - 2024-10-24
+
+### Added
+- Add encryption to the accessToken in Identity Management protocol
+
+### Changed
+- Minor updates to `GetSsoToken` request parameters
+
+### Removed
+- Remove unused `onUpdateSsoTokenManagement` in Identity Management protocol
+
 ## [0.2.21] - 2024-10-23
 
 ### Added
