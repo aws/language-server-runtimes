@@ -9,6 +9,7 @@ describe('serverDataFolder', () => {
     let initializeParams: InitializeParams
     let platformStub: sinon.SinonStub
     let osHomeDirStub: sinon.SinonStub
+    let processEnvStub: sinon.SinonStub
     const serverName = 'testServer'
     const expectedClientFolderName = 'aws_vscode_sample_extension_for_vscode'
 
@@ -39,8 +40,6 @@ describe('serverDataFolder', () => {
 
     afterEach(() => {
         sinon.restore()
-        process.env.APPDATA = ''
-        process.env.XDG_DATA_HOME = ''
     })
 
     it('should return the clientDataFolder param if present', () => {
@@ -64,9 +63,12 @@ describe('serverDataFolder', () => {
 
     it('should use the path from APPDATA environmental variable if present on Windows', () => {
         platformStub = sinon.stub(process, 'platform').value('win32')
-
         const appDataEnv = 'AppDataPath'
-        process.env.APPDATA = appDataEnv
+        processEnvStub = sinon.stub(process, 'env').value({
+            ...process.env,
+            APPDATA: appDataEnv,
+        })
+
         const clientDataFolderPath = path.join(appDataEnv, expectedClientFolderName)
         const expected = path.join(clientDataFolderPath, serverName)
 
@@ -96,9 +98,12 @@ describe('serverDataFolder', () => {
 
     it('should use the path from the XDG_DATA_HOME environmental variable if present on Linux', () => {
         platformStub = sinon.stub(process, 'platform').value('linux')
-
         const xdgDataHome = 'xgdDataPath'
-        process.env.XDG_DATA_HOME = xdgDataHome
+        processEnvStub = sinon.stub(process, 'env').value({
+            ...process.env,
+            XDG_DATA_HOME: xdgDataHome,
+        })
+
         const clientDataFolderPath = path.join(xdgDataHome, expectedClientFolderName)
         const expected = path.join(clientDataFolderPath, serverName)
 
