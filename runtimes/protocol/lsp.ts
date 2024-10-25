@@ -83,6 +83,7 @@ export interface ExtendedClientInfo {
 export interface AWSInitializationOptions {
     /**
      * Additional clientInfo to extend or override default data passed by LSP Client.
+     * This information may be used to generate client-specific data folder path if clientDataFolder is not specified.
      */
     clientInfo?: ExtendedClientInfo
     /**
