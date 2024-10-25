@@ -2,7 +2,7 @@ import path from 'path'
 import * as os from 'os'
 import { InitializeParams } from '../../protocol'
 
-export function getServerDataFolder(serverName: string, initializeParams: InitializeParams | undefined): string {
+export function getServerDataDirPath(serverName: string, initializeParams: InitializeParams | undefined): string {
     const clientSpecifiedLocation = initializeParams?.initializationOptions?.aws.clientDataFolder
     if (clientSpecifiedLocation) {
         return path.join(clientSpecifiedLocation, serverName)

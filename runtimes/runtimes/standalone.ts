@@ -58,7 +58,7 @@ import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
-import { getServerDataFolder } from './util/serverDataFolder'
+import { getServerDataDirPath } from './util/serverDataDirPath'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -181,7 +181,7 @@ export const standalone = (props: RuntimeProps) => {
                         })
                     }),
                 getFileSize: path => stat(path),
-                getServerDataFolder: serverName => getServerDataFolder(serverName, lspRouter.clientInitializeParams),
+                getServerDataDirPath: serverName => getServerDataDirPath(serverName, lspRouter.clientInitializeParams),
                 getTempDirPath: () =>
                     path.join(
                         // https://github.com/aws/aws-toolkit-vscode/issues/240

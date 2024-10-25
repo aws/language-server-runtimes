@@ -1,11 +1,11 @@
-import { getServerDataFolder } from './serverDataFolder'
+import { getServerDataDirPath } from './serverDataDirPath'
 import assert from 'assert'
 import sinon from 'sinon'
 import { InitializeParams } from '../../protocol'
 import path from 'path'
 import os from 'os'
 
-describe('serverDataFolder', () => {
+describe('getServerDataDirPath', () => {
     let initializeParams: InitializeParams
     let platformStub: sinon.SinonStub
     let processEnvStub: sinon.SinonStub
@@ -45,7 +45,7 @@ describe('serverDataFolder', () => {
         initializeParams.initializationOptions!.aws.clientDataFolder = clientDataFolderPath
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -55,7 +55,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(os.homedir(), 'AppData', 'Roaming', expectedClientFolderName)
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -70,7 +70,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(appDataEnv, expectedClientFolderName)
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -80,7 +80,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(os.homedir(), 'Library', 'Application Support', expectedClientFolderName)
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -90,7 +90,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(os.homedir(), '.local', 'share', expectedClientFolderName)
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -105,7 +105,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(xdgDataHome, expectedClientFolderName)
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -115,7 +115,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(os.homedir(), `.${expectedClientFolderName}`)
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -132,7 +132,7 @@ describe('serverDataFolder', () => {
         )
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -149,7 +149,7 @@ describe('serverDataFolder', () => {
         )
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -160,7 +160,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(os.homedir(), 'Library', 'Application Support', 'params_vscode')
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -172,7 +172,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(os.homedir(), 'Library', 'Application Support')
         const expected = path.join(clientDataFolderPath, serverName)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 
@@ -184,7 +184,7 @@ describe('serverDataFolder', () => {
         const clientDataFolderPath = path.join(os.homedir())
         const expected = path.join(clientDataFolderPath, `.${serverName}`)
 
-        const result = getServerDataFolder(serverName, initializeParams)
+        const result = getServerDataDirPath(serverName, initializeParams)
         assert.strictEqual(result, expected)
     })
 })
