@@ -7,7 +7,6 @@ import os from 'os'
 
 describe('serverDataFolder', () => {
     let initializeParams: InitializeParams
-    let pathJoinStub: sinon.SinonStub
     let platformStub: sinon.SinonStub
     let osHomeDirStub: sinon.SinonStub
     const serverName = 'testServer'
@@ -55,7 +54,6 @@ describe('serverDataFolder', () => {
 
     it('should use the default application data path on Windows', () => {
         platformStub = sinon.stub(process, 'platform').value('win32')
-        pathJoinStub = sinon.stub(path, 'join').callsFake(path.win32.join)
 
         const clientDataFolderPath = path.join(os.homedir(), 'AppData', 'Roaming', expectedClientFolderName)
         const expected = path.join(clientDataFolderPath, serverName)
@@ -66,7 +64,6 @@ describe('serverDataFolder', () => {
 
     it('should use the path from APPDATA environmental variable if present on Windows', () => {
         platformStub = sinon.stub(process, 'platform').value('win32')
-        pathJoinStub = sinon.stub(path, 'join').callsFake(path.win32.join)
 
         const appDataEnv = 'AppDataPath'
         process.env.APPDATA = appDataEnv
