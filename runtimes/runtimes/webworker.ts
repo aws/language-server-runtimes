@@ -48,7 +48,6 @@ import {
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
-    updateSsoTokenManagementRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
 
@@ -128,6 +127,7 @@ export const webworker = (props: RuntimeProps) => {
             name: props.name,
             version: props.version,
         },
+        platform: 'browser',
     }
 
     // Initialize every Server
@@ -182,8 +182,6 @@ export const webworker = (props: RuntimeProps) => {
             onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
             onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-            onUpdateSsoTokenManagement: handler =>
-                lspConnection.onRequest(updateSsoTokenManagementRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
         }
 

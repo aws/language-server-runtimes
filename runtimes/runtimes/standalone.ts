@@ -15,6 +15,8 @@ import {
     ShowDocumentRequest,
     showNotificationRequestType,
     notificationFollowupRequestType,
+    CancellationToken,
+    GetSsoTokenParams,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -33,6 +35,12 @@ import {
     Chat,
     Runtime,
     Notification,
+    getSsoTokenRequestType,
+    IdentityManagement,
+    invalidateSsoTokenRequestType,
+    listProfilesRequestType,
+    ssoTokenChangedRequestType,
+    updateProfileRequestType,
 } from '../server-interface'
 import { Auth } from './auth'
 import { EncryptedChat } from './chat/encryptedChat'
@@ -56,15 +64,6 @@ import { getServerDataFolder } from './util/serverDataFolder'
 if (checkAWSConfigFile()) {
     process.env.AWS_SDK_LOAD_CONFIG = '1'
 }
-import { IdentityManagement } from '../server-interface/identity-management'
-import {
-    getSsoTokenRequestType,
-    invalidateSsoTokenRequestType,
-    listProfilesRequestType,
-    ssoTokenChangedRequestType,
-    updateProfileRequestType,
-    updateSsoTokenManagementRequestType,
-} from '../protocol/identity-management'
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -212,6 +211,7 @@ export const standalone = (props: RuntimeProps) => {
                 name: props.name,
                 version: props.version,
             },
+            platform: os.platform(),
         }
 
         // Create router that will be routing LSP events from the client to server(s)
@@ -277,10 +277,24 @@ export const standalone = (props: RuntimeProps) => {
             const identityManagement: IdentityManagement = {
                 onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
                 onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
-                onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
+                onGetSsoToken: handler =>
+                    lspConnection.onRequest(
+                        getSsoTokenRequestType,
+                        async (params: GetSsoTokenParams, token: CancellationToken) => {
+                            const result = await handler(params, token)
+
+                            // Encrypt SsoToken.accessToken before sending to client
+                            if (result && !(result instanceof Error) && encryptionKey) {
+                                result.ssoToken.accessToken = await encryptObjectWithKey(
+                                    result.ssoToken.accessToken,
+                                    encryptionKey
+                                )
+                            }
+
+                            return result
+                        }
+                    ),
                 onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-                onUpdateSsoTokenManagement: handler =>
-                    lspConnection.onRequest(updateSsoTokenManagementRequestType, handler),
                 sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
             }
 
