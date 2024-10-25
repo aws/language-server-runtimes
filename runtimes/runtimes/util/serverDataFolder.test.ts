@@ -8,11 +8,9 @@ import os from 'os'
 describe('serverDataFolder', () => {
     let initializeParams: InitializeParams
     let platformStub: sinon.SinonStub
-    let osHomeDirStub: sinon.SinonStub
     let processEnvStub: sinon.SinonStub
     const serverName = 'testServer'
     const expectedClientFolderName = 'aws_vscode_sample_extension_for_vscode'
-    const originalEnv = { ...process.env }
 
     beforeEach(() => {
         initializeParams = {
@@ -36,7 +34,6 @@ describe('serverDataFolder', () => {
                 },
             },
         }
-        osHomeDirStub = sinon.stub(os, 'homedir').returns('stubHomeDir')
     })
 
     afterEach(() => {
@@ -66,7 +63,7 @@ describe('serverDataFolder', () => {
         platformStub = sinon.stub(process, 'platform').value('win32')
         const appDataEnv = 'AppDataPath'
         processEnvStub = sinon.stub(process, 'env').value({
-            ...originalEnv,
+            ...process.env,
             APPDATA: appDataEnv,
         })
 
@@ -101,7 +98,7 @@ describe('serverDataFolder', () => {
         platformStub = sinon.stub(process, 'platform').value('linux')
         const xdgDataHome = 'xgdDataPath'
         processEnvStub = sinon.stub(process, 'env').value({
-            ...originalEnv,
+            ...process.env,
             XDG_DATA_HOME: xdgDataHome,
         })
 
