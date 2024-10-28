@@ -50,8 +50,8 @@ import { RuntimeProps } from './runtime'
 
 import { observe } from './lsp'
 
-import { access, mkdirSync, existsSync } from 'fs'
-import { readdir, readFile, rm, stat, copyFile, writeFile, appendFile, mkdir } from 'fs/promises'
+import { mkdirSync, existsSync } from 'fs'
+import { access, readdir, readFile, rm, stat, copyFile, writeFile, appendFile, mkdir } from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
 import { LspRouter } from './lsp/router/lspRouter'
@@ -166,7 +166,7 @@ export const standalone = (props: RuntimeProps) => {
                 }
             },
             fs: {
-                copy: (src, dest) => {
+                copyFileWithCreateDir: (src, dest) => {
                     const destDir = path.dirname(dest)
                     if (!existsSync(destDir)) {
                         mkdirSync(destDir, { recursive: true })
@@ -174,12 +174,9 @@ export const standalone = (props: RuntimeProps) => {
                     return copyFile(src, dest)
                 },
                 exists: path =>
-                    new Promise(resolve => {
-                        access(path, err => {
-                            if (!err) resolve(true)
-                            resolve(false)
-                        })
-                    }),
+                    access(path)
+                        .then(() => true)
+                        .catch(() => false),
                 getFileSize: path => stat(path),
                 getServerDataDirPath: serverName => getServerDataDirPath(serverName, lspRouter.clientInitializeParams),
                 getTempDirPath: () =>
@@ -190,7 +187,7 @@ export const standalone = (props: RuntimeProps) => {
                     ),
                 readdir: path => readdir(path, { withFileTypes: true }),
                 readFile: path => readFile(path, 'utf-8'),
-                remove: dir => rm(dir, { recursive: true, force: true }),
+                rm: (dir, options?) => rm(dir, options),
                 isFile: path => stat(path).then(({ isFile }) => isFile()),
                 writeFile: (path, data) => writeFile(path, data),
                 appendFile: (path, data) => appendFile(path, data),

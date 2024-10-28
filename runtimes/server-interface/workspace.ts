@@ -19,15 +19,25 @@ export type Workspace = {
     getAllTextDocuments: () => Promise<TextDocument[]>
     getWorkspaceFolder: (uri: string) => WorkspaceFolder | null | undefined
     fs: {
-        copy: (src: string, dest: string) => Promise<void>
+        copyFileWithCreateDir: (src: string, dest: string) => Promise<void>
         exists: (path: string) => Promise<boolean>
         getFileSize: (path: string) => Promise<{ size: number }>
         getServerDataDirPath: (serverName: string) => string
         getTempDirPath: () => string
+        /**
+         * Reads the contents of a directory.
+         * @param {string} path - The path to the directory.
+         * @returns A promise that resolves to an array of Dirent objects.
+         */
         readdir: (path: string) => Promise<Dirent[]>
+        /**
+         * Reads the entire contents of a file.
+         * @param {string} path - The path to the file.
+         * @returns A promise that resolves to the contents of the file as a string.
+         */
         readFile: (path: string) => Promise<string>
         isFile: (path: string) => Promise<boolean>
-        remove: (dir: string) => Promise<void>
+        rm: (dir: string, options?: { recursive: boolean; force: boolean }) => Promise<void>
         writeFile: (path: string, data: string) => Promise<void>
         appendFile: (path: string, data: string) => Promise<void>
         mkdir: (path: string, options?: { recursive: boolean }) => Promise<string | undefined>

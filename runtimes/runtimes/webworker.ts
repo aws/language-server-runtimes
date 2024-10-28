@@ -81,7 +81,7 @@ export const webworker = (props: RuntimeProps) => {
         getWorkspaceFolder: _uri =>
             lspRouter.clientInitializeParams!.workspaceFolders && lspRouter.clientInitializeParams!.workspaceFolders[0],
         fs: {
-            copy: (_src, _dest) => Promise.resolve(),
+            copyFileWithCreateDir: (_src, _dest) => Promise.resolve(),
             exists: _path => Promise.resolve(false),
             getFileSize: _path => Promise.resolve({ size: 0 }),
             getServerDataDirPath: _serverName => '',
@@ -89,7 +89,7 @@ export const webworker = (props: RuntimeProps) => {
             readFile: _path => Promise.resolve(''),
             readdir: _path => Promise.resolve([]),
             isFile: _path => Promise.resolve(false),
-            remove: _dir => Promise.resolve(),
+            rm: (_dir, _options?) => Promise.resolve(),
             writeFile: (_path, _data) => Promise.resolve(),
             appendFile: (_path, _data) => Promise.resolve(),
             mkdir: (_path, _options?) => Promise.resolve(''),
