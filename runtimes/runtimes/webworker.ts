@@ -86,7 +86,7 @@ export const webworker = (props: RuntimeProps) => {
             getFileSize: _path => Promise.resolve({ size: 0 }),
             getServerDataDirPath: _serverName => '',
             getTempDirPath: () => '/tmp',
-            readFile: _path => Promise.resolve(''),
+            readFile: (_path, _options?) => Promise.resolve(''),
             readdir: _path => Promise.resolve([]),
             isFile: _path => Promise.resolve(false),
             rm: (_dir, _options?) => Promise.resolve(),

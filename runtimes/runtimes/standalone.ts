@@ -186,7 +186,8 @@ export const standalone = (props: RuntimeProps) => {
                         'aws-language-servers'
                     ),
                 readdir: path => readdir(path, { withFileTypes: true }),
-                readFile: path => readFile(path, 'utf-8'),
+                readFile: (path, options?) =>
+                    readFile(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
                 rm: (dir, options?) => rm(dir, options),
                 isFile: path => stat(path).then(({ isFile }) => isFile()),
                 writeFile: (path, data) => writeFile(path, data),

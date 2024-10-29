@@ -33,9 +33,10 @@ export type Workspace = {
         /**
          * Reads the entire contents of a file.
          * @param {string} path - The path to the file.
+         * @param {string} [options.encoding] - The encoding to use when reading the file, defaults to 'utf-8'.
          * @returns A promise that resolves to the contents of the file as a string.
          */
-        readFile: (path: string) => Promise<string>
+        readFile: (path: string, options?: { encoding: string }) => Promise<string>
         isFile: (path: string) => Promise<boolean>
         rm: (dir: string, options?: { recursive: boolean; force: boolean }) => Promise<void>
         writeFile: (path: string, data: string) => Promise<void>
