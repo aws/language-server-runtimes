@@ -166,10 +166,12 @@ export const standalone = (props: RuntimeProps) => {
                 }
             },
             fs: {
-                copyFileWithCreateDir: (src, dest) => {
-                    const destDir = path.dirname(dest)
-                    if (!existsSync(destDir)) {
-                        mkdirSync(destDir, { recursive: true })
+                copy: (src, dest, ensureDir = true) => {
+                    if (ensureDir) {
+                        const destDir = path.dirname(dest)
+                        if (!existsSync(destDir)) {
+                            mkdirSync(destDir, { recursive: true })
+                        }
                     }
                     return copyFile(src, dest)
                 },

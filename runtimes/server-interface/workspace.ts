@@ -19,7 +19,14 @@ export type Workspace = {
     getAllTextDocuments: () => Promise<TextDocument[]>
     getWorkspaceFolder: (uri: string) => WorkspaceFolder | null | undefined
     fs: {
-        copyFileWithCreateDir: (src: string, dest: string) => Promise<void>
+        /**
+         * Copies a file from src to dest. Dest is overwritten if it already exists.
+         * @param {string} src - The source path.
+         * @param {string} dest - The destination path.
+         * @param {boolean} ensureDir - Whether to create the destination directory if it doesn't exist, defaults to true.
+         * @returns A promise that resolves when the copy operation is complete.
+         */
+        copy: (src: string, dest: string, ensureDir?: boolean) => Promise<void>
         exists: (path: string) => Promise<boolean>
         getFileSize: (path: string) => Promise<{ size: number }>
         getServerDataDirPath: (serverName: string) => string
