@@ -166,8 +166,8 @@ export const standalone = (props: RuntimeProps) => {
                 }
             },
             fs: {
-                copy: (src, dest, ensureDir = true) => {
-                    if (ensureDir) {
+                copyFile: (src, dest, options?) => {
+                    if (options?.ensureDir !== false) {
                         const destDir = path.dirname(dest)
                         if (!existsSync(destDir)) {
                             mkdirSync(destDir, { recursive: true })
