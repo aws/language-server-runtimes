@@ -23,7 +23,7 @@ export type Workspace = {
          * Copies a file from src to dest. Dest is overwritten if it already exists.
          * @param {string} src - The source path.
          * @param {string} dest - The destination path.
-         * @param {boolean} [options.ensureDir] - Whether to create the destination directory if it doesn't exist, defaults to true.
+         * @param {boolean} [options.ensureDir] - Whether to create the destination directory if it doesn't exist, defaults to false.
          * @returns A promise that resolves when the copy operation is complete.
          */
         copyFile: (src: string, dest: string, options?: { ensureDir?: boolean }) => Promise<void>
