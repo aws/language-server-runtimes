@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.24] - 2024-10-30
+
+### Changed
+
+- Updated `workspace.fs` methods: `remove` renamed to `rm`, `copy` renamed to `copyFile` and added `options` parameters. (#247)
+
 ## [0.2.23] - 2024-10-24
 
 ### Added
