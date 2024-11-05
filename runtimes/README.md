@@ -225,7 +225,7 @@ Complete Identity Management parameter and result interfaces can be found in [id
 
 ### Notification
 
-The notification feature can be used to send custom customer-facing notifications to clients. Notifications can contain actions, like show URL, but also followup actions, like request customer acknowledgement. When customer reacts to followup actions, asynchronous notification can be sent from client to server to notify server about this.
+The notification feature can be used to send custom customer-facing notifications to clients. Notifications can contain actions, like show URL, but also followup actions, like request customer acknowledgement. When customer reacts to followup actions, asynchronous notification is expected to be sent from client to server to notify server about this.
 
 Notifications should be used in rare / exceptional cases that require customer attention (like some change happened or action recommended), but are not blocking the main flow. Clients can decide to throttle notifications, if too many are sent.
 

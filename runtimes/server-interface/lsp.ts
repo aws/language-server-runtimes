@@ -58,6 +58,17 @@ export type PartialServerCapabilities<T = any> = Pick<
     | 'signatureHelpProvider'
 >
 export type PartialInitializeResult<T = any> = {
+    /**
+     * Information about the server respresented by @type {Server}.
+     * serverInfo is used to differentiate servers internally in the system and is not exposed to the client.
+     */
+    serverInfo?: {
+        /**
+         * The name is expect to be unique per server. It also has to be persistent/durable
+         * across sessions and versions of application.
+         */
+        name: string
+    }
     capabilities: PartialServerCapabilities<T>
     awsServerCapabilities?: {
         chatOptions?: ChatOptions

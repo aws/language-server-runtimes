@@ -29,7 +29,7 @@
         "check:formatting": "prettier --check .",
         "fix:prettier": "prettier . --write",
         "format-staged": "npx pretty-quick --staged",
-        "prepare": "husky install .husky",
+        "prepare": "husky .husky",
         "test": "npm run test --workspaces --if-present",
         "preversion": "npm run test",
         "version": "npm run compile && git add -A .",

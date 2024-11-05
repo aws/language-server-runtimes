@@ -199,7 +199,9 @@ export const standalone = (props: RuntimeProps) => {
         }
 
         const notification: Notification = {
-            showNotification: params => lspConnection.sendNotification(showNotificationRequestType.method, params),
+            showNotification: params =>
+                lspRouter.clientSupportsShowNotification ??
+                lspConnection.sendNotification(showNotificationRequestType.method, params),
             onNotificationFollowup: handler =>
                 lspConnection.onNotification(notificationFollowupRequestType.method, handler),
         }

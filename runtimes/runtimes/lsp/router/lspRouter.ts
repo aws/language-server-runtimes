@@ -32,6 +32,13 @@ export class LspRouter {
         lspConnection.onRequest(getConfigurationFromServerRequestType, this.handleGetConfigurationFromServer)
     }
 
+    public get clientSupportsShowNotification() {
+        return (
+            this.clientInitializeParams?.initializationOptions?.aws.awsClientCapabilities?.window?.showNotification ??
+            false
+        )
+    }
+
     initialize = async (
         params: InitializeParams,
         token: CancellationToken

@@ -1,5 +1,13 @@
 import { MessageType, ProtocolNotificationType } from './lsp'
 
+export interface EventIdentifier {
+    readonly id: string
+}
+
+export interface FollowupIdentifier {
+    readonly source: EventIdentifier
+}
+
 export interface NotificationContent {
     readonly text: string
     readonly title?: string
@@ -39,16 +47,14 @@ export interface AcknowledgeRequestAction extends NotificationAction {
     readonly type: typeof FollowupNotificationActionType.Acknowledge
 }
 
-export interface NotificationParams {
-    readonly id?: string
+export interface NotificationParams extends Partial<EventIdentifier> {
     readonly type: MessageType
     readonly content: NotificationContent
     readonly actions?: NotificationAction[]
 }
 
-export interface NotificationFollowupParams {
-    readonly id: string
-    readonly actions: FollowupNotificationActionType[]
+export interface NotificationFollowupParams extends FollowupIdentifier {
+    readonly action: FollowupNotificationActionType
 }
 
 /**
@@ -62,7 +68,10 @@ export const showNotificationRequestType = new ProtocolNotificationType<Notifica
 /**
  * notificationFollowupRequestType defines the custom method that the language client
  * sends to the server to provide asynchronous customer followup to notification shown.
- * This method is optional per notification, as not all notifications require followup.
+ * This method is expected to be used only for notification that require followup.
+ *
+ * Client is responsible for passing `id` of source notification that triggered the followup notification
+ * in the parameters.
  */
 export const notificationFollowupRequestType = new ProtocolNotificationType<NotificationFollowupParams, void>(
     'aws/window/notificationFollowup'

@@ -61,6 +61,24 @@ describe('LspRouter', () => {
             assert(lspRouter.clientInitializeParams === initParam)
         })
 
+        it('should set clientSupportsShowNotification from InitializeParam', () => {
+            assert.equal(lspRouter.clientSupportsShowNotification, false)
+
+            const initParam = {
+                initializationOptions: {
+                    aws: {
+                        awsClientCapabilities: {
+                            window: {
+                                showNotification: true,
+                            },
+                        },
+                    },
+                },
+            } as InitializeParams
+            initializeHandler(initParam, {} as CancellationToken)
+            assert.equal(lspRouter.clientSupportsShowNotification, true)
+        })
+
         it('should return the default response when no handlers are registered', async () => {
             const result = await initializeHandler({} as InitializeParams, {} as CancellationToken)
 
