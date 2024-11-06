@@ -51,3 +51,13 @@ export function mergeObjects(obj1: any, obj2: any) {
     }
     return merged
 }
+
+export function findDuplicates<T>(array: T[]): T[] | undefined {
+    const seen = new Set<T>()
+    const dups = array
+        .filter(a => a !== undefined)
+        .filter(function (a) {
+            return seen.size === seen.add(a).size
+        })
+    return dups.length > 0 ? dups : undefined
+}
