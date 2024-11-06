@@ -2,6 +2,7 @@ import {
     CancellationToken,
     DidChangeConfigurationNotification,
     DidChangeConfigurationParams,
+    ErrorCodes,
     ExecuteCommandParams,
     GetConfigurationFromServerParams,
     getConfigurationFromServerRequestType,
@@ -14,7 +15,8 @@ import {
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
-import { mergeObjects } from './util'
+import { findDuplicates, mergeObjects } from './util'
+import { PartialInitializeResult } from '../../../server-interface'
 
 export class LspRouter {
     public clientInitializeParams?: InitializeParams
@@ -32,11 +34,34 @@ export class LspRouter {
         lspConnection.onRequest(getConfigurationFromServerRequestType, this.handleGetConfigurationFromServer)
     }
 
+    public get clientSupportsShowNotification() {
+        return (
+            this.clientInitializeParams?.initializationOptions?.aws.awsClientCapabilities?.window?.notifications ??
+            false
+        )
+    }
+
     initialize = async (
         params: InitializeParams,
         token: CancellationToken
     ): Promise<InitializeResult | ResponseError<InitializeError>> => {
         this.clientInitializeParams = params
+
+        let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
+        responsesList = responsesList.filter(r => r != undefined)
+        const responseError = responsesList.find(el => el instanceof ResponseError)
+        if (responseError) {
+            return responseError as ResponseError<InitializeError>
+        }
+        const dupServerNames = findDuplicates(responsesList.map(r => (r as PartialInitializeResult).serverInfo?.name))
+        if (dupServerNames) {
+            return new ResponseError(
+                ErrorCodes.InternalError,
+                `Duplicate servers defined: ${dupServerNames.join(', ')}`
+            )
+        }
+
+        const resultList = responsesList as InitializeResult[]
         const defaultResponse: InitializeResult = {
             serverInfo: {
                 name: this.name,
@@ -49,12 +74,6 @@ export class LspRouter {
                 },
             },
         }
-        let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
-        responsesList = responsesList.filter(r => r != undefined)
-        if (responsesList.some(el => el instanceof ResponseError)) {
-            return responsesList.find(el => el instanceof ResponseError) as ResponseError<InitializeError>
-        }
-        const resultList = responsesList as InitializeResult[]
         resultList.unshift(defaultResponse)
 
         return resultList.reduceRight((acc, curr) => {

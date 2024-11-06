@@ -61,6 +61,24 @@ describe('LspRouter', () => {
             assert(lspRouter.clientInitializeParams === initParam)
         })
 
+        it('should set clientSupportsShowNotification from InitializeParam', () => {
+            assert.equal(lspRouter.clientSupportsShowNotification, false)
+
+            const initParam = {
+                initializationOptions: {
+                    aws: {
+                        awsClientCapabilities: {
+                            window: {
+                                notifications: true,
+                            },
+                        },
+                    },
+                },
+            } as InitializeParams
+            initializeHandler(initParam, {} as CancellationToken)
+            assert.equal(lspRouter.clientSupportsShowNotification, true)
+        })
+
         it('should return the default response when no handlers are registered', async () => {
             const result = await initializeHandler({} as InitializeParams, {} as CancellationToken)
 
@@ -101,6 +119,9 @@ describe('LspRouter', () => {
         it('should merge handler results with the default response', async () => {
             const handler1 = () => {
                 return {
+                    serverInfo: {
+                        name: 'Q Inline Completion Server',
+                    },
                     capabilities: {
                         completionProvider: { resolveProvider: true },
                         executeCommandProvider: { commands: ['log', 'test'] },
@@ -197,6 +218,25 @@ describe('LspRouter', () => {
             const result = await initializeHandler({} as InitializeParams, {} as CancellationToken)
 
             assert.deepStrictEqual(result, error)
+        })
+
+        it('should return error if duplicate server names set', async () => {
+            const handlers: any[] = [
+                () => ({ serverInfo: { name: 'A' } }),
+                () => ({ serverInfo: { name: 'B' } }),
+                () => ({ serverInfo: { name: 'A' } }),
+                () => ({ serverInfo: { name: 'B' } }),
+                () => ({ serverInfo: { name: 'C' } }),
+            ]
+
+            handlers.forEach(h => {
+                lspRouter.servers.push(newServer({ initializeHandler: h }))
+            })
+
+            const result = await initializeHandler({} as InitializeParams, {} as CancellationToken)
+
+            assert(result instanceof ResponseError)
+            assert.equal(result.message, 'Duplicate servers defined: A, B')
         })
     })
 

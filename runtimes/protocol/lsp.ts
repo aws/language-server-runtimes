@@ -97,6 +97,14 @@ export interface AWSInitializationOptions {
      * and is extected to maintain data across updates and re-installations.
      */
     clientDataFolder?: string
+    /**
+     * The client signals AWS capabilities it supports.
+     */
+    awsClientCapabilities?: {
+        window?: {
+            notifications?: boolean
+        }
+    }
 }
 
 /**
