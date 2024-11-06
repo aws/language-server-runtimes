@@ -102,7 +102,7 @@ export interface AWSInitializationOptions {
      */
     awsClientCapabilities?: {
         window?: {
-            showNotification?: boolean
+            notifications?: boolean
         }
     }
 }

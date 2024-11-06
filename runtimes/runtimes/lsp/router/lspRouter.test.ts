@@ -69,7 +69,7 @@ describe('LspRouter', () => {
                     aws: {
                         awsClientCapabilities: {
                             window: {
-                                showNotification: true,
+                                notifications: true,
                             },
                         },
                     },

@@ -36,7 +36,7 @@ export class LspRouter {
 
     public get clientSupportsShowNotification() {
         return (
-            this.clientInitializeParams?.initializationOptions?.aws.awsClientCapabilities?.window?.showNotification ??
+            this.clientInitializeParams?.initializationOptions?.aws.awsClientCapabilities?.window?.notifications ??
             false
         )
     }
@@ -49,9 +49,9 @@ export class LspRouter {
 
         let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
         responsesList = responsesList.filter(r => r != undefined)
-        const errors = responsesList.find(el => el instanceof ResponseError)
-        if (errors) {
-            return errors as ResponseError<InitializeError>
+        const responseError = responsesList.find(el => el instanceof ResponseError)
+        if (responseError) {
+            return responseError as ResponseError<InitializeError>
         }
         const dupServerNames = findDuplicates(responsesList.map(r => (r as PartialInitializeResult).serverInfo?.name))
         if (dupServerNames) {

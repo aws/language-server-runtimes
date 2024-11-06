@@ -57,7 +57,11 @@ export function findDuplicates<T>(array: T[]): T[] | undefined {
     const dups = array
         .filter(a => a !== undefined)
         .filter(function (a) {
-            return seen.size === seen.add(a).size
+            if (seen.has(a)) {
+                return true
+            }
+            seen.add(a)
+            return false
         })
     return dups.length > 0 ? dups : undefined
 }
