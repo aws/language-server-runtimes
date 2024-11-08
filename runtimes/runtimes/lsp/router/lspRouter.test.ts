@@ -19,14 +19,7 @@ import { LspServer } from './lspServer'
 describe('LspRouter', () => {
     const sandbox = sinon.createSandbox()
 
-    const lspConnection = <Connection>{
-        onInitialize: (handler: any) => {},
-        onInitialized: (handler: any) => {},
-        onExecuteCommand: (handler: any) => {},
-        onRequest: (handler: any) => {},
-        onDidChangeConfiguration: (handler: any) => {},
-    }
-
+    const lspConnection = stubLspConnection()
     let executeCommandHandler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
     let initializeHandler: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
 
@@ -59,24 +52,6 @@ describe('LspRouter', () => {
             const initParam = {} as InitializeParams
             initializeHandler(initParam, {} as CancellationToken)
             assert(lspRouter.clientInitializeParams === initParam)
-        })
-
-        it('should set clientSupportsShowNotification from InitializeParam', () => {
-            assert.equal(lspRouter.clientSupportsNotifications, false)
-
-            const initParam = {
-                initializationOptions: {
-                    aws: {
-                        awsClientCapabilities: {
-                            window: {
-                                notifications: true,
-                            },
-                        },
-                    },
-                },
-            } as InitializeParams
-            initializeHandler(initParam, {} as CancellationToken)
-            assert.equal(lspRouter.clientSupportsNotifications, true)
         })
 
         it('should return the default response when no handlers are registered', async () => {
@@ -397,6 +372,16 @@ describe('LspRouter', () => {
         })
     })
 
+    function stubLspConnection() {
+        return <Connection>{
+            onInitialize: (handler: any) => {},
+            onInitialized: (handler: any) => {},
+            onExecuteCommand: (handler: any) => {},
+            onRequest: (handler: any) => {},
+            onDidChangeConfiguration: (handler: any) => {},
+        }
+    }
+
     function newServer({
         didChangeConfigurationHandler,
         executeCommandHandler,
@@ -410,7 +395,7 @@ describe('LspRouter', () => {
         initializeHandler?: any
         initializedHandler?: any
     }) {
-        const server = new LspServer()
+        const server = new LspServer(stubLspConnection())
         server.setDidChangeConfigurationHandler(didChangeConfigurationHandler)
         server.setExecuteCommandHandler(executeCommandHandler)
         server.setServerConfigurationHandler(getServerConfigurationHandler)

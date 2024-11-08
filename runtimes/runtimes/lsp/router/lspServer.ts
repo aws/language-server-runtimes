@@ -8,11 +8,17 @@ import {
     NotificationHandler,
     RequestHandler,
     ResponseError,
+    showNotificationRequestType,
+    notificationFollowupRequestType,
 } from '../../../protocol'
 import { InitializeParams, PartialInitializeResult, PartialServerCapabilities } from '../../../server-interface/lsp'
+import { Notification } from '../../../server-interface'
 import { asPromise } from './util'
+import { Connection } from 'vscode-languageserver/node'
 
 export class LspServer {
+    readonly notification: Notification
+
     private didChangeConfigurationHandler?: NotificationHandler<DidChangeConfigurationParams>
     private executeCommandHandler?: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
     private getServerConfigurationHandler?: RequestHandler<GetConfigurationFromServerParams, any, void>
@@ -20,7 +26,21 @@ export class LspServer {
     private initializedHandler?: NotificationHandler<InitializedParams>
     private serverCapabilities?: PartialServerCapabilities
     private awsServerCapabilities?: PartialInitializeResult['awsServerCapabilities']
+    private clientSupportsNotifications?: boolean
 
+    constructor(private lspConnection: Connection) {
+        this.notification = {
+            showNotification: params =>
+                this.clientSupportsNotifications ??
+                this.lspConnection.sendNotification(showNotificationRequestType.method, params),
+            onNotificationFollowup: handler =>
+                this.lspConnection.onNotification(notificationFollowupRequestType.method, handler),
+        }
+        // TODO: start defining routing logic for the events above
+        // TODO: tests for notification routing
+    }
+
+    // TODO: Remove those handler setters below
     public setInitializedHandler = (handler: NotificationHandler<InitializedParams>): void => {
         this.initializedHandler = handler
     }
@@ -51,6 +71,9 @@ export class LspServer {
         params: InitializeParams,
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
+        this.clientSupportsNotifications =
+            params.initializationOptions?.aws.awsClientCapabilities?.window?.notifications
+
         if (!this.initializeHandler) {
             return
         }

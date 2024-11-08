@@ -13,8 +13,6 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
-    showNotificationRequestType,
-    notificationFollowupRequestType,
     CancellationToken,
     GetSsoTokenParams,
 } from '../protocol'
@@ -34,7 +32,6 @@ import {
     CredentialsProvider,
     Chat,
     Runtime,
-    Notification,
     getSsoTokenRequestType,
     IdentityManagement,
     invalidateSsoTokenRequestType,
@@ -198,12 +195,32 @@ export const standalone = (props: RuntimeProps) => {
             },
         }
 
-        const notification: Notification = {
-            showNotification: params =>
-                lspRouter.clientSupportsNotifications ??
-                lspConnection.sendNotification(showNotificationRequestType.method, params),
-            onNotificationFollowup: handler =>
-                lspConnection.onNotification(notificationFollowupRequestType.method, handler),
+        if (!encryptionKey) {
+            chat = new BaseChat(lspConnection)
+        }
+
+        const identityManagement: IdentityManagement = {
+            onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
+            onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
+            onGetSsoToken: handler =>
+                lspConnection.onRequest(
+                    getSsoTokenRequestType,
+                    async (params: GetSsoTokenParams, token: CancellationToken) => {
+                        const result = await handler(params, token)
+
+                        // Encrypt SsoToken.accessToken before sending to client
+                        if (result && !(result instanceof Error) && encryptionKey) {
+                            result.ssoToken.accessToken = await encryptObjectWithKey(
+                                result.ssoToken.accessToken,
+                                encryptionKey
+                            )
+                        }
+
+                        return result
+                    }
+                ),
+            onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+            sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
         }
 
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
@@ -221,12 +238,13 @@ export const standalone = (props: RuntimeProps) => {
 
         // Initialize every Server
         const disposables = props.servers.map(s => {
-            // Create server representation, processing LSP event handlers, in runtimes
-            // and add it to the LSP router
-            const lspServer = new LspServer()
+            // Create LSP server representation that holds internal server state
+            // and processes LSP event handlers
+            const lspServer = new LspServer(lspConnection)
             lspRouter.servers.push(lspServer)
 
             // Set up LSP events handlers per server
+            // TODO: Move lsp feature inside lspServer
             const lsp: Lsp = {
                 addInitializer: lspServer.setInitializeHandler,
                 onInitialized: lspServer.setInitializedHandler,
@@ -319,7 +337,7 @@ export const standalone = (props: RuntimeProps) => {
                 logging,
                 runtime,
                 identityManagement,
-                notification,
+                notification: lspServer.notification,
             })
         })
 

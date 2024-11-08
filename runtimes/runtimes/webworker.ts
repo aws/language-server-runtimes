@@ -113,12 +113,12 @@ export const webworker = (props: RuntimeProps) => {
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
     }
 
-    const notification: Notification = {
-        showNotification: params =>
-            lspRouter.clientSupportsNotifications ??
-            lspConnection.sendNotification(showNotificationRequestType.method, params),
-        onNotificationFollowup: handler =>
-            lspConnection.onNotification(notificationFollowupRequestType.method, handler),
+    const identityManagement: IdentityManagement = {
+        onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
+        onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
+        onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
+        onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+        sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
     }
 
     // Set up auth without encryption
@@ -136,7 +136,7 @@ export const webworker = (props: RuntimeProps) => {
     const disposables = props.servers.map(s => {
         // Create server representation, processing LSP event handlers, in runtimes
         // and add it to the LSP router
-        const lspServer = new LspServer()
+        const lspServer = new LspServer(lspConnection)
         lspRouter.servers.push(lspServer)
 
         // Set up LSP events handlers per server
@@ -179,14 +179,6 @@ export const webworker = (props: RuntimeProps) => {
             },
         }
 
-        const identityManagement: IdentityManagement = {
-            onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
-            onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
-            onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
-            onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-            sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
-        }
-
         return s({
             chat,
             credentialsProvider,
@@ -196,7 +188,7 @@ export const webworker = (props: RuntimeProps) => {
             logging,
             runtime,
             identityManagement,
-            notification,
+            notification: lspServer.notification,
         })
     })
 
