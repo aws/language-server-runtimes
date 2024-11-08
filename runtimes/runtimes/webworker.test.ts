@@ -1,15 +1,14 @@
 import sinon from 'sinon'
 import { RuntimeProps } from './runtime'
-import { standalone } from './standalone'
-import * as vscodeLanguageserver from 'vscode-languageserver/node'
-
+import * as vscodeLanguageServer from 'vscode-languageserver/node'
 import { createStubFromInterface, Features } from './util/testingUtils'
 import assert from 'assert'
+import proxyquire from 'proxyquire'
 
 describe('webworker', () => {
     let stubServer: sinon.SinonStub
     let props: RuntimeProps
-    let stubConnection: sinon.SinonStubbedInstance<vscodeLanguageserver.Connection> & vscodeLanguageserver.Connection
+    let stubConnection: sinon.SinonStubbedInstance<vscodeLanguageServer.Connection> & vscodeLanguageServer.Connection
     let features: Features
 
     before(() => {
@@ -19,19 +18,30 @@ describe('webworker', () => {
             servers: [stubServer],
             name: 'Test',
         }
-        stubConnection = createStubFromInterface<vscodeLanguageserver.Connection>()
-        stubConnection.console = createStubFromInterface<vscodeLanguageserver.RemoteConsole>()
-        stubConnection.telemetry = createStubFromInterface<vscodeLanguageserver.Telemetry>()
-        sinon
-            .stub(vscodeLanguageserver, 'createConnection')
-            .returns(stubConnection as unknown as vscodeLanguageserver._Connection)
-        standalone(props)
+        stubConnection = createStubFromInterface<vscodeLanguageServer.Connection>()
+        stubConnection.console = createStubFromInterface<vscodeLanguageServer.RemoteConsole>()
+        stubConnection.telemetry = createStubFromInterface<vscodeLanguageServer.Telemetry>()
+        ;(global as any).self = sinon.stub()
+
+        const { webworker } = proxyquire('./webworker', {
+            'vscode-languageserver/browser': {
+                BrowserMessageReader: sinon.stub(),
+                BrowserMessageWriter: sinon.stub(),
+                createConnection: () => stubConnection,
+            },
+        })
+
+        webworker(props)
         features = stubServer.getCall(0).args[0] as Features
+    })
+
+    after(() => {
+        sinon.restore()
+        delete (global as any).self
     })
 
     it('should initialize lsp connection and start listening', () => {
         sinon.assert.calledOnce(stubConnection.listen)
-        sinon.assert.calledOnceWithExactly(stubServer, features)
     })
 
     describe('features', () => {

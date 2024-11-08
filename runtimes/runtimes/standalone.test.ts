@@ -2,17 +2,20 @@ import sinon from 'sinon'
 import { RuntimeProps } from './runtime'
 import assert from 'assert'
 import { standalone } from './standalone'
-import * as vscodeLanguageserver from 'vscode-languageserver/node'
+import * as vscodeLanguageServer from 'vscode-languageserver/node'
 import { telemetryNotificationType } from '../protocol'
 import { createStubFromInterface, Features } from './util/testingUtils'
 import os from 'os'
 import path from 'path'
+import * as lspRouterModule from './lsp/router/lspRouter'
+import { LspServer } from './lsp/router/lspServer'
 
 describe('standalone', () => {
     let stubServer: sinon.SinonStub
     let props: RuntimeProps
-    let stubConnection: sinon.SinonStubbedInstance<vscodeLanguageserver.Connection> & vscodeLanguageserver.Connection
+    let stubConnection: sinon.SinonStubbedInstance<vscodeLanguageServer.Connection> & vscodeLanguageServer.Connection
     let features: Features
+    let lspRouterStub: sinon.SinonStubbedInstance<lspRouterModule.LspRouter> & lspRouterModule.LspRouter
 
     before(() => {
         stubServer = sinon.stub()
@@ -21,19 +24,24 @@ describe('standalone', () => {
             servers: [stubServer],
             name: 'Test',
         }
-        stubConnection = createStubFromInterface<vscodeLanguageserver.Connection>()
-        stubConnection.console = createStubFromInterface<vscodeLanguageserver.RemoteConsole>()
-        stubConnection.telemetry = createStubFromInterface<vscodeLanguageserver.Telemetry>()
+        stubConnection = createStubFromInterface<vscodeLanguageServer.Connection>()
+        stubConnection.console = createStubFromInterface<vscodeLanguageServer.RemoteConsole>()
+        stubConnection.telemetry = createStubFromInterface<vscodeLanguageServer.Telemetry>()
         sinon
-            .stub(vscodeLanguageserver, 'createConnection')
-            .returns(stubConnection as unknown as vscodeLanguageserver._Connection)
+            .stub(vscodeLanguageServer, 'createConnection')
+            .returns(stubConnection as unknown as vscodeLanguageServer._Connection)
+
+        lspRouterStub = createStubFromInterface<lspRouterModule.LspRouter>()
+        lspRouterStub.servers = createStubFromInterface<LspServer[]>()
+        sinon.stub(lspRouterModule, 'LspRouter').returns(lspRouterStub)
+
         standalone(props)
         features = stubServer.getCall(0).args[0] as Features
     })
 
     it('should initialize lsp connection and start listening', () => {
+        sinon.assert.calledOnce(lspRouterStub.servers.push as sinon.SinonStub)
         sinon.assert.calledOnce(stubConnection.listen)
-        sinon.assert.calledOnceWithExactly(stubServer, features)
     })
 
     describe('features', () => {
