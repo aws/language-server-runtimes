@@ -62,7 +62,7 @@ describe('LspRouter', () => {
         })
 
         it('should set clientSupportsShowNotification from InitializeParam', () => {
-            assert.equal(lspRouter.clientSupportsShowNotification, false)
+            assert.equal(lspRouter.clientSupportsNotifications, false)
 
             const initParam = {
                 initializationOptions: {
@@ -76,7 +76,7 @@ describe('LspRouter', () => {
                 },
             } as InitializeParams
             initializeHandler(initParam, {} as CancellationToken)
-            assert.equal(lspRouter.clientSupportsShowNotification, true)
+            assert.equal(lspRouter.clientSupportsNotifications, true)
         })
 
         it('should return the default response when no handlers are registered', async () => {
@@ -353,7 +353,7 @@ describe('LspRouter', () => {
             }
 
             const params: GetConfigurationFromServerParams = { section: 'test' }
-            const result = await lspRouter.handleGetConfigurationFromServer(params, {} as CancellationToken)
+            const result = await lspRouter.getConfigurationFromServer(params, {} as CancellationToken)
             assert.strictEqual(result, 'server2')
         })
 
@@ -392,7 +392,7 @@ describe('LspRouter', () => {
             }
 
             const params: GetConfigurationFromServerParams = { section: 'something' }
-            const result = await lspRouter.handleGetConfigurationFromServer(params, {} as CancellationToken)
+            const result = await lspRouter.getConfigurationFromServer(params, {} as CancellationToken)
             assert.strictEqual(result, undefined)
         })
     })
