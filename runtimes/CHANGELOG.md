@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.2.26] - 2024-11-13
+
+### Added
+- Add GetSsoTokenResult.updateCredentialsParams to avoid decrypt/recrypt in destinations
+
 ## [0.2.25] - 2024-11-13
 
 ### Added
