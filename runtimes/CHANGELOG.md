@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.25] - 2024-11-13
+
+### Added
+- Extended protocol with showNotification client capability
+- Notification interface supports dynamic registration
+
 ## [0.2.24] - 2024-10-30
 
 ### Changed
