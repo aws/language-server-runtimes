@@ -1,15 +1,4 @@
 import sinon from 'sinon'
-import {
-    Logging,
-    Lsp,
-    IdentityManagement,
-    Telemetry,
-    Workspace,
-    CredentialsProvider,
-    Chat,
-    Runtime,
-    Notification,
-} from '../../server-interface'
 
 export function createStubFromInterface<T>(): sinon.SinonStubbedInstance<T> & T {
     const stub = {} as sinon.SinonStubbedInstance<T> & T
@@ -23,16 +12,4 @@ export function createStubFromInterface<T>(): sinon.SinonStubbedInstance<T> & T 
             return method
         },
     })
-}
-
-export type Features = {
-    chat: Chat
-    credentialsProvider: CredentialsProvider
-    lsp: Lsp
-    workspace: Workspace
-    logging: Logging
-    telemetry: Telemetry
-    runtime: Runtime
-    identityManagement: IdentityManagement
-    notification: Notification
 }

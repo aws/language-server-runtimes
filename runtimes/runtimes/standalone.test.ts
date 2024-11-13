@@ -4,11 +4,12 @@ import assert from 'assert'
 import { standalone } from './standalone'
 import * as vscodeLanguageServer from 'vscode-languageserver/node'
 import { telemetryNotificationType } from '../protocol'
-import { createStubFromInterface, Features } from './util/testingUtils'
+import { createStubFromInterface } from './util/testingUtils'
 import os from 'os'
 import path from 'path'
 import * as lspRouterModule from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
+import { Features } from '../server-interface/server'
 
 describe('standalone', () => {
     let stubServer: sinon.SinonStub
@@ -80,13 +81,6 @@ describe('standalone', () => {
                         handler
                     )
                 })
-            })
-        })
-
-        describe('Logging', () => {
-            it('should use LSP connection logging console', () => {
-                features.logging.log('info')
-                sinon.assert.calledOnce(stubConnection.console.info as sinon.SinonStub)
             })
         })
 

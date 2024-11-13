@@ -1,9 +1,10 @@
 import sinon from 'sinon'
 import { RuntimeProps } from './runtime'
 import * as vscodeLanguageServer from 'vscode-languageserver/node'
-import { createStubFromInterface, Features } from './util/testingUtils'
+import { createStubFromInterface } from './util/testingUtils'
 import assert from 'assert'
 import proxyquire from 'proxyquire'
+import { Features } from '../server-interface/server'
 
 describe('webworker', () => {
     let stubServer: sinon.SinonStub
