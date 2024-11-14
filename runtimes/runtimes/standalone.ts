@@ -293,9 +293,10 @@ export const standalone = (props: RuntimeProps) => {
                                         encryptionKey
                                     )
                                 }
-                                if (result.updateCredentialsParams.data) {
+                                if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
                                     result.updateCredentialsParams.data = await encryptObjectWithKey(
-                                        result.updateCredentialsParams.data,
+                                        // decodeCredentialsRequestToken expects nested 'data' fields
+                                        { data: result.updateCredentialsParams.data },
                                         encryptionKey
                                     )
                                     result.updateCredentialsParams.encrypted = true
