@@ -96,14 +96,12 @@ export const listProfilesRequestType = new ProtocolRequestType<
 export interface UpdateProfileOptions {
     createNonexistentProfile?: boolean
     createNonexistentSsoSession?: boolean
-    ensureSsoAccountAccessScope?: boolean
     updateSharedSsoSession?: boolean
 }
 
 export const updateProfileOptionsDefaults = {
     createNonexistentProfile: true,
     createNonexistentSsoSession: true,
-    ensureSsoAccountAccessScope: true,
     updateSharedSsoSession: false,
 } satisfies UpdateProfileOptions
 
