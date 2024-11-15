@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.27] - 2024-11-15
+
+### Changed
+- Identity Management: Put SSO token inside the 'data' field for encrypted credentials as required by Auth
+
+### Removed
+- Identity Management: Removed implicit sso:account:access scope in aws-lsp-identity. Removing unnecessary option from UpdateProfile
+
 ## [0.2.26] - 2024-11-13
 
 ### Added
