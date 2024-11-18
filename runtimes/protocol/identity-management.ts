@@ -1,4 +1,10 @@
-import { LSPErrorCodes, ProtocolNotificationType, ProtocolRequestType, ResponseError } from './lsp'
+import {
+    LSPErrorCodes,
+    ProtocolNotificationType,
+    ProtocolRequestType,
+    ResponseError,
+    UpdateCredentialsParams,
+} from './lsp'
 
 // Errors
 export const AwsErrorCodes = {
@@ -90,14 +96,12 @@ export const listProfilesRequestType = new ProtocolRequestType<
 export interface UpdateProfileOptions {
     createNonexistentProfile?: boolean
     createNonexistentSsoSession?: boolean
-    ensureSsoAccountAccessScope?: boolean
     updateSharedSsoSession?: boolean
 }
 
 export const updateProfileOptionsDefaults = {
     createNonexistentProfile: true,
     createNonexistentSsoSession: true,
-    ensureSsoAccountAccessScope: true,
     updateSharedSsoSession: false,
 } satisfies UpdateProfileOptions
 
@@ -169,6 +173,7 @@ export interface SsoToken {
 
 export interface GetSsoTokenResult {
     ssoToken: SsoToken
+    updateCredentialsParams: UpdateCredentialsParams
 }
 
 // Potential error codes: E_UNKNOWN | E_TIMEOUT | E_ENCRYPTION_REQUIRED | E_INVALID_TOKEN

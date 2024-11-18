@@ -287,10 +287,20 @@ export const standalone = (props: RuntimeProps) => {
 
                             // Encrypt SsoToken.accessToken before sending to client
                             if (result && !(result instanceof Error) && encryptionKey) {
-                                result.ssoToken.accessToken = await encryptObjectWithKey(
-                                    result.ssoToken.accessToken,
-                                    encryptionKey
-                                )
+                                if (result.ssoToken.accessToken) {
+                                    result.ssoToken.accessToken = await encryptObjectWithKey(
+                                        result.ssoToken.accessToken,
+                                        encryptionKey
+                                    )
+                                }
+                                if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
+                                    result.updateCredentialsParams.data = await encryptObjectWithKey(
+                                        // decodeCredentialsRequestToken expects nested 'data' fields
+                                        { data: result.updateCredentialsParams.data },
+                                        encryptionKey
+                                    )
+                                    result.updateCredentialsParams.encrypted = true
+                                }
                             }
 
                             return result
