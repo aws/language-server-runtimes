@@ -3,22 +3,25 @@ import { RuntimeProps } from './runtime'
 import assert from 'assert'
 import { standalone } from './standalone'
 import * as vscodeLanguageServer from 'vscode-languageserver/node'
-import { telemetryNotificationType } from '../protocol'
 import { createStubFromInterface } from './util/testingUtils'
 import os from 'os'
 import path from 'path'
 import * as lspRouterModule from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import { Features } from '../server-interface/server'
+import * as authEncryptionModule from './auth/standalone/encryption'
+import * as authModule from './auth/auth'
+import * as encryptedChatModule from './chat/encryptedChat'
+import * as baseChatModule from './chat/baseChat'
+import { pathToFileURL } from 'url'
 
 describe('standalone', () => {
     let stubServer: sinon.SinonStub
     let props: RuntimeProps
     let stubConnection: sinon.SinonStubbedInstance<vscodeLanguageServer.Connection> & vscodeLanguageServer.Connection
-    let features: Features
     let lspRouterStub: sinon.SinonStubbedInstance<lspRouterModule.LspRouter> & lspRouterModule.LspRouter
 
-    before(() => {
+    beforeEach(() => {
         stubServer = sinon.stub()
         props = {
             version: '0.1.0',
@@ -35,57 +38,152 @@ describe('standalone', () => {
         lspRouterStub = createStubFromInterface<lspRouterModule.LspRouter>()
         lspRouterStub.servers = createStubFromInterface<LspServer[]>()
         sinon.stub(lspRouterModule, 'LspRouter').returns(lspRouterStub)
-
-        standalone(props)
-        features = stubServer.getCall(0).args[0] as Features
     })
 
-    it('should initialize lsp connection and start listening', () => {
-        sinon.assert.calledOnce(lspRouterStub.servers.push as sinon.SinonStub)
-        sinon.assert.calledOnce(stubConnection.listen)
+    afterEach(() => {
+        sinon.restore()
+    })
+
+    describe('initializeAuth', () => {
+        let authStub: sinon.SinonStubbedInstance<authModule.Auth> & authModule.Auth
+        let chatStub: sinon.SinonStubbedInstance<encryptedChatModule.EncryptedChat> & encryptedChatModule.EncryptedChat
+        let baseChatStub: sinon.SinonStubbedInstance<baseChatModule.BaseChat> & baseChatModule.BaseChat
+
+        it('should initialize without encryption when no key is present', () => {
+            sinon.stub(authEncryptionModule, 'shouldWaitForEncryptionKey').returns(false)
+            authStub = createStubFromInterface<authModule.Auth>()
+            sinon.stub(authModule, 'Auth').returns(authStub)
+            baseChatStub = createStubFromInterface<baseChatModule.BaseChat>()
+            sinon.stub(baseChatModule, 'BaseChat').returns(baseChatStub)
+
+            standalone(props)
+
+            sinon.assert.calledWith(authModule.Auth as unknown as sinon.SinonStub, stubConnection)
+            sinon.assert.calledWith(
+                stubConnection.console.info as sinon.SinonStub,
+                'Runtime: Initializing runtime without encryption'
+            )
+            sinon.assert.calledWith(baseChatModule.BaseChat as unknown as sinon.SinonStub, stubConnection)
+            sinon.assert.calledOnce(lspRouterStub.servers.push as sinon.SinonStub)
+            sinon.assert.calledOnce(stubConnection.listen)
+        })
+
+        it('should initialize with encryption when a key is provided', async () => {
+            sinon.stub(authEncryptionModule, 'shouldWaitForEncryptionKey').returns(true)
+            const encryptionInitialization: authEncryptionModule.EncryptionInitialization = {
+                version: '1.0',
+                mode: 'JWT',
+                key: 'encryption_key',
+            }
+            sinon
+                .stub(authEncryptionModule, 'readEncryptionDetails')
+                .returns(
+                    new Promise<authEncryptionModule.EncryptionInitialization>((resolve, _) =>
+                        resolve(encryptionInitialization)
+                    )
+                )
+            authStub = createStubFromInterface<authModule.Auth>()
+            sinon.stub(authModule, 'Auth').returns(authStub)
+            chatStub = createStubFromInterface<encryptedChatModule.EncryptedChat>()
+            sinon.stub(encryptedChatModule, 'EncryptedChat').returns(chatStub)
+
+            await standalone(props)
+
+            sinon.assert.calledWith(
+                stubConnection.console.info as sinon.SinonStub,
+                'Runtime: Initializing runtime with encryption'
+            )
+            sinon.assert.calledWith(
+                authModule.Auth as unknown as sinon.SinonStub,
+                stubConnection,
+                encryptionInitialization.key,
+                encryptionInitialization.mode
+            )
+            sinon.assert.calledWith(
+                encryptedChatModule.EncryptedChat as unknown as sinon.SinonStub,
+                stubConnection,
+                encryptionInitialization.key,
+                encryptionInitialization.mode
+            )
+            sinon.assert.calledOnce(lspRouterStub.servers.push as sinon.SinonStub)
+            sinon.assert.calledOnce(stubConnection.listen)
+        })
     })
 
     describe('features', () => {
+        let features: Features
+
         beforeEach(() => {
-            sinon.resetHistory()
+            standalone(props)
+            features = stubServer.getCall(0).args[0] as Features
         })
 
         describe('Workspace', () => {
             describe('fs.getTempDirPath', () => {
-                it('should return the correct tmp directory path on Darwin', () => {
+                it('should use /tmp path when on Darwin', () => {
                     sinon.stub(os, 'type').returns('Darwin')
+                    const expected = path.join('/tmp', 'aws-language-servers')
 
                     const result = features.workspace.fs.getTempDirPath()
-                    const expected = path.join('/tmp', 'aws-language-servers')
+
+                    assert.strictEqual(result, expected)
+                })
+
+                it('should use os.tmpdir() path when on non-Darwin systems', () => {
+                    sinon.stub(os, 'type').returns('Linux')
+                    sinon.stub(os, 'tmpdir').returns('/test-tmp')
+                    const expected = path.join('/test-tmp', 'aws-language-servers')
+
+                    const result = features.workspace.fs.getTempDirPath()
 
                     assert.strictEqual(result, expected)
                 })
             })
-        })
 
-        describe('Telemetry', () => {
-            describe('emitMetric', () => {
-                it('should use LSP connection telemetry log event', () => {
-                    let metric: any
-                    features.telemetry.emitMetric(metric)
-                    sinon.assert.calledOnceWithExactly(stubConnection.telemetry.logEvent as sinon.SinonStub, metric)
+            describe('getWorkspaceFolder', () => {
+                it('should return undefined when no workspace folders are configured', () => {
+                    const fileUri = pathToFileURL('/sample/files').href
+                    lspRouterStub.clientInitializeParams!.workspaceFolders = undefined
+
+                    const result = features.workspace.getWorkspaceFolder(fileUri)
+
+                    assert.strictEqual(result, undefined)
                 })
-            })
-            describe('onClientTelemetry', () => {
-                it('should use LSP onNotification', () => {
-                    let handler: any
-                    features.telemetry.onClientTelemetry(handler)
-                    sinon.assert.calledOnceWithExactly(
-                        stubConnection.onNotification as sinon.SinonStub,
-                        telemetryNotificationType.method,
-                        handler
-                    )
+
+                it('should return undefined when workspace folders is empty', () => {
+                    const fileUri = pathToFileURL('/sample/files').href
+                    lspRouterStub.clientInitializeParams!.workspaceFolders = []
+
+                    const result = features.workspace.getWorkspaceFolder(fileUri)
+
+                    assert.strictEqual(result, undefined)
+                })
+
+                it('should return the workspace folder that contains the given file path', () => {
+                    const fileUri = pathToFileURL('/sample/workspace/file.ts').href
+                    let workspaceFolders = [
+                        { name: 'folder1', uri: '/folder/workspace' },
+                        { name: 'name', uri: '/tmp/tmp' },
+                        { name: 'name1', uri: '/sample/workspace/folder' },
+                        { name: 'workspace', uri: '/sample/workspace' },
+                        { name: 'name2', uri: '/sample' },
+                    ]
+                    workspaceFolders = workspaceFolders.map(folder => ({
+                        name: folder.name,
+                        uri: pathToFileURL(folder.uri).href,
+                    }))
+                    // @ts-ignore
+                    lspRouterStub.clientInitializeParams!.workspaceFolders = workspaceFolders
+
+                    const result = features.workspace.getWorkspaceFolder(fileUri)
+
+                    assert.strictEqual(result, workspaceFolders[3])
                 })
             })
         })
 
         describe('Runtime', () => {
-            it('should have the right params', () => {
+            it('should set params from runtime properties', () => {
                 assert.strictEqual(features.runtime.serverInfo.name, props.name)
                 assert.strictEqual(features.runtime.serverInfo.version, props.version)
             })
