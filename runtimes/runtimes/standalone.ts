@@ -70,10 +70,14 @@ if (checkAWSConfigFile()) {
  *
  * Initializes one or more Servers with the following features:
  * - CredentialsProvider: provides IAM and bearer credentials
- * - LSP: Initializes a connection based on STDIN / STDOUT
+ * - LSP: initializes a connection based on STDIN / STDOUT
  * - Logging: logs messages through the LSP connection
  * - Telemetry: emits telemetry through the LSP connection
  * - Workspace: tracks open and closed files from the LSP connection
+ * - Chat: provides access to chat functionalities
+ * - Runtime: holds information about runtime server and platform
+ * - Identity Management: manages user profiles and SSO sessions
+ * - Notification: sends notifications and follow-up actions
  *
  * By instantiating features inside the runtime we can tree-shake features or
  * variants of features in cases where they are not used.
@@ -86,7 +90,8 @@ if (checkAWSConfigFile()) {
  * As features are implemented, e.g., Auth or Telemetry, they will be supported
  * by each runtime.
  *
- * @param servers The list of servers to initialize and run
+ * @param props Runtime initialization properties
+ * @param props.servers The list of servers to initialize and run
  * @returns
  */
 export const standalone = (props: RuntimeProps) => {
