@@ -34,20 +34,22 @@ export class RouterByServerName<P extends Partial<EventIdentifier>, F extends Fo
             return
         }
 
-        const id = this.encoding.decode(params.source.id)
-        if (this.parseServerName(id) === this.serverName) {
+        const sourceId = this.encoding.decode(params.source.id)
+        const id = this.parseServerName(sourceId)
+        if (id?.serverName === this.serverName) {
             params = {
                 ...params,
-                id,
+                source: {
+                    id: id.id,
+                },
             }
             followupHandler(params)
         }
     }
 
-    private parseServerName(idJson: string): string | null {
+    private parseServerName(idJson: string): NotificationId | null {
         try {
-            const { serverName } = JSON.parse(idJson) as NotificationId
-            return serverName
+            return JSON.parse(idJson) as NotificationId
         } catch (e) {
             return null
         }

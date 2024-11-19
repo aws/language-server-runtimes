@@ -57,7 +57,6 @@ export class LspServer {
         }
     }
 
-    // TODO: Remove those handler setters below
     public setInitializedHandler = (handler: NotificationHandler<InitializedParams>): void => {
         this.initializedHandler = handler
     }

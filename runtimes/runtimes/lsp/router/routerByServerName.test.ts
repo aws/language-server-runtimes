@@ -31,7 +31,7 @@ describe('RouterByServerName', () => {
         })
     })
     describe('processFollowup', () => {
-        it('calls followup handler if id contains serverName', () => {
+        it('calls followup handler if id contains serverName and removes serverName from id', () => {
             const followupHandlerSpy = sinon.spy()
             const params = {
                 source: {
@@ -39,7 +39,7 @@ describe('RouterByServerName', () => {
                 },
             }
             router.processFollowup(followupHandlerSpy, params)
-            assert.calledOnce(followupHandlerSpy)
+            assert.calledOnceWithMatch(followupHandlerSpy, { source: { id: '123' } })
         })
         it('does not call followup handler if id does not contain serverName', () => {
             const followupHandlerSpy = sinon.spy()
