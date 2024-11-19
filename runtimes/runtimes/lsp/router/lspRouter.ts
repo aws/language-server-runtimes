@@ -12,6 +12,8 @@ import {
     InitializeResult,
     ResponseError,
     TextDocumentSyncKind,
+    notificationFollowupRequestType,
+    NotificationFollowupParams,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
@@ -32,6 +34,7 @@ export class LspRouter {
         lspConnection.onInitialize(this.initialize)
         lspConnection.onInitialized(this.onInitialized)
         lspConnection.onRequest(getConfigurationFromServerRequestType, this.getConfigurationFromServer)
+        lspConnection.onNotification(notificationFollowupRequestType, this.onNotificationFollowup)
     }
 
     initialize = async (
@@ -108,6 +111,10 @@ export class LspRouter {
         }
 
         this.routeNotificationToAllServers((server, params) => server.sendInitializedNotification(params), params)
+    }
+
+    onNotificationFollowup = (params: NotificationFollowupParams): void => {
+        this.routeNotificationToAllServers((server, params) => server.sendNotificationFollowup(params), params)
     }
 
     private async routeRequestToFirstCapableServer<P, R>(

@@ -56,6 +56,7 @@ import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
 import { getServerDataDirPath } from './util/serverDataDirPath'
+import { Encoding } from './encoding'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -233,6 +234,11 @@ export const standalone = (props: RuntimeProps) => {
             platform: os.platform(),
         }
 
+        const encoding: Encoding = {
+            encode: value => Buffer.from(value).toString('base64'),
+            decode: value => Buffer.from(value, 'base64').toString('utf-8'),
+        }
+
         // Create router that will be routing LSP events from the client to server(s)
         const lspRouter = new LspRouter(lspConnection, props.name, props.version)
 
@@ -240,7 +246,7 @@ export const standalone = (props: RuntimeProps) => {
         const disposables = props.servers.map(s => {
             // Create LSP server representation that holds internal server state
             // and processes LSP event handlers
-            const lspServer = new LspServer(lspConnection)
+            const lspServer = new LspServer(lspConnection, encoding, logging)
             lspRouter.servers.push(lspServer)
 
             // Set up LSP events handlers per server

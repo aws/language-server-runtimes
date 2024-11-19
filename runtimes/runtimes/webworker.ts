@@ -28,10 +28,6 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
-
-    // Notification
-    showNotificationRequestType,
-    notificationFollowupRequestType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace, Notification } from '../server-interface'
@@ -50,6 +46,7 @@ import {
     updateProfileRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
+import { Encoding, WebBase64Encoding } from './encoding'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -132,11 +129,13 @@ export const webworker = (props: RuntimeProps) => {
         platform: 'browser',
     }
 
+    const encoding = new WebBase64Encoding(self)
+
     // Initialize every Server
     const disposables = props.servers.map(s => {
         // Create server representation, processing LSP event handlers, in runtimes
         // and add it to the LSP router
-        const lspServer = new LspServer(lspConnection)
+        const lspServer = new LspServer(lspConnection, encoding, logging)
         lspRouter.servers.push(lspServer)
 
         // Set up LSP events handlers per server

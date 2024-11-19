@@ -60,7 +60,7 @@ export type PartialServerCapabilities<T = any> = Pick<
 export type PartialInitializeResult<T = any> = {
     /**
      * Information about the server respresented by @type {Server}.
-     * serverInfo is used to differentiate servers internally in the system and is not exposed to the client.
+     * serverInfo is used to differentiate servers internally in the system and is not exposed to a client.
      */
     serverInfo?: {
         /**
