@@ -211,10 +211,20 @@ export const standalone = (props: RuntimeProps) => {
 
                         // Encrypt SsoToken.accessToken before sending to client
                         if (result && !(result instanceof Error) && encryptionKey) {
-                            result.ssoToken.accessToken = await encryptObjectWithKey(
-                                result.ssoToken.accessToken,
-                                encryptionKey
-                            )
+                            if (result.ssoToken.accessToken) {
+                                result.ssoToken.accessToken = await encryptObjectWithKey(
+                                    result.ssoToken.accessToken,
+                                    encryptionKey
+                                )
+                            }
+                            if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
+                                result.updateCredentialsParams.data = await encryptObjectWithKey(
+                                    // decodeCredentialsRequestToken expects nested 'data' fields
+                                    { data: result.updateCredentialsParams.data },
+                                    encryptionKey
+                                )
+                                result.updateCredentialsParams.encrypted = true
+                            }
                         }
 
                         return result
@@ -294,44 +304,6 @@ export const standalone = (props: RuntimeProps) => {
                         lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
                     },
                 },
-            }
-
-            if (!encryptionKey) {
-                chat = new BaseChat(lspConnection)
-            }
-
-            const identityManagement: IdentityManagement = {
-                onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
-                onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
-                onGetSsoToken: handler =>
-                    lspConnection.onRequest(
-                        getSsoTokenRequestType,
-                        async (params: GetSsoTokenParams, token: CancellationToken) => {
-                            const result = await handler(params, token)
-
-                            // Encrypt SsoToken.accessToken before sending to client
-                            if (result && !(result instanceof Error) && encryptionKey) {
-                                if (result.ssoToken.accessToken) {
-                                    result.ssoToken.accessToken = await encryptObjectWithKey(
-                                        result.ssoToken.accessToken,
-                                        encryptionKey
-                                    )
-                                }
-                                if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
-                                    result.updateCredentialsParams.data = await encryptObjectWithKey(
-                                        // decodeCredentialsRequestToken expects nested 'data' fields
-                                        { data: result.updateCredentialsParams.data },
-                                        encryptionKey
-                                    )
-                                    result.updateCredentialsParams.encrypted = true
-                                }
-                            }
-
-                            return result
-                        }
-                    ),
-                onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-                sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
             }
 
             return s({
