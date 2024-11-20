@@ -4,7 +4,7 @@ import { IdentityManagement } from './identity-management'
 /**
  * Servers are used to provide features to the client.
  *
- * Servers can make use of the {CredentialsProvider}, {Lsp}, {Workspace}, {Logging} and {Telemetry} features
+ * Servers can make use of the {CredentialsProvider}, {Lsp}, {Workspace}, {Logging}, {Telemetry} and other features
  * to implement their functionality. Servers are notexpected to perform actions when their method
  * is called, but instead to set up listeners, event handlers, etc to handle.
  *
@@ -16,7 +16,9 @@ import { IdentityManagement } from './identity-management'
  *
  * @returns A function that will be called when the client exits, used to dispose of any held resources.
  */
-export type Server = (features: {
+export type Server = (features: Features) => () => void
+
+export type Features = {
     chat: Chat
     credentialsProvider: CredentialsProvider
     lsp: Lsp
@@ -26,4 +28,4 @@ export type Server = (features: {
     runtime: Runtime
     identityManagement: IdentityManagement
     notification: Notification
-}) => () => void
+}
