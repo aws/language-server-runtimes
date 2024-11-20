@@ -1,9 +1,8 @@
-import sinon from 'sinon'
+import sinon, { stubInterface } from 'ts-sinon'
 import { RuntimeProps } from './runtime'
 import assert from 'assert'
 import { standalone } from './standalone'
 import * as vscodeLanguageServer from 'vscode-languageserver/node'
-import { createStubFromInterface } from './util/testingUtils'
 import os from 'os'
 import path from 'path'
 import * as lspRouterModule from './lsp/router/lspRouter'
@@ -28,15 +27,13 @@ describe('standalone', () => {
             servers: [stubServer],
             name: 'Test',
         }
-        stubConnection = createStubFromInterface<vscodeLanguageServer.Connection>()
-        stubConnection.console = createStubFromInterface<vscodeLanguageServer.RemoteConsole>()
-        stubConnection.telemetry = createStubFromInterface<vscodeLanguageServer.Telemetry>()
-        sinon
-            .stub(vscodeLanguageServer, 'createConnection')
-            .returns(stubConnection as unknown as vscodeLanguageServer._Connection)
+        stubConnection = stubInterface<vscodeLanguageServer.Connection>()
+        stubConnection.console = stubInterface<vscodeLanguageServer.RemoteConsole>()
+        stubConnection.telemetry = stubInterface<vscodeLanguageServer.Telemetry>()
+        sinon.stub(vscodeLanguageServer, 'createConnection').returns(stubConnection)
 
-        lspRouterStub = createStubFromInterface<lspRouterModule.LspRouter>()
-        lspRouterStub.servers = createStubFromInterface<LspServer[]>()
+        lspRouterStub = stubInterface<lspRouterModule.LspRouter>()
+        lspRouterStub.servers = stubInterface<LspServer[]>()
         sinon.stub(lspRouterModule, 'LspRouter').returns(lspRouterStub)
     })
 
@@ -51,19 +48,19 @@ describe('standalone', () => {
 
         it('should initialize without encryption when no key is present', () => {
             sinon.stub(authEncryptionModule, 'shouldWaitForEncryptionKey').returns(false)
-            authStub = createStubFromInterface<authModule.Auth>()
+            authStub = stubInterface<authModule.Auth>()
             sinon.stub(authModule, 'Auth').returns(authStub)
-            baseChatStub = createStubFromInterface<baseChatModule.BaseChat>()
+            baseChatStub = stubInterface<baseChatModule.BaseChat>()
             sinon.stub(baseChatModule, 'BaseChat').returns(baseChatStub)
 
             standalone(props)
 
-            sinon.assert.calledWith(authModule.Auth as unknown as sinon.SinonStub, stubConnection)
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(authModule.Auth as unknown as sinon.SinonStub, stubConnection)
+            sinon.assert.calledWithExactly(
                 stubConnection.console.info as sinon.SinonStub,
                 'Runtime: Initializing runtime without encryption'
             )
-            sinon.assert.calledWith(baseChatModule.BaseChat as unknown as sinon.SinonStub, stubConnection)
+            sinon.assert.calledWithExactly(baseChatModule.BaseChat as unknown as sinon.SinonStub, stubConnection)
             sinon.assert.calledOnce(lspRouterStub.servers.push as sinon.SinonStub)
             sinon.assert.calledOnce(stubConnection.listen)
         })
@@ -82,24 +79,24 @@ describe('standalone', () => {
                         resolve(encryptionInitialization)
                     )
                 )
-            authStub = createStubFromInterface<authModule.Auth>()
+            authStub = stubInterface<authModule.Auth>()
             sinon.stub(authModule, 'Auth').returns(authStub)
-            chatStub = createStubFromInterface<encryptedChatModule.EncryptedChat>()
+            chatStub = stubInterface<encryptedChatModule.EncryptedChat>()
             sinon.stub(encryptedChatModule, 'EncryptedChat').returns(chatStub)
 
             await standalone(props)
 
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 stubConnection.console.info as sinon.SinonStub,
                 'Runtime: Initializing runtime with encryption'
             )
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 authModule.Auth as unknown as sinon.SinonStub,
                 stubConnection,
                 encryptionInitialization.key,
                 encryptionInitialization.mode
             )
-            sinon.assert.calledWith(
+            sinon.assert.calledWithExactly(
                 encryptedChatModule.EncryptedChat as unknown as sinon.SinonStub,
                 stubConnection,
                 encryptionInitialization.key,
@@ -115,7 +112,7 @@ describe('standalone', () => {
 
         beforeEach(() => {
             standalone(props)
-            features = stubServer.getCall(0).args[0] as Features
+            features = stubServer.getCall(0).args[0]
         })
 
         describe('Workspace', () => {

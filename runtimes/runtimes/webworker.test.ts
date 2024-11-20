@@ -1,7 +1,6 @@
-import sinon from 'sinon'
+import sinon, { stubInterface } from 'ts-sinon'
 import { RuntimeProps } from './runtime'
 import * as vscodeLanguageServer from 'vscode-languageserver/node'
-import { createStubFromInterface } from './util/testingUtils'
 import assert from 'assert'
 import proxyquire from 'proxyquire'
 import { Features } from '../server-interface/server'
@@ -19,9 +18,9 @@ describe('webworker', () => {
             servers: [stubServer],
             name: 'Test',
         }
-        stubConnection = createStubFromInterface<vscodeLanguageServer.Connection>()
-        stubConnection.console = createStubFromInterface<vscodeLanguageServer.RemoteConsole>()
-        stubConnection.telemetry = createStubFromInterface<vscodeLanguageServer.Telemetry>()
+        stubConnection = stubInterface<vscodeLanguageServer.Connection>()
+        stubConnection.console = stubInterface<vscodeLanguageServer.RemoteConsole>()
+        stubConnection.telemetry = stubInterface<vscodeLanguageServer.Telemetry>()
         ;(global as any).self = sinon.stub()
         ;({ webworker } = proxyquire('./webworker', {
             'vscode-languageserver/browser': {
@@ -47,7 +46,7 @@ describe('webworker', () => {
 
         beforeEach(() => {
             webworker(props)
-            features = stubServer.getCall(0).args[0] as Features
+            features = stubServer.getCall(0).args[0]
         })
 
         describe('Runtime', () => {
