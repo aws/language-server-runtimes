@@ -13,8 +13,6 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
-    showNotificationRequestType,
-    notificationFollowupRequestType,
     CancellationToken,
     GetSsoTokenParams,
 } from '../protocol'
@@ -34,7 +32,6 @@ import {
     CredentialsProvider,
     Chat,
     Runtime,
-    Notification,
     getSsoTokenRequestType,
     IdentityManagement,
     invalidateSsoTokenRequestType,
@@ -60,6 +57,7 @@ import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
 import { getServerDataDirPath } from './util/serverDataDirPath'
 import { getLoggingUtility } from './util/loggingUtil'
+import { Encoding } from './encoding'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -71,10 +69,14 @@ if (checkAWSConfigFile()) {
  *
  * Initializes one or more Servers with the following features:
  * - CredentialsProvider: provides IAM and bearer credentials
- * - LSP: Initializes a connection based on STDIN / STDOUT
+ * - LSP: initializes a connection based on STDIN / STDOUT
  * - Logging: logs messages through the LSP connection
  * - Telemetry: emits telemetry through the LSP connection
  * - Workspace: tracks open and closed files from the LSP connection
+ * - Chat: provides access to chat functionalities
+ * - Runtime: holds information about runtime server and platform
+ * - Identity Management: manages user profiles and SSO sessions
+ * - Notification: sends notifications and follow-up actions
  *
  * By instantiating features inside the runtime we can tree-shake features or
  * variants of features in cases where they are not used.
@@ -87,7 +89,8 @@ if (checkAWSConfigFile()) {
  * As features are implemented, e.g., Auth or Telemetry, they will be supported
  * by each runtime.
  *
- * @param servers The list of servers to initialize and run
+ * @param props Runtime initialization properties
+ * @param props.servers The list of servers to initialize and run
  * @returns
  */
 export const standalone = (props: RuntimeProps) => {
@@ -193,12 +196,42 @@ export const standalone = (props: RuntimeProps) => {
             },
         }
 
-        const notification: Notification = {
-            showNotification: params =>
-                lspRouter.clientSupportsShowNotification ??
-                lspConnection.sendNotification(showNotificationRequestType.method, params),
-            onNotificationFollowup: handler =>
-                lspConnection.onNotification(notificationFollowupRequestType.method, handler),
+        if (!encryptionKey) {
+            chat = new BaseChat(lspConnection)
+        }
+
+        const identityManagement: IdentityManagement = {
+            onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
+            onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
+            onGetSsoToken: handler =>
+                lspConnection.onRequest(
+                    getSsoTokenRequestType,
+                    async (params: GetSsoTokenParams, token: CancellationToken) => {
+                        const result = await handler(params, token)
+
+                        // Encrypt SsoToken.accessToken before sending to client
+                        if (result && !(result instanceof Error) && encryptionKey) {
+                            if (result.ssoToken.accessToken) {
+                                result.ssoToken.accessToken = await encryptObjectWithKey(
+                                    result.ssoToken.accessToken,
+                                    encryptionKey
+                                )
+                            }
+                            if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
+                                result.updateCredentialsParams.data = await encryptObjectWithKey(
+                                    // decodeCredentialsRequestToken expects nested 'data' fields
+                                    { data: result.updateCredentialsParams.data },
+                                    encryptionKey
+                                )
+                                result.updateCredentialsParams.encrypted = true
+                            }
+                        }
+
+                        return result
+                    }
+                ),
+            onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+            sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
         }
 
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
@@ -211,17 +244,23 @@ export const standalone = (props: RuntimeProps) => {
             platform: os.platform(),
         }
 
+        const encoding: Encoding = {
+            encode: value => Buffer.from(value).toString('base64'),
+            decode: value => Buffer.from(value, 'base64').toString('utf-8'),
+        }
+
         // Create router that will be routing LSP events from the client to server(s)
         const lspRouter = new LspRouter(lspConnection, props.name, props.version)
 
         // Initialize every Server
         const disposables = props.servers.map(s => {
-            // Create server representation, processing LSP event handlers, in runtimes
-            // and add it to the LSP router
-            const lspServer = new LspServer()
+            // Create LSP server representation that holds internal server state
+            // and processes LSP event handlers
+            const lspServer = new LspServer(lspConnection, encoding, logging)
             lspRouter.servers.push(lspServer)
 
             // Set up LSP events handlers per server
+            // TODO: Move lsp feature inside lspServer
             const lsp: Lsp = {
                 addInitializer: lspServer.setInitializeHandler,
                 onInitialized: lspServer.setInitializedHandler,
@@ -267,44 +306,6 @@ export const standalone = (props: RuntimeProps) => {
                 },
             }
 
-            if (!encryptionKey) {
-                chat = new BaseChat(lspConnection)
-            }
-
-            const identityManagement: IdentityManagement = {
-                onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
-                onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
-                onGetSsoToken: handler =>
-                    lspConnection.onRequest(
-                        getSsoTokenRequestType,
-                        async (params: GetSsoTokenParams, token: CancellationToken) => {
-                            const result = await handler(params, token)
-
-                            // Encrypt SsoToken.accessToken before sending to client
-                            if (result && !(result instanceof Error) && encryptionKey) {
-                                if (result.ssoToken.accessToken) {
-                                    result.ssoToken.accessToken = await encryptObjectWithKey(
-                                        result.ssoToken.accessToken,
-                                        encryptionKey
-                                    )
-                                }
-                                if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
-                                    result.updateCredentialsParams.data = await encryptObjectWithKey(
-                                        // decodeCredentialsRequestToken expects nested 'data' fields
-                                        { data: result.updateCredentialsParams.data },
-                                        encryptionKey
-                                    )
-                                    result.updateCredentialsParams.encrypted = true
-                                }
-                            }
-
-                            return result
-                        }
-                    ),
-                onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-                sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
-            }
-
             return s({
                 chat,
                 credentialsProvider,
@@ -314,7 +315,7 @@ export const standalone = (props: RuntimeProps) => {
                 logging,
                 runtime,
                 identityManagement,
-                notification,
+                notification: lspServer.notification,
             })
         })
 

@@ -12,6 +12,8 @@ import {
     InitializeResult,
     ResponseError,
     TextDocumentSyncKind,
+    notificationFollowupRequestType,
+    NotificationFollowupParams,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
@@ -31,14 +33,8 @@ export class LspRouter {
         lspConnection.onExecuteCommand(this.executeCommand)
         lspConnection.onInitialize(this.initialize)
         lspConnection.onInitialized(this.onInitialized)
-        lspConnection.onRequest(getConfigurationFromServerRequestType, this.handleGetConfigurationFromServer)
-    }
-
-    public get clientSupportsShowNotification() {
-        return (
-            this.clientInitializeParams?.initializationOptions?.aws.awsClientCapabilities?.window?.notifications ??
-            false
-        )
+        lspConnection.onRequest(getConfigurationFromServerRequestType, this.getConfigurationFromServer)
+        lspConnection.onNotification(notificationFollowupRequestType, this.onNotificationFollowup)
     }
 
     initialize = async (
@@ -85,18 +81,26 @@ export class LspRouter {
         params: ExecuteCommandParams,
         token: CancellationToken
     ): Promise<any | undefined | null> => {
-        for (const s of this.servers) {
-            const [executed, result] = await s.tryExecuteCommand(params, token)
-            if (executed) {
-                return result
-            }
-        }
+        return this.routeRequestToFirstCapableServer(
+            (server, params, token) => server.tryExecuteCommand(params, token),
+            params,
+            token
+        )
+    }
+
+    getConfigurationFromServer = async (params: GetConfigurationFromServerParams, token: CancellationToken) => {
+        return this.routeRequestToFirstCapableServer(
+            (server, params, token) => server.tryGetServerConfiguration(params, token),
+            params,
+            token
+        )
     }
 
     didChangeConfiguration = (params: DidChangeConfigurationParams): void => {
-        for (const s of this.servers) {
-            s.sendDidChangeConfigurationNotification(params)
-        }
+        this.routeNotificationToAllServers(
+            (server, params) => server.sendDidChangeConfigurationNotification(params),
+            params
+        )
     }
 
     onInitialized = (params: InitializedParams): void => {
@@ -106,17 +110,29 @@ export class LspRouter {
             this.lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
         }
 
-        for (const s of this.servers) {
-            s.sendInitializedNotification(params)
-        }
+        this.routeNotificationToAllServers((server, params) => server.sendInitializedNotification(params), params)
     }
 
-    handleGetConfigurationFromServer = async (params: GetConfigurationFromServerParams, token: CancellationToken) => {
-        for (const s of this.servers) {
-            const [executed, result] = await s.tryGetServerConfiguration(params, token)
+    onNotificationFollowup = (params: NotificationFollowupParams): void => {
+        this.routeNotificationToAllServers((server, params) => server.sendNotificationFollowup(params), params)
+    }
+
+    private async routeRequestToFirstCapableServer<P, R>(
+        action: (server: LspServer, params: P, token: CancellationToken) => Promise<[boolean, R | null | undefined]>,
+        params: P,
+        token: CancellationToken
+    ): Promise<R | null | undefined> {
+        for (const server of this.servers) {
+            const [executed, result] = await action(server, params, token)
             if (executed) {
                 return result
             }
+        }
+    }
+
+    private async routeNotificationToAllServers<P>(action: (server: LspServer, params: P) => void, params: P) {
+        for (const server of this.servers) {
+            action(server, params)
         }
     }
 }

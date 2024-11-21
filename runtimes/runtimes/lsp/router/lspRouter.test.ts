@@ -5,6 +5,9 @@ import {
     GetConfigurationFromServerParams,
     InitializeError,
     InitializeResult,
+    MessageType,
+    NotificationFollowupParams,
+    NotificationParams,
     RequestHandler,
     ResponseError,
     TextDocumentSyncKind,
@@ -15,17 +18,20 @@ import assert from 'assert'
 import sinon from 'sinon'
 import { PartialInitializeResult, InitializeParams } from '../../../server-interface/lsp'
 import { LspServer } from './lspServer'
+import { Logging } from '../../../server-interface'
+import { Encoding } from '../../encoding'
 
 describe('LspRouter', () => {
     const sandbox = sinon.createSandbox()
 
-    const lspConnection = <Connection>{
-        onInitialize: (handler: any) => {},
-        onInitialized: (handler: any) => {},
-        onExecuteCommand: (handler: any) => {},
-        onRequest: (handler: any) => {},
-        onDidChangeConfiguration: (handler: any) => {},
+    const encoding: Encoding = {
+        encode: (value: string) => value,
+        decode: (value: string) => value,
     }
+    const logging = <Logging>{
+        log: sandbox.stub(),
+    }
+    const lspConnection = stubLspConnection()
 
     let executeCommandHandler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
     let initializeHandler: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
@@ -59,24 +65,6 @@ describe('LspRouter', () => {
             const initParam = {} as InitializeParams
             initializeHandler(initParam, {} as CancellationToken)
             assert(lspRouter.clientInitializeParams === initParam)
-        })
-
-        it('should set clientSupportsShowNotification from InitializeParam', () => {
-            assert.equal(lspRouter.clientSupportsShowNotification, false)
-
-            const initParam = {
-                initializationOptions: {
-                    aws: {
-                        awsClientCapabilities: {
-                            window: {
-                                notifications: true,
-                            },
-                        },
-                    },
-                },
-            } as InitializeParams
-            initializeHandler(initParam, {} as CancellationToken)
-            assert.equal(lspRouter.clientSupportsShowNotification, true)
         })
 
         it('should return the default response when no handlers are registered', async () => {
@@ -353,7 +341,7 @@ describe('LspRouter', () => {
             }
 
             const params: GetConfigurationFromServerParams = { section: 'test' }
-            const result = await lspRouter.handleGetConfigurationFromServer(params, {} as CancellationToken)
+            const result = await lspRouter.getConfigurationFromServer(params, {} as CancellationToken)
             assert.strictEqual(result, 'server2')
         })
 
@@ -392,10 +380,114 @@ describe('LspRouter', () => {
             }
 
             const params: GetConfigurationFromServerParams = { section: 'something' }
-            const result = await lspRouter.handleGetConfigurationFromServer(params, {} as CancellationToken)
+            const result = await lspRouter.getConfigurationFromServer(params, {} as CancellationToken)
             assert.strictEqual(result, undefined)
         })
     })
+
+    describe('notifications', () => {
+        const initHandler = () => {
+            return {
+                serverInfo: {
+                    name: 'Notification Server',
+                },
+            }
+        }
+        const initParam = {
+            initializationOptions: {
+                aws: {
+                    awsClientCapabilities: {
+                        window: {
+                            notifications: true,
+                        },
+                    },
+                },
+            },
+        }
+        const notificationParams: NotificationParams = {
+            id: 'id-1',
+            type: MessageType.Info,
+            content: {
+                text: 'Update happened',
+            },
+        }
+
+        it('should send notification if notifications are supported and server name is defined', async () => {
+            const notificationSpy = sandbox.spy()
+            const lspConn = <Connection>{}
+            lspConn.sendNotification = notificationSpy
+
+            const server = newServer({ lspConnection: lspConn, initializeHandler: initHandler })
+            await server.initialize(initParam as InitializeParams, {} as CancellationToken)
+
+            server.notification.showNotification(notificationParams)
+
+            assert(notificationSpy.calledOnce)
+        })
+
+        it('should not send notification if server name is not defined', async () => {
+            const notificationSpy = sandbox.spy()
+            const lspConn = <Connection>{}
+            lspConn.sendNotification = notificationSpy
+
+            const server = newServer({
+                lspConnection: lspConn,
+                initializeHandler: () => {
+                    // no server name defined
+                },
+            })
+            await server.initialize(initParam as InitializeParams, {} as CancellationToken)
+
+            server.notification.showNotification(notificationParams)
+
+            assert(notificationSpy.notCalled)
+        })
+
+        it('should not send notification if not supported by client', async () => {
+            const notificationSpy = sandbox.spy()
+            const lspConn = <Connection>{}
+            lspConn.sendNotification = notificationSpy
+
+            const server = newServer({ lspConnection: lspConn, initializeHandler: initHandler })
+            await server.initialize({} as InitializeParams, {} as CancellationToken)
+
+            server.notification.showNotification(notificationParams)
+
+            assert(notificationSpy.notCalled)
+        })
+
+        it('should send followup to source server by matching server name in id', async () => {
+            const lspConn = <Connection>{}
+
+            const server = newServer({ lspConnection: lspConn, initializeHandler: initHandler })
+            await server.initialize(initParam as InitializeParams, {} as CancellationToken)
+            lspRouter.servers = [server]
+
+            const notificationFollowupSpy = sandbox.spy()
+            server.notification.onNotificationFollowup(notificationFollowupSpy)
+
+            const notificationFollowup: NotificationFollowupParams = {
+                source: {
+                    id: '{"serverName":"Notification Server", "id":"1"}',
+                },
+                action: 'Acknowledge',
+            }
+            lspRouter.onNotificationFollowup(notificationFollowup)
+
+            assert(notificationFollowupSpy.calledOnce)
+        })
+    })
+
+    function stubLspConnection() {
+        return <Connection>{
+            onInitialize: (handler: any) => {},
+            onInitialized: (handler: any) => {},
+            onExecuteCommand: (handler: any) => {},
+            onRequest: (handler: any) => {},
+            onNotification: (handler: any) => {},
+            onDidChangeConfiguration: (handler: any) => {},
+        }
+    }
 
     function newServer({
         didChangeConfigurationHandler,
@@ -403,14 +495,16 @@ describe('LspRouter', () => {
         getServerConfigurationHandler,
         initializeHandler,
         initializedHandler,
+        lspConnection,
     }: {
         didChangeConfigurationHandler?: any
         executeCommandHandler?: any
         getServerConfigurationHandler?: any
         initializeHandler?: any
         initializedHandler?: any
+        lspConnection?: Connection
     }) {
-        const server = new LspServer()
+        const server = new LspServer(lspConnection || stubLspConnection(), encoding, logging)
         server.setDidChangeConfigurationHandler(didChangeConfigurationHandler)
         server.setExecuteCommandHandler(executeCommandHandler)
         server.setServerConfigurationHandler(getServerConfigurationHandler)

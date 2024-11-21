@@ -28,10 +28,6 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
-
-    // Notification
-    showNotificationRequestType,
-    notificationFollowupRequestType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace, Notification } from '../server-interface'
@@ -51,6 +47,7 @@ import {
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
 import { getLoggingUtility } from './util/loggingUtil'
+import { Encoding, WebBase64Encoding } from './encoding'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -112,12 +109,12 @@ export const webworker = async (props: RuntimeProps) => {
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
     }
 
-    const notification: Notification = {
-        showNotification: params =>
-            lspRouter.clientSupportsShowNotification ??
-            lspConnection.sendNotification(showNotificationRequestType.method, params),
-        onNotificationFollowup: handler =>
-            lspConnection.onNotification(notificationFollowupRequestType.method, handler),
+    const identityManagement: IdentityManagement = {
+        onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
+        onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
+        onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
+        onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+        sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
     }
 
     // Set up auth without encryption
@@ -131,11 +128,13 @@ export const webworker = async (props: RuntimeProps) => {
         platform: 'browser',
     }
 
+    const encoding = new WebBase64Encoding(self)
+
     // Initialize every Server
     const disposables = props.servers.map(s => {
         // Create server representation, processing LSP event handlers, in runtimes
         // and add it to the LSP router
-        const lspServer = new LspServer()
+        const lspServer = new LspServer(lspConnection, encoding, logging)
         lspRouter.servers.push(lspServer)
 
         // Set up LSP events handlers per server
@@ -178,14 +177,6 @@ export const webworker = async (props: RuntimeProps) => {
             },
         }
 
-        const identityManagement: IdentityManagement = {
-            onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
-            onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
-            onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
-            onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-            sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
-        }
-
         return s({
             chat,
             credentialsProvider,
@@ -195,7 +186,7 @@ export const webworker = async (props: RuntimeProps) => {
             logging,
             runtime,
             identityManagement,
-            notification,
+            notification: lspServer.notification,
         })
     })
 
