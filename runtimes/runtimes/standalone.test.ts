@@ -113,9 +113,9 @@ describe('standalone', () => {
                 encryptionInitialization.key,
                 encryptionInitialization.mode
             )
-            // TODO: The below one fails as it tries to test async inside async, need to check back later
-            // sinon.assert.calledOnce(lspRouterStub.servers.push as sinon.SinonStub)
-            // sinon.assert.calledOnce(stubConnection.listen)
+            await setTimeout(() => Promise.resolve(), 1000)
+            sinon.assert.calledOnce(lspRouterStub.servers.push as sinon.SinonStub)
+            sinon.assert.calledOnce(stubConnection.listen)
         })
     })
 
