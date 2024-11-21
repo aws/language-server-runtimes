@@ -36,16 +36,16 @@ describe('webworker', () => {
         delete (global as any).self
     })
 
-    it('should initialize lsp connection and start listening', () => {
-        webworker(props)
+    it('should initialize lsp connection and start listening', async () => {
+        await webworker(props)
         sinon.assert.calledOnce(stubConnection.listen)
     })
 
     describe('features', () => {
         let features: Features
 
-        beforeEach(() => {
-            webworker(props)
+        beforeEach(async () => {
+            await webworker(props)
             features = stubServer.getCall(0).args[0]
         })
 

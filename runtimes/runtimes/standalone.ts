@@ -93,7 +93,7 @@ if (checkAWSConfigFile()) {
  * @param props.servers The list of servers to initialize and run
  * @returns
  */
-export const standalone = (props: RuntimeProps) => {
+export const standalone = async (props: RuntimeProps) => {
     handleVersionArgument(props.version)
 
     const lspConnection = createConnection(ProposedFeatures.all)
