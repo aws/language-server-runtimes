@@ -59,6 +59,7 @@ import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
 import { getServerDataDirPath } from './util/serverDataDirPath'
+import { getLoggingUtility } from './util/loggingUtil'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -130,15 +131,9 @@ export const standalone = (props: RuntimeProps) => {
     // TODO: make this dependent on the actual requirements of the
     // capabilities parameter.
 
-    function initializeRuntime(encryptionKey?: string) {
+    async function initializeRuntime(encryptionKey?: string) {
         const documents = new TextDocuments(TextDocument)
-
-        // Set up logging over LSP
-        // TODO: set up Logging once implemented
-        const logging: Logging = {
-            log: message => lspConnection.console.info(`[${new Date().toISOString()}] ${message}`),
-        }
-
+        const logging: Logging = await getLoggingUtility(lspConnection)
         // Set up telemetry over LSP
         const telemetry: Telemetry = {
             emitMetric: metric => lspConnection.telemetry.logEvent(metric),
