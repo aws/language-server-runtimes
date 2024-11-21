@@ -16,7 +16,7 @@ export const isLogLevelEnabled = (l1: LogLevel, l2: LogLevel): boolean => {
 }
 
 export const isValidLogLevel = (level: LogLevel): boolean => {
-    return level && typeof level === 'string' && ['fatal', 'error', 'warn', 'info', 'log', 'debug'].includes(level)
+    return level && typeof level === 'string' && ['error', 'warn', 'info', 'log', 'debug'].includes(level)
 }
 
 const DEFAULT_LOG_LEVEL: LogLevel = 'log'
