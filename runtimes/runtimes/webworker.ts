@@ -46,13 +46,13 @@ import {
     updateProfileRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
-import { getLoggingUtility } from './util/loggingUtil'
 import { Encoding, WebBase64Encoding } from './encoding'
+import { LoggingServer } from './lsp/router/loggingServer'
 
 declare const self: WindowOrWorkerGlobalScope
 
 // TODO: testing rig for runtimes
-export const webworker = async (props: RuntimeProps) => {
+export const webworker = (props: RuntimeProps) => {
     const lspConnection = createConnection(new BrowserMessageReader(self), new BrowserMessageWriter(self))
 
     const documentsObserver = observe(lspConnection)
@@ -60,9 +60,6 @@ export const webworker = async (props: RuntimeProps) => {
 
     // Create router that will be routing LSP events from the client to server(s)
     const lspRouter = new LspRouter(lspConnection, props.name, props.version)
-
-    // Set up logigng over LSP
-    const logging: Logging = await getLoggingUtility(lspConnection)
 
     // Set up telemetry over LSP
     const telemetry: Telemetry = {
@@ -129,6 +126,9 @@ export const webworker = async (props: RuntimeProps) => {
     }
 
     const encoding = new WebBase64Encoding(self)
+    const loggingServer = new LoggingServer(lspConnection, encoding)
+    const logging: Logging = loggingServer.getLoggingObject()
+    lspRouter.servers.push(loggingServer.getLspServer())
 
     // Initialize every Server
     const disposables = props.servers.map(s => {
