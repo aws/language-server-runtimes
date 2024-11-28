@@ -8,6 +8,7 @@ import {
     RequestType,
 } from 'vscode-languageserver-protocol'
 import { ChatOptions } from '@aws/language-server-runtimes-types'
+import { LogLevel } from '../runtimes/util/loggingUtil'
 
 export * from '@aws/language-server-runtimes-types'
 export { TextDocument } from 'vscode-languageserver-textdocument'
@@ -114,6 +115,7 @@ export interface AWSInitializationOptions {
 export interface InitializeParams extends _InitializeParamsBase {
     initializationOptions?: {
         [key: string]: any
+        logLevel?: LogLevel
         aws: AWSInitializationOptions
     }
 }

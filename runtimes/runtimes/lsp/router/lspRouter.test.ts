@@ -30,6 +30,10 @@ describe('LspRouter', () => {
     }
     const logging = <Logging>{
         log: sandbox.stub(),
+        debug: sandbox.stub(),
+        error: sandbox.stub(),
+        warn: sandbox.stub(),
+        info: sandbox.stub(),
     }
     const lspConnection = stubLspConnection()
 

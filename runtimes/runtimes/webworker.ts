@@ -47,6 +47,7 @@ import {
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
 import { Encoding, WebBase64Encoding } from './encoding'
+import { LoggingServer } from './lsp/router/loggingServer'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -59,11 +60,6 @@ export const webworker = (props: RuntimeProps) => {
 
     // Create router that will be routing LSP events from the client to server(s)
     const lspRouter = new LspRouter(lspConnection, props.name, props.version)
-
-    // Set up logigng over LSP
-    const logging: Logging = {
-        log: message => lspConnection.console.info(`[${new Date().toISOString()}] ${message}`),
-    }
 
     // Set up telemetry over LSP
     const telemetry: Telemetry = {
@@ -130,6 +126,9 @@ export const webworker = (props: RuntimeProps) => {
     }
 
     const encoding = new WebBase64Encoding(self)
+    const loggingServer = new LoggingServer(lspConnection, encoding)
+    const logging: Logging = loggingServer.getLoggingObject()
+    lspRouter.servers.push(loggingServer.getLspServer())
 
     // Initialize every Server
     const disposables = props.servers.map(s => {

@@ -57,6 +57,7 @@ import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
 import { getServerDataDirPath } from './util/serverDataDirPath'
 import { Encoding } from './encoding'
+import { LoggingServer } from './lsp/router/loggingServer'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -135,13 +136,6 @@ export const standalone = (props: RuntimeProps) => {
 
     function initializeRuntime(encryptionKey?: string) {
         const documents = new TextDocuments(TextDocument)
-
-        // Set up logging over LSP
-        // TODO: set up Logging once implemented
-        const logging: Logging = {
-            log: message => lspConnection.console.info(`[${new Date().toISOString()}] ${message}`),
-        }
-
         // Set up telemetry over LSP
         const telemetry: Telemetry = {
             emitMetric: metric => lspConnection.telemetry.logEvent(metric),
@@ -257,6 +251,10 @@ export const standalone = (props: RuntimeProps) => {
         // Create router that will be routing LSP events from the client to server(s)
         const lspRouter = new LspRouter(lspConnection, props.name, props.version)
 
+        const loggingServer = new LoggingServer(lspConnection, encoding)
+        const logging: Logging = loggingServer.getLoggingObject()
+        lspRouter.servers.push(loggingServer.getLspServer())
+
         // Initialize every Server
         const disposables = props.servers.map(s => {
             // Create LSP server representation that holds internal server state
@@ -310,7 +308,6 @@ export const standalone = (props: RuntimeProps) => {
                     },
                 },
             }
-
             return s({
                 chat,
                 credentialsProvider,
