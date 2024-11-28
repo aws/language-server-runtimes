@@ -13,21 +13,12 @@ import * as authModule from './auth/auth'
 import * as encryptedChatModule from './chat/encryptedChat'
 import * as baseChatModule from './chat/baseChat'
 import { pathToFileURL } from 'url'
-import { LogLevel } from '../runtimes/util/loggingUtil'
 
 describe('standalone', () => {
     let stubServer: sinon.SinonStub
     let props: RuntimeProps
     let stubConnection: sinon.SinonStubbedInstance<vscodeLanguageServer.Connection> & vscodeLanguageServer.Connection
     let lspRouterStub: sinon.SinonStubbedInstance<lspRouterModule.LspRouter> & lspRouterModule.LspRouter
-    const mockLoggingUtility = {
-        debug: sinon.stub(),
-        error: sinon.stub(),
-        info: sinon.stub(),
-        warn: sinon.stub(),
-        log: sinon.stub(),
-        level: 'info' as LogLevel,
-    }
 
     beforeEach(() => {
         stubServer = sinon.stub()

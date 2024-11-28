@@ -29,7 +29,6 @@ describe('LspRouter', () => {
         decode: (value: string) => value,
     }
     const logging = <Logging>{
-        level: 'info',
         log: sandbox.stub(),
         debug: sandbox.stub(),
         error: sandbox.stub(),
