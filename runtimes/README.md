@@ -136,11 +136,16 @@ Design TBD
 
 #### Initialization
 
-TBD
+The runtimes by default supports the logging feature, allowing servers to output logs varied by different log levels. 
 
 #### Feature Specification
 
-TBD
+The log level to be set in the runtime for logging can be decided by the client as part of initialize request, which is the first
+request initiated by client to the LSP server. The log level can be updated dynamically even after server start by triggering `workspace/didChangeConfiguration` 
+notification from the client - which prompts the runtime to fetch the new log level to be set from the client through LSP `getConfigurations` request. 
+1. Params in the initialize request: `InitializeParams.initializationOptions.logLevel`
+2. Configuration request params for requesting log level from runtimes to client: ``{section: "aws.logLevel"}`` 
+
 
 ### Chat
 

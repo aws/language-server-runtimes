@@ -1,22 +1,22 @@
 import { Logging } from '../../server-interface'
 import { Connection, MessageType } from 'vscode-languageserver/node'
 
-export type LogLevel = 'error' | 'warn' | 'info' | 'log' | 'debug'
-
-const logLevelMap: Record<LogLevel, number> = {
+const LOG_LEVELS = {
     error: MessageType.Error,
     warn: MessageType.Warning,
     info: MessageType.Info,
     log: MessageType.Log,
     debug: MessageType.Debug,
-}
+} as const
+
+export type LogLevel = keyof typeof LOG_LEVELS
 
 export const isLogLevelEnabled = (l1: LogLevel, l2: LogLevel): boolean => {
-    return logLevelMap[l1] >= logLevelMap[l2]
+    return LOG_LEVELS[l1] >= LOG_LEVELS[l2]
 }
 
 export const isValidLogLevel = (level: LogLevel): boolean => {
-    return ['error', 'warn', 'info', 'log', 'debug'].includes(level)
+    return Object.keys(LOG_LEVELS).includes(level)
 }
 
 export const DEFAULT_LOG_LEVEL: LogLevel = 'log'
@@ -30,29 +30,15 @@ export class LoggingImplementation implements Logging {
         this.lspConnection = connection
     }
 
-    error = (message: string) => {
-        if (isLogLevelEnabled(this.level, 'error')) {
-            this.lspConnection.console.error(`[${new Date().toISOString()}] ${message}`)
+    sendToLog(logLevel: LogLevel, message: string): void {
+        if (isLogLevelEnabled(this.level, logLevel)) {
+            this.lspConnection.console[logLevel](`[${new Date().toISOString()}] ${message}`)
         }
     }
-    warn = (message: string) => {
-        if (isLogLevelEnabled(this.level, 'warn')) {
-            this.lspConnection.console.warn(`[${new Date().toISOString()}] ${message}`)
-        }
-    }
-    info = (message: string) => {
-        if (isLogLevelEnabled(this.level, 'info')) {
-            this.lspConnection.console.info(`[${new Date().toISOString()}] ${message}`)
-        }
-    }
-    log = (message: string) => {
-        if (isLogLevelEnabled(this.level, 'log')) {
-            this.lspConnection.console.log(`[${new Date().toISOString()}] ${message}`)
-        }
-    }
-    debug = (message: string) => {
-        if (isLogLevelEnabled(this.level, 'debug')) {
-            this.lspConnection.console.debug(`[${new Date().toISOString()}] ${message}`)
-        }
-    }
+
+    error = (message: string) => this.sendToLog('error', message)
+    warn = (message: string) => this.sendToLog('warn', message)
+    info = (message: string) => this.sendToLog('info', message)
+    log = (message: string) => this.sendToLog('log', message)
+    debug = (message: string) => this.sendToLog('debug', message)
 }

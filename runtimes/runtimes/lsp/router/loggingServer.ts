@@ -32,6 +32,7 @@ export class LoggingServer {
 
     private updateLoggingLevel(logLevel: LogLevel) {
         this.logger.level = logLevel
+        this.logger.info(`Logging level changed to ${logLevel}`)
     }
 
     public getLoggingObject(): Logging {

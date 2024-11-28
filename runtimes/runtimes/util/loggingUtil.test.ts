@@ -55,7 +55,7 @@ describe('LoggingUtil', () => {
     })
 
     describe('LoggingImplementation', () => {
-        it('should test implementation of Logging', async () => {
+        it('should check logging method of configured log level are called', async () => {
             const logging = new LoggingImplementation('warn', mockConnection as Connection)
             assert.strictEqual('warn', logging.level)
             assert.strictEqual('function', typeof logging.error)
