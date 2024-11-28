@@ -40,7 +40,7 @@
         "vscode-languageserver-protocol": "^3.17.5"
     },
     "devDependencies": {
-        "@types/mocha": "^10.0.9",
+        "@types/mocha": "^10.0.10",
         "@types/node": "^22.9.0",
         "assert": "^2.0.0",
         "husky": "^9.1.7",
