@@ -21,7 +21,7 @@ export const isValidLogLevel = (level: LogLevel): boolean => {
 
 export const DEFAULT_LOG_LEVEL: LogLevel = 'log'
 
-export class LoggingImplementation implements Logging {
+export class DefaultLogger implements Logging {
     public level: LogLevel
     private lspConnection: Connection
 

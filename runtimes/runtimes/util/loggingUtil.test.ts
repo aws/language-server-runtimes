@@ -1,5 +1,5 @@
 import { Connection, RemoteConsole } from 'vscode-languageserver/node'
-import { isLogLevelEnabled, isValidLogLevel, LoggingImplementation, LogLevel } from './loggingUtil'
+import { isLogLevelEnabled, isValidLogLevel, DefaultLogger, LogLevel } from './loggingUtil'
 import sinon from 'sinon'
 import assert from 'assert'
 
@@ -54,9 +54,9 @@ describe('LoggingUtil', () => {
         })
     })
 
-    describe('LoggingImplementation', () => {
+    describe('DefaultLogger implementation', () => {
         it('should check logging method of configured log level are called', async () => {
-            const logging = new LoggingImplementation('warn', mockConnection as Connection)
+            const logging = new DefaultLogger('warn', mockConnection as Connection)
             assert.strictEqual('warn', logging.level)
             assert.strictEqual('function', typeof logging.error)
             assert.strictEqual('function', typeof logging.warn)
