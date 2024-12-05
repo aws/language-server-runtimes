@@ -5,7 +5,7 @@ on:
 jobs:
     notify:
         name: Slack notification
-        if: github.actor != 'dependabot[bot]'
+        if: github.author != 'dependabot[bot]'
         runs-on: [ubuntu-latest]
         steps:
             - name: Post message
