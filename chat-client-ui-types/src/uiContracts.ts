@@ -21,6 +21,7 @@ export const COPY_TO_CLIPBOARD = 'copyToClipboard'
 export const AUTH_FOLLOW_UP_CLICKED = 'authFollowUpClicked'
 export const GENERIC_COMMAND = 'genericCommand'
 export const CHAT_OPTIONS = 'chatOptions'
+export const DISCLAIMER_ACKNOWLEDGED = 'disclaimerAcknowledged'
 
 export type UiMessageCommand =
     | typeof SEND_TO_PROMPT
@@ -30,6 +31,7 @@ export type UiMessageCommand =
     | typeof GENERIC_COMMAND
     | typeof CHAT_OPTIONS
     | typeof COPY_TO_CLIPBOARD
+    | typeof DISCLAIMER_ACKNOWLEDGED
 
 export interface UiMessage {
     command: UiMessageCommand
