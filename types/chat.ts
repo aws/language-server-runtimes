@@ -14,6 +14,7 @@ export const LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/linkClick'
 export const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
 export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
 export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
+export const DISCLAIMER_ACKNOWLEDGED_METHOD = 'aws/chat/disclaimerAcknowledged'
 
 export interface ChatItemAction {
     pillText: string
