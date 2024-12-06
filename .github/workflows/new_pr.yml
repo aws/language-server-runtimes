@@ -5,7 +5,7 @@ on:
 jobs:
     notify:
         name: Slack notification
-        if: github.author != 'dependabot[bot]'
+        if: github.event.pull_request.user.login != 'dependabot[bot]'
         runs-on: [ubuntu-latest]
         steps:
             - name: Post message
