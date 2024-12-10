@@ -53,3 +53,6 @@ opensource-codeofconduct@amazon.com with any additional questions or comments.
 ## Licensing
 
 See the [LICENSE](LICENSE) file for our project's licensing. We will ask you to confirm the licensing of your contribution.
+
+
+<!-- TEST CHANGE FOR CONVENTIONAL COMMIT RULESET -->
