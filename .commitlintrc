@@ -1,0 +1,14 @@
+{
+    "extends": ["@commitlint/config-conventional"],
+    "rules": {
+        "scope-enum": [
+            2,
+            "always",
+            [
+                "chat-client-ui-types",
+                "runtimes",
+                "types"
+            ]
+        ]
+    }
+}
