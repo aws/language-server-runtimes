@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.1.0](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.0.9...chat-client-ui-types/v0.1.0) (2024-12-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* **chat-client-ui-types:** update the version of package to next minor. This commit does not actually contain a breaking change, only to trigger a release.
+
+### Documentation
+
+* **chat-client-ui-types:** updated README ([d2a569f](https://github.com/aws/language-server-runtimes/commit/d2a569fe9b839f61461661832407a4e9b0f16086))
+
 ## [0.0.9] - 2024-12-11
 
 ### Added
