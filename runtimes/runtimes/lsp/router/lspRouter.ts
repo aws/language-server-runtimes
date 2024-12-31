@@ -71,10 +71,15 @@ export class LspRouter {
             },
         }
         resultList.unshift(defaultResponse)
-
-        return resultList.reduceRight((acc, curr) => {
+        const result = resultList.reduceRight((acc, curr) => {
             return mergeObjects(acc, curr)
         })
+        this.lspConnection.console.info(
+            `Runtime: Initializing server ${JSON.stringify(result.serverInfo?.name)} version ${JSON.stringify(result.serverInfo?.version)} with capabilities:
+${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
+        )
+
+        return result
     }
 
     executeCommand = async (
