@@ -484,6 +484,9 @@ describe('LspRouter', () => {
 
     function stubLspConnection() {
         return <Connection>{
+            console: {
+                info: (message: any) => {},
+            },
             onInitialize: (handler: any) => {},
             onInitialized: (handler: any) => {},
             onExecuteCommand: (handler: any) => {},
