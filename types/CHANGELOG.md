@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.1.0](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.0.7...language-server-runtimes-types/v0.1.0) (2025-01-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **types:** update the version of package to next minor. This commit does not actually contain a breaking change, only to trigger a release.
+
+### Features
+
+* **types:** updated readme ([#290](https://github.com/aws/language-server-runtimes/issues/290)) ([4a3cc75](https://github.com/aws/language-server-runtimes/commit/4a3cc7588ddd24b8dd23865649be675ebcce706c))
+
+
+### Bug Fixes
+
+* **types:** npm publish (with out folder) ([#287](https://github.com/aws/language-server-runtimes/issues/287)) ([a4f4fb2](https://github.com/aws/language-server-runtimes/commit/a4f4fb21df9d13446eb737a314835f0a6a3f9f74))
+
+
+### Documentation
+
+* **types:** update readme ([#291](https://github.com/aws/language-server-runtimes/issues/291)) ([a777c8d](https://github.com/aws/language-server-runtimes/commit/a777c8d926208f6ed759e02c11b6c2ab70bdb16f))
+
 ## [0.0.7] - 2024-10-22
 
 ### Updated
