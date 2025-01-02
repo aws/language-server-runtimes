@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.28](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.27...language-server-runtimes/v0.2.28) (2025-01-02)
+
+
+### Features
+
+* **runtimes:** log detail server info during initialization ([#285](https://github.com/aws/language-server-runtimes/issues/285)) ([cd4ac14](https://github.com/aws/language-server-runtimes/commit/cd4ac14381599c8599c70a6df85ac62cc9668832))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.0.7 to ^0.1.0
+
 ## [0.2.27] - 2024-11-15
 
 ### Changed
