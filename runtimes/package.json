@@ -1,6 +1,6 @@
 {
     "name": "@aws/language-server-runtimes",
-    "version": "0.2.28",
+    "version": "0.2.29",
     "description": "Runtimes to host Language Servers for AWS",
     "files": [
         "out",
@@ -33,7 +33,7 @@
         "version": "npm run compile && git add -A ."
     },
     "dependencies": {
-        "@aws/language-server-runtimes-types": "^0.1.0",
+        "@aws/language-server-runtimes-types": "^0.1.1",
         "jose": "^5.9.6",
         "rxjs": "^7.8.1",
         "vscode-languageserver": "^9.0.1",

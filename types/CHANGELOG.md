@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.0...language-server-runtimes-types/v0.1.1) (2025-01-03)
+
+
+### Bug Fixes
+
+* **types:** fixed publish package contents ([#292](https://github.com/aws/language-server-runtimes/issues/292)) ([b3f5874](https://github.com/aws/language-server-runtimes/commit/b3f58743802116100091cf9e91a447c549185e92))
+
 ## [0.1.0](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.0.7...language-server-runtimes-types/v0.1.0) (2025-01-02)
 
 
