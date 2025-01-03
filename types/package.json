@@ -6,7 +6,7 @@
     "scripts": {
         "clean": "rm -rf out/",
         "compile": "tsc --build",
-        "prepub:copyFiles": "shx cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
+        "prepub:copyFiles": "shx cp ../LICENSE ../NOTICE ../SECURITY.md .",
         "prepub": "npm run clean && npm run compile && npm run prepub:copyFiles",
         "pub": "npm publish"
     },
