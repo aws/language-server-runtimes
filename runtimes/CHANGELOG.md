@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.30](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.29...language-server-runtimes/v0.2.30) (2025-01-07)
+
+
+### Features
+
+* add env variables getter in runtime ([#295](https://github.com/aws/language-server-runtimes/issues/295)) ([93be997](https://github.com/aws/language-server-runtimes/commit/93be9970f8c6aa23f609220e0c132e37fe567210))
+
 ## [0.2.29](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.28...language-server-runtimes/v0.2.29) (2025-01-03)
 
 
