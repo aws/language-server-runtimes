@@ -123,6 +123,9 @@ export const webworker = (props: RuntimeProps) => {
             version: props.version,
         },
         platform: 'browser',
+        getEnvironmentConfiguration(key: string) {
+            return undefined
+        },
     }
 
     const encoding = new WebBase64Encoding(self)

@@ -241,6 +241,9 @@ export const standalone = (props: RuntimeProps) => {
                 version: props.version,
             },
             platform: os.platform(),
+            getEnvironmentConfiguration(key: string) {
+                return process.env[key]
+            },
         }
 
         const encoding: Encoding = {

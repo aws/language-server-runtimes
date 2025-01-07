@@ -19,4 +19,11 @@ export interface Runtime {
      * Set to NodeJS.Platform for standalone and 'browser' for webworker runtime.
      */
     platform: Platform
+
+    /**
+     * Get the value of an environment variable.
+     * @param key The name of the environment variable.
+     * @returns The value of the environment variable or undefined if the environment variable is not set.
+     */
+    getEnvironmentConfiguration(key: string): string | undefined
 }
