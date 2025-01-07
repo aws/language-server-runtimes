@@ -6,7 +6,7 @@
     "scripts": {
         "clean": "rm -rf out/",
         "compile": "echo 'INFO: Running types compile' && pwd && tsc --build",
-        "prepub:copyFiles": "echo 'INFO: Running types copyFiles' && pwd && shx cp ../LICENSE ../NOTICE ../SECURITY.md . && echo 'INFO: Finished types copyFiles'",
+        "prepub:copyFiles": "echo 'INFO: Running types copyFiles' && pwd && echo 'INFO: Finished types copyFiles'",
         "prepub": "echo 'INFO: Running types prepub' && pwd && npm run clean && npm run compile && npm run prepub:copyFiles",
         "pub": "echo 'INFO: Running types pub' && pwd && npm publish"
     },
