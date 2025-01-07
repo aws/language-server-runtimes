@@ -26,7 +26,7 @@
         "prepare": "husky install",
         "prepub:copyFiles": "echo 'INFO: Running runtimes copyFiles' && pwd && shx cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
         "prepub": "echo 'INFO: Running runtimes prepub' && pwd && npm run clean && npm run test && npm run compile && npm run prepub:copyFiles",
-        "pub": "echo 'INFO: Running runtimes pub' && pwd && cd out && npm publish && cd ..",
+        "pub": "echo 'INFO: Running runtimes pub' && pwd && cd out && npm publish",
         "test:unit": "ts-mocha -b './**/*.test.ts'",
         "test": "npm run test:unit",
         "preversion": "npm run test",
