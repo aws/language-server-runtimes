@@ -123,7 +123,7 @@ export const webworker = (props: RuntimeProps) => {
             version: props.version,
         },
         platform: 'browser',
-        getEnvironmentConfiguration(key: string) {
+        getConfiguration(key: string) {
             return undefined
         },
     }

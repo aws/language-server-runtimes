@@ -21,9 +21,9 @@ export interface Runtime {
     platform: Platform
 
     /**
-     * Get the value of an environment variable.
-     * @param key The name of the environment variable.
-     * @returns The value of the environment variable or undefined if the environment variable is not set.
+     * Get a runtime configuration value.
+     * @param key The configuration key to retrieve.
+     * @returns The configuration value or undefined if the key is not set.
      */
-    getEnvironmentConfiguration(key: string): string | undefined
+    getConfiguration(key: string): string | undefined
 }
