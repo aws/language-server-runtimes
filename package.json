@@ -11,7 +11,8 @@
     ],
     "workspaces": [
         "chat-client-ui-types",
-        "runtimes"
+        "runtimes",
+        "types"
     ],
     "repository": {
         "type": "git",
