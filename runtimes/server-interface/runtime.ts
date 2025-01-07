@@ -19,4 +19,11 @@ export interface Runtime {
      * Set to NodeJS.Platform for standalone and 'browser' for webworker runtime.
      */
     platform: Platform
+
+    /**
+     * Get a runtime configuration value.
+     * @param key The configuration key to retrieve.
+     * @returns The configuration value or undefined if the key is not set.
+     */
+    getConfiguration(key: string): string | undefined
 }

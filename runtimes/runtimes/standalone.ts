@@ -241,6 +241,10 @@ export const standalone = (props: RuntimeProps) => {
                 version: props.version,
             },
             platform: os.platform(),
+            // gets the configurations from the environment variables
+            getConfiguration(key: string) {
+                return process.env[key]
+            },
         }
 
         const encoding: Encoding = {
