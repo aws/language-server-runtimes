@@ -2,6 +2,7 @@
     "extends": "../tsconfig.packages.json",
     "compilerOptions": {
         "rootDir": ".",
-        "outDir": "./out"
+        "outDir": "./out",
+        "tsBuildInfoFile": "./out/tsconfig.tsbuildinfo"
     }
 }
