@@ -7,8 +7,8 @@
         "clean": "rm -rf out/",
         "compile": "tsc --build",
         "prepub:copyFiles": "shx cp ../LICENSE ../NOTICE ../SECURITY.md .",
-        "prepub": "npm run clean && npm run compile && npm run prepub:copyFiles",
-        "pub": "npm publish"
+        "prepub": "echo 'Running ui-types prepub' && pwd && npm run clean && npm run compile && npm run prepub:copyFiles",
+        "pub": "echo 'Running ui-types pub' && pwd && npm publish"
     },
     "repository": {
         "type": "git",
