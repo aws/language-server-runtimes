@@ -2,7 +2,7 @@
     "name": "@aws/language-server-runtimes-types",
     "version": "0.1.1",
     "description": "Type definitions in Language Servers and Runtimes for AWS",
-    "main": "out/index.js",
+    "main": "./out/index.js",
     "scripts": {
         "clean": "rm -rf out/",
         "compile": "echo 'INFO: Running types compile' && pwd && tsc --build",
