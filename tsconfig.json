@@ -13,9 +13,6 @@
     "files": [],
     "references": [
         {
-            "path": "./types"
-        },
-        {
             "path": "./runtimes"
         }
     ]
