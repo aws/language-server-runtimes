@@ -10,9 +10,9 @@
         "testing"
     ],
     "workspaces": [
+        "chat-client-ui-types",
         "types",
-        "runtimes",
-        "chat-client-ui-types"
+        "runtimes"
     ],
     "repository": {
         "type": "git",
