@@ -47,7 +47,7 @@ import { RuntimeProps } from './runtime'
 
 import { observe } from './lsp'
 
-import { mkdirSync, existsSync } from 'fs'
+import { mkdirSync, existsSync, readFileSync } from 'fs'
 import { access, readdir, readFile, rm, stat, copyFile, writeFile, appendFile, mkdir } from 'fs/promises'
 import * as os from 'os'
 import * as path from 'path'
@@ -192,6 +192,7 @@ export const standalone = (props: RuntimeProps) => {
                 writeFile: (path, data) => writeFile(path, data),
                 appendFile: (path, data) => appendFile(path, data),
                 mkdir: (path, options?) => mkdir(path, options),
+                readFileSync: path => readFileSync(path),
             },
         }
 

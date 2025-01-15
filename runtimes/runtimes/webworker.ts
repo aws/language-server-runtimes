@@ -48,6 +48,7 @@ import {
 import { IdentityManagement } from '../server-interface/identity-management'
 import { Encoding, WebBase64Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
+import { Buffer } from 'node:buffer'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -86,6 +87,7 @@ export const webworker = (props: RuntimeProps) => {
             writeFile: (_path, _data) => Promise.resolve(),
             appendFile: (_path, _data) => Promise.resolve(),
             mkdir: (_path, _options?) => Promise.resolve(''),
+            readFileSync: _path => Buffer.alloc(0),
         },
     }
 
