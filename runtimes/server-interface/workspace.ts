@@ -49,6 +49,6 @@ export type Workspace = {
         writeFile: (path: string, data: string) => Promise<void>
         appendFile: (path: string, data: string) => Promise<void>
         mkdir: (path: string, options?: { recursive?: boolean }) => Promise<string | undefined>
-        readFileSync: (path: string) => Buffer
+        readFileSync: (path: string, options?: { encoding?: string }) => string
     }
 }

@@ -192,7 +192,8 @@ export const standalone = (props: RuntimeProps) => {
                 writeFile: (path, data) => writeFile(path, data),
                 appendFile: (path, data) => appendFile(path, data),
                 mkdir: (path, options?) => mkdir(path, options),
-                readFileSync: path => readFileSync(path),
+                readFileSync: (path, options?) =>
+                    readFileSync(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
             },
         }
 
