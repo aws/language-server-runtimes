@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.31](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.30...language-server-runtimes/v0.2.31) (2025-01-16)
+
+
+### Features
+
+* adding support for readFileSync method in workspace.fs ([#299](https://github.com/aws/language-server-runtimes/issues/299)) ([3ef292a](https://github.com/aws/language-server-runtimes/commit/3ef292a483d0f41e804511e1d951e09f5da36d46))
+
 ## [0.2.30](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.29...language-server-runtimes/v0.2.30) (2025-01-07)
 
 
