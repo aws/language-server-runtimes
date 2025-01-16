@@ -49,6 +49,12 @@ export type Workspace = {
         writeFile: (path: string, data: string) => Promise<void>
         appendFile: (path: string, data: string) => Promise<void>
         mkdir: (path: string, options?: { recursive?: boolean }) => Promise<string | undefined>
+        /**
+         * Reads the entire contents of a file.
+         * @param {string} path - The path to the file.
+         * @param {string} [options.encoding] - The encoding to use when reading the file, defaults to 'utf-8'.
+         * @returns A string referring to the contents of the file.
+         */
         readFileSync: (path: string, options?: { encoding?: string }) => string
     }
 }
