@@ -86,6 +86,7 @@ export const webworker = (props: RuntimeProps) => {
             writeFile: (_path, _data) => Promise.resolve(),
             appendFile: (_path, _data) => Promise.resolve(),
             mkdir: (_path, _options?) => Promise.resolve(''),
+            readFileSync: (_path, _options?) => '',
         },
     }
 
