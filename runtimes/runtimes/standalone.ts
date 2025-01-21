@@ -288,6 +288,9 @@ export const standalone = (props: RuntimeProps) => {
                     getConfiguration: section => lspConnection.workspace.getConfiguration(section),
                     onDidChangeWorkspaceFolders: handler =>
                         lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.method, handler),
+                    onDidCreateFiles: params => lspConnection.workspace.onDidCreateFiles(params),
+                    onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
+                    onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
                 },
                 window: {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),

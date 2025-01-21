@@ -43,6 +43,9 @@ import {
     ApplyWorkspaceEditParams,
     ApplyWorkspaceEditResult,
     DidSaveTextDocumentParams,
+    DeleteFilesParams,
+    CreateFilesParams,
+    RenameFilesParams,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -119,6 +122,9 @@ export type Lsp = {
         getConfiguration: (section: string) => Promise<any>
         onDidChangeWorkspaceFolders: (handler: NotificationHandler<DidChangeWorkspaceFoldersParams>) => void
         applyWorkspaceEdit: (params: ApplyWorkspaceEditParams) => Promise<ApplyWorkspaceEditResult>
+        onDidCreateFiles: (handler: NotificationHandler<CreateFilesParams>) => void
+        onDidDeleteFiles: (handler: NotificationHandler<DeleteFilesParams>) => void
+        onDidRenameFiles: (handler: NotificationHandler<RenameFilesParams>) => void
     }
     window: {
         showMessage: (params: ShowMessageParams) => Promise<void>
