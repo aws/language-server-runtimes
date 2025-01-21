@@ -29,7 +29,7 @@ type TextDocumentObservable = {
  * with observables for each operation.
  *
  * This is useful for integrating mutliple Servers that each want to handle events one or more times. The {Observable}
- * interface allows for low-level control of subscrive, resubscribe, and notification handling. The callback interface
+ * interface allows for low-level control of subscribe, resubscribe, and notification handling. The callback interface
  * mimics the {TextDocumentConnection}, but does not overwrite each callback with the next.
  *
  * **Note:** {onWillSaveTextDocumentWaitUntil} will NOT support multiple handlers. The last registrered is the one
