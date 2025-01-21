@@ -280,6 +280,7 @@ export const standalone = (props: RuntimeProps) => {
                 onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
                 onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
                 onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
+                onDidSaveTextDocument: handler => documentsObserver.callbacks.onDidSaveTextDocument(handler),
                 onExecuteCommand: lspServer.setExecuteCommandHandler,
                 onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
                 workspace: {

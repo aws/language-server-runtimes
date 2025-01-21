@@ -42,6 +42,7 @@ import {
     LSPAny,
     ApplyWorkspaceEditParams,
     ApplyWorkspaceEditResult,
+    DidSaveTextDocumentParams,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -107,6 +108,7 @@ export type Lsp = {
     onDidOpenTextDocument: (handler: NotificationHandler<DidOpenTextDocumentParams>) => void
     onDidChangeTextDocument: (handler: NotificationHandler<DidChangeTextDocumentParams>) => void
     onDidCloseTextDocument: (handler: NotificationHandler<DidCloseTextDocumentParams>) => void
+    onDidSaveTextDocument: (handler: NotificationHandler<DidSaveTextDocumentParams>) => void
     publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>
     sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => Promise<void>
     onHover: (handler: RequestHandler<HoverParams, Hover | null | undefined, void>) => void
