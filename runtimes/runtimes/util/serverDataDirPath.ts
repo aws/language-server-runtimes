@@ -3,7 +3,7 @@ import * as os from 'os'
 import { InitializeParams } from '../../protocol'
 
 export function getServerDataDirPath(serverName: string, initializeParams: InitializeParams | undefined): string {
-    const clientSpecifiedLocation = initializeParams?.initializationOptions?.aws.clientDataFolder
+    const clientSpecifiedLocation = initializeParams?.initializationOptions?.aws?.clientDataFolder
     if (clientSpecifiedLocation) {
         return path.join(clientSpecifiedLocation, serverName)
     }
@@ -39,7 +39,7 @@ function getPlatformAppDataFolder(): string {
 
 function getClientNameFromParams(initializeParams: InitializeParams | undefined): string {
     const clientInfo = initializeParams?.clientInfo
-    const awsClientInfo = initializeParams?.initializationOptions?.aws.clientInfo
+    const awsClientInfo = initializeParams?.initializationOptions?.aws?.clientInfo
 
     return [awsClientInfo?.name || clientInfo?.name || '', awsClientInfo?.extension.name || '']
         .filter(Boolean)

@@ -88,7 +88,7 @@ export class LspServer {
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
         this.clientSupportsNotifications =
-            params.initializationOptions?.aws.awsClientCapabilities?.window?.notifications
+                params.initializationOptions?.aws?.awsClientCapabilities?.window?.notifications
 
         if (!this.initializeHandler) {
             return
