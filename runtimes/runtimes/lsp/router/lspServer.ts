@@ -87,22 +87,29 @@ export class LspServer {
         params: InitializeParams,
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
-        this.clientSupportsNotifications =
-            params.initializationOptions?.aws.awsClientCapabilities?.window?.notifications
+        try {
+            this.clientSupportsNotifications =
+                params.initializationOptions?.aws?.awsClientCapabilities?.window?.notifications
 
-        if (!this.initializeHandler) {
+            if (!this.initializeHandler) {
+                return
+            }
+
+            const initializeResult = await asPromise(this.initializeHandler(params, token))
+            if (!(initializeResult instanceof ResponseError)) {
+                this.initializeResult = initializeResult
+                if (initializeResult?.serverInfo) {
+                    this.notificationRouter = new RouterByServerName(initializeResult.serverInfo.name, this.encoding)
+                }
+            }
+
+            return initializeResult
+        } catch (error) {
+            this.lspConnection.console.log(
+                `Error in initialize handler: "${error}",\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
+            )
             return
         }
-
-        const initializeResult = await asPromise(this.initializeHandler(params, token))
-        if (!(initializeResult instanceof ResponseError)) {
-            this.initializeResult = initializeResult
-            if (initializeResult?.serverInfo) {
-                this.notificationRouter = new RouterByServerName(initializeResult.serverInfo.name, this.encoding)
-            }
-        }
-
-        return initializeResult
     }
 
     public tryExecuteCommand = async (
