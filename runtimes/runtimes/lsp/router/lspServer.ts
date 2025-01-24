@@ -110,7 +110,9 @@ export class LspServer {
             )
             return new ResponseError<InitializeError>(
                 ErrorCodes.InternalError,
-                error instanceof Error ? error.message : 'Unknown initialization error'
+                error instanceof Error
+                    ? `${error.message}\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
+                    : `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
             )
         }
     }
