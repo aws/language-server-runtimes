@@ -88,14 +88,13 @@ export class LspServer {
         params: InitializeParams,
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
+        this.clientSupportsNotifications =
+            params.initializationOptions?.aws?.awsClientCapabilities?.window?.notifications
+
+        if (!this.initializeHandler) {
+            return
+        }
         try {
-            this.clientSupportsNotifications =
-                params.initializationOptions?.aws?.awsClientCapabilities?.window?.notifications
-
-            if (!this.initializeHandler) {
-                return
-            }
-
             const initializeResult = await asPromise(this.initializeHandler(params, token))
             if (!(initializeResult instanceof ResponseError)) {
                 this.initializeResult = initializeResult
