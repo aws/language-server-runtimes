@@ -108,7 +108,7 @@ export class LspServer {
             this.lspConnection.console.log(
                 `Error in initialize handler: "${error}",\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
             )
-            return
+            throw error
         }
     }
 
