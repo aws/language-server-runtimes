@@ -11,6 +11,7 @@ import {
     showNotificationRequestType,
     NotificationFollowupParams,
     NotificationParams,
+    ErrorCodes,
 } from '../../../protocol'
 import { InitializeParams, PartialInitializeResult, PartialServerCapabilities } from '../../../server-interface/lsp'
 import { Logging, Notification } from '../../../server-interface'
@@ -89,12 +90,11 @@ export class LspServer {
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
         try {
             this.clientSupportsNotifications =
-                params.initializationOptions?.aws?.awsClientCapabilities?.window?.notifications
+                params.initializationOptions?.aws.awsClientCapabilities?.window?.notifications
 
             if (!this.initializeHandler) {
                 return
             }
-
             const initializeResult = await asPromise(this.initializeHandler(params, token))
             if (!(initializeResult instanceof ResponseError)) {
                 this.initializeResult = initializeResult
@@ -108,7 +108,12 @@ export class LspServer {
             this.lspConnection.console.log(
                 `Error in initialize handler: "${error}",\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
             )
-            return
+            return new ResponseError<InitializeError>(
+                ErrorCodes.InternalError,
+                error instanceof Error
+                    ? `${error.message}\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
+                    : `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
+            )
         }
     }
 
