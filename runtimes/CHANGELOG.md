@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.33](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.32...language-server-runtimes/v0.2.33) (2025-01-28)
+
+
+### Features
+
+* add save option to initializeResult to allow LSP server to listen to save file events ([#309](https://github.com/aws/language-server-runtimes/issues/309)) ([d80688f](https://github.com/aws/language-server-runtimes/commit/d80688fe272cedd352a9e5ed8cd13279cad392a7))
+
+
+### Bug Fixes
+
+* explicit check for initializationOptions and add optional chaining ([#310](https://github.com/aws/language-server-runtimes/issues/310)) ([e97456d](https://github.com/aws/language-server-runtimes/commit/e97456d6d5352042364f860483ea2721fc3268e1))
+
 ## [0.2.32](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.31...language-server-runtimes/v0.2.32) (2025-01-27)
 
 
