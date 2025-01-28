@@ -67,6 +67,9 @@ export class LspRouter {
                 textDocumentSync: {
                     openClose: true,
                     change: TextDocumentSyncKind.Incremental,
+                    save: {
+                        includeText: true,
+                    },
                 },
             },
         }

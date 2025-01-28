@@ -60,6 +60,7 @@ export type PartialServerCapabilities<T = any> = Pick<
     | 'executeCommandProvider'
     | 'semanticTokensProvider'
     | 'signatureHelpProvider'
+    | 'workspace'
 >
 export type PartialInitializeResult<T = any> = {
     /**
