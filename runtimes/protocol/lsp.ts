@@ -116,7 +116,7 @@ export interface InitializeParams extends _InitializeParamsBase {
     initializationOptions?: {
         [key: string]: any
         logLevel?: LogLevel
-        aws: AWSInitializationOptions
+        aws?: AWSInitializationOptions
     }
 }
 
