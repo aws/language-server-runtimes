@@ -42,7 +42,7 @@ describe('getServerDataDirPath', () => {
 
     it('should return the clientDataFolder param if present', () => {
         const clientDataFolderPath = path.join('client-specified', 'path', 'to', 'data')
-        initializeParams.initializationOptions!.aws.clientDataFolder = clientDataFolderPath
+        initializeParams.initializationOptions!.aws!.clientDataFolder = clientDataFolderPath
         const expected = path.join(clientDataFolderPath, serverName)
 
         const result = getServerDataDirPath(serverName, initializeParams)
@@ -122,7 +122,7 @@ describe('getServerDataDirPath', () => {
     it('should reduce long client folder names that could exceed the file system limit', () => {
         platformStub = sinon.stub(process, 'platform').value('darwin')
 
-        initializeParams.initializationOptions!.aws.clientInfo!.extension.name =
+        initializeParams.initializationOptions!.aws!.clientInfo!.extension.name =
             'Sample Extension for VSCode Sample Extension for VSCode Sample Extension for VSCode Sample Extension for VSCode'
         const clientDataFolderPath = path.join(
             os.homedir(),
@@ -139,8 +139,8 @@ describe('getServerDataDirPath', () => {
     it('should filter problematic characters from the client folder name', () => {
         platformStub = sinon.stub(process, 'platform').value('darwin')
 
-        initializeParams.initializationOptions!.aws.clientInfo!.name = '.?vs@-code_123 '
-        initializeParams.initializationOptions!.aws.clientInfo!.extension.name = ' ..Sample Extension for VSCode!  '
+        initializeParams.initializationOptions!.aws!.clientInfo!.name = '.?vs@-code_123 '
+        initializeParams.initializationOptions!.aws!.clientInfo!.extension.name = ' ..Sample Extension for VSCode!  '
         const clientDataFolderPath = path.join(
             os.homedir(),
             'Library',
@@ -156,7 +156,7 @@ describe('getServerDataDirPath', () => {
     it('should use the default clientInfo parameter if AWS clientInfo is not specified', () => {
         platformStub = sinon.stub(process, 'platform').value('darwin')
 
-        initializeParams.initializationOptions!.aws.clientInfo = undefined
+        initializeParams.initializationOptions!.aws!.clientInfo = undefined
         const clientDataFolderPath = path.join(os.homedir(), 'Library', 'Application Support', 'params_vscode')
         const expected = path.join(clientDataFolderPath, serverName)
 
@@ -179,7 +179,7 @@ describe('getServerDataDirPath', () => {
     it('should omit the client folder if clientInfo is not specified and append the server name as a hidden directory', () => {
         platformStub = sinon.stub(process, 'platform').value('freebsd')
 
-        initializeParams.initializationOptions!.aws.clientInfo = undefined
+        initializeParams.initializationOptions!.aws!.clientInfo = undefined
         initializeParams.clientInfo = undefined
         const clientDataFolderPath = path.join(os.homedir())
         const expected = path.join(clientDataFolderPath, `.${serverName}`)
