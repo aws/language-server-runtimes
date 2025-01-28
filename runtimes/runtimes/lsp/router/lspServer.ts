@@ -89,7 +89,7 @@ export class LspServer {
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
         if (!params.initializationOptions?.aws) {
-            this.lspConnection.console.log(
+            this.logger.log(
                 `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
             )
         }
