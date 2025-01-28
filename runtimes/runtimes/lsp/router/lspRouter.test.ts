@@ -83,6 +83,9 @@ describe('LspRouter', () => {
                     textDocumentSync: {
                         openClose: true,
                         change: TextDocumentSyncKind.Incremental,
+                        save: {
+                            includeText: true,
+                        },
                     },
                 },
             }
@@ -102,6 +105,9 @@ describe('LspRouter', () => {
                     textDocumentSync: {
                         openClose: true,
                         change: TextDocumentSyncKind.Incremental,
+                        save: {
+                            includeText: true,
+                        },
                     },
                 },
             }
@@ -143,6 +149,9 @@ describe('LspRouter', () => {
                     textDocumentSync: {
                         openClose: true,
                         change: TextDocumentSyncKind.Incremental,
+                        save: {
+                            includeText: true,
+                        },
                     },
                     completionProvider: { resolveProvider: true },
                     executeCommandProvider: { commands: ['run', 'log', 'test'] },
@@ -183,6 +192,9 @@ describe('LspRouter', () => {
                     textDocumentSync: {
                         openClose: true,
                         change: TextDocumentSyncKind.Incremental,
+                        save: {
+                            includeText: true,
+                        },
                     },
                     completionProvider: { resolveProvider: true },
                 },
