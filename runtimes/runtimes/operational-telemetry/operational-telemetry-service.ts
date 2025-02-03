@@ -1,11 +1,12 @@
-import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
+import { MeterProvider, PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AWSMetricExporter } from './aws-metric-exporter'
 import { OperationalTelemetry } from './operational-telemetry'
-import opentelemetry, { Attributes } from '@opentelemetry/api'
+import opentelemetry, { diag, Attributes, DiagLogLevel } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions/*'
 import { randomUUID } from 'crypto'
+import { RemoteConsole } from 'vscode-languageserver'
 
 export class OperationalTelemetryService implements OperationalTelemetry {
     private customResource: Record<string, any> = {}
@@ -17,7 +18,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
     reportCounterMetric(counterName: string, value = 1, attributes?: Record<string, any>): void {
         if (!this.initialized) {
-            // todo log diag error
+            diag.error('Operational telemetry not initialized')
             return
         }
 
@@ -28,13 +29,13 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
     setPeriodicGauge(gaugeName: string, valueGetter: () => number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
-            // todo log diag error
+            diag.error('Operational telemetry not initialized')
             return
         }
 
         const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
-        const memoryUsageGauge = meter.createObservableGauge(gaugeName)
-        memoryUsageGauge.addCallback(result => {
+        const gauge = meter.createObservableGauge(gaugeName)
+        gauge.addCallback(result => {
             result.observe(valueGetter(), attributes as Attributes)
         })
     }
@@ -46,8 +47,9 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         return OperationalTelemetryService.instance
     }
 
-    initialize(serviceName: string, serviceVersion: string): void {
+    initialize(serviceName: string, serviceVersion: string, console: RemoteConsole): void {
         if (this.initialized) {
+            diag.warn('Operational telemetry already initialized')
             return
         }
         this.initialized = true
@@ -55,6 +57,17 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         const poolId = ''
         const region = ''
         const endpoint = ''
+
+        diag.setLogger(
+            {
+                debug: message => console.debug(message),
+                error: message => console.error(message),
+                info: message => console.info(message),
+                verbose: message => console.log(message),
+                warn: message => console.warn(message),
+            },
+            DiagLogLevel.ALL
+        )
 
         const exporter = new AWSMetricExporter(endpoint, region, poolId, this)
 

@@ -1,3 +1,5 @@
+import { RemoteConsole } from 'vscode-languageserver'
+
 export type OperationalMetric = {
     name: string
     value: number
@@ -14,7 +16,7 @@ export type OperationalMetric = {
 }
 
 export interface OperationalTelemetry {
-    initialize(serviceName: string, serviceVersion: string): void
+    initialize(serviceName: string, serviceVersion: string, console: RemoteConsole): void
     setPeriodicGauge(gaugeName: string, valueGetter: () => number, attributes?: Record<string, any>): void
     reportCounterMetric(counterName: string, value: number, attributes?: Record<string, any>): void
     getResource(): Record<string, any>

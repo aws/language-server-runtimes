@@ -58,8 +58,6 @@ import { checkAWSConfigFile } from './util/sharedConfigFile'
 import { getServerDataDirPath } from './util/serverDataDirPath'
 import { Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
-import { OperationalTelemetry } from './operational-telemetry/operational-telemetry'
-import { OperationalTelemetryService } from './operational-telemetry/operational-telemetry-service'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -100,12 +98,6 @@ export const standalone = (props: RuntimeProps) => {
 
     const lspConnection = createConnection(ProposedFeatures.all)
     const documentsObserver = observe(lspConnection)
-
-    // const operationalTelemetry: OperationalTelemetry = OperationalTelemetryService.getInstance()
-    // operationalTelemetry.initialize(props.name, props.version ? props.version : '')
-
-    // operationalTelemetry.setPeriodicGauge('memory-heap', () => process.memoryUsage().heapUsed)
-    // operationalTelemetry.reportCounterMetric('exception', 1)
 
     let auth: Auth
     let chat: Chat

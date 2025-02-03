@@ -12,6 +12,7 @@ import { SignatureV4 } from '@smithy/signature-v4'
 import axios from 'axios'
 import { OperationalMetric, OperationalTelemetry } from './operational-telemetry'
 import { Resource } from '@opentelemetry/resources'
+import { diag } from '@opentelemetry/api'
 
 export class AWSMetricExporter implements PushMetricExporter {
     private readonly endpoint: string
@@ -35,6 +36,7 @@ export class AWSMetricExporter implements PushMetricExporter {
 
     async export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void): Promise<void> {
         if (this.isShutdown) {
+            diag.warn('Export attempted on shutdown exporter')
             setImmediate(resultCallback, { code: ExportResultCode.FAILED })
             return
         }
@@ -43,19 +45,29 @@ export class AWSMetricExporter implements PushMetricExporter {
             const operationalMetrics = this.extractOperationalMetrics(metrics)
             await this.refreshCognitoCredentials(this.region, this.poolId)
             await this.sendOperationalMetrics(operationalMetrics)
+
+            diag.info('Successfully exported operational metrics batch')
             resultCallback({ code: ExportResultCode.SUCCESS })
         } catch (error) {
-            console.log('Failed to export metrics', error)
+            diag.error('Failed to export metrics:', error)
             resultCallback({ code: ExportResultCode.FAILED })
             return
         }
     }
 
     forceFlush(): Promise<void> {
+        if (this.isShutdown) {
+            diag.warn('Force flush attempted on shutdown exporter')
+        }
+        // todo run export
         return Promise.resolve()
     }
 
     shutdown(): Promise<void> {
+        if (this.isShutdown) {
+            diag.warn('Duplicate shutdown attempt - exporter is already in shutdown state')
+        }
+        // todo run export
         this.isShutdown = true
         return Promise.resolve()
     }
@@ -84,6 +96,7 @@ export class AWSMetricExporter implements PushMetricExporter {
         )
 
         if (!credentialsResponse.Credentials) {
+            diag.error('Failed to refresh Cognito credentials')
             throw new Error('No credentials received')
         }
 
@@ -161,9 +174,7 @@ export class AWSMetricExporter implements PushMetricExporter {
                     headers: signedRequest.headers,
                 })
 
-                // todo proper logging
-                console.log('Status Code:', response.status)
-                console.log('Response:', response.data)
+                diag.debug('Operational metrics response status code:', response.status)
             } catch (e) {
                 throw Error('Failed to send metric')
             }
