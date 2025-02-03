@@ -1,6 +1,6 @@
 import { MeterProvider, PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AwsCognitoApiGatewayMetricExporter } from './aws-cognito-gateway-metric-exporter'
-import { OperationalTelemetry } from './operational-telemetry'
+import { MetricType, OperationalTelemetry } from './operational-telemetry'
 import opentelemetry, { diag, Attributes, DiagLogLevel } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
@@ -16,36 +16,36 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
     private constructor() {}
 
-    incrementCounter(counterName: string, value?: number, attributes?: Record<string, any>): void {
+    incrementCounter(metricName: MetricType, value?: number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')
             return
         }
 
         const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
-        const counter = meter.createCounter(counterName)
+        const counter = meter.createCounter(metricName.toString())
         counter.add(value ? value : 1, attributes as Attributes)
     }
 
-    recordGauge(gaugeName: string, value: number, attributes?: Record<string, any>): void {
+    recordGauge(metricName: MetricType, value: number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')
             return
         }
 
         const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
-        const gauge = meter.createGauge(gaugeName)
+        const gauge = meter.createGauge(metricName.toString())
         gauge.record(value, attributes as Attributes)
     }
 
-    registerGaugeProvider(gaugeName: string, valueProvider: () => number, attributes?: Record<string, any>): void {
+    registerGaugeProvider(metricName: MetricType, valueProvider: () => number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')
             return
         }
 
         const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
-        const gauge = meter.createObservableGauge(gaugeName)
+        const gauge = meter.createObservableGauge(metricName.toString())
         gauge.addCallback(result => {
             result.observe(valueProvider(), attributes as Attributes)
         })
