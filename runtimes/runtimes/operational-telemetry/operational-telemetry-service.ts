@@ -1,5 +1,5 @@
 import { MeterProvider, PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
-import { AWSMetricExporter } from './aws-metric-exporter'
+import { AwsCognitoApiGatewayMetricExporter } from './aws-cognito-gateway-metric-exporter'
 import { OperationalTelemetry } from './operational-telemetry'
 import opentelemetry, { diag, Attributes, DiagLogLevel } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
@@ -9,14 +9,14 @@ import { randomUUID } from 'crypto'
 import { RemoteConsole } from 'vscode-languageserver'
 
 export class OperationalTelemetryService implements OperationalTelemetry {
-    private customResource: Record<string, any> = {}
+    private customAttributes: Record<string, any> = {}
     private static instance: OperationalTelemetryService
     private SCOPE_NAME = 'language-server-runtimes'
     private initialized = false
 
     private constructor() {}
 
-    reportCounterMetric(counterName: string, value = 1, attributes?: Record<string, any>): void {
+    incrementCounter(counterName: string, value?: number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')
             return
@@ -24,10 +24,21 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
         const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
         const counter = meter.createCounter(counterName)
-        counter.add(value, attributes as Attributes)
+        counter.add(value ? value : 1, attributes as Attributes)
     }
 
-    setPeriodicGauge(gaugeName: string, valueGetter: () => number, attributes?: Record<string, any>): void {
+    recordGauge(gaugeName: string, value: number, attributes?: Record<string, any>): void {
+        if (!this.initialized) {
+            diag.error('Operational telemetry not initialized')
+            return
+        }
+
+        const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
+        const gauge = meter.createGauge(gaugeName)
+        gauge.record(value, attributes as Attributes)
+    }
+
+    registerGaugeProvider(gaugeName: string, valueProvider: () => number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')
             return
@@ -36,7 +47,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
         const gauge = meter.createObservableGauge(gaugeName)
         gauge.addCallback(result => {
-            result.observe(valueGetter(), attributes as Attributes)
+            result.observe(valueProvider(), attributes as Attributes)
         })
     }
 
@@ -69,7 +80,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
             DiagLogLevel.ALL
         )
 
-        const exporter = new AWSMetricExporter(endpoint, region, poolId, this)
+        const exporter = new AwsCognitoApiGatewayMetricExporter(endpoint, region, poolId, this)
 
         const metricReader = new PeriodicExportingMetricReader({
             exporter: exporter,
@@ -88,11 +99,11 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         sdk.start()
     }
 
-    getResource(): Record<string, any> {
-        return this.customResource
+    getCustomAttributes(): Record<string, any> {
+        return this.customAttributes
     }
 
-    updateResource(key: string, value: any): void {
-        this.customResource[key] = value
+    updateCustomAttributes(key: string, value: any): void {
+        this.customAttributes[key] = value
     }
 }

@@ -14,7 +14,7 @@ import { OperationalMetric, OperationalTelemetry } from './operational-telemetry
 import { Resource } from '@opentelemetry/resources'
 import { diag } from '@opentelemetry/api'
 
-export class AWSMetricExporter implements PushMetricExporter {
+export class AwsCognitoApiGatewayMetricExporter implements PushMetricExporter {
     private readonly endpoint: string
     private readonly region: string
     private readonly poolId: string
@@ -72,7 +72,7 @@ export class AWSMetricExporter implements PushMetricExporter {
         return Promise.resolve()
     }
 
-    async refreshCognitoCredentials(region: string, poolId: string): Promise<Credentials> {
+    private async refreshCognitoCredentials(region: string, poolId: string): Promise<Credentials> {
         if (this.credentials && this.credentialsLastFetched) {
             const now = new Date()
             const timeSinceLastFetch = now.getTime() - this.credentialsLastFetched.getTime()
@@ -106,7 +106,7 @@ export class AWSMetricExporter implements PushMetricExporter {
         return this.credentials
     }
 
-    signRequest(url: URL, body: string, region: string, credentials: Credentials) {
+    private signRequest(url: URL, body: string, region: string, credentials: Credentials) {
         const request = new HttpRequest({
             method: 'POST',
             headers: {
@@ -132,17 +132,17 @@ export class AWSMetricExporter implements PushMetricExporter {
         return signer.sign(request)
     }
 
-    extractOperationalMetrics(metrics: ResourceMetrics): OperationalMetric[] {
+    private extractOperationalMetrics(metrics: ResourceMetrics): OperationalMetric[] {
         return metrics.scopeMetrics
             .map((scopeMetrics: ScopeMetrics) => {
                 return scopeMetrics.metrics.map((metric: MetricData) => {
-                    return this.transform(metric, metrics.resource)
+                    return this.toOperationalMetric(metric, metrics.resource)
                 })
             })
             .flat()
     }
 
-    transform(metric: MetricData, resource: Resource): OperationalMetric {
+    private toOperationalMetric(metric: MetricData, resource: Resource): OperationalMetric {
         const dataPoint = metric.dataPoints[0]
         return {
             name: metric.descriptor.name,
@@ -155,12 +155,12 @@ export class AWSMetricExporter implements PushMetricExporter {
                 version: resource.attributes['service.version'] as string,
             },
             clientInfo: {
-                name: this.telemetryService.getResource()['clientInfo.name'] as string,
+                name: this.telemetryService.getCustomAttributes()['clientInfo.name'] as string,
             },
         }
     }
 
-    async sendOperationalMetrics(metrics: OperationalMetric[]) {
+    private async sendOperationalMetrics(metrics: OperationalMetric[]) {
         for (const metric of metrics) {
             const body = JSON.stringify(metric)
             const url = new URL(this.endpoint)
