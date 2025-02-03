@@ -1,4 +1,14 @@
-import { Logging, Lsp, Telemetry, Workspace, CredentialsProvider, Chat, Runtime, Notification } from '.'
+import {
+    Logging,
+    Lsp,
+    Telemetry,
+    Workspace,
+    CredentialsProvider,
+    Chat,
+    Runtime,
+    Notification,
+    SDKRuntimeConfigurator,
+} from '.'
 import { IdentityManagement } from './identity-management'
 
 /**
@@ -28,4 +38,5 @@ export type Features = {
     runtime: Runtime
     identityManagement: IdentityManagement
     notification: Notification
+    sdkRuntimeConfigurator: SDKRuntimeConfigurator
 }

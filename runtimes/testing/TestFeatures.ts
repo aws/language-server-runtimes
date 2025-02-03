@@ -8,6 +8,10 @@ import {
     Chat,
     Runtime,
     Notification,
+    SDKClientConstructorV2,
+    SDKClientConstructorV3,
+    SDKClientV3,
+    SDKRuntimeConfigurator,
 } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
@@ -24,6 +28,8 @@ import {
     SignatureHelpParams,
 } from '../protocol'
 import { IdentityManagement } from '../server-interface/identity-management'
+import { Service } from 'aws-sdk'
+import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 
 /**
  * A test helper package to test Server implementations. Accepts a single callback
@@ -52,6 +58,7 @@ export class TestFeatures {
     runtime: StubbedInstance<Runtime>
     identityManagement: StubbedInstance<IdentityManagement>
     notification: StubbedInstance<Notification>
+    sdkRuntimeConfigurator: SDKRuntimeConfigurator
 
     private disposables: (() => void)[] = []
 
@@ -72,7 +79,17 @@ export class TestFeatures {
         this.runtime = stubInterface<Runtime>()
         this.identityManagement = stubInterface<IdentityManagement>()
         this.notification = stubInterface<Notification>()
-
+        this.sdkRuntimeConfigurator = {
+            v2: <T extends Service, P extends ServiceConfigurationOptions>(
+                Ctor: SDKClientConstructorV2<T, P>,
+                current_config: P
+            ): T => {
+                return new Ctor({ ...current_config })
+            },
+            v3: <T extends SDKClientV3, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
+                return new Ctor({ ...current_config })
+            },
+        }
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
         this.workspace.getAllTextDocuments.callsFake(async () => Object.values(this.documents))
     }

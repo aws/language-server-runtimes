@@ -30,7 +30,19 @@ import {
     ShowDocumentRequest,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
-import { Chat, Logging, Lsp, Runtime, Telemetry, Workspace, Notification } from '../server-interface'
+import {
+    Chat,
+    Logging,
+    Lsp,
+    Runtime,
+    Telemetry,
+    Workspace,
+    Notification,
+    SDKClientConstructorV2,
+    SDKClientConstructorV3,
+    SDKClientV3,
+    SDKRuntimeConfigurator,
+} from '../server-interface'
 import { Auth } from './auth'
 
 import { RuntimeProps } from './runtime'
@@ -48,6 +60,8 @@ import {
 import { IdentityManagement } from '../server-interface/identity-management'
 import { Encoding, WebBase64Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
+import { Service } from 'aws-sdk'
+import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -185,6 +199,18 @@ export const webworker = (props: RuntimeProps) => {
             },
         }
 
+        const sdkRuntimeConfigurator: SDKRuntimeConfigurator = {
+            v2: <T extends Service, P extends ServiceConfigurationOptions>(
+                Ctor: SDKClientConstructorV2<T, P>,
+                current_config: P
+            ): T => {
+                return new Ctor({ ...current_config })
+            },
+            v3: <T extends SDKClientV3, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
+                return new Ctor({ ...current_config })
+            },
+        }
+
         return s({
             chat,
             credentialsProvider,
@@ -195,6 +221,7 @@ export const webworker = (props: RuntimeProps) => {
             runtime,
             identityManagement,
             notification: lspServer.notification,
+            sdkRuntimeConfigurator: sdkRuntimeConfigurator,
         })
     })
 
