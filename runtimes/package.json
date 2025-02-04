@@ -34,6 +34,9 @@
     },
     "dependencies": {
         "@aws/language-server-runtimes-types": "^0.1.1",
+        "@smithy/node-http-handler": "^4.0.2",
+        "aws-sdk": "^2.1692.0",
+        "hpagent": "^1.2.0",
         "jose": "^5.9.6",
         "rxjs": "^7.8.1",
         "vscode-languageserver": "^9.0.1",

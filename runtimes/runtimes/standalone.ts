@@ -38,6 +38,9 @@ import {
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
+    SDKClientConstructorV2,
+    SDKClientConstructorV3,
+    SDKInitializator,
 } from '../server-interface'
 import { Auth } from './auth'
 import { EncryptedChat } from './chat/encryptedChat'
@@ -56,8 +59,11 @@ import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
 import { getServerDataDirPath } from './util/serverDataDirPath'
+import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/proxyUtil'
 import { Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
+import { Service } from 'aws-sdk'
+import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -318,6 +324,31 @@ export const standalone = (props: RuntimeProps) => {
                     },
                 },
             }
+
+            const sdkInitializator: SDKInitializator = Object.assign(
+                // Default v3 implementation as the callable function
+                <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
+                    // setup proxy
+                    let instance = new Ctor({
+                        ...current_config,
+                        requestHandler: makeProxyConfigv3Standalone(workspace),
+                    })
+                    return instance
+                },
+                // v2 implementation as a property
+                {
+                    v2: <T extends Service, P extends ServiceConfigurationOptions>(
+                        Ctor: SDKClientConstructorV2<T, P>,
+                        current_config: P
+                    ): T => {
+                        let instance = new Ctor({ ...current_config })
+                        // setup proxy
+                        instance.config.update(makeProxyConfigv2Standalone(workspace))
+                        return instance
+                    },
+                }
+            )
+
             return s({
                 chat,
                 credentialsProvider,
@@ -328,6 +359,7 @@ export const standalone = (props: RuntimeProps) => {
                 runtime,
                 identityManagement,
                 notification: lspServer.notification,
+                sdkInitializator: sdkInitializator,
             })
         })
 
