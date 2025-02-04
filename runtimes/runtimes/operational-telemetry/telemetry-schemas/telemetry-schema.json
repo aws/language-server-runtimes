@@ -1,0 +1,83 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Operational Telemetry Schema",
+    "type": "object",
+    "required": ["batchTimestamp", "sessionId", "server", "clientInfo", "scopes"],
+    "additionalProperties": false,
+    "properties": {
+        "batchTimestamp": {
+            "type": "number",
+            "description": "Timestamp when the batch of telemetry data was emitted"
+        },
+        "sessionId": {
+            "type": "string",
+            "description": "The session id of the runtime that emitted the telemetry data"
+        },
+        "server": {
+            "type": "object",
+            "description": "Information about the server that emitted the telemetry data",
+            "required": ["name"],
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        },
+        "clientInfo": {
+            "type": "object",
+            "description": "Information about the client using the server",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                },
+                "extension": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "name": {
+                            "type": "string"
+                        },
+                        "version": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "clientId": {
+                    "type": "string"
+                }
+            }
+        },
+        "scopes": {
+            "type": "array",
+            "description": "The scopes of the telemetry data",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["scopeName", "metrics"],
+                "properties": {
+                    "scopeName": {
+                        "type": "string"
+                    },
+                    "metrics": {
+                        "type": "array",
+                        "items": {
+                            "oneOf": [
+                                {
+                                    "$ref": "./runtimes/operational-telemetry/telemetry-schemas/memory-usage-metric-schema.json#/definitions/MemoryMetric"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
