@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.34](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.33...language-server-runtimes/v0.2.34) (2025-02-04)
+
+
+### Features
+
+* implement sdk runtime configurator to configure sdk clients at runtime ([#316](https://github.com/aws/language-server-runtimes/issues/316)) ([ef82756](https://github.com/aws/language-server-runtimes/commit/ef827565b32d1482b6e08d66b78774d7aed544eb))
+
 ## [0.2.33](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.32...language-server-runtimes/v0.2.33) (2025-01-28)
 
 
