@@ -33,8 +33,6 @@
         "version": "npm run compile && git add -A ."
     },
     "dependencies": {
-        "@aws-sdk/smithy-client": "^3.374.0",
-        "@aws-sdk/types": "^3.734.0",
         "@aws/language-server-runtimes-types": "^0.1.1",
         "@smithy/node-http-handler": "^4.0.2",
         "aws-sdk": "^2.1692.0",

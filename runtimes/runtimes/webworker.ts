@@ -40,8 +40,7 @@ import {
     Notification,
     SDKClientConstructorV2,
     SDKClientConstructorV3,
-    SDKClientV3,
-    SDKRuntimeConfigurator,
+    SDKInitializator,
 } from '../server-interface'
 import { Auth } from './auth'
 
@@ -199,17 +198,17 @@ export const webworker = (props: RuntimeProps) => {
             },
         }
 
-        const sdkRuntimeConfigurator: SDKRuntimeConfigurator = {
-            v2: <T extends Service, P extends ServiceConfigurationOptions>(
-                Ctor: SDKClientConstructorV2<T, P>,
-                current_config: P
-            ): T => {
-                return new Ctor({ ...current_config })
-            },
-            v3: <T extends SDKClientV3, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
-                return new Ctor({ ...current_config })
-            },
-        }
+        const sdkInitializator: SDKInitializator = Object.assign(
+            // Default callable function for v3 clients
+            <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => new Ctor({ ...current_config }),
+            // Property for v2 clients
+            {
+                v2: <T extends Service, P extends ServiceConfigurationOptions>(
+                    Ctor: SDKClientConstructorV2<T, P>,
+                    current_config: P
+                ): T => new Ctor({ ...current_config }),
+            }
+        )
 
         return s({
             chat,
@@ -221,7 +220,7 @@ export const webworker = (props: RuntimeProps) => {
             runtime,
             identityManagement,
             notification: lspServer.notification,
-            sdkRuntimeConfigurator: sdkRuntimeConfigurator,
+            sdkInitializator: sdkInitializator,
         })
     })
 

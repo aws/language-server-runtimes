@@ -10,8 +10,7 @@ import {
     Notification,
     SDKClientConstructorV2,
     SDKClientConstructorV3,
-    SDKClientV3,
-    SDKRuntimeConfigurator,
+    SDKInitializator,
 } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
@@ -58,7 +57,7 @@ export class TestFeatures {
     runtime: StubbedInstance<Runtime>
     identityManagement: StubbedInstance<IdentityManagement>
     notification: StubbedInstance<Notification>
-    sdkRuntimeConfigurator: SDKRuntimeConfigurator
+    sdkInitializator: SDKInitializator
 
     private disposables: (() => void)[] = []
 
@@ -79,17 +78,17 @@ export class TestFeatures {
         this.runtime = stubInterface<Runtime>()
         this.identityManagement = stubInterface<IdentityManagement>()
         this.notification = stubInterface<Notification>()
-        this.sdkRuntimeConfigurator = {
-            v2: <T extends Service, P extends ServiceConfigurationOptions>(
-                Ctor: SDKClientConstructorV2<T, P>,
-                current_config: P
-            ): T => {
-                return new Ctor({ ...current_config })
-            },
-            v3: <T extends SDKClientV3, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
-                return new Ctor({ ...current_config })
-            },
-        }
+        this.sdkInitializator = Object.assign(
+            // Default callable function for v3 clients
+            <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => new Ctor({ ...current_config }),
+            // Property for v2 clients
+            {
+                v2: <T extends Service, P extends ServiceConfigurationOptions>(
+                    Ctor: SDKClientConstructorV2<T, P>,
+                    current_config: P
+                ): T => new Ctor({ ...current_config }),
+            }
+        )
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
         this.workspace.getAllTextDocuments.callsFake(async () => Object.values(this.documents))
     }

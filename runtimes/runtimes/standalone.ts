@@ -40,8 +40,7 @@ import {
     updateProfileRequestType,
     SDKClientConstructorV2,
     SDKClientConstructorV3,
-    SDKClientV3,
-    SDKRuntimeConfigurator,
+    SDKInitializator,
 } from '../server-interface'
 import { Auth } from './auth'
 import { EncryptedChat } from './chat/encryptedChat'
@@ -326,17 +325,9 @@ export const standalone = (props: RuntimeProps) => {
                 },
             }
 
-            const sdkRuntimeConfigurator: SDKRuntimeConfigurator = {
-                v2: <T extends Service, P extends ServiceConfigurationOptions>(
-                    Ctor: SDKClientConstructorV2<T, P>,
-                    current_config: P
-                ): T => {
-                    let instance = new Ctor({ ...current_config })
-                    // setup proxy
-                    instance.config.update(makeProxyConfigv2Standalone(workspace))
-                    return instance
-                },
-                v3: <T extends SDKClientV3, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
+            const sdkInitializator: SDKInitializator = Object.assign(
+                // Default v3 implementation as the callable function
+                <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
                     // setup proxy
                     let instance = new Ctor({
                         ...current_config,
@@ -344,7 +335,19 @@ export const standalone = (props: RuntimeProps) => {
                     })
                     return instance
                 },
-            }
+                // v2 implementation as a property
+                {
+                    v2: <T extends Service, P extends ServiceConfigurationOptions>(
+                        Ctor: SDKClientConstructorV2<T, P>,
+                        current_config: P
+                    ): T => {
+                        let instance = new Ctor({ ...current_config })
+                        // setup proxy
+                        instance.config.update(makeProxyConfigv2Standalone(workspace))
+                        return instance
+                    },
+                }
+            )
 
             return s({
                 chat,
@@ -356,7 +359,7 @@ export const standalone = (props: RuntimeProps) => {
                 runtime,
                 identityManagement,
                 notification: lspServer.notification,
-                sdkRuntimeConfigurator: sdkRuntimeConfigurator,
+                sdkInitializator: sdkInitializator,
             })
         })
 

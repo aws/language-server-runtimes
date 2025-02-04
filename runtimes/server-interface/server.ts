@@ -7,7 +7,7 @@ import {
     Chat,
     Runtime,
     Notification,
-    SDKRuntimeConfigurator,
+    SDKInitializator,
 } from '.'
 import { IdentityManagement } from './identity-management'
 
@@ -38,5 +38,5 @@ export type Features = {
     runtime: Runtime
     identityManagement: IdentityManagement
     notification: Notification
-    sdkRuntimeConfigurator: SDKRuntimeConfigurator
+    sdkInitializator: SDKInitializator
 }
