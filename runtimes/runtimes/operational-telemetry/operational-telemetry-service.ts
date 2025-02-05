@@ -1,12 +1,15 @@
 import { MeterProvider, PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
-import { AwsCognitoApiGatewayMetricExporter } from './aws-cognito-gateway-metric-exporter'
+import { AwsMetricExporter } from './aws-metrics-exporter'
 import { MetricType, OperationalTelemetry } from './operational-telemetry'
-import opentelemetry, { diag, Attributes, DiagLogLevel } from '@opentelemetry/api'
+import opentelemetry, { diag, Attributes, DiagLogLevel, trace, SpanStatusCode } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions/*'
 import { randomUUID } from 'crypto'
 import { RemoteConsole } from 'vscode-languageserver'
+import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
+import { AWSSpanExporter } from './aws-spans-exporter'
+import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 
 export class OperationalTelemetryService implements OperationalTelemetry {
     private customAttributes: Record<string, any> = {}
@@ -15,6 +18,19 @@ export class OperationalTelemetryService implements OperationalTelemetry {
     private initialized = false
 
     private constructor() {}
+
+    recordEvent(eventType: string, attributes?: Record<string, any>): void {
+        if (!this.initialized) {
+            diag.error('Operational telemetry not initialized')
+            return
+        }
+        const tracer = trace.getTracer(this.SCOPE_NAME)
+
+        const span = tracer.startSpan(eventType)
+        // span.recordException(new Error('error message'))
+        span.setAttribute('error-type', 'test-error')
+        span.end()
+    }
 
     incrementCounter(metricName: MetricType, value?: number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
@@ -80,10 +96,12 @@ export class OperationalTelemetryService implements OperationalTelemetry {
             DiagLogLevel.ALL
         )
 
-        const exporter = new AwsCognitoApiGatewayMetricExporter(endpoint, region, poolId, this)
+        const awsSender = new AwsCognitoApiGatewaySender(endpoint, region, poolId)
+        const metricExporter = new AwsMetricExporter(this, awsSender)
+        const spansExporter = new AWSSpanExporter(this, awsSender)
 
         const metricReader = new PeriodicExportingMetricReader({
-            exporter: exporter,
+            exporter: metricExporter,
             exportIntervalMillis: 5000,
         })
 
@@ -94,9 +112,14 @@ export class OperationalTelemetryService implements OperationalTelemetry {
                 sessionId: randomUUID(),
             }),
             metricReader: metricReader,
+            spanProcessor: new BatchSpanProcessor(spansExporter),
         })
 
         sdk.start()
+
+        process.on('beforeExit', async () => {
+            sdk.shutdown()
+        })
     }
 
     getCustomAttributes(): Record<string, any> {

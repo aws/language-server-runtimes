@@ -26,6 +26,7 @@ export interface OperationalTelemetry {
     registerGaugeProvider(metricName: MetricType, valueProvider: () => number, attributes?: Record<string, any>): void
     recordGauge(metricName: MetricType, value: number, attributes?: Record<string, any>): void
     incrementCounter(metricName: MetricType, value: number, attributes?: Record<string, any>): void
+    recordEvent(eventType: string, attributes?: Record<string, any>): void
     getCustomAttributes(): Record<string, any>
     updateCustomAttributes(key: string, value: any): void
 }
