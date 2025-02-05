@@ -89,6 +89,14 @@ export class LspServer {
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
         if (!params.initializationOptions?.aws) {
+            this.lspConnection.telemetry.logEvent({
+                name: 'Initialization error',
+                result: 'Failed',
+                data: JSON.stringify(params.initializationOptions),
+                errorData: {
+                    reason: 'Unknown initialization error with initialization options Error',
+                },
+            })
             this.logger.log(
                 `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
             )
@@ -99,15 +107,20 @@ export class LspServer {
         if (!this.initializeHandler) {
             return
         }
-        const initializeResult = await asPromise(this.initializeHandler(params, token))
-        if (!(initializeResult instanceof ResponseError)) {
-            this.initializeResult = initializeResult
-            if (initializeResult?.serverInfo) {
-                this.notificationRouter = new RouterByServerName(initializeResult.serverInfo.name, this.encoding)
+        try {
+            const initializeResult = await asPromise(this.initializeHandler(params, token))
+            if (!(initializeResult instanceof ResponseError)) {
+                this.initializeResult = initializeResult
+                if (initializeResult?.serverInfo) {
+                    this.notificationRouter = new RouterByServerName(initializeResult.serverInfo.name, this.encoding)
+                }
             }
-        }
 
-        return initializeResult
+            return initializeResult
+        } catch (e) {
+            this.logger.log(`Unknown initialization error\n${e}`)
+            return new ResponseError(ErrorCodes.UnknownErrorCode, `Unknown initialization error\n${e}`)
+        }
     }
 
     public tryExecuteCommand = async (
