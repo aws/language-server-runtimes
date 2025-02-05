@@ -79,7 +79,7 @@ export class AwsMetricExporter implements PushMetricExporter {
             scopes: [
                 {
                     scopeName: 'scope from resources',
-                    metrics: [],
+                    data: [],
                 },
             ],
         }

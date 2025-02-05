@@ -8,7 +8,7 @@ import { OperationalTelemetrySchema } from './metric-types/generated/telemetry'
 export class AWSSpanExporter implements SpanExporter {
     private readonly telemetryService: OperationalTelemetry
     private readonly sender: AwsCognitoApiGatewaySender
-    // todo batching queue for events received from reader
+    // todo batch queue for events received from reader
 
     private isShutdown = false
 
@@ -83,7 +83,7 @@ export class AWSSpanExporter implements SpanExporter {
             scopes: [
                 {
                     scopeName: 'scope from resources',
-                    metrics: [],
+                    data: [],
                 },
             ],
         }

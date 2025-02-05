@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "ServerCrashEvent": {
+            "title": "ServerCrashEvent",
+            "allOf": [
+                { "$ref": "./base-event-schema.json" },
+                {
+                    "required": ["crashType"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "crashType": {
+                            "type": "string",
+                            "enum": ["uncaughtException", "unhandledRejection", "sigint", "sigterm"]
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -61,17 +61,23 @@
             "items": {
                 "type": "object",
                 "additionalProperties": false,
-                "required": ["scopeName", "metrics"],
+                "required": ["scopeName", "data"],
                 "properties": {
                     "scopeName": {
                         "type": "string"
                     },
-                    "metrics": {
+                    "data": {
                         "type": "array",
                         "items": {
                             "oneOf": [
                                 {
-                                    "$ref": "./runtimes/operational-telemetry/telemetry-schemas/memory-usage-metric-schema.json#/definitions/MemoryMetric"
+                                    "$ref": "./runtimes/operational-telemetry/telemetry-schemas/resource-usage-metric-schema.json#/definitions/ResourceUsageMetric"
+                                },
+                                {
+                                    "$ref": "./runtimes/operational-telemetry/telemetry-schemas/caught-error-schema.json#/definitions/CaughtErrorEvent"
+                                },
+                                {
+                                    "$ref": "./runtimes/operational-telemetry/telemetry-schemas/server-crash-schema.json#/definitions/ServerCrashEvent"
                                 }
                             ]
                         }

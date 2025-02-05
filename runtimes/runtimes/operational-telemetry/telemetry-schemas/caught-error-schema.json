@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "CaughtErrorEvent": {
+            "title": "CaughtErrorEvent",
+            "allOf": [
+                { "$ref": "./base-event-schema.json" },
+                {
+                    "required": ["errorType"],
+                    "additionalProperties": false,
+                    "properties": {
+                        "errorType": {
+                            "type": "string"
+                        }
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -14,7 +14,7 @@ import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 export class OperationalTelemetryService implements OperationalTelemetry {
     private customAttributes: Record<string, any> = {}
     private static instance: OperationalTelemetryService
-    private SCOPE_NAME = 'language-server-runtimes'
+    private readonly SCOPE_NAME = 'language-server-runtimes'
     private initialized = false
 
     private constructor() {}
@@ -27,12 +27,15 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         const tracer = trace.getTracer(this.SCOPE_NAME)
 
         const span = tracer.startSpan(eventType)
-        // span.recordException(new Error('error message'))
-        span.setAttribute('error-type', 'test-error')
+        if (attributes) {
+            for (const [key, value] of Object.entries(attributes)) {
+                span.setAttribute(key, value)
+            }
+        }
         span.end()
     }
 
-    incrementCounter(metricName: MetricType, value?: number, attributes?: Record<string, any>): void {
+    incrementCounter(metricName: string, value?: number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')
             return
@@ -43,7 +46,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         counter.add(value ? value : 1, attributes as Attributes)
     }
 
-    recordGauge(metricName: MetricType, value: number, attributes?: Record<string, any>): void {
+    recordGauge(metricName: string, value: number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')
             return
@@ -54,7 +57,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         gauge.record(value, attributes as Attributes)
     }
 
-    registerGaugeProvider(metricName: MetricType, valueProvider: () => number, attributes?: Record<string, any>): void {
+    registerGaugeProvider(metricName: string, valueProvider: () => number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')
             return
