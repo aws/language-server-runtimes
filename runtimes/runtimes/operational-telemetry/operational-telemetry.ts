@@ -1,20 +1,5 @@
 import { RemoteConsole } from 'vscode-languageserver'
 
-export type OperationalMetric = {
-    name: string
-    value: number
-    timestamp: number
-    atrributes: { string: any }[]
-    metrics: {}
-    server: {
-        name: string
-        version: string
-    }
-    clientInfo: {
-        name: string
-    }
-}
-
 export enum MetricType {
     'memory-usage',
     'server-crash',

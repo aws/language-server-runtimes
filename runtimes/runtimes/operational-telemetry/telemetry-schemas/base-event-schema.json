@@ -6,7 +6,8 @@
     "additionalProperties": false,
     "properties": {
         "name": {
-            "type": "string"
+            "type": "string",
+            "enum": ["CaughtErrorEvent", "ResourceUsageMetric", "ServerCrashEvent"]
         },
         "timestamp": {
             "type": "number",

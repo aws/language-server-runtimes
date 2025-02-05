@@ -8,7 +8,6 @@ import {
 import { HttpRequest } from '@smithy/protocol-http'
 import { SignatureV4 } from '@smithy/signature-v4'
 import axios from 'axios'
-import { OperationalMetric, OperationalTelemetry } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
 import { OperationalTelemetrySchema } from './metric-types/generated/telemetry'
 
@@ -30,7 +29,7 @@ export class AwsCognitoApiGatewaySender {
         this.poolId = poolId
     }
 
-    async sendOperationalTelemetryData(data: OperationalTelemetrySchema[]): Promise<void> {
+    async sendOperationalTelemetryData(data: OperationalTelemetrySchema): Promise<void> {
         if (this.isShutdown) {
             diag.warn('Export attempted on shutdown exporter')
             return
@@ -107,24 +106,22 @@ export class AwsCognitoApiGatewaySender {
         return signer.sign(request)
     }
 
-    private async postTelemetryData(data: OperationalTelemetrySchema[]) {
-        for (const metric of data) {
-            const body = JSON.stringify(metric)
-            const url = new URL(this.endpoint)
-            const signedRequest = await this.signRequest(url, body, this.region, this.credentials!)
+    private async postTelemetryData(data: OperationalTelemetrySchema) {
+        const body = JSON.stringify(data)
+        const url = new URL(this.endpoint)
+        const signedRequest = await this.signRequest(url, body, this.region, this.credentials!)
 
-            try {
-                const response = await axios({
-                    method: 'POST',
-                    url: this.endpoint,
-                    data: body,
-                    headers: signedRequest.headers,
-                })
+        try {
+            const response = await axios({
+                method: 'POST',
+                url: this.endpoint,
+                data: body,
+                headers: signedRequest.headers,
+            })
 
-                diag.debug('Operational data response status code:', response.status)
-            } catch (e) {
-                throw Error('Failed to send operational data')
-            }
+            diag.debug('Operational data response status code:', response.status)
+        } catch (e) {
+            throw Error('Failed to send operational data')
         }
     }
 }
