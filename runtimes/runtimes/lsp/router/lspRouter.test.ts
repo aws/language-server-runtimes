@@ -499,6 +499,9 @@ describe('LspRouter', () => {
             console: {
                 info: (message: any) => {},
             },
+            telemetry: {
+                logEvent: (message: any) => {},
+            },
             onInitialize: (handler: any) => {},
             onInitialized: (handler: any) => {},
             onExecuteCommand: (handler: any) => {},
