@@ -100,7 +100,7 @@ export class AwsCognitoApiGatewaySender {
         const signedRequest = await this.signRequest(url, body, this.region, this.credentials!)
 
         // todo retry mechanism
-        const response = await axios({
+        const response = await axios.request({
             method: 'POST',
             url: this.endpoint,
             data: body,
