@@ -35,28 +35,6 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         span.end()
     }
 
-    incrementCounter(metricName: string, value?: number, attributes?: Record<string, any>): void {
-        if (!this.initialized) {
-            diag.error('Operational telemetry not initialized')
-            return
-        }
-
-        const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
-        const counter = meter.createCounter(metricName.toString())
-        counter.add(value ? value : 1, attributes as Attributes)
-    }
-
-    recordGauge(metricName: string, value: number, attributes?: Record<string, any>): void {
-        if (!this.initialized) {
-            diag.error('Operational telemetry not initialized')
-            return
-        }
-
-        const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
-        const gauge = meter.createGauge(metricName.toString())
-        gauge.record(value, attributes as Attributes)
-    }
-
     registerGaugeProvider(metricName: string, valueProvider: () => number, attributes?: Record<string, any>): void {
         if (!this.initialized) {
             diag.error('Operational telemetry not initialized')

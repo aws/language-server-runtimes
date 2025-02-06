@@ -10,8 +10,7 @@
                     "additionalProperties": false,
                     "properties": {
                         "crashType": {
-                            "type": "string",
-                            "enum": ["uncaughtException", "unhandledRejection", "sigint", "sigterm"]
+                            "type": "string"
                         }
                     }
                 }

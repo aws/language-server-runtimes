@@ -3,7 +3,7 @@ import { ExportResult, ExportResultCode } from '@opentelemetry/core'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { OperationalTelemetry } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
-import { OperationalTelemetrySchema } from './metric-types/generated/telemetry'
+import { CaughtErrorEvent, OperationalTelemetrySchema, ServerCrashEvent } from './metric-types/generated/telemetry'
 
 export class AWSSpanExporter implements SpanExporter {
     private readonly telemetryService: OperationalTelemetry
@@ -36,14 +36,6 @@ export class AWSSpanExporter implements SpanExporter {
             return
         }
 
-        console.log(spans.length)
-        for (const span of spans) {
-            console.log(`span:`)
-            console.log(`name: ${span.name}`)
-            console.log(`timespan: ${span.startTime[0]}`)
-            console.log(`attributes: ${span.attributes}`)
-        }
-
         resultCallback({ code: ExportResultCode.SUCCESS })
     }
 
@@ -65,20 +57,27 @@ export class AWSSpanExporter implements SpanExporter {
     }
 
     private extractOperationalData(spans: ReadableSpan[]): OperationalTelemetrySchema {
-        return this.spanToOperationalEvent(spans[0])
+        const scopeRecords = spans.reduce(
+            (acc, span) => {
+                const scopeName = span.instrumentationLibrary.name
+                if (!acc[scopeName]) {
+                    acc[scopeName] = []
+                }
+                acc[scopeName].push(this.spanToOperationalEvent(span))
+                return acc
+            },
+            {} as Record<string, (CaughtErrorEvent | ServerCrashEvent)[]>
+        )
+        const scopes = Object.entries(scopeRecords).map(([scopeName, scopeSpans]) => {
+            return { scopeName: scopeName, data: scopeSpans }
+        })
 
-        // return spans.map((span: ReadableSpan) => {
-        //     return this.spanToOperationalEvent(span)
-        // })
-    }
-
-    private spanToOperationalEvent(span: ReadableSpan): OperationalTelemetrySchema {
         return {
-            sessionId: span.resource.attributes['sessionId'] as string,
+            sessionId: spans[0].resource.attributes['sessionId'] as string,
             batchTimestamp: Date.now(),
             server: {
-                name: span.resource.attributes['service.name'] as string,
-                version: span.resource.attributes['service.version'] as string | undefined,
+                name: spans[0].resource.attributes['service.name'] as string,
+                version: spans[0].resource.attributes['service.version'] as string | undefined,
             },
             clientInfo: {
                 name: this.telemetryService.getCustomAttributes()['clientInfo.name'] as string | undefined,
@@ -92,12 +91,25 @@ export class AWSSpanExporter implements SpanExporter {
                 },
                 clientId: this.telemetryService.getCustomAttributes()['clientInfo.clientId'] as string | undefined,
             },
-            scopes: [
-                {
-                    scopeName: 'scope from resources',
-                    data: [],
-                },
-            ],
+            scopes: scopes,
         }
+    }
+
+    private spanToOperationalEvent(span: ReadableSpan): CaughtErrorEvent | ServerCrashEvent {
+        if (span.name === 'CaughtErrorEvent') {
+            return {
+                name: span.name,
+                timestamp: Date.now(),
+                errorType: span.attributes['errorType'] as string,
+            } as CaughtErrorEvent
+        }
+        if (span.name === 'ServerCrashEvent') {
+            return {
+                name: span.name,
+                timestamp: Date.now(),
+                crashType: span.attributes['crashType'] as string,
+            } as ServerCrashEvent
+        }
+        throw Error('Unknown span name: ' + span.name)
     }
 }

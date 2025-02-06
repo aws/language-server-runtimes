@@ -108,6 +108,6 @@ export class AwsMetricExporter implements PushMetricExporter {
             heapUsed: result['heapUsed'],
             heapTotal: result['heapTotal'],
             rss: result['rss'],
-        }
+        } as ResourceUsageMetric
     }
 }
