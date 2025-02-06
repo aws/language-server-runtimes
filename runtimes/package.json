@@ -21,7 +21,7 @@
     },
     "scripts": {
         "clean": "rm -rf out/",
-        "compile": "npm run generate-types && tsc --build",
+        "compile": "tsc --build",
         "fix:prettier": "prettier . --write",
         "prepare": "husky install",
         "prepub:copyFiles": "shx cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
@@ -30,8 +30,7 @@
         "test:unit": "ts-mocha -b './**/*.test.ts'",
         "test": "npm run test:unit",
         "preversion": "npm run test",
-        "version": "npm run compile && git add -A .",
-        "generate-types": "json2ts ./runtimes/operational-telemetry/telemetry-schemas/telemetry-schema.json  -o ./runtimes/operational-telemetry/metric-types/generated/telemetry.d.ts"
+        "version": "npm run compile && git add -A ."
     },
     "dependencies": {
         "@aws-crypto/sha256-js": "^5.2.0",

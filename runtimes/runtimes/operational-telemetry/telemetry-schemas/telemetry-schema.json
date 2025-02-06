@@ -71,13 +71,13 @@
                         "items": {
                             "oneOf": [
                                 {
-                                    "$ref": "./runtimes/operational-telemetry/telemetry-schemas/resource-usage-metric-schema.json#/definitions/ResourceUsageMetric"
+                                    "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageMetric"
                                 },
                                 {
-                                    "$ref": "./runtimes/operational-telemetry/telemetry-schemas/caught-error-schema.json#/definitions/CaughtErrorEvent"
+                                    "$ref": "./caught-error-schema.json#/definitions/CaughtErrorEvent"
                                 },
                                 {
-                                    "$ref": "./runtimes/operational-telemetry/telemetry-schemas/server-crash-schema.json#/definitions/ServerCrashEvent"
+                                    "$ref": "./server-crash-schema.json#/definitions/ServerCrashEvent"
                                 }
                             ]
                         }
