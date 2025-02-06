@@ -8,7 +8,7 @@ import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic
 import { randomUUID } from 'crypto'
 import { RemoteConsole } from 'vscode-languageserver'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
-import { AWSSpanExporter } from './aws-spans-exporter'
+import { AwsSpanExporter } from './aws-spans-exporter'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 
 export class OperationalTelemetryService implements OperationalTelemetry {
@@ -79,7 +79,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
         const awsSender = new AwsCognitoApiGatewaySender(endpoint, region, poolId)
         const metricExporter = new AwsMetricExporter(this, awsSender)
-        const spansExporter = new AWSSpanExporter(this, awsSender)
+        const spansExporter = new AwsSpanExporter(this, awsSender)
 
         const metricReader = new PeriodicExportingMetricReader({
             exporter: metricExporter,

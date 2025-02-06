@@ -1,0 +1,159 @@
+import assert from 'assert'
+import sinon from 'sinon'
+import { AwsSpanExporter } from './aws-spans-exporter'
+import { ExportResultCode } from '@opentelemetry/core'
+import { ReadableSpan } from '@opentelemetry/sdk-trace-base'
+import { OperationalTelemetry } from './operational-telemetry'
+import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
+
+describe('AWSSpanExporter', () => {
+    let exporter: AwsSpanExporter
+    let telemetryService: sinon.SinonStubbedInstance<OperationalTelemetry>
+    let sender: sinon.SinonStubbedInstance<AwsCognitoApiGatewaySender>
+    let resultCallback: sinon.SinonSpy
+
+    const mockSpans: ReadableSpan[] = [
+        {
+            resource: {
+                attributes: {
+                    sessionId: 'test-session',
+                    'service.name': 'test-service',
+                    'service.version': '1.0.0',
+                },
+            },
+            instrumentationLibrary: {
+                name: 'test-scope',
+            },
+            name: 'CaughtErrorEvent',
+            attributes: {
+                errorType: 'TestError',
+            },
+        } as any,
+        {
+            resource: {
+                attributes: {
+                    sessionId: 'test-session',
+                    'service.name': 'test-service',
+                    'service.version': '1.0.0',
+                },
+            },
+            instrumentationLibrary: {
+                name: 'test-scope',
+            },
+            name: 'ServerCrashEvent',
+            attributes: {
+                crashType: 'unhandledException',
+            },
+        } as any,
+    ]
+
+    beforeEach(() => {
+        telemetryService = {
+            getCustomAttributes: sinon.stub().returns({
+                'clientInfo.name': 'test-client',
+                'clientInfo.extension.name': 'test-extension',
+                'clientInfo.extension.version': '1.0.0',
+                'clientInfo.clientId': 'test-id',
+            }),
+        } as any
+
+        sender = {
+            sendOperationalTelemetryData: sinon.stub().resolves(),
+        } as any
+
+        exporter = new AwsSpanExporter(telemetryService as any, sender as any)
+        resultCallback = sinon.spy()
+    })
+
+    afterEach(() => {
+        sinon.restore()
+    })
+
+    describe('export', () => {
+        it('should successfully export spans', async () => {
+            await exporter.export(mockSpans, resultCallback)
+
+            assert.ok(sender.sendOperationalTelemetryData.calledOnce)
+            assert.ok(resultCallback.calledOnce)
+            assert.deepEqual(resultCallback.firstCall.args[0], {
+                code: ExportResultCode.SUCCESS,
+            })
+        })
+
+        it('should handle export failure', async () => {
+            const error = new Error('Export failed')
+            sender.sendOperationalTelemetryData.rejects(error)
+
+            await exporter.export(mockSpans, resultCallback)
+
+            assert.ok(resultCallback.calledOnce)
+            assert.deepEqual(resultCallback.firstCall.args[0], {
+                code: ExportResultCode.FAILED,
+            })
+        })
+
+        it('should not export when shutdown', async () => {
+            await exporter.shutdown()
+            await exporter.export(mockSpans, resultCallback)
+
+            assert.equal(sender.sendOperationalTelemetryData.called, false)
+        })
+
+        it('should correctly transform spans to operational data', async () => {
+            await exporter.export(mockSpans, resultCallback)
+
+            const expectedData = {
+                sessionId: 'test-session',
+                batchTimestamp: sinon.match.number,
+                server: {
+                    name: 'test-service',
+                    version: '1.0.0',
+                },
+                clientInfo: {
+                    name: 'test-client',
+                    extension: {
+                        name: 'test-extension',
+                        version: '1.0.0',
+                    },
+                    clientId: 'test-id',
+                },
+                scopes: [
+                    {
+                        scopeName: 'test-scope',
+                        data: [
+                            {
+                                name: 'CaughtErrorEvent',
+                                timestamp: sinon.match.number,
+                                errorType: 'TestError',
+                            },
+                            {
+                                name: 'ServerCrashEvent',
+                                timestamp: sinon.match.number,
+                                crashType: 'unhandledException',
+                            },
+                        ],
+                    },
+                ],
+            }
+
+            assert.ok(sender.sendOperationalTelemetryData.calledOnce)
+            sinon.assert.calledWith(sender.sendOperationalTelemetryData, sinon.match(expectedData))
+        })
+
+        it('should handle invalid span names', async () => {
+            const invalidSpans = [
+                {
+                    ...mockSpans[0],
+                    name: 'InvalidEvent',
+                },
+            ] as ReadableSpan[]
+
+            await exporter.export(invalidSpans, resultCallback)
+
+            assert.ok(resultCallback.calledOnce)
+            assert.deepEqual(resultCallback.firstCall.args[0], {
+                code: ExportResultCode.FAILED,
+            })
+        })
+    })
+})

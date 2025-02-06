@@ -1,4 +1,3 @@
-// import { expect } from 'chai'
 import assert from 'assert'
 import sinon from 'sinon'
 import { AwsMetricExporter } from './aws-metrics-exporter'
@@ -73,7 +72,7 @@ describe('AwsMetricExporter', () => {
 
     const expected = {
         sessionId: 'test-session',
-        batchTimestamp: 0,
+        batchTimestamp: sinon.match.number,
         server: {
             name: 'test-service',
             version: '1.0.0',
@@ -92,7 +91,7 @@ describe('AwsMetricExporter', () => {
                 data: [
                     {
                         name: 'ResourceUsageMetric',
-                        timestamp: 0,
+                        timestamp: sinon.match.number,
                         heapUsed: 18227311,
                         heapTotal: 18227312,
                         rss: 18227313,
@@ -159,14 +158,7 @@ describe('AwsMetricExporter', () => {
         it('should correctly transform metrics data', async () => {
             await exporter.export(mockResourceMetrics, resultCallback)
 
-            const sentData = sender.sendOperationalTelemetryData.firstCall.args[0]
-            let expectedWithTimestamps = {
-                ...expected,
-            }
-            expectedWithTimestamps.batchTimestamp = sentData.batchTimestamp
-            expectedWithTimestamps.scopes[0].data[0].timestamp = sentData.scopes[0].data[0].timestamp
-
-            assert.deepEqual(sentData, expectedWithTimestamps)
+            sinon.assert.calledWith(sender.sendOperationalTelemetryData, sinon.match(expected))
         })
 
         it('should throw error for unsupported metric type', async () => {

@@ -5,7 +5,7 @@ import { OperationalTelemetry } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
 import { CaughtErrorEvent, OperationalTelemetrySchema, ServerCrashEvent } from './metric-types/generated/telemetry'
 
-export class AWSSpanExporter implements SpanExporter {
+export class AwsSpanExporter implements SpanExporter {
     private readonly telemetryService: OperationalTelemetry
     private readonly sender: AwsCognitoApiGatewaySender
     // todo batch queue for events received from reader
@@ -35,8 +35,6 @@ export class AWSSpanExporter implements SpanExporter {
             resultCallback({ code: ExportResultCode.FAILED })
             return
         }
-
-        resultCallback({ code: ExportResultCode.SUCCESS })
     }
 
     forceFlush(): Promise<void> {
