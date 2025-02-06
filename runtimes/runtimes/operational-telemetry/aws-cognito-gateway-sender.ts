@@ -99,20 +99,50 @@ export class AwsCognitoApiGatewaySender {
         const url = new URL(this.endpoint)
         const signedRequest = await this.signRequest(url, body, this.region, this.credentials!)
 
-        // todo retry mechanism
-        const response = await axios.request({
-            method: 'POST',
-            url: this.endpoint,
-            data: body,
-            headers: signedRequest.headers,
-        })
+        let attempt = 0
+        const maxRetries = 3
+        let delay = 1000 // Delay in milliseconds
+        let lastError: Error | null = null
+        let retry: boolean = true
 
-        diag.debug(`Operational telemetry HTTP status: ${response.status}, message: ${response.statusText}`)
+        for (; attempt <= maxRetries; attempt++) {
+            try {
+                const response = await axios.request({
+                    method: 'POST',
+                    url: this.endpoint,
+                    data: body,
+                    headers: signedRequest.headers,
+                })
 
-        if (response.status < 200 || response.status >= 300) {
-            throw new Error(
-                `HTTP error sending operational telemetry, status: ${response.status}, message: ${response.statusText}`
-            )
+                diag.debug(`Operational telemetry HTTP status: ${response.status}, message: ${response.statusText}`)
+
+                if (response.status >= 400) {
+                    if (response.status < 500 && response.status != 429) {
+                        retry = false
+                    }
+
+                    throw new Error(
+                        `HTTP error sending operational telemetry, status: ${response.status}, message: ${response.statusText}`
+                    )
+                }
+
+                return
+            } catch (error) {
+                // network error or 4xx error
+                lastError = error as Error
+
+                if (!retry || attempt === maxRetries) {
+                    break
+                }
+
+                diag.debug(`Retrying... waiting ${delay}ms before attempt ${attempt + 1}/${maxRetries}`)
+                await new Promise(resolve => setTimeout(resolve, delay))
+                delay *= 2
+            }
         }
+
+        throw new Error(
+            `Failed to send telemetry data after ${attempt + 1} attempts. Last error: ${lastError?.message}`
+        )
     }
 }
