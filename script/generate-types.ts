@@ -8,7 +8,7 @@ async function generateTypes() {
     try {
         const schemaDir = path.resolve(__dirname, '../runtimes/runtimes/operational-telemetry/telemetry-schemas')
         const input = path.join(schemaDir, 'telemetry-schema.json')
-        const output = path.join(schemaDir, '../metric-types/generated/telemetry.d.ts')
+        const output = path.join(schemaDir, '../types/generated/telemetry.d.ts')
 
         console.log('Generating TypeScript types from json schemas...')
         await execAsync(`json2ts -i "${input}" -o "${output}"`, { cwd: schemaDir })

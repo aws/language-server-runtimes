@@ -3,7 +3,7 @@ import { ExportResult, ExportResultCode } from '@opentelemetry/core'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { OperationalTelemetry } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
-import { CaughtErrorEvent, OperationalTelemetrySchema, ServerCrashEvent } from './metric-types/generated/telemetry'
+import { CaughtErrorEvent, OperationalTelemetrySchema, ServerCrashEvent } from './types/generated/telemetry'
 
 export class AwsSpanExporter implements SpanExporter {
     private readonly telemetryService: OperationalTelemetry
@@ -23,15 +23,20 @@ export class AwsSpanExporter implements SpanExporter {
             setImmediate(resultCallback, { code: ExportResultCode.FAILED })
             return
         }
+        if (spans.length === 0) {
+            diag.warn('No spans to export')
+            resultCallback({ code: ExportResultCode.SUCCESS })
+            return
+        }
 
         try {
-            const operationalMetrics = this.extractOperationalData(spans)
-            await this.sender.sendOperationalTelemetryData(operationalMetrics)
+            const operationalData = this.extractOperationalData(spans)
+            await this.sender.sendOperationalTelemetryData(operationalData)
 
             diag.info('Successfully exported operational telemetry data')
             resultCallback({ code: ExportResultCode.SUCCESS })
         } catch (error) {
-            diag.error('Failed to export metrics:', error)
+            diag.error('Failed to export operational spans:', error)
             resultCallback({ code: ExportResultCode.FAILED })
             return
         }
@@ -94,17 +99,18 @@ export class AwsSpanExporter implements SpanExporter {
     }
 
     private spanToOperationalEvent(span: ReadableSpan): CaughtErrorEvent | ServerCrashEvent {
+        const unixEpochSeconds = span.endTime[0]
         if (span.name === 'CaughtErrorEvent') {
             return {
                 name: span.name,
-                timestamp: Date.now(),
+                timestamp: unixEpochSeconds,
                 errorType: span.attributes['errorType'] as string,
             } as CaughtErrorEvent
         }
         if (span.name === 'ServerCrashEvent') {
             return {
                 name: span.name,
-                timestamp: Date.now(),
+                timestamp: unixEpochSeconds,
                 crashType: span.attributes['crashType'] as string,
             } as ServerCrashEvent
         }

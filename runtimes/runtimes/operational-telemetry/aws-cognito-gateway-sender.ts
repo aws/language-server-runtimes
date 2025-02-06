@@ -9,14 +9,12 @@ import { HttpRequest } from '@smithy/protocol-http'
 import { SignatureV4 } from '@smithy/signature-v4'
 import axios from 'axios'
 import { diag } from '@opentelemetry/api'
-import { OperationalTelemetrySchema } from './metric-types/generated/telemetry'
+import { OperationalTelemetrySchema } from './types/generated/telemetry'
 
 export class AwsCognitoApiGatewaySender {
     private readonly endpoint: string
     private readonly region: string
     private readonly poolId: string
-
-    private isShutdown = false
 
     private credentials: Credentials | null = null
     private credentialsLastFetched: Date | null = null
@@ -30,20 +28,10 @@ export class AwsCognitoApiGatewaySender {
     }
 
     async sendOperationalTelemetryData(data: OperationalTelemetrySchema): Promise<void> {
-        if (this.isShutdown) {
-            diag.warn('Export attempted on shutdown exporter')
-            return
-        }
+        await this.refreshCognitoCredentials(this.region, this.poolId)
+        await this.postTelemetryData(data)
 
-        try {
-            await this.refreshCognitoCredentials(this.region, this.poolId)
-            await this.postTelemetryData(data)
-
-            diag.info('Successfully exported operational metrics batch')
-        } catch (error) {
-            diag.error('Failed to export metrics:', error)
-            return
-        }
+        diag.info('Successfully sent operational metrics batch')
     }
 
     private async refreshCognitoCredentials(region: string, poolId: string): Promise<Credentials> {
@@ -111,17 +99,20 @@ export class AwsCognitoApiGatewaySender {
         const url = new URL(this.endpoint)
         const signedRequest = await this.signRequest(url, body, this.region, this.credentials!)
 
-        try {
-            const response = await axios({
-                method: 'POST',
-                url: this.endpoint,
-                data: body,
-                headers: signedRequest.headers,
-            })
+        // todo retry mechanism
+        const response = await axios({
+            method: 'POST',
+            url: this.endpoint,
+            data: body,
+            headers: signedRequest.headers,
+        })
 
-            diag.debug('Operational data response status code:', response.status)
-        } catch (e) {
-            throw Error('Failed to send operational data')
+        diag.debug(`Operational telemetry HTTP status: ${response.status}, message: ${response.statusText}`)
+
+        if (response.status < 200 || response.status >= 300) {
+            throw new Error(
+                `HTTP error sending operational telemetry, status: ${response.status}, message: ${response.statusText}`
+            )
         }
     }
 }

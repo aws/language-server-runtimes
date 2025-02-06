@@ -1,7 +1,7 @@
-import { MeterProvider, PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
+import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AwsMetricExporter } from './aws-metrics-exporter'
-import { MetricType, OperationalTelemetry } from './operational-telemetry'
-import opentelemetry, { diag, Attributes, DiagLogLevel, trace, SpanStatusCode } from '@opentelemetry/api'
+import { OperationalTelemetry } from './operational-telemetry'
+import opentelemetry, { diag, Attributes, DiagLogLevel, trace } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions'
@@ -81,9 +81,17 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         const metricExporter = new AwsMetricExporter(this, awsSender)
         const spansExporter = new AwsSpanExporter(this, awsSender)
 
+        const fiveMinutes = 300000
+        const fiveSeconds = 5000
+
         const metricReader = new PeriodicExportingMetricReader({
             exporter: metricExporter,
-            exportIntervalMillis: 5000,
+            exportIntervalMillis: fiveMinutes,
+        })
+
+        const spanProcessor = new BatchSpanProcessor(spansExporter, {
+            maxExportBatchSize: 20,
+            scheduledDelayMillis: fiveSeconds,
         })
 
         const sdk = new NodeSDK({
@@ -93,7 +101,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
                 sessionId: randomUUID(),
             }),
             metricReader: metricReader,
-            spanProcessor: new BatchSpanProcessor(spansExporter),
+            spanProcessor: spanProcessor,
         })
 
         sdk.start()

@@ -3,7 +3,7 @@ import { MetricData, PushMetricExporter, ResourceMetrics, ScopeMetrics } from '@
 import { OperationalTelemetry } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
-import { OperationalTelemetrySchema, ResourceUsageMetric } from './metric-types/generated/telemetry'
+import { OperationalTelemetrySchema, ResourceUsageMetric } from './types/generated/telemetry'
 
 export class AwsMetricExporter implements PushMetricExporter {
     private readonly telemetryService: OperationalTelemetry
@@ -23,15 +23,20 @@ export class AwsMetricExporter implements PushMetricExporter {
             setImmediate(resultCallback, { code: ExportResultCode.FAILED })
             return
         }
+        if (metrics.scopeMetrics.length === 0) {
+            diag.warn('No metrics to export')
+            resultCallback({ code: ExportResultCode.SUCCESS })
+            return
+        }
 
         try {
-            const operationalMetrics = this.extractOperationalData(metrics)
-            await this.sender.sendOperationalTelemetryData(operationalMetrics)
+            const operationalData = this.extractOperationalData(metrics)
+            await this.sender.sendOperationalTelemetryData(operationalData)
 
             diag.info('Successfully exported operational metrics batch')
             resultCallback({ code: ExportResultCode.SUCCESS })
         } catch (error) {
-            diag.error('Failed to export metrics:', error)
+            diag.error('Failed to export operational metrics:', error)
             resultCallback({ code: ExportResultCode.FAILED })
             return
         }
@@ -100,9 +105,10 @@ export class AwsMetricExporter implements PushMetricExporter {
             {} as Record<string, number>
         )
 
+        const unixEpochSeconds = metric.dataPoints[0].endTime[0]
         return {
             name: metric.descriptor.name,
-            timestamp: metric.dataPoints[0].endTime[0],
+            timestamp: unixEpochSeconds,
             userCpuUsage: result['userCpuUsage'],
             systemCpuUsage: result['systemCpuUsage'],
             heapUsed: result['heapUsed'],

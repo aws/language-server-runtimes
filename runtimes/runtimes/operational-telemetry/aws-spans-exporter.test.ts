@@ -24,6 +24,7 @@ describe('AWSSpanExporter', () => {
             instrumentationLibrary: {
                 name: 'test-scope',
             },
+            endTime: [1234567890, 838000000],
             name: 'CaughtErrorEvent',
             attributes: {
                 errorType: 'TestError',
@@ -40,6 +41,7 @@ describe('AWSSpanExporter', () => {
             instrumentationLibrary: {
                 name: 'test-scope',
             },
+            endTime: [1234567890, 838000000],
             name: 'ServerCrashEvent',
             attributes: {
                 crashType: 'unhandledException',
