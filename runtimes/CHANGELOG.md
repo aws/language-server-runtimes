@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.2.34](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.33...language-server-runtimes/v0.2.34) (2025-02-04)
+
+
+### Features
+
+* implement sdk runtime configurator to configure sdk clients at runtime ([#316](https://github.com/aws/language-server-runtimes/issues/316)) ([ef82756](https://github.com/aws/language-server-runtimes/commit/ef827565b32d1482b6e08d66b78774d7aed544eb))
+
+## [0.2.33](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.32...language-server-runtimes/v0.2.33) (2025-01-28)
+
+
+### Features
+
+* add save option to initializeResult to allow LSP server to listen to save file events ([#309](https://github.com/aws/language-server-runtimes/issues/309)) ([d80688f](https://github.com/aws/language-server-runtimes/commit/d80688fe272cedd352a9e5ed8cd13279cad392a7))
+
+
+### Bug Fixes
+
+* explicit check for initializationOptions and add optional chaining ([#310](https://github.com/aws/language-server-runtimes/issues/310)) ([e97456d](https://github.com/aws/language-server-runtimes/commit/e97456d6d5352042364f860483ea2721fc3268e1))
+
+## [0.2.32](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.31...language-server-runtimes/v0.2.32) (2025-01-27)
+
+
+### Features
+
+* **runtimes:** extend lsp with didSaveTextDocument and lsp.worksapce with didCreateFiles, didDeleteFiles and didRenameFiles ([e8df283](https://github.com/aws/language-server-runtimes/commit/e8df28359cdca9efdaf05dd963ef52d7fc45531b))
+
+
+### Bug Fixes
+
+* handling of aws object of initializationOptions and initialize error handling ([#306](https://github.com/aws/language-server-runtimes/issues/306)) ([f71547a](https://github.com/aws/language-server-runtimes/commit/f71547a7a27adb62231e2c096560988a09ff6fea))
+* throw error on initialize fail ([#307](https://github.com/aws/language-server-runtimes/issues/307)) ([df148a2](https://github.com/aws/language-server-runtimes/commit/df148a27bf4d84ec3466920848eff3e70bef493a))
+
 ## [0.2.31](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.30...language-server-runtimes/v0.2.31) (2025-01-16)
 
 

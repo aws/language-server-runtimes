@@ -11,6 +11,7 @@ import {
     showNotificationRequestType,
     NotificationFollowupParams,
     NotificationParams,
+    ErrorCodes,
 } from '../../../protocol'
 import { InitializeParams, PartialInitializeResult, PartialServerCapabilities } from '../../../server-interface/lsp'
 import { Logging, Notification } from '../../../server-interface'
@@ -87,29 +88,26 @@ export class LspServer {
         params: InitializeParams,
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
-        try {
-            this.clientSupportsNotifications =
-                params.initializationOptions?.aws?.awsClientCapabilities?.window?.notifications
-
-            if (!this.initializeHandler) {
-                return
-            }
-
-            const initializeResult = await asPromise(this.initializeHandler(params, token))
-            if (!(initializeResult instanceof ResponseError)) {
-                this.initializeResult = initializeResult
-                if (initializeResult?.serverInfo) {
-                    this.notificationRouter = new RouterByServerName(initializeResult.serverInfo.name, this.encoding)
-                }
-            }
-
-            return initializeResult
-        } catch (error) {
-            this.lspConnection.console.log(
-                `Error in initialize handler: "${error}",\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
+        if (!params.initializationOptions?.aws) {
+            this.logger.log(
+                `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
             )
+        }
+        this.clientSupportsNotifications =
+            params.initializationOptions?.aws?.awsClientCapabilities?.window?.notifications
+
+        if (!this.initializeHandler) {
             return
         }
+        const initializeResult = await asPromise(this.initializeHandler(params, token))
+        if (!(initializeResult instanceof ResponseError)) {
+            this.initializeResult = initializeResult
+            if (initializeResult?.serverInfo) {
+                this.notificationRouter = new RouterByServerName(initializeResult.serverInfo.name, this.encoding)
+            }
+        }
+
+        return initializeResult
     }
 
     public tryExecuteCommand = async (
