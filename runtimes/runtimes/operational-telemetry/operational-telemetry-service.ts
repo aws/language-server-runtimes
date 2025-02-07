@@ -62,10 +62,6 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         }
         this.initialized = true
 
-        const poolId = ''
-        const region = ''
-        const endpoint = ''
-
         diag.setLogger(
             {
                 debug: message => console.debug(message),
@@ -77,6 +73,10 @@ export class OperationalTelemetryService implements OperationalTelemetry {
             DiagLogLevel.ALL
         )
 
+        const poolId = ''
+        const region = ''
+        const endpoint = ''
+
         const awsSender = new AwsCognitoApiGatewaySender(endpoint, region, poolId)
         const metricExporter = new AwsMetricExporter(this, awsSender)
         const spansExporter = new AwsSpanExporter(this, awsSender)
@@ -84,11 +84,14 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         const fiveMinutes = 300000
         const fiveSeconds = 5000
 
+        // Collects metrics every `exportIntervalMillis` and sends it to exporter.
+        // Registered callbacks are evaluated once during collection process.
         const metricReader = new PeriodicExportingMetricReader({
             exporter: metricExporter,
             exportIntervalMillis: fiveMinutes,
         })
 
+        // Sends batch of spans every `scheduledDelayMillis`.
         const spanProcessor = new BatchSpanProcessor(spansExporter, {
             maxExportBatchSize: 20,
             scheduledDelayMillis: fiveSeconds,
@@ -107,6 +110,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         sdk.start()
 
         process.on('beforeExit', async () => {
+            // Metrics and spans are force flushed to their exporters on shutdown.
             sdk.shutdown()
         })
     }

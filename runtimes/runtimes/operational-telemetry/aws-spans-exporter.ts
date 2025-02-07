@@ -8,7 +8,6 @@ import { CaughtErrorEvent, OperationalTelemetrySchema, ServerCrashEvent } from '
 export class AwsSpanExporter implements SpanExporter {
     private readonly telemetryService: OperationalTelemetry
     private readonly sender: AwsCognitoApiGatewaySender
-    // todo batch queue for events received from reader
 
     private isShutdown = false
 
@@ -46,7 +45,6 @@ export class AwsSpanExporter implements SpanExporter {
         if (this.isShutdown) {
             diag.warn('Force flush attempted on shutdown exporter')
         }
-        // todo flush batch queue
         return Promise.resolve()
     }
 
@@ -54,7 +52,6 @@ export class AwsSpanExporter implements SpanExporter {
         if (this.isShutdown) {
             diag.warn('Duplicate shutdown attempt - exporter is already in shutdown state')
         }
-        // todo flush batch queue
         this.isShutdown = true
         return Promise.resolve()
     }

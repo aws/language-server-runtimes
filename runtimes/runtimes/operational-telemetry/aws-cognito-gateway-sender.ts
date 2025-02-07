@@ -128,12 +128,13 @@ export class AwsCognitoApiGatewaySender {
 
                 return
             } catch (error) {
-                // network error or 4xx error
                 lastError = error as Error
 
                 if (!retry || attempt === maxRetries) {
                     break
                 }
+
+                // retries on network error from axios or 4xx error
 
                 diag.debug(`Retrying... waiting ${delay}ms before attempt ${attempt + 1}/${maxRetries}`)
                 await new Promise(resolve => setTimeout(resolve, delay))
