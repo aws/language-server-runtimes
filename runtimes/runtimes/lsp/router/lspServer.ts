@@ -89,16 +89,17 @@ export class LspServer {
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
         if (!params.initializationOptions?.aws) {
-            if (this.lspConnection?.telemetry) {
-                this.lspConnection.telemetry.logEvent({
-                    name: 'Initialization error',
-                    result: 'Failed',
-                    data: JSON.stringify(params.initializationOptions),
-                    errorData: {
-                        reason: 'Unknown initialization error with initialization options Error',
-                    },
-                })
-            }
+            this.lspConnection.telemetry.logEvent({
+                name: 'runtimeInitialization_validation',
+                result: 'Failed',
+                data: {
+                    hasAwsConfig: Boolean(params.initializationOptions?.aws),
+                    hasLogLevel: params.initializationOptions?.logLevel,
+                },
+                errorData: {
+                    reason: 'aws field is not defined in InitializeResult',
+                },
+            })
 
             this.logger.log(
                 `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
@@ -121,8 +122,8 @@ export class LspServer {
 
             return initializeResult
         } catch (e) {
-            this.logger.log(`Unknown initialization error\n${e}`)
-            return new ResponseError(ErrorCodes.UnknownErrorCode, `Unknown initialization error\n${e}`)
+            this.logger.log(`Runtime Initialization Error\n${e}`)
+            return new ResponseError(ErrorCodes.ServerNotInitialized, `Runtime Initialization Error\n${e}`)
         }
     }
 

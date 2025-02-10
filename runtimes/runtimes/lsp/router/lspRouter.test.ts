@@ -430,8 +430,7 @@ describe('LspRouter', () => {
 
         it('should send notification if notifications are supported and server name is defined', async () => {
             const notificationSpy = sandbox.spy()
-            const lspConn = <Connection>{}
-            lspConn.sendNotification = notificationSpy
+            const lspConn = stubLspConnection({ sendNotification: notificationSpy })
 
             const server = newServer({ lspConnection: lspConn, initializeHandler: initHandler })
             await server.initialize(initParam as InitializeParams, {} as CancellationToken)
@@ -443,8 +442,7 @@ describe('LspRouter', () => {
 
         it('should not send notification if server name is not defined', async () => {
             const notificationSpy = sandbox.spy()
-            const lspConn = <Connection>{}
-            lspConn.sendNotification = notificationSpy
+            const lspConn = stubLspConnection({ sendNotification: notificationSpy })
 
             const server = newServer({
                 lspConnection: lspConn,
@@ -461,8 +459,7 @@ describe('LspRouter', () => {
 
         it('should not send notification if not supported by client', async () => {
             const notificationSpy = sandbox.spy()
-            const lspConn = <Connection>{}
-            lspConn.sendNotification = notificationSpy
+            const lspConn = stubLspConnection({ sendNotification: notificationSpy })
 
             const server = newServer({ lspConnection: lspConn, initializeHandler: initHandler })
             await server.initialize({} as InitializeParams, {} as CancellationToken)
@@ -473,7 +470,7 @@ describe('LspRouter', () => {
         })
 
         it('should send followup to source server by matching server name in id', async () => {
-            const lspConn = <Connection>{}
+            const lspConn = stubLspConnection()
 
             const server = newServer({ lspConnection: lspConn, initializeHandler: initHandler })
             await server.initialize(initParam as InitializeParams, {} as CancellationToken)
@@ -494,7 +491,7 @@ describe('LspRouter', () => {
         })
     })
 
-    function stubLspConnection() {
+    function stubLspConnection(overrides = {}): Connection {
         return <Connection>{
             console: {
                 info: (message: any) => {},
@@ -508,6 +505,7 @@ describe('LspRouter', () => {
             onRequest: (handler: any) => {},
             onNotification: (handler: any) => {},
             onDidChangeConfiguration: (handler: any) => {},
+            ...overrides,
         }
     }
 
