@@ -17,9 +17,9 @@ export interface TaskOverview {
     title: string
     description: string
 }
+export type TaskStatusType = 'Pending' | 'InProgress' | 'Complete' | 'Cancelled' | string
 export interface TaskStatus {
-    status: string
-    isComplete: boolean
+    status: TaskStatusType
     detail?: string
 }
 export interface TaskFileList {

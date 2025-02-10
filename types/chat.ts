@@ -97,8 +97,7 @@ export interface ChatResult {
         options?: ChatItemAction[]
     }
     codeReference?: ReferenceTrackerInformation[]
-    fileList?: FileList // added! TODO: Any reasons not to add it to streaming endpoint?
-    placeholderText?: string
+    fileList?: FileList
 }
 
 export type EndChatParams = { tabId: string }
@@ -208,12 +207,11 @@ export interface FollowUpClickParams extends Partial<TaskParams> {
 export interface SendUpdateParams extends ChatResult, Partial<TaskParams> {
     placeholderText?: string
     canAcceptInput?: boolean
-    cardAction?: 'Add' | 'UpdateLast' | 'UpdateByMessageId'
+    messages: ChatResult[]
 }
 
 export interface FileClickParams extends Partial<TaskParams> {
     tabId: string
     filePath: string
-    isDeleted: boolean
     action?: FileAction
 }
