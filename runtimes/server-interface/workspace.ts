@@ -33,7 +33,7 @@ export type Workspace = {
             SelectWorkspaceItemResult
         >
     ) => void
-    openFileDiff: (handler: NotificationHandler<OpenFileDiffParams>) => void
+    openFileDiff: (params: OpenFileDiffParams) => void
     fs: {
         /**
          * Copies a file from src to dest. Dest is overwritten if it already exists.

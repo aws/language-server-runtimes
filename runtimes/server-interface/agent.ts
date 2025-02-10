@@ -12,5 +12,5 @@ export type Agent = {
         handler: RequestHandler<ManageTaskParams, ManageTaskResult | undefined | null, ManageTaskResult>
     ) => void
     // Notifications
-    sendTaskStatusUpdate: (handler: NotificationHandler<TaskStatusUpdateParams>) => void
+    sendTaskStatusUpdate: (params: TaskStatusUpdateParams) => void
 }
