@@ -29,6 +29,10 @@ import {
     followUpClickNotificationType,
     endChatRequestType,
     quickActionRequestType,
+    SendUpdateParams,
+    sendUpdateNotificationType,
+    FileClickParams,
+    fileClickNotificationType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -85,5 +89,13 @@ export class BaseChat implements Chat {
 
     public onFollowUpClicked(handler: NotificationHandler<FollowUpClickParams>) {
         this.connection.onNotification(followUpClickNotificationType.method, handler)
+    }
+
+    public sendUpdate(param: SendUpdateParams) {
+        this.connection.sendNotification(sendUpdateNotificationType.method, param)
+    }
+
+    public onFileClicked(handler: NotificationHandler<FileClickParams>) {
+        this.connection.onNotification(fileClickNotificationType.method, handler)
     }
 }

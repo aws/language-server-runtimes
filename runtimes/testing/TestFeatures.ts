@@ -29,6 +29,7 @@ import {
 import { IdentityManagement } from '../server-interface/identity-management'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import { Agent } from '../server-interface/agent'
 
 /**
  * A test helper package to test Server implementations. Accepts a single callback
@@ -57,6 +58,7 @@ export class TestFeatures {
     runtime: StubbedInstance<Runtime>
     identityManagement: StubbedInstance<IdentityManagement>
     notification: StubbedInstance<Notification>
+    agent: StubbedInstance<Agent>
     sdkInitializator: SDKInitializator
 
     private disposables: (() => void)[] = []
@@ -78,6 +80,7 @@ export class TestFeatures {
         this.runtime = stubInterface<Runtime>()
         this.identityManagement = stubInterface<IdentityManagement>()
         this.notification = stubInterface<Notification>()
+        this.agent = stubInterface<Agent>()
         this.sdkInitializator = Object.assign(
             // Default callable function for v3 clients
             <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => new Ctor({ ...current_config }),

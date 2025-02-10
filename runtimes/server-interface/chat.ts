@@ -16,6 +16,8 @@ import {
     TabChangeParams,
     TabAddParams,
     TabRemoveParams,
+    SendUpdateParams,
+    FileClickParams,
 } from '../protocol'
 
 /**
@@ -37,4 +39,6 @@ export type Chat = {
     onInfoLinkClick: (handler: NotificationHandler<InfoLinkClickParams>) => void
     onSourceLinkClick: (handler: NotificationHandler<SourceLinkClickParams>) => void
     onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
+    sendUpdate: (params: SendUpdateParams) => void
+    onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
 }

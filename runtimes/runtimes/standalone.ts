@@ -15,6 +15,10 @@ import {
     ShowDocumentRequest,
     CancellationToken,
     GetSsoTokenParams,
+    openFileDiffNotificationType,
+    selectWorkspaceItemRequestType,
+    manageTaskRequestType,
+    sendTaskStatusUpdateNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -41,6 +45,7 @@ import {
     SDKClientConstructorV2,
     SDKClientConstructorV3,
     SDKInitializator,
+    Agent,
 } from '../server-interface'
 import { Auth } from './auth'
 import { EncryptedChat } from './chat/encryptedChat'
@@ -152,6 +157,8 @@ export const standalone = (props: RuntimeProps) => {
         const workspace: Workspace = {
             getTextDocument: async uri => documents.get(uri),
             getAllTextDocuments: async () => documents.all(),
+            selectWorkspaceItem: params => lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
+            openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
             // Get all workspace folders and return the workspace folder that contains the uri
             getWorkspaceFolder: uri => {
                 const fileUrl = new URL(uri)
@@ -325,6 +332,12 @@ export const standalone = (props: RuntimeProps) => {
                 },
             }
 
+            const agent: Agent = {
+                onManageTask: handler => lspConnection.onRequest(manageTaskRequestType.method, handler),
+                sendTaskStatusUpdate: params =>
+                    lspConnection.sendNotification(sendTaskStatusUpdateNotificationType.method, params),
+            }
+
             const sdkInitializator: SDKInitializator = Object.assign(
                 // Default v3 implementation as the callable function
                 <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
@@ -360,6 +373,7 @@ export const standalone = (props: RuntimeProps) => {
                 identityManagement,
                 notification: lspServer.notification,
                 sdkInitializator: sdkInitializator,
+                agent,
             })
         })
 

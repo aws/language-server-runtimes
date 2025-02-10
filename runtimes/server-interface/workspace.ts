@@ -1,4 +1,12 @@
-import { TextDocument, WorkspaceFolder } from '../protocol'
+import {
+    NotificationHandler,
+    OpenFileDiffParams,
+    RequestHandler,
+    SelectWorkspaceItemParams,
+    SelectWorkspaceItemResult,
+    TextDocument,
+    WorkspaceFolder,
+} from '../protocol'
 
 // Minimal version of fs.Dirent
 interface Dirent {
@@ -18,6 +26,14 @@ export type Workspace = {
     getTextDocument: (uri: string) => Promise<TextDocument | undefined>
     getAllTextDocuments: () => Promise<TextDocument[]>
     getWorkspaceFolder: (uri: string) => WorkspaceFolder | null | undefined
+    selectWorkspaceItem: (
+        handler: RequestHandler<
+            SelectWorkspaceItemParams,
+            SelectWorkspaceItemResult | undefined | null,
+            SelectWorkspaceItemResult
+        >
+    ) => void
+    openFileDiff: (handler: NotificationHandler<OpenFileDiffParams>) => void
     fs: {
         /**
          * Copies a file from src to dest. Dest is overwritten if it already exists.
