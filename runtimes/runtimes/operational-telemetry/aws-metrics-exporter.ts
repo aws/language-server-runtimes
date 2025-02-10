@@ -17,7 +17,7 @@ export class AwsMetricExporter implements PushMetricExporter {
         this.sender = sender
     }
 
-    async export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void): Promise<void> {
+    export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void): void {
         if (this.isShutdown) {
             diag.warn('Export attempted on shutdown exporter')
             setImmediate(resultCallback, { code: ExportResultCode.FAILED })
@@ -31,14 +31,19 @@ export class AwsMetricExporter implements PushMetricExporter {
 
         try {
             const operationalData = this.extractOperationalData(metrics)
-            await this.sender.sendOperationalTelemetryData(operationalData)
-
-            diag.info('Successfully exported operational metrics batch')
-            resultCallback({ code: ExportResultCode.SUCCESS })
+            this.sender
+                .sendOperationalTelemetryData(operationalData)
+                .then(() => {
+                    diag.info('Successfully exported operational metrics batch')
+                    resultCallback({ code: ExportResultCode.SUCCESS })
+                })
+                .catch(err => {
+                    diag.error('Failed to export operational metrics:', err)
+                    resultCallback({ code: ExportResultCode.FAILED })
+                })
         } catch (error) {
-            diag.error('Failed to export operational metrics:', error)
+            diag.error('Failed to extract operational data from metrics:', error)
             resultCallback({ code: ExportResultCode.FAILED })
-            return
         }
     }
 

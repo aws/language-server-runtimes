@@ -73,7 +73,12 @@ describe('AWSSpanExporter', () => {
 
     describe('export', () => {
         it('should successfully export spans', async () => {
-            await exporter.export(mockSpans, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(mockSpans, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             assert.ok(sender.sendOperationalTelemetryData.calledOnce)
             assert.ok(resultCallback.calledOnce)
@@ -86,7 +91,12 @@ describe('AWSSpanExporter', () => {
             const error = new Error('Export failed')
             sender.sendOperationalTelemetryData.rejects(error)
 
-            await exporter.export(mockSpans, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(mockSpans, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             assert.ok(resultCallback.calledOnce)
             assert.deepEqual(resultCallback.firstCall.args[0], {
@@ -96,13 +106,24 @@ describe('AWSSpanExporter', () => {
 
         it('should not export when shutdown', async () => {
             await exporter.shutdown()
-            await exporter.export(mockSpans, resultCallback)
+
+            await new Promise<void>(resolve => {
+                exporter.export(mockSpans, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             assert.equal(sender.sendOperationalTelemetryData.called, false)
         })
 
         it('should correctly transform spans to operational data', async () => {
-            await exporter.export(mockSpans, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(mockSpans, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             const expectedData = {
                 sessionId: 'test-session',
@@ -150,7 +171,12 @@ describe('AWSSpanExporter', () => {
                 },
             ] as ReadableSpan[]
 
-            await exporter.export(invalidSpans, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(invalidSpans, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             assert.ok(resultCallback.calledOnce)
             assert.deepEqual(resultCallback.firstCall.args[0], {

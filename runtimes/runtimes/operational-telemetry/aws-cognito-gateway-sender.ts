@@ -30,8 +30,6 @@ export class AwsCognitoApiGatewaySender {
     async sendOperationalTelemetryData(data: OperationalTelemetrySchema): Promise<void> {
         await this.refreshCognitoCredentials(this.region, this.poolId)
         await this.postTelemetryData(data)
-
-        diag.info('Successfully sent operational metrics batch')
     }
 
     private async refreshCognitoCredentials(region: string, poolId: string): Promise<Credentials> {

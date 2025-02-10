@@ -16,10 +16,10 @@ export class AwsSpanExporter implements SpanExporter {
         this.sender = sender
     }
 
-    async export(spans: ReadableSpan[], resultCallback: (result: ExportResult) => void): Promise<void> {
+    export(spans: ReadableSpan[], resultCallback: (result: ExportResult) => void): void {
         if (this.isShutdown) {
             diag.warn('Export attempted on shutdown exporter')
-            setImmediate(resultCallback, { code: ExportResultCode.FAILED })
+            resultCallback({ code: ExportResultCode.FAILED })
             return
         }
         if (spans.length === 0) {
@@ -30,14 +30,19 @@ export class AwsSpanExporter implements SpanExporter {
 
         try {
             const operationalData = this.extractOperationalData(spans)
-            await this.sender.sendOperationalTelemetryData(operationalData)
-
-            diag.info('Successfully exported operational telemetry data')
-            resultCallback({ code: ExportResultCode.SUCCESS })
+            this.sender
+                .sendOperationalTelemetryData(operationalData)
+                .then(() => {
+                    diag.info('Successfully exported operational spans batch')
+                    resultCallback({ code: ExportResultCode.SUCCESS })
+                })
+                .catch(err => {
+                    diag.error('Failed to export operational spans:', err)
+                    resultCallback({ code: ExportResultCode.FAILED })
+                })
         } catch (error) {
-            diag.error('Failed to export operational spans:', error)
+            diag.error('Failed to extract operational data from spans:', error)
             resultCallback({ code: ExportResultCode.FAILED })
-            return
         }
     }
 

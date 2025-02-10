@@ -127,7 +127,12 @@ describe('AwsMetricExporter', () => {
 
     describe('export', () => {
         it('should successfully export metrics', async () => {
-            await exporter.export(mockResourceMetrics, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(mockResourceMetrics, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             assert.ok(sender.sendOperationalTelemetryData.calledOnce)
             assert.ok(resultCallback.calledOnce)
@@ -140,7 +145,12 @@ describe('AwsMetricExporter', () => {
             const error = new Error('Export failed')
             sender.sendOperationalTelemetryData.rejects(error)
 
-            await exporter.export(mockResourceMetrics, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(mockResourceMetrics, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             assert.ok(resultCallback.calledOnce)
             assert.deepEqual(resultCallback.firstCall.args[0], {
@@ -150,13 +160,23 @@ describe('AwsMetricExporter', () => {
 
         it('should not export when shutdown', async () => {
             await exporter.shutdown()
-            await exporter.export(mockResourceMetrics, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(mockResourceMetrics, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             assert.strictEqual(sender.sendOperationalTelemetryData.called, false)
         })
 
         it('should correctly transform metrics data', async () => {
-            await exporter.export(mockResourceMetrics, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(mockResourceMetrics, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             sinon.assert.calledWith(sender.sendOperationalTelemetryData, sinon.match(expected))
         })
@@ -177,7 +197,12 @@ describe('AwsMetricExporter', () => {
                 ],
             } as any
 
-            await exporter.export(invalidMetrics, resultCallback)
+            await new Promise<void>(resolve => {
+                exporter.export(invalidMetrics, result => {
+                    resultCallback(result)
+                    resolve()
+                })
+            })
 
             assert.ok(resultCallback.calledOnce)
             assert.deepEqual(resultCallback.firstCall.args[0], {

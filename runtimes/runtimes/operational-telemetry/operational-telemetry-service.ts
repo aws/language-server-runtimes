@@ -85,13 +85,14 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         const fiveSeconds = 5000
 
         // Collects metrics every `exportIntervalMillis` and sends it to exporter.
-        // Registered callbacks are evaluated once during collection process.
+        // Registered callbacks are evaluated once during the collection process.
         const metricReader = new PeriodicExportingMetricReader({
             exporter: metricExporter,
             exportIntervalMillis: fiveMinutes,
         })
 
-        // Sends batch of spans every `scheduledDelayMillis`.
+        // Sends collected spans every `scheduledDelayMillis` if batch is non-empty.
+        // Triggers export immediately when collected spans reach `maxExportBatchSize` limit.
         const spanProcessor = new BatchSpanProcessor(spansExporter, {
             maxExportBatchSize: 20,
             scheduledDelayMillis: fiveSeconds,
