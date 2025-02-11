@@ -18,7 +18,7 @@ export class AwsCognitoApiGatewaySender {
 
     private credentials: Credentials | null = null
     private credentialsLastFetched: Date | null = null
-    private readonly CREDENTIALS_EXPIRATION_TIME_MS = 60 * 60 * 1000 // 60 minutes, default for cognito crednetials
+    private readonly CREDENTIALS_EXPIRATION_TIME_MS = 60 * 60 * 1000 // 60 minutes, default for cognito credentials
     private readonly CREDENTIALS_BUFFER_TIME_MS = 1 * 60 * 1000 // 1 min
 
     constructor(endpoint: string, region: string, poolId: string) {
@@ -66,7 +66,7 @@ export class AwsCognitoApiGatewaySender {
         return this.credentials
     }
 
-    private signRequest(url: URL, body: string, region: string, credentials: Credentials) {
+    private signRequest(url: URL, body: string) {
         const request = new HttpRequest({
             method: 'POST',
             headers: {
@@ -80,11 +80,11 @@ export class AwsCognitoApiGatewaySender {
 
         const signer = new SignatureV4({
             credentials: {
-                accessKeyId: credentials.AccessKeyId!,
-                secretAccessKey: credentials.SecretKey!,
-                sessionToken: credentials.SessionToken!,
+                accessKeyId: this.credentials!.AccessKeyId!,
+                secretAccessKey: this.credentials!.SecretKey!,
+                sessionToken: this.credentials!.SessionToken!,
             },
-            region: region,
+            region: this.region,
             service: 'execute-api',
             sha256: Sha256,
         })
@@ -95,53 +95,48 @@ export class AwsCognitoApiGatewaySender {
     private async postTelemetryData(data: OperationalTelemetrySchema) {
         const body = JSON.stringify(data)
         const url = new URL(this.endpoint)
-        const signedRequest = await this.signRequest(url, body, this.region, this.credentials!)
+        const signedRequest = await this.signRequest(url, body)
 
-        let attempt = 0
-        const maxRetries = 3
-        let delay = 1000 // Delay in milliseconds
-        let lastError: Error | null = null
-        let retry: boolean = true
-
-        for (; attempt <= maxRetries; attempt++) {
-            try {
-                const response = await axios.request({
-                    method: 'POST',
-                    url: this.endpoint,
-                    data: body,
-                    headers: signedRequest.headers,
-                })
-
-                diag.debug(`Operational telemetry HTTP status: ${response.status}, message: ${response.statusText}`)
-
-                if (response.status >= 400) {
-                    if (response.status < 500 && response.status != 429) {
-                        retry = false
-                    }
-
-                    throw new Error(
-                        `HTTP error sending operational telemetry, status: ${response.status}, message: ${response.statusText}`
-                    )
+        const axiosClient = axios.create({ baseURL: this.endpoint })
+        axiosClient.interceptors.response.use(
+            response => response,
+            async error => {
+                const config = error.config
+                if (!config || !config.retryCount) {
+                    config.retryCount = 0
                 }
 
-                return
-            } catch (error) {
-                lastError = error as Error
+                const RETRY_LIMIT = 3
 
-                if (!retry || attempt === maxRetries) {
-                    break
+                if (config.retryCount >= RETRY_LIMIT) {
+                    return Promise.reject(error)
                 }
 
-                // retries on network error from axios or 4xx error
+                if (
+                    config.retryCount < RETRY_LIMIT &&
+                    error.response &&
+                    (error.response.status === 429 || error.response.status >= 500)
+                ) {
+                    config.retryCount++
+                    const delay = config.retryCount * 1000
+                    diag.debug(`Request failed with status code ${error.response.status}`)
+                    diag.debug(`Retrying... waiting ${delay}ms before attempt ${config.retryCount}/${RETRY_LIMIT}`)
+                    await new Promise(resolve => setTimeout(resolve, delay))
+                    return axiosClient(config)
+                }
 
-                diag.debug(`Retrying... waiting ${delay}ms before attempt ${attempt + 1}/${maxRetries}`)
-                await new Promise(resolve => setTimeout(resolve, delay))
-                delay *= 2
+                return Promise.reject(error)
             }
-        }
-
-        throw new Error(
-            `Failed to send telemetry data after ${attempt + 1} attempts. Last error: ${lastError?.message}`
         )
+
+        await axiosClient
+            .post(this.endpoint, body, { headers: signedRequest.headers })
+            .then(response => {
+                diag.debug(`Operational telemetry HTTP status: ${response.status}, message: ${response.statusText}`)
+            })
+            .catch(error => {
+                diag.error(`Error sending operational telemetry: ${error.message}`)
+                throw new Error(`Failed to send telemetry data. Last error: ${error.message}`)
+            })
     }
 }

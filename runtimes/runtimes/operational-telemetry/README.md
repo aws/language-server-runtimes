@@ -5,7 +5,7 @@ The Operational Telemetry Service collects, processes and exports operational te
 * caught errors, 
 * server crashes.
 
-Json telemetry schemas and can be extended in the future to send other type of operational data. These schemas have a strictly defined format that will be validated on the backed.
+Json telemetry schemas can be extended in the future to send other type of operational data. These schemas have a strictly defined format that will be validated on the backend.
 
 The collected data is then securely sent in batches via http to an AWS API Gateway endpoint using Cognito authentication. Collected data is sent on a best effort basis, and any telemetry related error should not impact customer experience using standalone runtime.
 

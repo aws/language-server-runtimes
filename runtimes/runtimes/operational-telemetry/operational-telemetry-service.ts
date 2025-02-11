@@ -42,7 +42,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         }
 
         const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
-        const gauge = meter.createObservableGauge(metricName.toString())
+        const gauge = meter.createObservableGauge(metricName)
         gauge.addCallback(result => {
             result.observe(valueProvider(), attributes as Attributes)
         })
@@ -55,7 +55,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         return OperationalTelemetryService.instance
     }
 
-    initialize(serviceName: string, serviceVersion: string, console: RemoteConsole): void {
+    initialize(serviceName: string, serviceVersion: string, lspConsole: RemoteConsole): void {
         if (this.initialized) {
             diag.warn('Operational telemetry already initialized')
             return
@@ -64,18 +64,18 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
         diag.setLogger(
             {
-                debug: message => console.debug(message),
-                error: message => console.error(message),
-                info: message => console.info(message),
-                verbose: message => console.log(message),
-                warn: message => console.warn(message),
+                debug: message => lspConsole.debug(message),
+                error: message => lspConsole.error(message),
+                info: message => lspConsole.info(message),
+                verbose: message => lspConsole.log(message),
+                warn: message => lspConsole.warn(message),
             },
             DiagLogLevel.ALL
         )
 
-        const poolId = ''
-        const region = ''
-        const endpoint = ''
+        const poolId = 'us-east-1:55354675-a962-43a0-86c9-528c74ee2775'
+        const region = 'us-east-1'
+        const endpoint = 'https://n3coch0xk0.execute-api.us-east-1.amazonaws.com/prod'
 
         const awsSender = new AwsCognitoApiGatewaySender(endpoint, region, poolId)
         const metricExporter = new AwsMetricExporter(this, awsSender)
