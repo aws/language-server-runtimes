@@ -36,6 +36,8 @@ import {
     SendUpdateParams,
     FILE_CLICK_NOTIFICATION_METHOD,
     FileClickParams,
+    OpenTabParams,
+    OpenTabResult,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -84,4 +86,7 @@ export const sendUpdateNotificationType = new ProtocolNotificationType<SendUpdat
 )
 export const fileClickNotificationType = new ProtocolNotificationType<FileClickParams, void>(
     FILE_CLICK_NOTIFICATION_METHOD
+)
+export const openTabRequestType = new ProtocolRequestType<OpenTabParams, OpenTabResult, never, void, void>(
+    END_CHAT_REQUEST_METHOD
 )

@@ -34,6 +34,7 @@ import {
     selectWorkspaceItemRequestType,
     manageTaskRequestType,
     sendTaskStatusUpdateNotificationType,
+    openTabRequestType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import {
@@ -129,6 +130,7 @@ export const webworker = (props: RuntimeProps) => {
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
         sendUpdate: params => lspConnection.sendNotification(sendUpdateNotificationType.method, params),
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
+        openTab: params => lspConnection.sendRequest(openTabRequestType.method, params),
     }
 
     const identityManagement: IdentityManagement = {

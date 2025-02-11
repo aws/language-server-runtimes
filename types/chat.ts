@@ -17,6 +17,7 @@ export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
 export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
 export const TASK_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
+export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
 
 export interface ChatItemAction {
     pillText: string
@@ -215,3 +216,8 @@ export interface FileClickParams extends Partial<TaskParams> {
     filePath: string
     action?: FileAction
 }
+
+export interface OpenTabParams extends Partial<TabEventParams> {
+    // tabId is expected to open specific tab, otherwise - new tab will be opened
+}
+export interface OpenTabResult extends TabEventParams {}
