@@ -4,13 +4,13 @@ import {
     ManageTaskResult,
     ProtocolNotificationType,
     ProtocolRequestType,
-    TASK_STATUS_UPDATE_NOTIFICATION_METHOD,
-    TaskStatusUpdateParams,
+    TASK_STATE_UPDATE_NOTIFICATION_METHOD,
+    TaskStateUpdateParams,
 } from './lsp'
 
 export const manageTaskRequestType = new ProtocolRequestType<ManageTaskParams, ManageTaskResult, never, void, void>(
     MANAGE_TASK_REQUEST_METHOD
 )
-export const sendTaskStatusUpdateNotificationType = new ProtocolNotificationType<TaskStatusUpdateParams, void>(
-    TASK_STATUS_UPDATE_NOTIFICATION_METHOD
+export const sendTaskStateUpdateNotificationType = new ProtocolNotificationType<TaskStateUpdateParams, void>(
+    TASK_STATE_UPDATE_NOTIFICATION_METHOD
 )

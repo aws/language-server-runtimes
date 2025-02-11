@@ -1,5 +1,5 @@
 export const MANAGE_TASK_REQUEST_METHOD = 'aws/agent/manageTask'
-export const TASK_STATUS_UPDATE_NOTIFICATION_METHOD = 'aws/agent/sendTaskStatusUpdate'
+export const TASK_STATE_UPDATE_NOTIFICATION_METHOD = 'aws/agent/sendTaskStateUpdate'
 
 export interface TaskParams {
     taskId: string
@@ -17,28 +17,28 @@ export interface TaskOverview {
     title: string
     description: string
 }
-export type TaskStatusType = 'Pending' | 'InProgress' | 'Complete' | 'Cancelled' | string
-export interface TaskStatus {
-    status: TaskStatusType
+export type TaskStateType = 'Pending' | 'InProgress' | 'Complete' | 'Failed' | 'Cancelled' | string
+export interface TaskState {
+    state: TaskStateType
     detail?: string
-}
-export interface TaskFileList {
-    filePaths?: string[]
-    deletedFiles?: string[]
 }
 export interface TaskStep {
     stepId: string
-    step: string
-    detail?: string
-    fileList?: TaskFileList
+    title: string
+    state: TaskStateType
+    details?: string[]
+}
+export interface TaskContent {
+    title: string
+    steps?: TaskStep[]
 }
 export interface TaskAction {
     type: TaskActionType
 }
-export interface TaskStatusUpdate {
+export interface TaskStateUpdate {
     overview: TaskOverview
-    status: TaskStatus
-    steps?: TaskStep[]
+    state: TaskState
+    contents?: TaskContent[]
     actions?: TaskAction[]
 }
-export interface TaskStatusUpdateParams extends TaskStatusUpdate, TaskParams {}
+export interface TaskStateUpdateParams extends TaskStateUpdate, TaskParams {}

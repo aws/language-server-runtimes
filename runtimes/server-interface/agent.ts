@@ -1,10 +1,4 @@
-import {
-    ManageTaskParams,
-    ManageTaskResult,
-    NotificationHandler,
-    RequestHandler,
-    TaskStatusUpdateParams,
-} from '../protocol'
+import { ManageTaskParams, ManageTaskResult, RequestHandler, TaskStateUpdateParams } from '../protocol'
 
 export type Agent = {
     // Requests
@@ -12,5 +6,5 @@ export type Agent = {
         handler: RequestHandler<ManageTaskParams, ManageTaskResult | undefined | null, ManageTaskResult>
     ) => void
     // Notifications
-    sendTaskStatusUpdate: (params: TaskStatusUpdateParams) => void
+    sendTaskStateUpdate: (params: TaskStateUpdateParams) => void
 }

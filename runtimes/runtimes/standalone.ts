@@ -18,7 +18,7 @@ import {
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
     manageTaskRequestType,
-    sendTaskStatusUpdateNotificationType,
+    sendTaskStateUpdateNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -334,8 +334,8 @@ export const standalone = (props: RuntimeProps) => {
 
             const agent: Agent = {
                 onManageTask: handler => lspConnection.onRequest(manageTaskRequestType.method, handler),
-                sendTaskStatusUpdate: params =>
-                    lspConnection.sendNotification(sendTaskStatusUpdateNotificationType.method, params),
+                sendTaskStateUpdate: params =>
+                    lspConnection.sendNotification(sendTaskStateUpdateNotificationType.method, params),
             }
 
             const sdkInitializator: SDKInitializator = Object.assign(

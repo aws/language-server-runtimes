@@ -33,7 +33,7 @@ import {
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
     manageTaskRequestType,
-    sendTaskStatusUpdateNotificationType,
+    sendTaskStateUpdateNotificationType,
     openTabRequestType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
@@ -213,8 +213,8 @@ export const webworker = (props: RuntimeProps) => {
 
         const agent: Agent = {
             onManageTask: handler => lspConnection.onRequest(manageTaskRequestType.method, handler),
-            sendTaskStatusUpdate: params =>
-                lspConnection.sendNotification(sendTaskStatusUpdateNotificationType.method, params),
+            sendTaskStateUpdate: params =>
+                lspConnection.sendNotification(sendTaskStateUpdateNotificationType.method, params),
         }
 
         const sdkInitializator: SDKInitializator = Object.assign(
