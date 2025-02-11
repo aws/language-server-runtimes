@@ -27,6 +27,7 @@ export interface TaskFileList {
     deletedFiles?: string[]
 }
 export interface TaskStep {
+    stepId: string
     step: string
     detail?: string
     fileList?: TaskFileList
@@ -37,7 +38,7 @@ export interface TaskAction {
 export interface TaskStatusUpdate {
     overview: TaskOverview
     status: TaskStatus
-    step?: TaskStep
+    steps?: TaskStep[]
     actions?: TaskAction[]
 }
 export interface TaskStatusUpdateParams extends TaskStatusUpdate, TaskParams {}

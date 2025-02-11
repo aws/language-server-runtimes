@@ -218,6 +218,7 @@ export interface FileClickParams extends Partial<TaskParams> {
 }
 
 export interface OpenTabParams extends Partial<TabEventParams> {
-    // tabId is expected to open specific tab, otherwise - new tab will be opened
+    // if tabId is provided, corresponding tab will be opened,
+    // otherwise new tab is expected to be created and opened
 }
 export interface OpenTabResult extends TabEventParams {}
