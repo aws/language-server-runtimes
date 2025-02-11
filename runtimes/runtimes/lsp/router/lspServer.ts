@@ -89,6 +89,18 @@ export class LspServer {
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
         if (!params.initializationOptions?.aws) {
+            this.lspConnection.telemetry.logEvent({
+                name: 'runtimeInitialization_validation',
+                result: 'Failed',
+                data: {
+                    hasAwsConfig: Boolean(params.initializationOptions?.aws),
+                    hasLogLevel: params.initializationOptions?.logLevel,
+                },
+                errorData: {
+                    reason: 'aws field is not defined in InitializeResult',
+                },
+            })
+
             this.logger.log(
                 `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
             )
@@ -99,15 +111,20 @@ export class LspServer {
         if (!this.initializeHandler) {
             return
         }
-        const initializeResult = await asPromise(this.initializeHandler(params, token))
-        if (!(initializeResult instanceof ResponseError)) {
-            this.initializeResult = initializeResult
-            if (initializeResult?.serverInfo) {
-                this.notificationRouter = new RouterByServerName(initializeResult.serverInfo.name, this.encoding)
+        try {
+            const initializeResult = await asPromise(this.initializeHandler(params, token))
+            if (!(initializeResult instanceof ResponseError)) {
+                this.initializeResult = initializeResult
+                if (initializeResult?.serverInfo) {
+                    this.notificationRouter = new RouterByServerName(initializeResult.serverInfo.name, this.encoding)
+                }
             }
-        }
 
-        return initializeResult
+            return initializeResult
+        } catch (e) {
+            this.logger.log(`Runtime Initialization Error\n${e}`)
+            return new ResponseError(ErrorCodes.ServerNotInitialized, `Runtime Initialization Error\n${e}`)
+        }
     }
 
     public tryExecuteCommand = async (
