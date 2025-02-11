@@ -28,6 +28,13 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
+    sendUpdateNotificationType,
+    fileClickNotificationType,
+    openFileDiffNotificationType,
+    selectWorkspaceItemRequestType,
+    manageTaskRequestType,
+    sendTaskStateUpdateNotificationType,
+    openTabRequestType,
 } from '../protocol'
 import { BrowserMessageReader, BrowserMessageWriter, createConnection } from 'vscode-languageserver/browser'
 import {
@@ -41,6 +48,7 @@ import {
     SDKClientConstructorV2,
     SDKClientConstructorV3,
     SDKInitializator,
+    Agent,
 } from '../server-interface'
 import { Auth } from './auth'
 
@@ -57,7 +65,7 @@ import {
     updateProfileRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
-import { Encoding, WebBase64Encoding } from './encoding'
+import { WebBase64Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
@@ -86,6 +94,8 @@ export const webworker = (props: RuntimeProps) => {
         getAllTextDocuments: async () => documents.all(),
         getWorkspaceFolder: _uri =>
             lspRouter.clientInitializeParams!.workspaceFolders && lspRouter.clientInitializeParams!.workspaceFolders[0],
+        selectWorkspaceItem: params => lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
+        openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
         fs: {
             copyFile: (_src, _dest, _options?) => Promise.resolve(),
             exists: _path => Promise.resolve(false),
@@ -118,6 +128,9 @@ export const webworker = (props: RuntimeProps) => {
         onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
         onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
+        sendUpdate: params => lspConnection.sendNotification(sendUpdateNotificationType.method, params),
+        onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
+        openTab: params => lspConnection.sendRequest(openTabRequestType.method, params),
     }
 
     const identityManagement: IdentityManagement = {
@@ -198,6 +211,12 @@ export const webworker = (props: RuntimeProps) => {
             },
         }
 
+        const agent: Agent = {
+            onManageTask: handler => lspConnection.onRequest(manageTaskRequestType.method, handler),
+            sendTaskStateUpdate: params =>
+                lspConnection.sendNotification(sendTaskStateUpdateNotificationType.method, params),
+        }
+
         const sdkInitializator: SDKInitializator = Object.assign(
             // Default callable function for v3 clients
             <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => new Ctor({ ...current_config }),
@@ -221,6 +240,7 @@ export const webworker = (props: RuntimeProps) => {
             identityManagement,
             notification: lspServer.notification,
             sdkInitializator: sdkInitializator,
+            agent,
         })
     })
 
