@@ -66,6 +66,15 @@ import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 
 declare const self: WindowOrWorkerGlobalScope
 
+/**
+ * Creates a runtime that uses the provided LSP connection transport
+ *
+ * @param connections - Object containing message reader and writer for LSP communication
+ * @param connections.reader - MessageReader instance for reading LSP messages
+ * @param connections.writer - MessageWriter instance for writing LSP messages
+ * @returns A runtime function
+ *
+ */
 export const baseRuntime = (connections: { reader: MessageReader; writer: MessageWriter }) => (props: RuntimeProps) => {
     const lspConnection = createConnection(connections.reader, connections.writer)
 
