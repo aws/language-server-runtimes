@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.35](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.34...language-server-runtimes/v0.2.35) (2025-02-12)
+
+
+### Features
+
+* **runtimes:** extract reusable runtime logic into the `base-runtime.ts` ([ebcb52f](https://github.com/aws/language-server-runtimes/commit/ebcb52f66dca8c85d3a842b21c8dbaccb19d6ad0))
+
+
+### Bug Fixes
+
+* adding try/catch to initialize lsp server, added telemetry log events  ([#320](https://github.com/aws/language-server-runtimes/issues/320)) ([48b064b](https://github.com/aws/language-server-runtimes/commit/48b064b5b690e5ce49efff2066f60b58b6f283d2))
+
 ## [0.2.34](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.33...language-server-runtimes/v0.2.34) (2025-02-04)
 
 
