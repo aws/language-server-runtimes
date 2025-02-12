@@ -3,11 +3,11 @@
     "definitions": {
         "ServerCrashEvent": {
             "title": "ServerCrashEvent",
+            "type": "object",
             "allOf": [
                 { "$ref": "./base-event-schema.json" },
                 {
                     "required": ["crashType"],
-                    "additionalProperties": false,
                     "properties": {
                         "crashType": {
                             "type": "string"

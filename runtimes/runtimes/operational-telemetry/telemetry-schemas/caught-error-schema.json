@@ -3,11 +3,11 @@
     "definitions": {
         "CaughtErrorEvent": {
             "title": "CaughtErrorEvent",
+            "type": "object",
             "allOf": [
                 { "$ref": "./base-event-schema.json" },
                 {
                     "required": ["errorType"],
-                    "additionalProperties": false,
                     "properties": {
                         "errorType": {
                             "type": "string"

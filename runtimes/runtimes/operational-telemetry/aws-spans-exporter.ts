@@ -3,17 +3,24 @@ import { ExportResult, ExportResultCode } from '@opentelemetry/core'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { OperationalTelemetry } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
-import { CaughtErrorEvent, OperationalTelemetrySchema, ServerCrashEvent } from './types/generated/telemetry'
+import { OperationalEvent, OperationalTelemetrySchema } from './types/generated/telemetry'
+import { OperationalEventValidator } from './operational-event-validator'
 
 export class AwsSpanExporter implements SpanExporter {
     private readonly telemetryService: OperationalTelemetry
     private readonly sender: AwsCognitoApiGatewaySender
+    private readonly eventValidator: OperationalEventValidator
 
     private isShutdown = false
 
-    constructor(telemetryService: OperationalTelemetry, sender: AwsCognitoApiGatewaySender) {
+    constructor(
+        telemetryService: OperationalTelemetry,
+        sender: AwsCognitoApiGatewaySender,
+        eventValidator: OperationalEventValidator
+    ) {
         this.telemetryService = telemetryService
         this.sender = sender
+        this.eventValidator = eventValidator
     }
 
     export(spans: ReadableSpan[], resultCallback: (result: ExportResult) => void): void {
@@ -71,7 +78,7 @@ export class AwsSpanExporter implements SpanExporter {
                 acc[scopeName].push(this.spanToOperationalEvent(span))
                 return acc
             },
-            {} as Record<string, (CaughtErrorEvent | ServerCrashEvent)[]>
+            {} as Record<string, OperationalEvent[]>
         )
         const scopes = Object.entries(scopeRecords).map(([scopeName, scopeSpans]) => {
             return { scopeName: scopeName, data: scopeSpans }
@@ -100,22 +107,20 @@ export class AwsSpanExporter implements SpanExporter {
         }
     }
 
-    private spanToOperationalEvent(span: ReadableSpan): CaughtErrorEvent | ServerCrashEvent {
+    private spanToOperationalEvent(span: ReadableSpan): OperationalEvent {
         const unixEpochSeconds = span.endTime[0]
-        if (span.name === 'CaughtErrorEvent') {
-            return {
-                name: span.name,
-                timestamp: unixEpochSeconds,
-                errorType: span.attributes['errorType'] as string,
-            } as CaughtErrorEvent
+        const result: Record<string, any> = {}
+
+        result['name'] = span.name
+        result['timestamp'] = unixEpochSeconds
+        for (const key of Object.keys(span.attributes)) {
+            result[key] = String(span.attributes[key])
         }
-        if (span.name === 'ServerCrashEvent') {
-            return {
-                name: span.name,
-                timestamp: unixEpochSeconds,
-                crashType: span.attributes['crashType'] as string,
-            } as ServerCrashEvent
+
+        const isValid = this.eventValidator.validateEvent(result)
+        if (!isValid) {
+            throw Error(`Invalid operational event: ${result}`)
         }
-        throw Error('Unknown span name: ' + span.name)
+        return result as OperationalEvent
     }
 }

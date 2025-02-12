@@ -3,18 +3,25 @@ import { MetricData, PushMetricExporter, ResourceMetrics, ScopeMetrics } from '@
 import { OperationalTelemetry } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
-import { OperationalTelemetrySchema, ResourceUsageMetric } from './types/generated/telemetry'
+import { OperationalEvent, OperationalTelemetrySchema } from './types/generated/telemetry'
+import { OperationalEventValidator } from './operational-event-validator'
 
 export class AwsMetricExporter implements PushMetricExporter {
     private readonly telemetryService: OperationalTelemetry
     private readonly sender: AwsCognitoApiGatewaySender
+    private readonly eventValidator: OperationalEventValidator
     // todo batching queue for events received from reader
 
     private isShutdown = false
 
-    constructor(telemetryService: OperationalTelemetry, sender: AwsCognitoApiGatewaySender) {
+    constructor(
+        telemetryService: OperationalTelemetry,
+        sender: AwsCognitoApiGatewaySender,
+        eventValidator: OperationalEventValidator
+    ) {
         this.telemetryService = telemetryService
         this.sender = sender
+        this.eventValidator = eventValidator
     }
 
     export(metrics: ResourceMetrics, resultCallback: (result: ExportResult) => void): void {
@@ -72,7 +79,7 @@ export class AwsMetricExporter implements PushMetricExporter {
                     return this.metricToOperationalEvent(metric)
                 }),
             }
-        })
+        }) // todo filter undefined
 
         return {
             sessionId: metrics.resource.attributes['sessionId'] as string,
@@ -97,12 +104,8 @@ export class AwsMetricExporter implements PushMetricExporter {
         }
     }
 
-    private metricToOperationalEvent(metric: MetricData): ResourceUsageMetric {
-        if (metric.descriptor.name != 'ResourceUsageMetric') {
-            throw new Error('Not supported metric type')
-        }
-
-        const result = metric.dataPoints.reduce(
+    private metricToOperationalEvent(metric: MetricData): OperationalEvent {
+        const dataPoints = metric.dataPoints.reduce(
             (acc, point) => {
                 acc[point.attributes['type'] as string] = point.value as number
                 return acc
@@ -111,14 +114,17 @@ export class AwsMetricExporter implements PushMetricExporter {
         )
 
         const unixEpochSeconds = metric.dataPoints[0].endTime[0]
-        return {
+        const result = {
             name: metric.descriptor.name,
             timestamp: unixEpochSeconds,
-            userCpuUsage: result['userCpuUsage'],
-            systemCpuUsage: result['systemCpuUsage'],
-            heapUsed: result['heapUsed'],
-            heapTotal: result['heapTotal'],
-            rss: result['rss'],
-        } as ResourceUsageMetric
+            ...dataPoints,
+        }
+
+        const isValid = this.eventValidator.validateEvent(result)
+        if (!isValid) {
+            throw Error(`Invalid operational event: ${result}`)
+        }
+
+        return result as OperationalEvent
     }
 }

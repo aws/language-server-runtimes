@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "Operational Telemetry Schema",
+    "title": "OperationalTelemetrySchema",
     "type": "object",
     "required": ["batchTimestamp", "sessionId", "server", "clientInfo", "scopes"],
     "additionalProperties": false,
@@ -69,21 +69,28 @@
                     "data": {
                         "type": "array",
                         "items": {
-                            "oneOf": [
-                                {
-                                    "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageMetric"
-                                },
-                                {
-                                    "$ref": "./caught-error-schema.json#/definitions/CaughtErrorEvent"
-                                },
-                                {
-                                    "$ref": "./server-crash-schema.json#/definitions/ServerCrashEvent"
-                                }
-                            ]
+                            "$ref": "#/definitions/OperationalEvent"
                         }
                     }
                 }
             }
+        }
+    },
+    "definitions": {
+        "OperationalEvent": {
+            "title": "OperationalEvent",
+            "type": "object",
+            "oneOf": [
+                {
+                    "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageMetric"
+                },
+                {
+                    "$ref": "./caught-error-schema.json#/definitions/CaughtErrorEvent"
+                },
+                {
+                    "$ref": "./server-crash-schema.json#/definitions/ServerCrashEvent"
+                }
+            ]
         }
     }
 }

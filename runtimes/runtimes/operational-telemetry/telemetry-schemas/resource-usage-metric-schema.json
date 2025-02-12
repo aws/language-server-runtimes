@@ -3,11 +3,11 @@
     "definitions": {
         "ResourceUsageMetric": {
             "title": "ResourceUsageMetric",
+            "type": "object",
             "allOf": [
                 { "$ref": "./base-event-schema.json" },
                 {
                     "required": ["userCpuUsage", "systemCpuUsage", "heapUsed", "heapTotal", "rss"],
-                    "additionalProperties": false,
                     "properties": {
                         "userCpuUsage": {
                             "type": "number"

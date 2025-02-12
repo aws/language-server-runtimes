@@ -5,6 +5,7 @@ import { ExportResultCode } from '@opentelemetry/core'
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base'
 import { OperationalTelemetry } from './operational-telemetry'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
+import { OperationalEventValidator } from './operational-event-validator'
 
 describe('AWSSpanExporter', () => {
     let exporter: AwsSpanExporter
@@ -63,7 +64,7 @@ describe('AWSSpanExporter', () => {
             sendOperationalTelemetryData: sinon.stub().resolves(),
         } as any
 
-        exporter = new AwsSpanExporter(telemetryService as any, sender as any)
+        exporter = new AwsSpanExporter(telemetryService as any, sender as any, new OperationalEventValidator())
         resultCallback = sinon.spy()
     })
 

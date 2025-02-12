@@ -10,6 +10,7 @@ import { RemoteConsole } from 'vscode-languageserver'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { AwsSpanExporter } from './aws-spans-exporter'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
+import { OperationalEventValidator } from './operational-event-validator'
 
 export class OperationalTelemetryService implements OperationalTelemetry {
     private customAttributes: Record<string, any> = {}
@@ -77,9 +78,10 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         const region = 'us-east-1'
         const endpoint = 'https://n3coch0xk0.execute-api.us-east-1.amazonaws.com/prod'
 
+        const eventValidator = new OperationalEventValidator()
         const awsSender = new AwsCognitoApiGatewaySender(endpoint, region, poolId)
-        const metricExporter = new AwsMetricExporter(this, awsSender)
-        const spansExporter = new AwsSpanExporter(this, awsSender)
+        const metricExporter = new AwsMetricExporter(this, awsSender, eventValidator)
+        const spansExporter = new AwsSpanExporter(this, awsSender, eventValidator)
 
         const fiveMinutes = 300000
         const fiveSeconds = 5000

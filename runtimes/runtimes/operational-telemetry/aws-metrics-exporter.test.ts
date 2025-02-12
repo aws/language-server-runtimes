@@ -5,6 +5,7 @@ import { ExportResultCode } from '@opentelemetry/core'
 import { ResourceMetrics } from '@opentelemetry/sdk-metrics'
 import { OperationalTelemetry } from './operational-telemetry'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
+import { OperationalEventValidator } from './operational-event-validator'
 
 describe('AwsMetricExporter', () => {
     let exporter: AwsMetricExporter
@@ -117,7 +118,7 @@ describe('AwsMetricExporter', () => {
             sendOperationalTelemetryData: sinon.stub().resolves(),
         } as any
 
-        exporter = new AwsMetricExporter(telemetryService as any, sender as any)
+        exporter = new AwsMetricExporter(telemetryService as any, sender as any, new OperationalEventValidator())
         resultCallback = sinon.spy()
     })
 
