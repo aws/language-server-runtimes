@@ -1,26 +1,27 @@
-# Operational Telemetry Service for Language Server Runtimes
+# Operational Telemetry for Language Server Runtimes
 
 The Operational Telemetry Service collects, processes and exports operational telemetry data from language server runtimes. This service integrates with OpenTelemetry to gather various types of operational data. Based on the telemetry-schemas, curretnly it can collect:
 * resource usage metrics, 
 * caught errors, 
 * server crashes.
 
-Json telemetry schemas can be extended in the future to send other type of operational data. These schemas have a strictly defined format that will be validated on the backend.
+Json telemetry schemas can be extended in the future to send other type of operational data. These schemas have a strictly defined format that will be validated before sending an event.
 
 The collected data is then securely sent in batches via http to an AWS API Gateway endpoint using Cognito authentication. Collected data is sent on a best effort basis, and any telemetry related error should not impact customer experience using standalone runtime.
 
 ## Usage Instructions
 
-1. Initialize the OperationalTelemetryService:
+1. Initialize the OperationalTelemetryService and set it in the OperationalTelemetryProvider:
 
 ```typescript
-const telemetryService = OperationalTelemetryService.getInstance();
-telemetryService.initialize('language-server-runtimes', '1.0.0', remoteConsole);
+const telemetryService = OperationalTelemetryService.getInstance('language-server-runtimes', '1.0.0', remoteConsole, 'poolId', 'us-east-1', 'amazon.com');
+OperationalTelemetryProvider.setTelemetryInstance(telemetryService)
 ```
 
-2. Register gauge providers for resource usage metrics:
+2. Retrieve the telemetry instance from the provider and register gauge providers for resource usage metrics:
 
 ```typescript
+const telemetryService = OperationalTelemetryProvider.getTelemetryForScope('myScope');
 telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().user, {type: 'userCpuUsage'});
 telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().system, {type: 'systemCpuUsage'});
 telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().heapUsed, {type: 'heapUsed'});

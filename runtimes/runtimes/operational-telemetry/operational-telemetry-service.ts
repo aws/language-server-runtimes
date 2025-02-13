@@ -15,54 +15,38 @@ import { OperationalEventValidator } from './operational-event-validator'
 export class OperationalTelemetryService implements OperationalTelemetry {
     private customAttributes: Record<string, any> = {}
     private static instance: OperationalTelemetryService
-    private readonly SCOPE_NAME = 'language-server-runtimes'
-    private initialized = false
+    private readonly RUNTIMES_SCOPE_NAME = 'language-server-runtimes'
 
-    private constructor() {}
-
-    recordEvent(eventType: string, attributes?: Record<string, any>): void {
-        if (!this.initialized) {
-            diag.error('Operational telemetry not initialized')
-            return
-        }
-        const tracer = trace.getTracer(this.SCOPE_NAME)
-
-        const span = tracer.startSpan(eventType)
-        if (attributes) {
-            for (const [key, value] of Object.entries(attributes)) {
-                span.setAttribute(key, value)
-            }
-        }
-        span.end()
-    }
-
-    registerGaugeProvider(metricName: string, valueProvider: () => number, attributes?: Record<string, any>): void {
-        if (!this.initialized) {
-            diag.error('Operational telemetry not initialized')
-            return
-        }
-
-        const meter = opentelemetry.metrics.getMeter(this.SCOPE_NAME)
-        const gauge = meter.createObservableGauge(metricName)
-        gauge.addCallback(result => {
-            result.observe(valueProvider(), attributes as Attributes)
-        })
-    }
-
-    static getInstance(): OperationalTelemetryService {
+    static getInstance(
+        serviceName: string,
+        serviceVersion: string,
+        lspConsole: RemoteConsole,
+        poolId: string,
+        region: string,
+        endpoint: string
+    ): OperationalTelemetryService {
         if (!OperationalTelemetryService.instance) {
-            OperationalTelemetryService.instance = new OperationalTelemetryService()
+            OperationalTelemetryService.instance = new OperationalTelemetryService(
+                serviceName,
+                serviceVersion,
+                lspConsole,
+                poolId,
+                region,
+                endpoint
+            )
         }
+        diag.error('Operational telemetry already initialized')
         return OperationalTelemetryService.instance
     }
 
-    initialize(serviceName: string, serviceVersion: string, lspConsole: RemoteConsole): void {
-        if (this.initialized) {
-            diag.warn('Operational telemetry already initialized')
-            return
-        }
-        this.initialized = true
-
+    private constructor(
+        serviceName: string,
+        serviceVersion: string,
+        lspConsole: RemoteConsole,
+        poolId: string,
+        region: string,
+        endpoint: string
+    ) {
         diag.setLogger(
             {
                 debug: message => lspConsole.debug(message),
@@ -73,10 +57,6 @@ export class OperationalTelemetryService implements OperationalTelemetry {
             },
             DiagLogLevel.ALL
         )
-
-        const poolId = 'us-east-1:55354675-a962-43a0-86c9-528c74ee2775'
-        const region = 'us-east-1'
-        const endpoint = 'https://n3coch0xk0.execute-api.us-east-1.amazonaws.com/prod'
 
         const eventValidator = new OperationalEventValidator()
         const awsSender = new AwsCognitoApiGatewaySender(endpoint, region, poolId)
@@ -115,6 +95,31 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         process.on('beforeExit', async () => {
             // Metrics and spans are force flushed to their exporters on shutdown.
             sdk.shutdown()
+        })
+    }
+
+    recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void {
+        const tracer = trace.getTracer(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
+
+        const span = tracer.startSpan(eventType)
+        if (attributes) {
+            for (const [key, value] of Object.entries(attributes)) {
+                span.setAttribute(key, value)
+            }
+        }
+        span.end()
+    }
+
+    registerGaugeProvider(
+        metricName: string,
+        valueProvider: () => number,
+        attributes?: Record<string, any>,
+        scopeName?: string
+    ): void {
+        const meter = opentelemetry.metrics.getMeter(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
+        const gauge = meter.createObservableGauge(metricName)
+        gauge.addCallback(result => {
+            result.observe(valueProvider(), attributes as Attributes)
         })
     }
 
