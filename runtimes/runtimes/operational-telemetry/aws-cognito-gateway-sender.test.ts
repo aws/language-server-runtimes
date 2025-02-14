@@ -4,6 +4,7 @@ import { CognitoIdentityClient, GetCredentialsForIdentityCommand, GetIdCommand }
 import axios, { AxiosInstance } from 'axios'
 import { SignatureV4 } from '@smithy/signature-v4'
 import { diag } from '@opentelemetry/api'
+import assert from 'assert'
 
 describe('AwsCognitoApiGatewaySender', () => {
     let sender: AwsCognitoApiGatewaySender
@@ -25,6 +26,19 @@ describe('AwsCognitoApiGatewaySender', () => {
     beforeEach(() => {
         sender = new AwsCognitoApiGatewaySender(testEndpoint, testRegion, testPoolId)
         cognitoSendStub = sinon.stub(CognitoIdentityClient.prototype, 'send')
+        cognitoSendStub.callsFake(async command => {
+            if (command instanceof GetIdCommand) {
+                return { IdentifyId: 'testId' }
+            } else if (command instanceof GetCredentialsForIdentityCommand) {
+                return {
+                    Credentials: {
+                        AccessKeyId: 'testAccessKeyId',
+                        SecretKey: 'testSecretKey',
+                        SessionToken: 'testSessionToken',
+                    },
+                }
+            }
+        })
 
         axiosStub = stubInterface<AxiosInstance>()
         axiosStub.post.resolves({ status: 200, statusText: 'ok' })
@@ -47,20 +61,6 @@ describe('AwsCognitoApiGatewaySender', () => {
 
     describe('sendOperationalTelemetryData', () => {
         it('should not refresh credentials before expiration buffer time', async () => {
-            cognitoSendStub.callsFake(async command => {
-                if (command instanceof GetIdCommand) {
-                    return { IdentifyId: 'testId' }
-                } else if (command instanceof GetCredentialsForIdentityCommand) {
-                    return {
-                        Credentials: {
-                            AccessKeyId: 'testAccessKeyId',
-                            SecretKey: 'testSecretKey',
-                            SessionToken: 'testSessionToken',
-                        },
-                    }
-                }
-            })
-
             await sender.sendOperationalTelemetryData(testData)
             await sender.sendOperationalTelemetryData(testData)
 
@@ -83,6 +83,19 @@ describe('AwsCognitoApiGatewaySender', () => {
             sinon.assert.callCount(cognitoSendStub, 4)
 
             clock.restore()
+        })
+
+        it('should not retry and throw on 400 status code', async () => {
+            const errorResponse = {
+                response: {
+                    status: 400,
+                    statusText: 'Bad Request',
+                },
+            }
+            axiosStub.post.rejects(errorResponse)
+
+            await assert.rejects(async () => await sender.sendOperationalTelemetryData(testData))
+            sinon.assert.calledOnce(axiosStub.post)
         })
     })
 })

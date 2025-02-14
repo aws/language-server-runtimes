@@ -1,4 +1,6 @@
 import Ajv from 'ajv'
+import fs from 'fs'
+import path from 'path'
 
 export class OperationalEventValidator {
     private readonly ajv
@@ -7,14 +9,15 @@ export class OperationalEventValidator {
     constructor() {
         this.ajv = new Ajv()
 
-        this.ajv.addSchema(require('./telemetry-schemas/base-event-schema.json'), 'base-event-schema.json')
-        this.ajv.addSchema(require('./telemetry-schemas/caught-error-schema.json'), 'caught-error-schema.json')
-        this.ajv.addSchema(
-            require('./telemetry-schemas/resource-usage-metric-schema.json'),
-            'resource-usage-metric-schema.json'
-        )
-        this.ajv.addSchema(require('./telemetry-schemas/server-crash-schema.json'), 'server-crash-schema.json')
-        this.ajv.addSchema(require('./telemetry-schemas/telemetry-schema.json'), 'telemetry-schema.json')
+        const schemaDir = path.resolve(__dirname, 'telemetry-schemas')
+
+        fs.readdirSync(schemaDir).forEach(file => {
+            if (file.endsWith('.json')) {
+                const schema = require(path.resolve(schemaDir, file))
+                this.ajv.addSchema(schema, file)
+            }
+        })
+
         this.validate = this.ajv.getSchema('telemetry-schema.json#/definitions/OperationalEvent')!
     }
 
