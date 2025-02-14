@@ -27,6 +27,7 @@ describe('webworker', () => {
                 BrowserMessageReader: sinon.stub(),
                 BrowserMessageWriter: sinon.stub(),
                 createConnection: () => stubConnection,
+                '@global': true,
             },
         }))
     })
