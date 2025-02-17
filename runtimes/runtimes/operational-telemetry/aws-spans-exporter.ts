@@ -1,7 +1,7 @@
 import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base'
 import { ExportResult, ExportResultCode } from '@opentelemetry/core'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
-import { OperationalTelemetry } from './operational-telemetry'
+import { OperationalTelemetry, TelemetryStatus } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
 import { OperationalEvent, OperationalTelemetrySchema } from './types/generated/telemetry'
 import { OperationalEventValidator } from './operational-event-validator'
@@ -27,6 +27,17 @@ export class AwsSpanExporter implements SpanExporter {
         if (this.isShutdown) {
             diag.warn('Export attempted on shutdown exporter')
             resultCallback({ code: ExportResultCode.FAILED })
+            return
+        }
+        if (this.telemetryService.getTelemetryStatus() === TelemetryStatus.Pending) {
+            // add to queue
+            resultCallback({ code: ExportResultCode.SUCCESS })
+            return
+        }
+        if (this.telemetryService.getTelemetryStatus() === TelemetryStatus.Disabled) {
+            // clean queue
+            diag.warn('Telemetry is disabled, dropping metrics')
+            resultCallback({ code: ExportResultCode.SUCCESS })
             return
         }
         if (spans.length === 0) {

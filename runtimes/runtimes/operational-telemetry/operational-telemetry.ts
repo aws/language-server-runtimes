@@ -6,8 +6,16 @@ export interface OperationalTelemetry {
         scopeName?: string
     ): void
     recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void
+    updateTelemetryStatus(status: TelemetryStatus): void
+    getTelemetryStatus(): TelemetryStatus
     getCustomAttributes(): Record<string, any>
     updateCustomAttributes(key: string, value: any): void
+}
+
+export enum TelemetryStatus {
+    Disabled,
+    Enabled,
+    Pending,
 }
 
 export class OperationalTelemetryProvider {
@@ -27,6 +35,12 @@ export class OperationalTelemetryProvider {
 }
 
 class NoopOperationalTelemetry implements OperationalTelemetry {
+    getTelemetryStatus(): TelemetryStatus {
+        return TelemetryStatus.Disabled
+    }
+
+    updateTelemetryStatus(ts: TelemetryStatus): void {}
+
     registerGaugeProvider(
         _metricName: string,
         _valueProvider: () => number,
@@ -50,6 +64,14 @@ class ScopedTelemetryService implements OperationalTelemetry {
     constructor(scope: string, telemetryService: OperationalTelemetry) {
         this.telemetryService = telemetryService
         this.defaultScopeName = scope
+    }
+
+    getTelemetryStatus(): TelemetryStatus {
+        return this.telemetryService.getTelemetryStatus()
+    }
+
+    updateTelemetryStatus(ts: TelemetryStatus): void {
+        this.telemetryService.updateTelemetryStatus(ts)
     }
 
     recordEvent(eventName: string, attributes?: Record<string, any>, scopeName?: string): void {

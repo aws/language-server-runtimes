@@ -1,6 +1,6 @@
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AwsMetricExporter } from './aws-metrics-exporter'
-import { OperationalTelemetry } from './operational-telemetry'
+import { OperationalTelemetry, TelemetryStatus } from './operational-telemetry'
 import opentelemetry, { diag, Attributes, DiagLogLevel, trace } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
@@ -12,54 +12,48 @@ import { AwsSpanExporter } from './aws-spans-exporter'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 import { OperationalEventValidator } from './operational-event-validator'
 
+type OperationalTelmetryConfig = {
+    serviceName: string
+    serviceVersion: string
+    lspConsole: RemoteConsole
+    poolId: string
+    region: string
+    endpoint: string
+}
+
 export class OperationalTelemetryService implements OperationalTelemetry {
     private customAttributes: Record<string, any> = {}
     private static instance: OperationalTelemetryService
     private readonly RUNTIMES_SCOPE_NAME = 'language-server-runtimes'
+    private telemetryStatus = TelemetryStatus.Pending
+    private sdk: NodeSDK | null = null
+    // private initializeConfig: OperationalTelmetryConfig
+    private spanProcessor: BatchSpanProcessor
+    private metricReader: PeriodicExportingMetricReader
+    private baseResource: Resource
 
-    static getInstance(
-        serviceName: string,
-        serviceVersion: string,
-        lspConsole: RemoteConsole,
-        poolId: string,
-        region: string,
-        endpoint: string
-    ): OperationalTelemetryService {
+    static getInstance(config: OperationalTelmetryConfig): OperationalTelemetryService {
         if (!OperationalTelemetryService.instance) {
-            OperationalTelemetryService.instance = new OperationalTelemetryService(
-                serviceName,
-                serviceVersion,
-                lspConsole,
-                poolId,
-                region,
-                endpoint
-            )
+            OperationalTelemetryService.instance = new OperationalTelemetryService(config)
         }
         diag.error('Operational telemetry already initialized')
         return OperationalTelemetryService.instance
     }
 
-    private constructor(
-        serviceName: string,
-        serviceVersion: string,
-        lspConsole: RemoteConsole,
-        poolId: string,
-        region: string,
-        endpoint: string
-    ) {
+    private constructor(config: OperationalTelmetryConfig) {
         diag.setLogger(
             {
-                debug: message => lspConsole.debug(message),
-                error: message => lspConsole.error(message),
-                info: message => lspConsole.info(message),
-                verbose: message => lspConsole.log(message),
-                warn: message => lspConsole.warn(message),
+                debug: message => config.lspConsole.debug(message),
+                error: message => config.lspConsole.error(message),
+                info: message => config.lspConsole.info(message),
+                verbose: message => config.lspConsole.log(message),
+                warn: message => config.lspConsole.warn(message),
             },
             DiagLogLevel.ALL
         )
 
         const eventValidator = new OperationalEventValidator()
-        const awsSender = new AwsCognitoApiGatewaySender(endpoint, region, poolId)
+        const awsSender = new AwsCognitoApiGatewaySender(config.endpoint, config.region, config.poolId)
         const metricExporter = new AwsMetricExporter(this, awsSender, eventValidator)
         const spansExporter = new AwsSpanExporter(this, awsSender, eventValidator)
 
@@ -68,34 +62,68 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
         // Collects metrics every `exportIntervalMillis` and sends it to exporter.
         // Registered callbacks are evaluated once during the collection process.
-        const metricReader = new PeriodicExportingMetricReader({
+        this.metricReader = new PeriodicExportingMetricReader({
             exporter: metricExporter,
             exportIntervalMillis: fiveMinutes,
         })
 
         // Sends collected spans every `scheduledDelayMillis` if batch is non-empty.
         // Triggers export immediately when collected spans reach `maxExportBatchSize` limit.
-        const spanProcessor = new BatchSpanProcessor(spansExporter, {
+        this.spanProcessor = new BatchSpanProcessor(spansExporter, {
             maxExportBatchSize: 20,
             scheduledDelayMillis: fiveSeconds,
         })
 
-        const sdk = new NodeSDK({
-            resource: new Resource({
-                [ATTR_SERVICE_NAME]: serviceName,
-                [ATTR_SERVICE_VERSION]: serviceVersion,
-                sessionId: randomUUID(),
-            }),
-            metricReader: metricReader,
-            spanProcessor: spanProcessor,
+        this.baseResource = new Resource({
+            [ATTR_SERVICE_NAME]: config.serviceName,
+            [ATTR_SERVICE_VERSION]: config.serviceVersion,
+            sessionId: randomUUID(),
         })
 
-        sdk.start()
+        this.startupSdk()
+    }
+
+    getTelemetryStatus(): TelemetryStatus {
+        return this.telemetryStatus
+    }
+
+    updateTelemetryStatus(newStatus: TelemetryStatus): void {
+        if (this.telemetryStatus === newStatus) {
+            return
+        }
+
+        const previousStatus = this.telemetryStatus
+        this.telemetryStatus = newStatus
+
+        if (newStatus === TelemetryStatus.Enabled) {
+            if (previousStatus === TelemetryStatus.Disabled) {
+                this.startupSdk()
+            }
+        }
+
+        if (newStatus === TelemetryStatus.Disabled) {
+            this.shutdownSdk()
+        }
+    }
+
+    startupSdk() {
+        this.sdk = new NodeSDK({
+            resource: this.baseResource,
+            metricReader: this.metricReader,
+            spanProcessor: this.spanProcessor,
+        })
+
+        this.sdk.start()
 
         process.on('beforeExit', async () => {
             // Metrics and spans are force flushed to their exporters on shutdown.
-            sdk.shutdown()
+            this.sdk?.shutdown()
         })
+    }
+
+    shutdownSdk() {
+        this.sdk?.shutdown()
+        // this.sdk=null
     }
 
     recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void {

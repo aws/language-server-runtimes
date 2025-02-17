@@ -3,7 +3,7 @@ import sinon from 'sinon'
 import { AwsMetricExporter } from './aws-metrics-exporter'
 import { ExportResultCode } from '@opentelemetry/core'
 import { ResourceMetrics } from '@opentelemetry/sdk-metrics'
-import { OperationalTelemetry } from './operational-telemetry'
+import { OperationalTelemetry, TelemetryStatus } from './operational-telemetry'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { OperationalEventValidator } from './operational-event-validator'
 
@@ -112,6 +112,7 @@ describe('AwsMetricExporter', () => {
                 'clientInfo.extension.version': '1.0.0',
                 'clientInfo.clientId': 'test-id',
             }),
+            getTelemetryStatus: sinon.stub().returns(TelemetryStatus.Enabled),
         } as any
 
         sender = {
