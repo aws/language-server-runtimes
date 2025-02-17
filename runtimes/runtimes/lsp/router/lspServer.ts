@@ -94,7 +94,8 @@ export class LspServer {
                 result: 'Failed',
                 data: {
                     hasAwsConfig: Boolean(params.initializationOptions?.aws),
-                    hasLogLevel: params.initializationOptions?.logLevel,
+                    logLevel: params.initializationOptions?.logLevel,
+                    initializationOptionsStr: JSON.stringify(params.initializationOptions),
                 },
                 errorData: {
                     reason: 'aws field is not defined in InitializeResult',
@@ -122,8 +123,13 @@ export class LspServer {
 
             return initializeResult
         } catch (e) {
-            this.logger.log(`Runtime Initialization Error\n${e}`)
-            return new ResponseError(ErrorCodes.ServerNotInitialized, `Runtime Initialization Error\n${e}`)
+            this.logger.log(
+                `Runtime Initialization Error\nInitializationOptions: ${JSON.stringify(params.initializationOptions)}\n${e}`
+            )
+            return new ResponseError(
+                ErrorCodes.ServerNotInitialized,
+                `Runtime Initialization Error\nInitializationOptions: ${JSON.stringify(params.initializationOptions)}\n${e}`
+            )
         }
     }
 
