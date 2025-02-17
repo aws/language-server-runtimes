@@ -6,7 +6,7 @@ const execAsync = promisify(exec)
 
 async function generateTypes() {
     try {
-        const schemaDir = path.resolve(__dirname, '../runtimes/runtimes/operational-telemetry/telemetry-schemas')
+        const schemaDir = path.resolve(__dirname, '../runtimes/operational-telemetry/telemetry-schemas')
         const input = path.join(schemaDir, 'telemetry-schema.json')
         const output = path.join(schemaDir, '../types/generated/telemetry.d.ts')
 
