@@ -21,6 +21,7 @@
     },
     "scripts": {
         "clean": "rm -rf out/",
+        "precompile": "npm run generate-types",
         "compile": "tsc --build",
         "fix:prettier": "prettier . --write",
         "prepare": "husky install",
@@ -30,6 +31,7 @@
         "test:unit": "ts-mocha -b './**/*.test.ts'",
         "test": "npm run test:unit",
         "preversion": "npm run test",
+        "generate-types": "ts-node ./script/generate-types.ts",
         "version": "npm run compile && git add -A ."
     },
     "dependencies": {

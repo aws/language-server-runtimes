@@ -26,7 +26,8 @@
     "scripts": {
         "clean": "ts-node ./script/clean.ts",
         "commitlint": "commitlint --edit",
-        "compile": "npm run generate-types && tsc --build && npm run compile --workspaces --if-present",
+        "precompile": "npm run generate-types --workspaces --if-present",
+        "compile": "tsc --build && npm run compile --workspaces --if-present",
         "check:formatting": "prettier --check .",
         "fix:prettier": "prettier . --write",
         "format-staged": "npx pretty-quick --staged",
@@ -34,8 +35,7 @@
         "test": "npm run test --workspaces --if-present",
         "preversion": "npm run test",
         "version": "npm run compile && git add -A .",
-        "watch": "tsc --build --watch",
-        "generate-types": "ts-node ./script/generate-types.ts"
+        "watch": "tsc --build --watch"
     },
     "devDependencies": {
         "@commitlint/cli": "^19.6.1",
