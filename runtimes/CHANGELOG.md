@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.36](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.35...language-server-runtimes/v0.2.36) (2025-02-18)
+
+
+### Features
+
+* add operational telemetry interface ([#312](https://github.com/aws/language-server-runtimes/issues/312)) ([44ae86c](https://github.com/aws/language-server-runtimes/commit/44ae86c1f33b2a71702cc55b2ad78c2ec22e380f))
+
 ## [0.2.35](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.34...language-server-runtimes/v0.2.35) (2025-02-12)
 
 
