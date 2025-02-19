@@ -42,7 +42,6 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         if (!OperationalTelemetryService.instance) {
             OperationalTelemetryService.instance = new OperationalTelemetryService(config)
         }
-        diag.error('Operational telemetry already initialized')
         return OperationalTelemetryService.instance
     }
 
@@ -82,7 +81,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         }
     }
 
-    toggleTelemetry(telemetryOptOut: boolean): void {
+    toggleOptOut(telemetryOptOut: boolean): void {
         if (this.telemetryOptOut === telemetryOptOut) {
             return
         }
@@ -90,13 +89,13 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         this.telemetryOptOut = telemetryOptOut
 
         if (this.telemetryOptOut) {
-            this.startupSdk()
-        } else {
             this.shutdownSdk()
+        } else {
+            this.startupSdk()
         }
     }
 
-    startupSdk() {
+    private startupSdk() {
         const eventValidator = new OperationalEventValidator()
         const awsSender = new AwsCognitoApiGatewaySender(
             this.awsConfig.endpoint,
@@ -137,7 +136,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         })
     }
 
-    shutdownSdk() {
+    private shutdownSdk() {
         this.sdk?.shutdown()
     }
 

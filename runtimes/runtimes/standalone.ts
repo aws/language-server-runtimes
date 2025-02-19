@@ -268,8 +268,8 @@ export const standalone = (props: RuntimeProps) => {
         const logging: Logging = loggingServer.getLoggingObject()
         lspRouter.servers.push(loggingServer.getLspServer())
 
-        // const telemetryLspServer = getTelmetryLspServer(lspConnection, encoding, logging, props)
-        // lspRouter.servers.push(telemetryLspServer)
+        const telemetryLspServer = getTelmetryLspServer(lspConnection, encoding, logging, props)
+        lspRouter.servers.push(telemetryLspServer)
 
         // Initialize every Server
         const disposables = props.servers.map(s => {

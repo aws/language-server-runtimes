@@ -18,18 +18,18 @@ export function getTelmetryLspServer(
     lspServer.setInitializeHandler(async (params: InitializeParams): Promise<InitializeResult> => {
         const optOut = params.initializationOptions?.telemetryOptOut ?? true // telemetry disabled if option not provided
 
-        const optel = OperationalTelemetryService.getInstance({
-            serviceName: props.name,
-            serviceVersion: props.version,
-            extendedClientInfo: params.initializationOptions?.aws?.clientInfo,
-            lspConsole: lspConnection.console,
-            poolId: '',
-            region: '',
-            endpoint: '',
-            telemetryOptOut: optOut,
-        })
+        // const optel = OperationalTelemetryService.getInstance({
+        //     serviceName: props.name,
+        //     serviceVersion: props.version,
+        //     extendedClientInfo: params.initializationOptions?.aws?.clientInfo,
+        //     lspConsole: lspConnection.console,
+        //     poolId: '',
+        //     region: '',
+        //     endpoint: '',
+        //     telemetryOptOut: optOut,
+        // })
 
-        OperationalTelemetryProvider.setTelemetryInstance(optel)
+        // OperationalTelemetryProvider.setTelemetryInstance(optel)
 
         return {
             capabilities: {},
@@ -42,7 +42,7 @@ export function getTelmetryLspServer(
         })
 
         if (typeof optOut === 'boolean') {
-            OperationalTelemetryProvider.getTelemetryForScope('').toggleTelemetry(optOut)
+            OperationalTelemetryProvider.getTelemetryForScope('').toggleOptOut(optOut)
         }
     })
 

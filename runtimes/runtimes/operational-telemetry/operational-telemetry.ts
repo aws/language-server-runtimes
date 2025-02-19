@@ -6,11 +6,11 @@ export interface OperationalTelemetry {
         scopeName?: string
     ): void
     recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void
-    toggleTelemetry(telemetryOptOut: boolean): void
+    toggleOptOut(telemetryOptOut: boolean): void
 }
 
 class NoopOperationalTelemetry implements OperationalTelemetry {
-    toggleTelemetry(telemetryOptOut: boolean): void {}
+    toggleOptOut(telemetryOptOut: boolean): void {}
 
     registerGaugeProvider(
         _metricName: string,
@@ -31,8 +31,8 @@ class ScopedTelemetryService implements OperationalTelemetry {
         this.defaultScopeName = scope
     }
 
-    toggleTelemetry(telemetryOptOut: boolean): void {
-        this.telemetryService.toggleTelemetry(telemetryOptOut)
+    toggleOptOut(telemetryOptOut: boolean): void {
+        this.telemetryService.toggleOptOut(telemetryOptOut)
     }
 
     recordEvent(eventName: string, attributes?: Record<string, any>, scopeName?: string): void {
