@@ -9,12 +9,20 @@ Json telemetry schemas can be extended in the future to send other type of opera
 
 The collected data is then securely sent in batches via http to an AWS API Gateway endpoint using Cognito authentication. Collected data is sent on a best effort basis, and any telemetry related error should not impact customer experience using standalone runtime.
 
+
+## Telemetry Opt-Out
+
+The OperationalTelemetryService implements a telemetry opt-out mechanism that respects user privacy preferences and allows changes during the session without restarting the IDE. When telemetry is opted out, all data collection and exports are disabled through OpenTelemetry SDK shutdown. The opt-out state can be toggled at any time using the toggleOptOut method.
+
+For the standalone runtime, the OperationalTelemetryService instance is initialized during the initialize handshake. It checks for telemetry preferences in the initialization options, defaulting to opted-out (true) if no preference is specified. It then instantiates the OperationalTelemetryService with these preferences along with service information and client details. A didChangeConfigurationHandler is added to listen for updates to the 'aws.optOutTelemetry' workspace setting, allowing users to dynamically toggle telemetry collection through their IDE settings. When a configuration change occurs, the handler updates the telemetry opt-out state accordingly through the OperationalTelemetryProvider.
+
+
 ## Usage Instructions
 
 1. Initialize the OperationalTelemetryService and set it in the OperationalTelemetryProvider:
 
 ```typescript
-const telemetryService = OperationalTelemetryService.getInstance('language-server-runtimes', '1.0.0', remoteConsole, 'poolId', 'us-east-1', 'amazon.com');
+const telemetryService = OperationalTelemetryService.getInstance({serviceName: 'language-server-runtimes', serviceVersion: '1.0.0', lspConsole: lspConnection.console, poolId: 'poolId', region: 'us-east-1', endpoint: 'example.com', telemetryOptOut: false});
 OperationalTelemetryProvider.setTelemetryInstance(telemetryService)
 ```
 
