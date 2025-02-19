@@ -59,7 +59,7 @@ import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
 import { getServerDataDirPath } from './util/serverDataDirPath'
-import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/proxyUtil'
+import { createV2ProxyConfig, createV3ProxyConfig } from './util/standalone/proxyUtil'
 import { Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
@@ -331,7 +331,7 @@ export const standalone = (props: RuntimeProps) => {
                     // setup proxy
                     let instance = new Ctor({
                         ...current_config,
-                        requestHandler: makeProxyConfigv3Standalone(workspace),
+                        requestHandler: createV3ProxyConfig(),
                     })
                     return instance
                 },
@@ -343,7 +343,7 @@ export const standalone = (props: RuntimeProps) => {
                     ): T => {
                         let instance = new Ctor({ ...current_config })
                         // setup proxy
-                        instance.config.update(makeProxyConfigv2Standalone(workspace))
+                        instance.config.update(createV2ProxyConfig())
                         return instance
                     },
                 }
