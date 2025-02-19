@@ -6,40 +6,11 @@ export interface OperationalTelemetry {
         scopeName?: string
     ): void
     recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void
-    updateTelemetryStatus(status: TelemetryStatus): void
-    getTelemetryStatus(): TelemetryStatus
-    getCustomAttributes(): Record<string, any>
-    updateCustomAttributes(key: string, value: any): void
-}
-
-export enum TelemetryStatus {
-    Disabled,
-    Enabled,
-    Pending,
-}
-
-export class OperationalTelemetryProvider {
-    private static telemetryInstance: OperationalTelemetry
-
-    static setTelemetryInstance(telemetryInstance: OperationalTelemetry): void {
-        OperationalTelemetryProvider.telemetryInstance = telemetryInstance
-    }
-
-    static getTelemetryForScope(scopeName: string): OperationalTelemetry {
-        if (!OperationalTelemetryProvider.telemetryInstance) {
-            return new NoopOperationalTelemetry()
-        }
-
-        return new ScopedTelemetryService(scopeName, OperationalTelemetryProvider.telemetryInstance)
-    }
+    toggleTelemetry(telemetryOptOut: boolean): void
 }
 
 class NoopOperationalTelemetry implements OperationalTelemetry {
-    getTelemetryStatus(): TelemetryStatus {
-        return TelemetryStatus.Disabled
-    }
-
-    updateTelemetryStatus(ts: TelemetryStatus): void {}
+    toggleTelemetry(telemetryOptOut: boolean): void {}
 
     registerGaugeProvider(
         _metricName: string,
@@ -49,12 +20,6 @@ class NoopOperationalTelemetry implements OperationalTelemetry {
     ): void {}
 
     recordEvent(_eventType: string, _attributes?: Record<string, any>, _scopeName?: string): void {}
-
-    getCustomAttributes(): Record<string, any> {
-        return {}
-    }
-
-    updateCustomAttributes(_key: string, _value: any): void {}
 }
 
 class ScopedTelemetryService implements OperationalTelemetry {
@@ -66,12 +31,8 @@ class ScopedTelemetryService implements OperationalTelemetry {
         this.defaultScopeName = scope
     }
 
-    getTelemetryStatus(): TelemetryStatus {
-        return this.telemetryService.getTelemetryStatus()
-    }
-
-    updateTelemetryStatus(ts: TelemetryStatus): void {
-        this.telemetryService.updateTelemetryStatus(ts)
+    toggleTelemetry(telemetryOptOut: boolean): void {
+        this.telemetryService.toggleTelemetry(telemetryOptOut)
     }
 
     recordEvent(eventName: string, attributes?: Record<string, any>, scopeName?: string): void {
@@ -91,12 +52,16 @@ class ScopedTelemetryService implements OperationalTelemetry {
             scopeName ? scopeName : this.defaultScopeName
         )
     }
+}
 
-    getCustomAttributes(): Record<string, any> {
-        return this.telemetryService.getCustomAttributes()
+export class OperationalTelemetryProvider {
+    private static telemetryInstance: OperationalTelemetry = new NoopOperationalTelemetry()
+
+    static setTelemetryInstance(telemetryInstance: OperationalTelemetry): void {
+        OperationalTelemetryProvider.telemetryInstance = telemetryInstance
     }
 
-    updateCustomAttributes(key: string, value: any): void {
-        this.telemetryService.updateCustomAttributes(key, value)
+    static getTelemetryForScope(scopeName: string): OperationalTelemetry {
+        return new ScopedTelemetryService(scopeName, OperationalTelemetryProvider.telemetryInstance)
     }
 }

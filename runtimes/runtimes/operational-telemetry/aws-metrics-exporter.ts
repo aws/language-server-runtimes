@@ -1,25 +1,18 @@
 import { ExportResult, ExportResultCode } from '@opentelemetry/core'
 import { MetricData, PushMetricExporter, ResourceMetrics, ScopeMetrics } from '@opentelemetry/sdk-metrics'
-import { OperationalTelemetry, TelemetryStatus } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { OperationalEvent, OperationalTelemetrySchema } from './types/generated/telemetry'
 import { OperationalEventValidator } from './operational-event-validator'
 
 export class AwsMetricExporter implements PushMetricExporter {
-    private readonly telemetryService: OperationalTelemetry
     private readonly sender: AwsCognitoApiGatewaySender
     private readonly eventValidator: OperationalEventValidator
     // todo batching queue for events received from reader
 
     private isShutdown = false
 
-    constructor(
-        telemetryService: OperationalTelemetry,
-        sender: AwsCognitoApiGatewaySender,
-        eventValidator: OperationalEventValidator
-    ) {
-        this.telemetryService = telemetryService
+    constructor(sender: AwsCognitoApiGatewaySender, eventValidator: OperationalEventValidator) {
         this.sender = sender
         this.eventValidator = eventValidator
     }
@@ -28,17 +21,6 @@ export class AwsMetricExporter implements PushMetricExporter {
         if (this.isShutdown) {
             diag.warn('Export attempted on shutdown exporter')
             setImmediate(resultCallback, { code: ExportResultCode.FAILED })
-            return
-        }
-        if (this.telemetryService.getTelemetryStatus() === TelemetryStatus.Pending) {
-            // add to queue
-            resultCallback({ code: ExportResultCode.SUCCESS })
-            return
-        }
-        if (this.telemetryService.getTelemetryStatus() === TelemetryStatus.Disabled) {
-            // clean queue
-            diag.warn('Telemetry is disabled, dropping metrics')
-            resultCallback({ code: ExportResultCode.SUCCESS })
             return
         }
         if (metrics.scopeMetrics.length === 0) {
@@ -100,16 +82,13 @@ export class AwsMetricExporter implements PushMetricExporter {
                 version: metrics.resource.attributes['service.version'] as string | undefined,
             },
             clientInfo: {
-                name: this.telemetryService.getCustomAttributes()['clientInfo.name'] as string | undefined,
+                name: metrics.resource.attributes['clientInfo.name'] as string | undefined,
+                version: metrics.resource.attributes['clientInfo.version'] as string | undefined,
                 extension: {
-                    name: this.telemetryService.getCustomAttributes()['clientInfo.extension.name'] as
-                        | string
-                        | undefined,
-                    version: this.telemetryService.getCustomAttributes()['clientInfo.extension.version'] as
-                        | string
-                        | undefined,
+                    name: metrics.resource.attributes['clientInfo.extension.name'] as string | undefined,
+                    version: metrics.resource.attributes['clientInfo.extension.version'] as string | undefined,
                 },
-                clientId: this.telemetryService.getCustomAttributes()['clientInfo.clientId'] as string | undefined,
+                clientId: metrics.resource.attributes['clientInfo.clientId'] as string | undefined,
             },
             scopes: scopes,
         }
