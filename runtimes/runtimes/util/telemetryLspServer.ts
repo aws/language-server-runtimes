@@ -7,7 +7,7 @@ import { RuntimeProps } from '../runtime'
 import { OperationalTelemetryService } from '../operational-telemetry/operational-telemetry-service'
 import { InitializeParams, InitializeResult } from '../../protocol'
 
-export function getTelmetryLspServer(
+export function getTelemetryLspServer(
     lspConnection: Connection,
     encoding: Encoding,
     logging: Logging,
