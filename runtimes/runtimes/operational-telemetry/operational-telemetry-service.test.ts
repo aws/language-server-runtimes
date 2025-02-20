@@ -80,6 +80,35 @@ describe('OperationalTelemetryService', () => {
 
             sinon.assert.calledOnce(NodeSDK.prototype.start as sinon.SinonStub)
         })
+
+        it('should correctly handle multiple toggles between opt-in and opt-out', () => {
+            // Initial: telemetry enabled
+            const config = { ...defaultConfig, telemetryOptOut: false }
+            const optel = OperationalTelemetryService.getInstance(config)
+
+            sinon.assert.notCalled(NodeSDK.prototype.shutdown as sinon.SinonStub)
+            sinon.assert.calledOnce(NodeSDK.prototype.start as sinon.SinonStub)
+
+            // First toggle: opt-in -> opt-out
+            optel.toggleOptOut(true)
+            sinon.assert.calledOnce(NodeSDK.prototype.shutdown as sinon.SinonStub)
+            sinon.assert.calledOnce(NodeSDK.prototype.start as sinon.SinonStub)
+
+            // Second toggle: opt-out -> opt-in
+            optel.toggleOptOut(false)
+            sinon.assert.calledTwice(NodeSDK.prototype.start as sinon.SinonStub)
+            sinon.assert.calledOnce(NodeSDK.prototype.shutdown as sinon.SinonStub)
+
+            // Third toggle: opt-in -> opt-out
+            optel.toggleOptOut(true)
+            sinon.assert.calledTwice(NodeSDK.prototype.start as sinon.SinonStub)
+            sinon.assert.calledTwice(NodeSDK.prototype.shutdown as sinon.SinonStub)
+
+            // Fourth toggle: opt-out -> opt-in
+            optel.toggleOptOut(false)
+            sinon.assert.calledThrice(NodeSDK.prototype.start as sinon.SinonStub)
+            sinon.assert.calledTwice(NodeSDK.prototype.shutdown as sinon.SinonStub)
+        })
     })
 
     describe('getInstance', () => {
