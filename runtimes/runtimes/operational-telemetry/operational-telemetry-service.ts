@@ -13,7 +13,7 @@ import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 import { OperationalEventValidator } from './operational-event-validator'
 import { ExtendedClientInfo } from '../../server-interface'
 
-type OperationalTelmetryConfig = {
+type OperationalTelemetryConfig = {
     serviceName: string
     serviceVersion?: string
     extendedClientInfo?: ExtendedClientInfo
@@ -38,14 +38,14 @@ export class OperationalTelemetryService implements OperationalTelemetry {
     private awsConfig: AwsConfig
     private telemetryOptOut: boolean
 
-    static getInstance(config: OperationalTelmetryConfig): OperationalTelemetryService {
+    static getInstance(config: OperationalTelemetryConfig): OperationalTelemetryService {
         if (!OperationalTelemetryService.instance) {
             OperationalTelemetryService.instance = new OperationalTelemetryService(config)
         }
         return OperationalTelemetryService.instance
     }
 
-    private constructor(config: OperationalTelmetryConfig) {
+    private constructor(config: OperationalTelemetryConfig) {
         diag.setLogger(
             {
                 debug: message => config.lspConsole.debug(message),
