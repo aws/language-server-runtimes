@@ -64,6 +64,7 @@ import { Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import { notifyDependencyPathsNotificationType } from '../protocol/notifyDependencyPaths'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -321,6 +322,9 @@ export const standalone = (props: RuntimeProps) => {
                         lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
                     onLogInlineCompletionSessionResults: handler => {
                         lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
+                    },
+                    onNotifyDependencyPaths(handler) {
+                        lspConnection.onNotification(notifyDependencyPathsNotificationType, handler)
                     },
                 },
             }
