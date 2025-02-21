@@ -43,6 +43,21 @@ export class LspRouter {
     ): Promise<InitializeResult | ResponseError<InitializeError>> => {
         this.clientInitializeParams = params
 
+        if (!params.initializationOptions?.aws) {
+            this.lspConnection.telemetry.logEvent({
+                name: 'runtimeInitialization_validation',
+                result: 'Failed',
+                data: {
+                    hasAwsConfig: Boolean(params.initializationOptions?.aws),
+                    logLevel: params.initializationOptions?.logLevel,
+                    initializationOptionsStr: JSON.stringify(params.initializationOptions),
+                },
+                errorData: {
+                    reason: 'aws field is not defined in InitializeResult',
+                },
+            })
+        }
+
         let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
         responsesList = responsesList.filter(r => r != undefined)
         const responseError = responsesList.find(el => el instanceof ResponseError)

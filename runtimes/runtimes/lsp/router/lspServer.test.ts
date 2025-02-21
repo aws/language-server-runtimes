@@ -91,35 +91,6 @@ describe('LspServer', () => {
             )
         })
 
-        it('should log error when aws config is missing', async () => {
-            const params: InitializeParams = {
-                processId: null,
-                rootUri: null,
-                capabilities: {},
-                initializationOptions: {},
-            }
-
-            const expectedResult: PartialInitializeResult = {
-                capabilities: {},
-                serverInfo: {
-                    name: 'testServer',
-                },
-            }
-            lspServer.setInitializeHandler(() => expectedResult)
-            const result = await lspServer.initialize(params, mockToken)
-
-            sinon.assert.calledOnce(
-                // @ts-ignore
-                mockConnection.telemetry.logEvent
-            )
-            sinon.assert.calledWithMatch(
-                // @ts-ignore
-                mockLogger.log,
-                'Unknown initialization error\nwith initialization options: {}'
-            )
-            assert.strictEqual(result, expectedResult)
-        })
-
         it('should handle initialization errors', async () => {
             const params: InitializeParams = {
                 processId: null,
