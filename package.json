@@ -28,7 +28,7 @@
         "commitlint": "commitlint --edit",
         "compile": "npm run generate-types && tsc --build && npm run compile --workspaces --if-present",
         "check:formatting": "prettier --check .",
-        "fix:prettier": "prettier . --write",
+        "format": "prettier . --write",
         "format-staged": "npx pretty-quick --staged",
         "prepare": "husky .husky",
         "test": "npm run test --workspaces --if-present",
