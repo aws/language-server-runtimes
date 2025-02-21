@@ -3,13 +3,11 @@ import sinon from 'sinon'
 import { AwsMetricExporter } from './aws-metrics-exporter'
 import { ExportResultCode } from '@opentelemetry/core'
 import { ResourceMetrics } from '@opentelemetry/sdk-metrics'
-import { OperationalTelemetry } from './operational-telemetry'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { OperationalEventValidator } from './operational-event-validator'
 
 describe('AwsMetricExporter', () => {
     let exporter: AwsMetricExporter
-    let telemetryService: sinon.SinonStubbedInstance<OperationalTelemetry>
     let sender: sinon.SinonStubbedInstance<AwsCognitoApiGatewaySender>
     let resultCallback: sinon.SinonSpy
     const mockResourceMetrics: ResourceMetrics = {
@@ -18,6 +16,11 @@ describe('AwsMetricExporter', () => {
                 sessionId: 'test-session',
                 'service.name': 'test-service',
                 'service.version': '1.0.0',
+                'clientInfo.name': 'test-client',
+                'clientInfo.version': '1.2.3',
+                'clientInfo.extension.name': 'test-extension',
+                'clientInfo.extension.version': '1.0.0',
+                'clientInfo.clientId': 'test-id',
             },
         },
         scopeMetrics: [
@@ -80,6 +83,7 @@ describe('AwsMetricExporter', () => {
         },
         clientInfo: {
             name: 'test-client',
+            version: '1.2.3',
             extension: {
                 name: 'test-extension',
                 version: '1.0.0',
@@ -105,20 +109,11 @@ describe('AwsMetricExporter', () => {
     }
 
     beforeEach(() => {
-        telemetryService = {
-            getCustomAttributes: sinon.stub().returns({
-                'clientInfo.name': 'test-client',
-                'clientInfo.extension.name': 'test-extension',
-                'clientInfo.extension.version': '1.0.0',
-                'clientInfo.clientId': 'test-id',
-            }),
-        } as any
-
         sender = {
             sendOperationalTelemetryData: sinon.stub().resolves(),
         } as any
 
-        exporter = new AwsMetricExporter(telemetryService as any, sender as any, new OperationalEventValidator())
+        exporter = new AwsMetricExporter(sender as any, new OperationalEventValidator())
         resultCallback = sinon.spy()
     })
 

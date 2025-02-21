@@ -1,7 +1,7 @@
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AwsMetricExporter } from './aws-metrics-exporter'
 import { OperationalTelemetry } from './operational-telemetry'
-import opentelemetry, { diag, Attributes, DiagLogLevel, trace } from '@opentelemetry/api'
+import { diag, Attributes, DiagLogLevel, trace, metrics } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions'
@@ -11,57 +11,99 @@ import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { AwsSpanExporter } from './aws-spans-exporter'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 import { OperationalEventValidator } from './operational-event-validator'
+import { ExtendedClientInfo } from '../../server-interface'
+
+type OperationalTelemetryConfig = {
+    serviceName: string
+    serviceVersion?: string
+    extendedClientInfo?: ExtendedClientInfo
+    lspConsole: RemoteConsole
+    poolId: string
+    region: string
+    endpoint: string
+    telemetryOptOut: boolean
+}
+
+type AwsConfig = {
+    endpoint: string
+    region: string
+    poolId: string
+}
 
 export class OperationalTelemetryService implements OperationalTelemetry {
-    private customAttributes: Record<string, any> = {}
     private static instance: OperationalTelemetryService
     private readonly RUNTIMES_SCOPE_NAME = 'language-server-runtimes'
+    private sdk: NodeSDK | null = null
+    private readonly baseResource: Resource
+    private awsConfig: AwsConfig
+    private telemetryOptOut: boolean
 
-    static getInstance(
-        serviceName: string,
-        serviceVersion: string,
-        lspConsole: RemoteConsole,
-        poolId: string,
-        region: string,
-        endpoint: string
-    ): OperationalTelemetryService {
+    static getInstance(config: OperationalTelemetryConfig): OperationalTelemetryService {
         if (!OperationalTelemetryService.instance) {
-            OperationalTelemetryService.instance = new OperationalTelemetryService(
-                serviceName,
-                serviceVersion,
-                lspConsole,
-                poolId,
-                region,
-                endpoint
-            )
+            OperationalTelemetryService.instance = new OperationalTelemetryService(config)
         }
-        diag.error('Operational telemetry already initialized')
         return OperationalTelemetryService.instance
     }
 
-    private constructor(
-        serviceName: string,
-        serviceVersion: string,
-        lspConsole: RemoteConsole,
-        poolId: string,
-        region: string,
-        endpoint: string
-    ) {
+    private constructor(config: OperationalTelemetryConfig) {
         diag.setLogger(
             {
-                debug: message => lspConsole.debug(message),
-                error: message => lspConsole.error(message),
-                info: message => lspConsole.info(message),
-                verbose: message => lspConsole.log(message),
-                warn: message => lspConsole.warn(message),
+                debug: message => config.lspConsole.debug(message),
+                error: message => config.lspConsole.error(message),
+                info: message => config.lspConsole.info(message),
+                verbose: message => config.lspConsole.log(message),
+                warn: message => config.lspConsole.warn(message),
             },
             DiagLogLevel.ALL
         )
 
+        this.baseResource = new Resource({
+            [ATTR_SERVICE_NAME]: config.serviceName,
+            [ATTR_SERVICE_VERSION]: config.serviceVersion,
+            'clientInfo.name': config.extendedClientInfo?.name,
+            'clientInfo.version': config.extendedClientInfo?.version,
+            'clientInfo.clientId': config.extendedClientInfo?.clientId,
+            'clientInfo.extension.name': config.extendedClientInfo?.extension.name,
+            'clientInfo.extension.version': config.extendedClientInfo?.extension.version,
+            sessionId: randomUUID(),
+        })
+
+        this.awsConfig = {
+            endpoint: config.endpoint,
+            region: config.region,
+            poolId: config.poolId,
+        }
+
+        this.telemetryOptOut = config.telemetryOptOut
+
+        if (!this.telemetryOptOut) {
+            this.startupSdk()
+        }
+    }
+
+    toggleOptOut(telemetryOptOut: boolean): void {
+        if (this.telemetryOptOut === telemetryOptOut) {
+            return
+        }
+
+        this.telemetryOptOut = telemetryOptOut
+
+        if (this.telemetryOptOut) {
+            this.shutdownSdk()
+        } else {
+            this.startupSdk()
+        }
+    }
+
+    private startupSdk() {
         const eventValidator = new OperationalEventValidator()
-        const awsSender = new AwsCognitoApiGatewaySender(endpoint, region, poolId)
-        const metricExporter = new AwsMetricExporter(this, awsSender, eventValidator)
-        const spansExporter = new AwsSpanExporter(this, awsSender, eventValidator)
+        const awsSender = new AwsCognitoApiGatewaySender(
+            this.awsConfig.endpoint,
+            this.awsConfig.region,
+            this.awsConfig.poolId
+        )
+        const metricExporter = new AwsMetricExporter(awsSender, eventValidator)
+        const spansExporter = new AwsSpanExporter(awsSender, eventValidator)
 
         const fiveMinutes = 300000
         const fiveSeconds = 5000
@@ -80,22 +122,22 @@ export class OperationalTelemetryService implements OperationalTelemetry {
             scheduledDelayMillis: fiveSeconds,
         })
 
-        const sdk = new NodeSDK({
-            resource: new Resource({
-                [ATTR_SERVICE_NAME]: serviceName,
-                [ATTR_SERVICE_VERSION]: serviceVersion,
-                sessionId: randomUUID(),
-            }),
+        this.sdk = new NodeSDK({
+            resource: this.baseResource,
             metricReader: metricReader,
             spanProcessor: spanProcessor,
         })
 
-        sdk.start()
+        this.sdk.start()
 
         process.on('beforeExit', async () => {
             // Metrics and spans are force flushed to their exporters on shutdown.
-            sdk.shutdown()
+            this.sdk?.shutdown()
         })
+    }
+
+    private shutdownSdk() {
+        this.sdk?.shutdown()
     }
 
     recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void {
@@ -116,18 +158,10 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         attributes?: Record<string, any>,
         scopeName?: string
     ): void {
-        const meter = opentelemetry.metrics.getMeter(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
+        const meter = metrics.getMeter(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
         const gauge = meter.createObservableGauge(metricName)
         gauge.addCallback(result => {
             result.observe(valueProvider(), attributes as Attributes)
         })
-    }
-
-    getCustomAttributes(): Record<string, any> {
-        return this.customAttributes
-    }
-
-    updateCustomAttributes(key: string, value: any): void {
-        this.customAttributes[key] = value
     }
 }

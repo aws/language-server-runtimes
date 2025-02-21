@@ -116,6 +116,7 @@ export interface InitializeParams extends _InitializeParamsBase {
     initializationOptions?: {
         [key: string]: any
         logLevel?: LogLevel
+        telemetryOptOut?: boolean
         aws?: AWSInitializationOptions
     }
 }

@@ -61,7 +61,7 @@ describe('standalone', () => {
                 'Runtime: Initializing runtime without encryption'
             )
             sinon.assert.calledWithExactly(baseChatModule.BaseChat as unknown as sinon.SinonStub, stubConnection)
-            sinon.assert.calledTwice(lspRouterStub.servers.push as sinon.SinonStub)
+            sinon.assert.calledThrice(lspRouterStub.servers.push as sinon.SinonStub)
             sinon.assert.calledOnce(stubConnection.listen)
         })
 
@@ -102,7 +102,7 @@ describe('standalone', () => {
                 encryptionInitialization.key,
                 encryptionInitialization.mode
             )
-            sinon.assert.calledTwice(lspRouterStub.servers.push as sinon.SinonStub)
+            sinon.assert.calledThrice(lspRouterStub.servers.push as sinon.SinonStub)
             sinon.assert.calledOnce(stubConnection.listen)
         })
     })

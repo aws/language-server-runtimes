@@ -3,13 +3,11 @@ import sinon from 'sinon'
 import { AwsSpanExporter } from './aws-spans-exporter'
 import { ExportResultCode } from '@opentelemetry/core'
 import { ReadableSpan } from '@opentelemetry/sdk-trace-base'
-import { OperationalTelemetry } from './operational-telemetry'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { OperationalEventValidator } from './operational-event-validator'
 
 describe('AWSSpanExporter', () => {
     let exporter: AwsSpanExporter
-    let telemetryService: sinon.SinonStubbedInstance<OperationalTelemetry>
     let sender: sinon.SinonStubbedInstance<AwsCognitoApiGatewaySender>
     let resultCallback: sinon.SinonSpy
 
@@ -20,6 +18,11 @@ describe('AWSSpanExporter', () => {
                     sessionId: 'test-session',
                     'service.name': 'test-service',
                     'service.version': '1.0.0',
+                    'clientInfo.name': 'test-client',
+                    'clientInfo.version': '1.2.3',
+                    'clientInfo.extension.name': 'test-extension',
+                    'clientInfo.extension.version': '1.0.0',
+                    'clientInfo.clientId': 'test-id',
                 },
             },
             instrumentationLibrary: {
@@ -51,20 +54,11 @@ describe('AWSSpanExporter', () => {
     ]
 
     beforeEach(() => {
-        telemetryService = {
-            getCustomAttributes: sinon.stub().returns({
-                'clientInfo.name': 'test-client',
-                'clientInfo.extension.name': 'test-extension',
-                'clientInfo.extension.version': '1.0.0',
-                'clientInfo.clientId': 'test-id',
-            }),
-        } as any
-
         sender = {
             sendOperationalTelemetryData: sinon.stub().resolves(),
         } as any
 
-        exporter = new AwsSpanExporter(telemetryService as any, sender as any, new OperationalEventValidator())
+        exporter = new AwsSpanExporter(sender as any, new OperationalEventValidator())
         resultCallback = sinon.spy()
     })
 
@@ -135,6 +129,7 @@ describe('AWSSpanExporter', () => {
                 },
                 clientInfo: {
                     name: 'test-client',
+                    version: '1.2.3',
                     extension: {
                         name: 'test-extension',
                         version: '1.0.0',

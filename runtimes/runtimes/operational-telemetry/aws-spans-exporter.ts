@@ -1,24 +1,17 @@
 import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base'
 import { ExportResult, ExportResultCode } from '@opentelemetry/core'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
-import { OperationalTelemetry } from './operational-telemetry'
 import { diag } from '@opentelemetry/api'
 import { OperationalEvent, OperationalTelemetrySchema } from './types/generated/telemetry'
 import { OperationalEventValidator } from './operational-event-validator'
 
 export class AwsSpanExporter implements SpanExporter {
-    private readonly telemetryService: OperationalTelemetry
     private readonly sender: AwsCognitoApiGatewaySender
     private readonly eventValidator: OperationalEventValidator
 
     private isShutdown = false
 
-    constructor(
-        telemetryService: OperationalTelemetry,
-        sender: AwsCognitoApiGatewaySender,
-        eventValidator: OperationalEventValidator
-    ) {
-        this.telemetryService = telemetryService
+    constructor(sender: AwsCognitoApiGatewaySender, eventValidator: OperationalEventValidator) {
         this.sender = sender
         this.eventValidator = eventValidator
     }
@@ -92,16 +85,13 @@ export class AwsSpanExporter implements SpanExporter {
                 version: spans[0].resource.attributes['service.version'] as string | undefined,
             },
             clientInfo: {
-                name: this.telemetryService.getCustomAttributes()['clientInfo.name'] as string | undefined,
+                name: spans[0].resource.attributes['clientInfo.name'] as string | undefined,
+                version: spans[0].resource.attributes['clientInfo.version'] as string | undefined,
                 extension: {
-                    name: this.telemetryService.getCustomAttributes()['clientInfo.extension.name'] as
-                        | string
-                        | undefined,
-                    version: this.telemetryService.getCustomAttributes()['clientInfo.extension.version'] as
-                        | string
-                        | undefined,
+                    name: spans[0].resource.attributes['clientInfo.extension.name'] as string | undefined,
+                    version: spans[0].resource.attributes['clientInfo.extension.version'] as string | undefined,
                 },
-                clientId: this.telemetryService.getCustomAttributes()['clientInfo.clientId'] as string | undefined,
+                clientId: spans[0].resource.attributes['clientInfo.clientId'] as string | undefined,
             },
             scopes: scopes,
         }

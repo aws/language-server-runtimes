@@ -21,7 +21,7 @@
     },
     "scripts": {
         "clean": "rm -rf out/",
-        "compile": "tsc --build",
+        "compile": "tsc --build && npm run copy-files",
         "fix:prettier": "prettier . --write",
         "prepare": "husky install",
         "prepub:copyFiles": "shx cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
@@ -30,7 +30,8 @@
         "test:unit": "ts-mocha -b './**/*.test.ts'",
         "test": "npm run test:unit",
         "preversion": "npm run test",
-        "version": "npm run compile && git add -A ."
+        "version": "npm run compile && git add -A .",
+        "copy-files": "copyfiles runtimes/operational-telemetry/telemetry-schemas/*.json out"
     },
     "dependencies": {
         "@aws-crypto/sha256-js": "^5.2.0",
@@ -59,6 +60,7 @@
         "@types/mocha": "^10.0.9",
         "@types/node": "^22.13.1",
         "assert": "^2.0.0",
+        "copyfiles": "^2.4.1",
         "husky": "^9.1.7",
         "json-schema-to-typescript": "^15.0.4",
         "prettier": "3.4.2",

@@ -64,6 +64,7 @@ import { Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import { getTelemetryLspServer } from './util/telemetryLspServer'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -266,6 +267,9 @@ export const standalone = (props: RuntimeProps) => {
         const loggingServer = new LoggingServer(lspConnection, encoding)
         const logging: Logging = loggingServer.getLoggingObject()
         lspRouter.servers.push(loggingServer.getLspServer())
+
+        const telemetryLspServer = getTelemetryLspServer(lspConnection, encoding, logging, props)
+        lspRouter.servers.push(telemetryLspServer)
 
         // Initialize every Server
         const disposables = props.servers.map(s => {
