@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.37](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.36...language-server-runtimes/v0.2.37) (2025-02-24)
+
+
+### Features
+
+* add opt-out mechanism to operational telemetry ([#330](https://github.com/aws/language-server-runtimes/issues/330)) ([0de11b1](https://github.com/aws/language-server-runtimes/commit/0de11b10b5556848633df351defe84350c7b5da1))
+
+
+### Bug Fixes
+
+* moving the telemetry logging for initialization options to the l… ([#337](https://github.com/aws/language-server-runtimes/issues/337)) ([3f0a826](https://github.com/aws/language-server-runtimes/commit/3f0a8262ea8e809341ffce4f503517339267917b))
+
 ## [0.2.36](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.35...language-server-runtimes/v0.2.36) (2025-02-18)
 
 
