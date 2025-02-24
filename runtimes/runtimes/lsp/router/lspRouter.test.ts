@@ -45,6 +45,8 @@ describe('LspRouter', () => {
     beforeEach(() => {
         const onInitializeSpy = sandbox.spy(lspConnection, 'onInitialize')
         const onExecuteommandSpy = sandbox.spy(lspConnection, 'onExecuteCommand')
+        lspConnection.telemetry.logEvent = sandbox.stub()
+        lspConnection.console.log = sandbox.stub()
 
         lspRouter = new LspRouter(lspConnection, 'AWS LSP Standalone', '1.0.0')
 
@@ -69,6 +71,38 @@ describe('LspRouter', () => {
             const initParam = {} as InitializeParams
             initializeHandler(initParam, {} as CancellationToken)
             assert(lspRouter.clientInitializeParams === initParam)
+        })
+
+        it('should log telemetry event when aws config is missing in InitializeParams', async () => {
+            const params: InitializeParams = {
+                processId: null,
+                rootUri: null,
+                capabilities: {},
+                initializationOptions: {},
+            }
+
+            await initializeHandler(params, {} as CancellationToken)
+            // @ts-ignore
+            sinon.assert.calledOnce(lspConnection.telemetry.logEvent)
+            // @ts-ignore
+            sinon.assert.calledOnce(lspConnection.console.log)
+        })
+
+        it('should log telemetry event only once when aws config is missing in InitializeParams when multiple servers are present', async () => {
+            const params: InitializeParams = {
+                processId: null,
+                rootUri: null,
+                capabilities: {},
+                initializationOptions: {},
+            }
+            lspRouter.servers.push(newServer({}))
+            lspRouter.servers.push(newServer({}))
+
+            await initializeHandler(params, {} as CancellationToken)
+            // @ts-ignore
+            sinon.assert.calledOnce(lspConnection.telemetry.logEvent)
+            // @ts-ignore
+            sinon.assert.calledOnce(lspConnection.console.log)
         })
 
         it('should return the default response when no handlers are registered', async () => {

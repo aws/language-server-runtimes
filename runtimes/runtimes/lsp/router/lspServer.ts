@@ -88,24 +88,6 @@ export class LspServer {
         params: InitializeParams,
         token: CancellationToken
     ): Promise<PartialInitializeResult | ResponseError<InitializeError> | undefined> => {
-        if (!params.initializationOptions?.aws) {
-            this.lspConnection.telemetry.logEvent({
-                name: 'runtimeInitialization_validation',
-                result: 'Failed',
-                data: {
-                    hasAwsConfig: Boolean(params.initializationOptions?.aws),
-                    logLevel: params.initializationOptions?.logLevel,
-                    initializationOptionsStr: JSON.stringify(params.initializationOptions),
-                },
-                errorData: {
-                    reason: 'aws field is not defined in InitializeResult',
-                },
-            })
-
-            this.logger.log(
-                `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
-            )
-        }
         this.clientSupportsNotifications =
             params.initializationOptions?.aws?.awsClientCapabilities?.window?.notifications
 

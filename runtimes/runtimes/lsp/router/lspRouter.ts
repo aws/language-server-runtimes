@@ -18,7 +18,7 @@ import {
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { findDuplicates, mergeObjects } from './util'
-import { PartialInitializeResult } from '../../../server-interface'
+import { Logging, PartialInitializeResult } from '../../../server-interface'
 
 export class LspRouter {
     public clientInitializeParams?: InitializeParams
@@ -42,6 +42,25 @@ export class LspRouter {
         token: CancellationToken
     ): Promise<InitializeResult | ResponseError<InitializeError>> => {
         this.clientInitializeParams = params
+
+        if (!params.initializationOptions?.aws) {
+            this.lspConnection.telemetry.logEvent({
+                name: 'runtimeInitialization_validation',
+                result: 'Failed',
+                data: {
+                    hasAwsConfig: Boolean(params.initializationOptions?.aws),
+                    logLevel: params.initializationOptions?.logLevel,
+                    initializationOptionsStr: JSON.stringify(params.initializationOptions),
+                },
+                errorData: {
+                    reason: 'aws field is not defined in InitializeResult',
+                },
+            })
+
+            this.lspConnection.console.log(
+                `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
+            )
+        }
 
         let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
         responsesList = responsesList.filter(r => r != undefined)
