@@ -5,3 +5,7 @@ node_modules/
 package-lock.json
 .*
 tsconfig.json
+tsconfig.tsbuildinfo
+*.test.js
+*.test.d.ts
+*.test.js.map
