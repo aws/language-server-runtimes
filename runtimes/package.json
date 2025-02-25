@@ -21,7 +21,8 @@
     },
     "scripts": {
         "clean": "rm -rf out/",
-        "compile": "tsc --build && npm run copy-files",
+        "precompile": "npm run generate-types",
+        "compile": "tsc --build && npm run copy-files && npm run resolve-schemas",
         "fix:prettier": "prettier . --write",
         "prepare": "husky install",
         "prepub:copyFiles": "shx cp ../.npmignore CHANGELOG.md ../LICENSE ../NOTICE README.md ../SECURITY.md package.json out/",
@@ -31,9 +32,12 @@
         "test": "npm run test:unit",
         "preversion": "npm run test",
         "version": "npm run compile && git add -A .",
-        "copy-files": "copyfiles runtimes/operational-telemetry/types/generated/* out"
+        "copy-files": "copyfiles runtimes/operational-telemetry/types/generated/* out",
+        "generate-types": "ts-node ./script/generate-types.ts",
+        "resolve-schemas": "ts-node ./script/resolve-schema-refs.ts"
     },
     "dependencies": {
+        "@apidevtools/json-schema-ref-parser": "^11.9.1",
         "@aws-crypto/sha256-js": "^5.2.0",
         "@aws-sdk/client-cognito-identity": "^3.734.0",
         "@aws/language-server-runtimes-types": "^0.1.1",

@@ -26,7 +26,7 @@
     "scripts": {
         "clean": "ts-node ./script/clean.ts",
         "commitlint": "commitlint --edit",
-        "precompile": "npm run generate-types",
+        "precompile": "npm run generate-types --workspaces --if-present",
         "compile": "tsc --build && npm run compile --workspaces --if-present",
         "check:formatting": "prettier --check .",
         "fix:prettier": "prettier . --write",
