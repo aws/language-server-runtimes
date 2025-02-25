@@ -35,8 +35,7 @@
         "test": "npm run test --workspaces --if-present",
         "preversion": "npm run test",
         "version": "npm run compile && git add -A .",
-        "watch": "tsc --build --watch",
-        "generate-types": "ts-node ./script/generate-types.ts"
+        "watch": "tsc --build --watch"
     },
     "devDependencies": {
         "@commitlint/cli": "^19.6.1",
