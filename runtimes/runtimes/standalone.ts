@@ -15,6 +15,7 @@ import {
     ShowDocumentRequest,
     CancellationToken,
     GetSsoTokenParams,
+    didChangeDependencyPathsNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -64,7 +65,6 @@ import { Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
-import { notifyDependencyPathsNotificationType } from '../protocol/notifyDependencyPaths'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -323,8 +323,8 @@ export const standalone = (props: RuntimeProps) => {
                     onLogInlineCompletionSessionResults: handler => {
                         lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
                     },
-                    onNotifyDependencyPaths(handler) {
-                        lspConnection.onNotification(notifyDependencyPathsNotificationType, handler)
+                    onDidChangeDependencyPaths(handler) {
+                        lspConnection.onNotification(didChangeDependencyPathsNotificationType, handler)
                     },
                 },
             }

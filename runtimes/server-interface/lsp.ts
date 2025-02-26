@@ -46,7 +46,7 @@ import {
     DeleteFilesParams,
     CreateFilesParams,
     RenameFilesParams,
-    NotifyDependencyPathsParams,
+    DidChangeDependencyPathsParams,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -145,6 +145,6 @@ export type Lsp = {
             handler: NotificationHandler<LogInlineCompletionSessionResultsParams>
         ) => void
         onGetConfigurationFromServer: (handler: RequestHandler<GetConfigurationFromServerParams, LSPAny, void>) => void
-        onNotifyDependencyPaths: (handler: NotificationHandler<NotifyDependencyPathsParams>) => void
+        onDidChangeDependencyPaths: (handler: NotificationHandler<DidChangeDependencyPathsParams>) => void
     }
 }
