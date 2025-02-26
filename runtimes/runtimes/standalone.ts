@@ -268,7 +268,7 @@ export const standalone = (props: RuntimeProps) => {
         const logging: Logging = loggingServer.getLoggingObject()
         lspRouter.servers.push(loggingServer.getLspServer())
 
-        const telemetryLspServer = getTelemetryLspServer(lspConnection, encoding, logging, props)
+        const telemetryLspServer = getTelemetryLspServer(lspConnection, encoding, logging, props, runtime)
         lspRouter.servers.push(telemetryLspServer)
 
         const sdkProxyConfigManager = new ProxyConfigManager()
