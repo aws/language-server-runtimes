@@ -36,7 +36,7 @@ export function getTelemetryLspServer(
         //     poolId: poolId,
         //     region: region,
         //     endpoint: endpoint,
-        //     telemetryOptOut: false,
+        //     telemetryOptOut: optOut,
         // })
 
         // OperationalTelemetryProvider.setTelemetryInstance(optel)
