@@ -29,7 +29,7 @@
         "precompile": "npm run generate-types --workspaces --if-present",
         "compile": "tsc --build && npm run compile --workspaces --if-present",
         "check:formatting": "prettier --check .",
-        "fix:prettier": "prettier . --write",
+        "format": "prettier . --write",
         "format-staged": "npx pretty-quick --staged",
         "prepare": "husky .husky",
         "test": "npm run test --workspaces --if-present",

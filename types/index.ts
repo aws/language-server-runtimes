@@ -1,4 +1,5 @@
-export * from './chat'
 export * from './auth'
-export * from './lsp'
+export * from './chat'
+export * from './didChangeDependencyPaths'
 export * from './inlineCompletionWithReferences'
+export * from './lsp'

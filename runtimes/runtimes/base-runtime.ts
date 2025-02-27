@@ -10,7 +10,7 @@ import {
     TextDocument,
     telemetryNotificationType,
     SemanticTokensRequest,
-
+    didChangeDependencyPathsNotificationType,
     // Chat
     chatRequestType,
     endChatRequestType,
@@ -37,7 +37,6 @@ import {
     Runtime,
     Telemetry,
     Workspace,
-    Notification,
     SDKClientConstructorV2,
     SDKClientConstructorV3,
     SDKInitializator,
@@ -59,7 +58,7 @@ import {
     updateProfileRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
-import { Encoding, WebBase64Encoding } from './encoding'
+import { WebBase64Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
@@ -204,6 +203,9 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                     lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
                 onLogInlineCompletionSessionResults: handler => {
                     lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
+                },
+                onDidChangeDependencyPaths(handler) {
+                    lspConnection.onNotification(didChangeDependencyPathsNotificationType, handler)
                 },
             },
         }

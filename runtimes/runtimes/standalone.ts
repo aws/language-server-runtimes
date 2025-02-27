@@ -15,6 +15,7 @@ import {
     ShowDocumentRequest,
     CancellationToken,
     GetSsoTokenParams,
+    didChangeDependencyPathsNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -327,6 +328,9 @@ export const standalone = (props: RuntimeProps) => {
                         lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
                     onLogInlineCompletionSessionResults: handler => {
                         lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
+                    },
+                    onDidChangeDependencyPaths(handler) {
+                        lspConnection.onNotification(didChangeDependencyPathsNotificationType, handler)
                     },
                 },
             }
