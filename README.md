@@ -1,5 +1,13 @@
 # Language Server Runtimes for AWS Monorepo
 
+## Relation with Language Servers
+
+This monorepo hosts the runtime library for creating a fully working language server. The runtime is responsible to provide the interface of the server and expose the features of the protocol defined through them. All official AWS Language Servers created using this implementation is stored in the [Language Servers repo](https://github.com/aws/language-servers/tree/main).
+
+Want to create a new protocol or feature that would be available to all language servers? See what we already provide in [runtimes package](runtimes).
+
+Want to create a new language capability? Head over to the [Language Servers repo](https://github.com/aws/language-servers/tree/main) and start building!
+
 ## Structure
 
 Monorepo
