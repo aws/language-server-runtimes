@@ -38,7 +38,7 @@
         "watch": "tsc --build --watch"
     },
     "devDependencies": {
-        "@commitlint/cli": "^19.6.1",
+        "@commitlint/cli": "^19.7.1",
         "@commitlint/config-conventional": "^19.6.0",
         "@types/mocha": "^10.0.9",
         "@types/node": "^22.13.1",
