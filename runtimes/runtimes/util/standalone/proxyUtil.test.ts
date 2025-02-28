@@ -10,7 +10,7 @@ import mockFs from 'mock-fs'
 import { HttpsProxyAgent } from 'hpagent'
 import { ProxyConfigManager } from './proxyUtil'
 import * as certificatesReaders from './certificatesReaders'
-
+import { Telemetry } from '../../../server-interface'
 import forge from 'node-forge'
 
 export const generateCert = (validityDays = 365) => {
@@ -34,11 +34,17 @@ describe('ProxyConfigManager', () => {
     let readMacosCertificatesStub: sinon.SinonStub
     let readLinuxCertificatesStub: sinon.SinonStub
     let readWindowsCertificatesStub: sinon.SinonStub
+    let telemetryStub: Telemetry
 
     beforeEach(() => {
         originalEnv = { ...process.env }
         process.env = {}
-        proxyManager = new ProxyConfigManager()
+
+        telemetryStub = {
+            emitMetric: sinon.stub(),
+            onClientTelemetry: sinon.stub(),
+        }
+        proxyManager = new ProxyConfigManager(telemetryStub)
 
         readMacosCertificatesStub = sinon.stub(certificatesReaders, 'readMacosCertificates').returns([])
         readLinuxCertificatesStub = sinon.stub(certificatesReaders, 'readLinuxCertificates').returns([])
@@ -246,6 +252,12 @@ describe('ProxyConfigManager', () => {
     })
 
     describe('createSecureAgent', () => {
+        beforeEach(() => {
+            sinon.stub(process, 'platform').value('linux')
+            const sysCerts = [generateCert().cert, generateCert().cert, generateCert().cert]
+            readLinuxCertificatesStub.returns(sysCerts)
+        })
+
         it('should create HttpsAgent when no proxy set (transparent proxy)', () => {
             const agent = proxyManager.createSecureAgent()
 
@@ -253,6 +265,17 @@ describe('ProxyConfigManager', () => {
             assert.strictEqual((agent as HttpsAgent).options.rejectUnauthorized, true)
             // @ts-ignore
             assert.strictEqual(agent.proxy, undefined)
+            assert(
+                // @ts-ignore
+                telemetryStub.emitMetric.calledOnceWithExactly({
+                    name: 'runtime_httpProxyConfiguration',
+                    result: 'Succeeded',
+                    data: {
+                        proxyMode: 'Transparent',
+                        certificatesNumber: 3,
+                    },
+                })
+            )
         })
 
         it('should create HttpsProxyAgent when proxy set', () => {
@@ -263,6 +286,18 @@ describe('ProxyConfigManager', () => {
             assert.strictEqual(agent.options.rejectUnauthorized, true)
             // @ts-ignore
             assert.strictEqual(agent.proxy.origin, 'https://proxy')
+            assert(
+                // @ts-ignore
+                telemetryStub.emitMetric.calledOnceWithExactly({
+                    name: 'runtime_httpProxyConfiguration',
+                    result: 'Succeeded',
+                    data: {
+                        proxyMode: 'Explicit',
+                        proxyUrl: 'https://proxy',
+                        certificatesNumber: 3,
+                    },
+                })
+            )
         })
     })
 })
