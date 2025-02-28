@@ -10,6 +10,7 @@ import { ConfigurationOptions } from 'aws-sdk'
 import { HttpsProxyAgent } from 'hpagent'
 import { NodeHttpHandler } from '@smithy/node-http-handler'
 import { readMacosCertificates, readLinuxCertificates, readWindowsCertificates } from './certificatesReaders'
+import { Telemetry } from '../../../server-interface'
 
 export class ProxyConfigManager {
     /**
@@ -19,6 +20,8 @@ export class ProxyConfigManager {
     private cachedV2Config?: ConfigurationOptions
     private cachedV3Config?: NodeHttpHandler
     private cachedAgent?: HttpsAgent | HttpsProxyAgent
+
+    constructor(private readonly telemetry: Telemetry) {}
 
     getSecureAgent(): HttpsAgent | HttpsProxyAgent {
         if (!this.cachedAgent) {
@@ -127,7 +130,7 @@ export class ProxyConfigManager {
         console.debug(`Total certificates read: ${certificates.length}`)
         const validCerts = this.removeExpiredCertificates(certificates)
 
-        console.debug(`Using ${validCerts.length} certificates`)
+        console.debug(`Using certificates: ${certificates.length}`)
         return validCerts
     }
 
@@ -149,6 +152,15 @@ export class ProxyConfigManager {
         // Proxy agent for explicit proxy
         if (proxyUrl) {
             console.log(`Using HTTP proxy at ${proxyUrl}`)
+            this.telemetry.emitMetric({
+                name: 'runtime_httpProxyConfiguration',
+                result: 'Succeeded',
+                data: {
+                    proxyMode: 'Explicit',
+                    proxyUrl: proxyUrl,
+                    certificatesNumber: certs.length,
+                },
+            })
 
             return new HttpsProxyAgent({
                 ...agentOptions,
@@ -158,6 +170,14 @@ export class ProxyConfigManager {
         }
 
         // Proxy agent for transparent proxy network setup
+        this.telemetry.emitMetric({
+            name: 'runtime_httpProxyConfiguration',
+            result: 'Succeeded',
+            data: {
+                proxyMode: 'Transparent',
+                certificatesNumber: certs.length,
+            },
+        })
         return new HttpsAgent(agentOptions)
     }
 
@@ -184,7 +204,7 @@ export class ProxyConfigManager {
         })
 
         if (validCerts.length < certs.length) {
-            console.log(`Removed ${certs.length - validCerts.length} expired certificates.`)
+            console.log(`Removed expired certificates: ${certs.length - validCerts.length}`)
         }
 
         return validCerts
