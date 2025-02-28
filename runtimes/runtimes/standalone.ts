@@ -272,7 +272,7 @@ export const standalone = (props: RuntimeProps) => {
         const telemetryLspServer = getTelemetryLspServer(lspConnection, encoding, logging, props, runtime)
         lspRouter.servers.push(telemetryLspServer)
 
-        const sdkProxyConfigManager = new ProxyConfigManager()
+        const sdkProxyConfigManager = new ProxyConfigManager(telemetry)
 
         // Initialize every Server
         const disposables = props.servers.map(s => {
@@ -338,12 +338,26 @@ export const standalone = (props: RuntimeProps) => {
             const sdkInitializator: SDKInitializator = Object.assign(
                 // Default v3 implementation as the callable function
                 <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
-                    // setup proxy
-                    let instance = new Ctor({
-                        ...current_config,
-                        requestHandler: sdkProxyConfigManager.getV3ProxyConfig(),
-                    })
-                    return instance
+                    try {
+                        // setup proxy
+                        let instance = new Ctor({
+                            ...current_config,
+                            requestHandler: sdkProxyConfigManager.getV3ProxyConfig(),
+                        })
+                        logging.log(`Configured AWS SDK V3 Proxy for ${Ctor.name}`)
+                        return instance
+                    } catch (err) {
+                        telemetry.emitMetric({
+                            name: 'runtime_httpProxyConfiguration',
+                            result: 'Failed',
+                            errorData: {
+                                reason: err instanceof Error ? err.toString() : 'unknown',
+                            },
+                        })
+
+                        // Fallback
+                        return new Ctor({ ...current_config })
+                    }
                 },
                 // v2 implementation as a property
                 {
@@ -352,9 +366,23 @@ export const standalone = (props: RuntimeProps) => {
                         current_config: P
                     ): T => {
                         let instance = new Ctor({ ...current_config })
-                        // setup proxy
-                        instance.config.update(sdkProxyConfigManager.getV2ProxyConfig())
-                        return instance
+
+                        try {
+                            instance.config.update(sdkProxyConfigManager.getV2ProxyConfig())
+                            logging.log(`Configured AWS SDK V2 Proxy for ${Ctor.name}`)
+                            return instance
+                        } catch (err) {
+                            telemetry.emitMetric({
+                                name: 'runtime_httpProxyConfiguration',
+                                result: 'Failed',
+                                errorData: {
+                                    reason: err instanceof Error ? err.toString() : 'unknown',
+                                },
+                            })
+
+                            // Fallback
+                            return instance
+                        }
                     },
                 }
             )
