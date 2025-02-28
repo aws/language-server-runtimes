@@ -1,5 +1,27 @@
 # Changelog
 
+## [0.2.38](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.37...language-server-runtimes/v0.2.38) (2025-02-27)
+
+
+### Features
+
+* add new lsp extension to send dependency information from client to servers ([#338](https://github.com/aws/language-server-runtimes/issues/338)) ([cbaf65f](https://github.com/aws/language-server-runtimes/commit/cbaf65fa67df3173ded718b7c93b29054129d3c7))
+* get telemetry aws config from env variables ([#345](https://github.com/aws/language-server-runtimes/issues/345)) ([e2d7267](https://github.com/aws/language-server-runtimes/commit/e2d7267aff2a5c3d3fe92131b9478319a9a91c6e))
+* **runtimes:** extended network proxy support ([7369086](https://github.com/aws/language-server-runtimes/commit/7369086ad519843f0dfc74f7124e23f129f21e63))
+
+
+### Bug Fixes
+
+* add missing telemetry files ([#344](https://github.com/aws/language-server-runtimes/issues/344)) ([e592796](https://github.com/aws/language-server-runtimes/commit/e592796f901000e58fbdf93860a50ea697adaa89))
+* export operational telemetry schemas ([#340](https://github.com/aws/language-server-runtimes/issues/340)) ([5b4ca25](https://github.com/aws/language-server-runtimes/commit/5b4ca25a03a3cfe5671bb01eae8e1d3c92c3b979))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.1 to ^0.1.2
+
 ## [0.2.37](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.36...language-server-runtimes/v0.2.37) (2025-02-24)
 
 
