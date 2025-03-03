@@ -435,6 +435,77 @@ describe('LspRouter', () => {
         })
     })
 
+    describe('updateConfiguration', () => {
+        it('should send UpdateConfigurationRequest to all server', async () => {
+            const updateConfigSpy1 = sandbox.spy()
+            const updateConfigSpy2 = sandbox.spy()
+            const server1 = newServer({ updateConfigurationHandler: updateConfigSpy1 })
+            const server2 = newServer({ updateConfigurationHandler: updateConfigSpy2 })
+
+            const configParams = {
+                section: 'aws.testconfig',
+                settings: {
+                    testSetting: 'value',
+                },
+            }
+
+            lspRouter.servers = [server1, server2]
+            await lspRouter.updateConfiguration(configParams, {} as CancellationToken)
+
+            assert(updateConfigSpy1.calledWith(configParams))
+            assert(updateConfigSpy2.calledWith(configParams))
+        })
+
+        it('should return null if all servers returned empty response', async () => {
+            const server1 = newServer({
+                updateConfigurationHandler: () => Promise.resolve(null),
+            })
+            const server2 = newServer({
+                updateConfigurationHandler: () => Promise.resolve(undefined),
+            })
+
+            const configParams = {
+                section: 'aws.testconfig',
+                settings: {
+                    testSetting: 'value',
+                },
+            }
+
+            lspRouter.servers = [server1, server2]
+            const result = await lspRouter.updateConfiguration(configParams, {} as CancellationToken)
+
+            assert.strictEqual(result, null)
+        })
+
+        it('should return ResponseError if at least one server returned an error', async () => {
+            const error = new ResponseError(111, 'Configuration update failed')
+            const server1 = newServer({
+                updateConfigurationHandler: () => Promise.resolve(null),
+            })
+            const server2 = newServer({
+                updateConfigurationHandler: () => Promise.reject(error),
+            })
+
+            const configParams = {
+                section: 'aws.testconfig',
+                settings: {
+                    testSetting: 'value',
+                },
+            }
+
+            lspRouter.servers = [server1, server2]
+
+            try {
+                await lspRouter.updateConfiguration(configParams, {} as CancellationToken)
+                assert.fail('Expected error to be thrown')
+            } catch (err) {
+                assert(err instanceof ResponseError)
+                assert.equal(err.code, 111)
+                assert.equal(err.message, 'Configuration update failed')
+            }
+        })
+    })
+
     describe('notifications', () => {
         const initHandler = () => {
             return {
@@ -544,19 +615,21 @@ describe('LspRouter', () => {
     }
 
     function newServer({
+        lspConnection,
         didChangeConfigurationHandler,
         executeCommandHandler,
         getServerConfigurationHandler,
         initializeHandler,
         initializedHandler,
-        lspConnection,
+        updateConfigurationHandler,
     }: {
+        lspConnection?: Connection
         didChangeConfigurationHandler?: any
         executeCommandHandler?: any
         getServerConfigurationHandler?: any
         initializeHandler?: any
         initializedHandler?: any
-        lspConnection?: Connection
+        updateConfigurationHandler?: any
     }) {
         const server = new LspServer(lspConnection || stubLspConnection(), encoding, logging)
         server.setDidChangeConfigurationHandler(didChangeConfigurationHandler)
@@ -564,6 +637,7 @@ describe('LspRouter', () => {
         server.setServerConfigurationHandler(getServerConfigurationHandler)
         server.setInitializeHandler(initializeHandler)
         server.setInitializedHandler(initializedHandler)
+        server.setUpdateConfigurationHandler(updateConfigurationHandler)
         return server
     }
 })

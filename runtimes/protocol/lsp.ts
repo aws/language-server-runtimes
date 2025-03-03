@@ -1,3 +1,8 @@
+/*!
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { _EM } from 'vscode-jsonrpc'
 import {
     InitializeParams as _InitializeParamsBase,
@@ -106,6 +111,11 @@ export interface AWSInitializationOptions {
             notifications?: boolean
         }
     }
+    /**
+     * Global region configuration option set by the client application.
+     * Server implementations can use this value to preconfigure SDKs, API clients, etc. at server process startup.
+     */
+    region?: string
 }
 
 /**

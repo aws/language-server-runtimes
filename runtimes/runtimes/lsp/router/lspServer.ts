@@ -1,3 +1,8 @@
+/*!
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {
     CancellationToken,
     DidChangeConfigurationParams,
@@ -12,8 +17,10 @@ import {
     NotificationFollowupParams,
     NotificationParams,
     ErrorCodes,
+    UpdateConfigurationParams,
+    HandlerResult,
 } from '../../../protocol'
-import { InitializeParams, PartialInitializeResult, PartialServerCapabilities } from '../../../server-interface/lsp'
+import { InitializeParams, PartialInitializeResult } from '../../../server-interface/lsp'
 import { Logging, Notification } from '../../../server-interface'
 import { asPromise } from './util'
 import { Connection } from 'vscode-languageserver/node'
@@ -28,6 +35,7 @@ export class LspServer {
     private getServerConfigurationHandler?: RequestHandler<GetConfigurationFromServerParams, any, void>
     private initializeHandler?: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
     private initializedHandler?: NotificationHandler<InitializedParams>
+    private updateConfigurationHandler?: RequestHandler<UpdateConfigurationParams, void, void>
 
     private clientSupportsNotifications?: boolean
     private initializeResult?: PartialInitializeResult
@@ -64,6 +72,10 @@ export class LspServer {
 
     public setDidChangeConfigurationHandler = (handler: NotificationHandler<DidChangeConfigurationParams>): void => {
         this.didChangeConfigurationHandler = handler
+    }
+
+    public setUpdateConfigurationHandler = (handler: RequestHandler<UpdateConfigurationParams, void, void>): void => {
+        this.updateConfigurationHandler = handler
     }
 
     public setInitializeHandler = (
@@ -149,6 +161,17 @@ export class LspServer {
 
     public sendDidChangeConfigurationNotification = (params: DidChangeConfigurationParams): void => {
         this.didChangeConfigurationHandler?.(params)
+    }
+
+    public sendUpdateConfigurationRequest = async (
+        params: UpdateConfigurationParams,
+        token: CancellationToken
+    ): Promise<HandlerResult<void, void>> => {
+        if (this.updateConfigurationHandler) {
+            const result = await asPromise(this.updateConfigurationHandler?.(params, token))
+
+            return result
+        }
     }
 
     public sendInitializedNotification = (params: InitializedParams): void => {

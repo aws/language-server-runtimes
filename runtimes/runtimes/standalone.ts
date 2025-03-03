@@ -1,3 +1,8 @@
+/*!
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import { TextDocuments } from 'vscode-languageserver'
 import {
     DidChangeWorkspaceFoldersNotification,
@@ -313,6 +318,7 @@ export const standalone = (props: RuntimeProps) => {
                     onDidCreateFiles: params => lspConnection.workspace.onDidCreateFiles(params),
                     onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
                     onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
+                    onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
                 },
                 window: {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),

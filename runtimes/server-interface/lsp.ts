@@ -1,3 +1,8 @@
+/*!
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {
     CompletionItem,
     CompletionList,
@@ -47,12 +52,13 @@ import {
     CreateFilesParams,
     RenameFilesParams,
     DidChangeDependencyPathsParams,
+    UpdateConfigurationParams,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
 // This is needed for LSP features as we pass messages down.
 export * from '../protocol/lsp'
-export { GetConfigurationFromServerParams } from '../protocol'
+export { GetConfigurationFromServerParams, UpdateConfigurationParams } from '../protocol'
 
 export type PartialServerCapabilities<T = any> = Pick<
     ServerCapabilities<T>,
@@ -127,6 +133,7 @@ export type Lsp = {
         onDidCreateFiles: (handler: NotificationHandler<CreateFilesParams>) => void
         onDidDeleteFiles: (handler: NotificationHandler<DeleteFilesParams>) => void
         onDidRenameFiles: (handler: NotificationHandler<RenameFilesParams>) => void
+        onUpdateConfiguration: (handler: RequestHandler<UpdateConfigurationParams, void, void>) => void
     }
     window: {
         showMessage: (params: ShowMessageParams) => Promise<void>

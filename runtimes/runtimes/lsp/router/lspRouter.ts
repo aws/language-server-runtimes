@@ -1,3 +1,8 @@
+/*!
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 import {
     CancellationToken,
     DidChangeConfigurationNotification,
@@ -14,11 +19,14 @@ import {
     TextDocumentSyncKind,
     notificationFollowupRequestType,
     NotificationFollowupParams,
+    UpdateConfigurationParams,
+    updateConfigurationRequestType,
+    HandlerResult,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { findDuplicates, mergeObjects } from './util'
-import { Logging, PartialInitializeResult } from '../../../server-interface'
+import { PartialInitializeResult } from '../../../server-interface'
 
 export class LspRouter {
     public clientInitializeParams?: InitializeParams
@@ -35,6 +43,7 @@ export class LspRouter {
         lspConnection.onInitialized(this.onInitialized)
         lspConnection.onRequest(getConfigurationFromServerRequestType, this.getConfigurationFromServer)
         lspConnection.onNotification(notificationFollowupRequestType, this.onNotificationFollowup)
+        lspConnection.onRequest(updateConfigurationRequestType, this.updateConfiguration)
     }
 
     initialize = async (
@@ -123,6 +132,29 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         )
     }
 
+    updateConfiguration = async (params: UpdateConfigurationParams, token: CancellationToken) => {
+        const results = await this.routeRequestToAllServers(
+            (server, params, token) => server.sendUpdateConfigurationRequest(params, token),
+            params,
+            token
+        )
+
+        const errors = results.filter(result => result instanceof ResponseError)
+
+        if (errors.length > 0) {
+            errors.forEach(error => {
+                this.lspConnection.console.log(
+                    `Error updating configration section ${params.section}: ${error.message}`
+                )
+            })
+
+            return new ResponseError(ErrorCodes.InternalError, 'Error during updating configuration', errors)
+        }
+
+        // Update configuration succeeded.
+        return null
+    }
+
     didChangeConfiguration = (params: DidChangeConfigurationParams): void => {
         this.routeNotificationToAllServers(
             (server, params) => server.sendDidChangeConfigurationNotification(params),
@@ -161,5 +193,18 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         for (const server of this.servers) {
             action(server, params)
         }
+    }
+
+    /**
+     * Routes a single request to all registered LSP servers and collects their responses.
+     */
+    private async routeRequestToAllServers<P, R, E>(
+        action: (server: LspServer, params: P, token: CancellationToken) => Promise<HandlerResult<R, E>>,
+        params: P,
+        token: CancellationToken
+    ): Promise<HandlerResult<R, E>[]> {
+        const responses = await Promise.all(this.servers.map(s => action(s, params, token)))
+
+        return responses
     }
 }
