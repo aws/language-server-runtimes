@@ -4,12 +4,10 @@ import {
     DidChangeConfigurationParams,
     ExecuteCommandParams,
     GetConfigurationFromServerParams,
-    InitializeError,
-    InitializedParams,
     NotificationFollowupParams,
     NotificationParams,
     ResponseError,
-    showNotificationRequestType,
+    UpdateConfigurationParams,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { InitializeParams, PartialInitializeResult } from '../../../server-interface/lsp'
@@ -243,6 +241,22 @@ describe('LspServer', () => {
 
             assert.strictEqual(handled, true)
             assert.deepStrictEqual(result, expectedResult)
+        })
+
+        it('should handle updateConfiguration requests', async () => {
+            const updateConfigurationHandler = sandbox.stub()
+            const params: UpdateConfigurationParams = {
+                section: 'aws.testconfig',
+                settings: {
+                    foo: 'bar',
+                },
+            }
+
+            lspServer.setUpdateConfigurationHandler(updateConfigurationHandler)
+            lspServer.sendUpdateConfigurationRequest(params, mockToken)
+
+            assert(updateConfigurationHandler.calledOnce)
+            assert(updateConfigurationHandler.calledWith(params))
         })
     })
 })
