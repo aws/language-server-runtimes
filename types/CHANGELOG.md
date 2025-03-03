@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.1...language-server-runtimes-types/v0.1.2) (2025-02-27)
+
+
+### Features
+
+* add new lsp extension to send dependency information from client to servers ([#338](https://github.com/aws/language-server-runtimes/issues/338)) ([cbaf65f](https://github.com/aws/language-server-runtimes/commit/cbaf65fa67df3173ded718b7c93b29054129d3c7))
+
 ## [0.1.1](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.0...language-server-runtimes-types/v0.1.1) (2025-01-03)
 
 
