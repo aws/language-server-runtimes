@@ -72,6 +72,11 @@ if (checkAWSConfigFile()) {
     process.env.AWS_SDK_LOAD_CONFIG = '1'
 }
 
+process.on('uncaughtException', err => {
+    console.error('Uncaught Exception:', err.message)
+    process.exit(1)
+})
+
 /**
  * The runtime for standalone LSP-based servers.
  *
@@ -117,19 +122,23 @@ export const standalone = (props: RuntimeProps) => {
             // Before starting the runtime, accept encryption initialization details
             // directly from the destination for standalone runtimes.
             // Contract: Only read up to (and including) the first newline (\n).
-            readEncryptionDetails(process.stdin).then(
-                (encryptionDetails: EncryptionInitialization) => {
-                    validateEncryptionDetails(encryptionDetails)
-                    lspConnection.console.info('Runtime: Initializing runtime with encryption')
-                    auth = new Auth(lspConnection, encryptionDetails.key, encryptionDetails.mode)
-                    chat = new EncryptedChat(lspConnection, encryptionDetails.key, encryptionDetails.mode)
-                    initializeRuntime(encryptionDetails.key)
-                },
-                error => {
-                    console.error(error)
-                    process.exit(10)
-                }
-            )
+            readEncryptionDetails(process.stdin)
+                .then(
+                    (encryptionDetails: EncryptionInitialization) => {
+                        validateEncryptionDetails(encryptionDetails)
+                        lspConnection.console.info('Runtime: Initializing runtime with encryption')
+                        auth = new Auth(lspConnection, encryptionDetails.key, encryptionDetails.mode)
+                        chat = new EncryptedChat(lspConnection, encryptionDetails.key, encryptionDetails.mode)
+                        initializeRuntime(encryptionDetails.key)
+                    },
+                    error => {
+                        console.error(error)
+                        process.exit(10)
+                    }
+                )
+                .catch((error: Error) => {
+                    console.error('Error at runtime initialization:', error.message)
+                })
         } else {
             lspConnection.console.info('Runtime: Initializing runtime without encryption')
             auth = new Auth(lspConnection)
