@@ -211,7 +211,7 @@ Complete Chat parameter and result interfaces can be found in [chat.ts](src/prot
 The Identity Management feature is designed to centralize the management of authentication and identity-related functionality. The APIs consist of:
 
 - Listing and managing user profiles and SSO sessions
-- Obtaining valid SSO access tokens, handling the PKCE login flow as needed
+- Obtaining valid SSO access tokens, handling the PKCE or Device Code login flows as needed
 - Controlling the lifetime and notifications for active SSO tokens
 - Invalidating cached SSO tokens
 
@@ -227,6 +227,35 @@ The Identity Management feature is designed to centralize the management of auth
 | SSO token changed                    | `aws/identity/ssoTokenChanged`          | `SsoTokenChangedParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a                              |
 
 Complete Identity Management parameter and result interfaces can be found in [identity-management.ts](src/protocol/identity-management.ts)
+
+#### Client Capability
+
+Requires the client to implement support for receiving the following requests:
+  - `window/showDocument`
+    ```
+    client.onRequest<ShowDocumentResult, Error>(
+        ShowDocumentRequest.method,
+        async (params: ShowDocumentParams) => { ... }
+    )
+    ```
+  - `window/showMessageRequest`
+    ```
+    client.onRequest<MessageActionItem | null, Error>(
+        ShowMessageRequest.method,
+        async (params: ShowMessageRequestParams) => { ... }
+    )
+    ```
+  - `onProgress`
+    ```
+    client.onProgress(
+        GetSsoTokenProgressType, 
+        GetSsoTokenProgressToken,
+        async (partialResult: GetSsoTokenProgress) => { 
+            // partialResult is likely encrypted
+            ...
+        }
+    )
+    ```
 
 ### Notification
 
