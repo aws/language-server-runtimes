@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.39](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.38...language-server-runtimes/v0.2.39) (2025-03-06)
+
+
+### Features
+
+* **runtimes:** add UpdateConfiguration protocol and server handlers ([df24447](https://github.com/aws/language-server-runtimes/commit/df244475bf08caafd6fb4c905de8fbbce970af1d))
+
+
+### Bug Fixes
+
+* **runtimes:** catch unhandled encryption validation and process exeptions ([e950103](https://github.com/aws/language-server-runtimes/commit/e9501038192fbc6acfa144f48c33faeef61d69d8))
+
 ## [0.2.38](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.37...language-server-runtimes/v0.2.38) (2025-02-27)
 
 
