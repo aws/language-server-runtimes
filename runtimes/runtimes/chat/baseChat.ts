@@ -29,6 +29,9 @@ import {
     followUpClickNotificationType,
     endChatRequestType,
     quickActionRequestType,
+    OpenTabParams,
+    OpenTabResult,
+    openTabRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -85,5 +88,9 @@ export class BaseChat implements Chat {
 
     public onFollowUpClicked(handler: NotificationHandler<FollowUpClickParams>) {
         this.connection.onNotification(followUpClickNotificationType.method, handler)
+    }
+
+    public openTab(params: OpenTabParams): Promise<OpenTabResult> {
+        return this.connection.sendRequest(openTabRequestType.method, params)
     }
 }
