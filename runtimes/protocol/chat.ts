@@ -32,6 +32,9 @@ import {
     EncryptedChatParams,
     EncryptedQuickActionParams,
     QuickActionResult,
+    OPEN_TAB_REQUEST_METHOD,
+    OpenTabParams,
+    OpenTabResult,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -74,4 +77,7 @@ export const sourceLinkClickNotificationType = new ProtocolNotificationType<Sour
 )
 export const followUpClickNotificationType = new ProtocolNotificationType<FollowUpClickParams, void>(
     FOLLOW_UP_CLICK_NOTIFICATION_METHOD
+)
+export const openTabRequestType = new ProtocolRequestType<OpenTabParams, OpenTabResult, never, void, void>(
+    OPEN_TAB_REQUEST_METHOD
 )

@@ -19,6 +19,7 @@ export interface ConnectionMetadata {
 export interface UpdateCredentialsParams {
     // Plaintext Credentials (for browser based environments) or encrypted JWT token
     data: IamCredentials | BearerCredentials | string
+    metadata?: ConnectionMetadata
     // If the payload is encrypted
     // Defaults to false if undefined or null
     encrypted?: boolean

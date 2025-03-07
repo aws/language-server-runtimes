@@ -18,6 +18,8 @@ import {
     CredentialsProvider,
 } from '../../server-interface'
 
+export const BUILDER_ID_START_URL = 'https://view.awsapps.com/start'
+
 export function isIamCredentials(credentials: Credentials): credentials is IamCredentials {
     const iamCredentials = credentials as IamCredentials
     return iamCredentials?.accessKeyId !== undefined && iamCredentials?.secretAccessKey !== undefined
@@ -70,6 +72,11 @@ export class Auth {
             getConnectionMetadata: () => {
                 return this.connectionMetadata
             },
+
+            getConnectionType: () => {
+                const startUrl = this.connectionMetadata?.sso?.startUrl
+                return !startUrl ? 'none' : startUrl.includes(BUILDER_ID_START_URL) ? 'builderId' : 'identityCenter'
+            },
         }
 
         this.registerLspCredentialsUpdateHandlers()
@@ -121,9 +128,8 @@ export class Auth {
 
             if (isBearerCredentials(bearerCredentials)) {
                 this.setCredentials(bearerCredentials)
+                await this.handleBearerCredentialsMetadata(request.metadata)
                 this.connection.console.info('Runtime: Successfully saved bearer credentials')
-
-                await this.requestConnectionMetadata()
             } else {
                 this.bearerCredentials = undefined
                 throw new Error('Invalid bearer credentials')
@@ -135,6 +141,18 @@ export class Auth {
             this.connectionMetadata = undefined
             this.connection.console.info('Runtime: Deleted bearer credentials')
         })
+    }
+
+    private async handleBearerCredentialsMetadata(metadata?: ConnectionMetadata) {
+        if (metadata) {
+            this.connectionMetadata = metadata
+            return
+        }
+
+        this.connection.console.warn(
+            'Runtime: metadata for bearer token connection was not provided - requesting from client'
+        )
+        await this.requestConnectionMetadata()
     }
 
     private setCredentials(creds: Credentials) {
