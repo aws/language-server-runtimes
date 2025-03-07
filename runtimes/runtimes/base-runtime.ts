@@ -33,6 +33,7 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
+    openTabRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -132,6 +133,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
         onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
+        openTab: params => lspConnection.sendRequest(openTabRequestType.method, params),
     }
 
     const identityManagement: IdentityManagement = {
