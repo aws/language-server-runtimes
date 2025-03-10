@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.40](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.39...language-server-runtimes/v0.2.40) (2025-03-10)
+
+
+### Features
+
+* **runtimes:** emit telemetry from SDK proxy configuration utility ([a82a708](https://github.com/aws/language-server-runtimes/commit/a82a70810592909e1d82c74406124de847f1af0b))
+* update protocol for regions use cases ([#355](https://github.com/aws/language-server-runtimes/issues/355)) ([50ef5c7](https://github.com/aws/language-server-runtimes/commit/50ef5c78e5d3e0c67c47b32ed147b7e21fee8116))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.2 to ^0.1.3
+
 ## [0.2.39](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.38...language-server-runtimes/v0.2.39) (2025-03-06)
 
 

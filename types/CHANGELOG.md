@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.2...language-server-runtimes-types/v0.1.3) (2025-03-10)
+
+
+### Features
+
+* update protocol for regions use cases ([#355](https://github.com/aws/language-server-runtimes/issues/355)) ([50ef5c7](https://github.com/aws/language-server-runtimes/commit/50ef5c78e5d3e0c67c47b32ed147b7e21fee8116))
+
 ## [0.1.2](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.1...language-server-runtimes-types/v0.1.2) (2025-02-27)
 
 
