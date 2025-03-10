@@ -357,6 +357,24 @@ describe('Auth', () => {
 
             assert.deepEqual(credentialsProvider.getConnectionType(), 'identityCenter')
         })
+
+        it('getConnectionType return none', async () => {
+            const CONNECTION_METADATA = {
+                sso: {},
+            }
+
+            const updateRequest: UpdateCredentialsParams = {
+                data: bearerCredentials,
+                metadata: CONNECTION_METADATA,
+                encrypted: false,
+            }
+            const auth = new Auth(serverConnection)
+            const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+
+            await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
+
+            assert.deepEqual(credentialsProvider.getConnectionType(), 'none')
+        })
     })
 
     describe('Encrypted credentials', () => {
