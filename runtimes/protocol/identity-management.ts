@@ -1,5 +1,6 @@
 import {
     LSPErrorCodes,
+    ProgressType,
     ProtocolNotificationType,
     ProtocolRequestType,
     ResponseError,
@@ -31,6 +32,7 @@ export const AwsErrorCodes = {
     E_SSO_TOKEN_SOURCE_NOT_SUPPORTED: 'E_SSO_TOKEN_SOURCE_NOT_SUPPORTED',
     E_TIMEOUT: 'E_TIMEOUT',
     E_UNKNOWN: 'E_UNKNOWN',
+    E_CANCELLED: 'E_CANCELLED',
 } as const
 
 export interface AwsResponseErrorData {
@@ -151,12 +153,43 @@ export interface IamIdentityCenterSsoTokenSource {
     profileName: string
 }
 
+export type InProgress = 'InProgress'
+export type Complete = 'Complete'
+
+export type GetSsoTokenProgressState = InProgress | Complete
+
+export const GetSsoTokenProgressState = {
+    InProgress: 'InProgress',
+    Complete: 'Complete',
+} as const
+
+export interface GetSsoTokenProgress {
+    message?: string
+    state: GetSsoTokenProgressState
+}
+
+export const GetSsoTokenProgressType = new ProgressType<GetSsoTokenProgress>()
+
+// Use this to identify the sendProgress/onProgress call from the identity server.
+// It indicates that an SSO login is currently in progress.
+export const GetSsoTokenProgressToken = 'aws/identity/getSsoToken/progressToken'
+
+export type DeviceCodeAuthorizationFlowKind = 'DeviceCode'
+export type PkceAuthorizationFlowKind = 'Pkce'
+export type AuthorizationFlowKind = DeviceCodeAuthorizationFlowKind | PkceAuthorizationFlowKind
+export const AuthorizationFlowKind = {
+    DeviceCode: 'DeviceCode',
+    Pkce: 'Pkce',
+} as const
+
 export interface GetSsoTokenOptions {
     loginOnInvalidToken?: boolean
+    authorizationFlow?: AuthorizationFlowKind // Unused if loginOnInvalidToken is false
 }
 
 export const getSsoTokenOptionsDefaults = {
     loginOnInvalidToken: true,
+    authorizationFlow: AuthorizationFlowKind.Pkce,
 } satisfies GetSsoTokenOptions
 
 export interface GetSsoTokenParams {
