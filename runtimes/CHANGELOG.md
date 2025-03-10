@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.41](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.40...language-server-runtimes/v0.2.41) (2025-03-10)
+
+
+### Bug Fixes
+
+* fix the flaky test timeout error ([#359](https://github.com/aws/language-server-runtimes/issues/359)) ([b907843](https://github.com/aws/language-server-runtimes/commit/b9078435c918077215ff127ca8e84425bda9c4c0))
+
 ## [0.2.40](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.39...language-server-runtimes/v0.2.40) (2025-03-10)
 
 
