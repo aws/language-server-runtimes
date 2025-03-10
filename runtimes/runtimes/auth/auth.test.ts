@@ -3,7 +3,7 @@ import { randomBytes } from 'node:crypto'
 import * as jose from 'jose'
 import { Duplex } from 'stream'
 import { Connection, createConnection } from 'vscode-languageserver/node'
-import { Auth } from './auth'
+import { Auth, BUILDER_ID_START_URL } from './auth'
 import { ParameterStructures, UpdateCredentialsParams } from '../../protocol'
 import { IamCredentials, BearerCredentials, CredentialsType, CredentialsProvider } from '../../server-interface'
 
@@ -64,6 +64,9 @@ const serverLspConnectionMock = <Connection>{
         },
         error: (str: string) => {
             console.log(str)
+        },
+        warn: (str: string) => {
+            console.warn(str)
         },
     },
 }
@@ -150,7 +153,29 @@ describe('Auth', () => {
         assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
     })
 
-    it('Updates connection metadata on receiving Set Bearer credentials request', async () => {
+    it('Updates connection metadata on receiving Set Bearer credentials request with metadata', async () => {
+        const CONNECTION_METADATA = {
+            sso: {
+                startUrl: 'testStartUrl',
+            },
+        }
+
+        const updateRequest: UpdateCredentialsParams = {
+            data: bearerCredentials,
+            metadata: CONNECTION_METADATA,
+            encrypted: false,
+        }
+        const auth = new Auth(serverConnection)
+        const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+
+        assert(!credentialsProvider.getConnectionMetadata())
+
+        await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
+
+        assert.deepEqual(credentialsProvider.getConnectionMetadata(), CONNECTION_METADATA)
+    })
+
+    it('Requests connection metadata on receiving Set Bearer credentials request without metadata', async () => {
         const CONNECTION_METADATA = {
             sso: {
                 startUrl: 'testStartUrl',
@@ -291,6 +316,64 @@ describe('Auth', () => {
                 () => credentialsProvider.getCredentials('unsupported_type' as CredentialsType),
                 /Unsupported credentials type/
             )
+        })
+
+        it('getConnectionType return builderId', async () => {
+            const CONNECTION_METADATA = {
+                sso: {
+                    startUrl: BUILDER_ID_START_URL,
+                },
+            }
+
+            const updateRequest: UpdateCredentialsParams = {
+                data: bearerCredentials,
+                metadata: CONNECTION_METADATA,
+                encrypted: false,
+            }
+            const auth = new Auth(serverConnection)
+            const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+
+            await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
+
+            assert.deepEqual(credentialsProvider.getConnectionType(), 'builderId')
+        })
+
+        it('getConnectionType return identityCenter', async () => {
+            const CONNECTION_METADATA = {
+                sso: {
+                    startUrl: 'https://idc.awsapps.com/start',
+                },
+            }
+
+            const updateRequest: UpdateCredentialsParams = {
+                data: bearerCredentials,
+                metadata: CONNECTION_METADATA,
+                encrypted: false,
+            }
+            const auth = new Auth(serverConnection)
+            const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+
+            await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
+
+            assert.deepEqual(credentialsProvider.getConnectionType(), 'identityCenter')
+        })
+
+        it('getConnectionType return none', async () => {
+            const CONNECTION_METADATA = {
+                sso: {},
+            }
+
+            const updateRequest: UpdateCredentialsParams = {
+                data: bearerCredentials,
+                metadata: CONNECTION_METADATA,
+                encrypted: false,
+            }
+            const auth = new Auth(serverConnection)
+            const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+
+            await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
+
+            assert.deepEqual(credentialsProvider.getConnectionType(), 'none')
         })
     })
 
