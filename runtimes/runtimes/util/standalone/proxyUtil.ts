@@ -145,6 +145,9 @@ export class ProxyConfigManager {
         const agentOptions = {
             ca: certs,
             rejectUnauthorized: true, // Always validate certificates
+            keepAlive: true,
+            keepAliveMsecs: 30000, // Keep alive for 30 seconds
+            maxSockets: 10, // Maximum number of sockets to allow per host
         }
 
         const proxyUrl = this.getProxyUrl()
