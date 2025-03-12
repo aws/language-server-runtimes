@@ -4,6 +4,7 @@
  */
 
 import { readFileSync } from 'node:fs'
+import * as tls from 'node:tls'
 import { Agent as HttpsAgent } from 'node:https'
 import { X509Certificate } from 'node:crypto'
 import { ConfigurationOptions } from 'aws-sdk'
@@ -106,7 +107,8 @@ export class ProxyConfigManager {
      * @returns {string[]} Array of certificate strings in PEM format
      */
     getCertificates(): string[] {
-        const certificates: string[] = []
+        // Preserve NodeJS default certificates
+        const certificates = [...tls.rootCertificates]
 
         try {
             const certs = this.readSystemCertificates()
