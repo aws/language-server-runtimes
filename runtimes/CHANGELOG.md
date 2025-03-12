@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.42](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.41...language-server-runtimes/v0.2.42) (2025-03-12)
+
+
+### Bug Fixes
+
+* **runtimes:** maintain nodejs built-in certificates for SDK proxy configuration ([#362](https://github.com/aws/language-server-runtimes/issues/362)) ([83fa698](https://github.com/aws/language-server-runtimes/commit/83fa698b3d0446f1b3cb6f1237866910a966026f))
+
 ## [0.2.41](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.40...language-server-runtimes/v0.2.41) (2025-03-11)
 
 
