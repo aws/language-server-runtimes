@@ -35,6 +35,10 @@ export type InlineCompletionListWithReferences = {
      * The inline completion items with optional references
      */
     items: InlineCompletionItemWithReferences[]
+    /**
+     * Server returns partialResultToken for client to request next set of results
+     */
+    partialResultToken?: number | string
 }
 
 export interface InlineCompletionStates {

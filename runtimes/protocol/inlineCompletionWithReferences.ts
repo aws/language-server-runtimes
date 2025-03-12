@@ -6,9 +6,10 @@ import {
     ProtocolNotificationType,
     ProtocolRequestType,
     InlineCompletionParams,
+    PartialResultParams,
 } from './lsp'
 
-export type InlineCompletionWithReferencesParams = InlineCompletionParams & {}
+export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams
 
 export const inlineCompletionWithReferencesRequestType = new ProtocolRequestType<
     InlineCompletionWithReferencesParams,
