@@ -12,6 +12,7 @@ import { ProxyConfigManager } from './proxyUtil'
 import * as certificatesReaders from './certificatesReaders'
 import { Telemetry } from '../../../server-interface'
 import forge from 'node-forge'
+import * as tls from 'node:tls'
 
 export const generateCert = (validityDays = 365) => {
     const keys = forge.pki.rsa.generateKeyPair(2048)
@@ -145,9 +146,9 @@ describe('ProxyConfigManager', function () {
             const cert = generateCert()
             const sysCerts = [cert.cert]
             readLinuxCertificatesStub.returns(sysCerts)
-
+            const expectedCerts = [...tls.rootCertificates, cert.cert]
             const certs = proxyManager.getCertificates()
-            assert.deepStrictEqual(certs, sysCerts)
+            assert.deepStrictEqual(certs, expectedCerts)
         })
 
         it('should read AWS_CA_BUNDLE when set', () => {
@@ -160,7 +161,7 @@ describe('ProxyConfigManager', function () {
             })
 
             const certs = proxyManager.getCertificates()
-            assert.deepStrictEqual(certs, [cert.cert])
+            assert.deepStrictEqual(certs, [...tls.rootCertificates, cert.cert])
         })
 
         it('should read NODE_EXTRA_CA_CERTS when set', () => {
@@ -173,7 +174,7 @@ describe('ProxyConfigManager', function () {
             })
 
             const certs = proxyManager.getCertificates()
-            assert.deepStrictEqual(certs, [cert.cert])
+            assert.deepStrictEqual(certs, [...tls.rootCertificates, cert.cert])
         })
 
         it('should combine certificates from all sources when set', () => {
@@ -193,7 +194,7 @@ describe('ProxyConfigManager', function () {
             })
 
             const certs = proxyManager.getCertificates()
-            assert.deepStrictEqual(certs, [...sysCerts, awsCert.cert, nodeCaCert.cert])
+            assert.deepStrictEqual(certs, [...tls.rootCertificates, ...sysCerts, awsCert.cert, nodeCaCert.cert])
         })
 
         it('should remove invalid certificates', () => {
@@ -216,8 +217,9 @@ describe('ProxyConfigManager', function () {
             })
 
             const certs = proxyManager.getCertificates()
-            assert.equal(certs.length, 2)
-            assert.deepStrictEqual(certs, [validCert1.cert, validCert2.cert])
+            const tlsCerts = [...tls.rootCertificates]
+            assert.equal(certs.length, 2 + tlsCerts.length)
+            assert.deepStrictEqual(certs, [...tlsCerts, validCert1.cert, validCert2.cert])
         })
     })
 
@@ -237,7 +239,7 @@ describe('ProxyConfigManager', function () {
             assert(readWindowsCertificatesStub.calledOnce)
         })
 
-        it('should return empty list on unsupported platform', () => {
+        it('should return node js built-in certificate on unsupported platform', () => {
             sinon.stub(process, 'platform').value('unsupported-platform')
             readLinuxCertificatesStub.returns(['testcert'])
             readWindowsCertificatesStub.returns(['testcert'])
@@ -248,7 +250,7 @@ describe('ProxyConfigManager', function () {
             assert(readLinuxCertificatesStub.notCalled)
             assert(readMacosCertificatesStub.notCalled)
             assert(readWindowsCertificatesStub.notCalled)
-            assert.deepStrictEqual(certs, [])
+            assert.deepStrictEqual(certs, [...tls.rootCertificates])
         })
     })
 
@@ -273,7 +275,7 @@ describe('ProxyConfigManager', function () {
                     result: 'Succeeded',
                     data: {
                         proxyMode: 'Transparent',
-                        certificatesNumber: 3,
+                        certificatesNumber: 3 + tls.rootCertificates.length,
                     },
                 })
             )
@@ -295,7 +297,7 @@ describe('ProxyConfigManager', function () {
                     data: {
                         proxyMode: 'Explicit',
                         proxyUrl: 'https://proxy',
-                        certificatesNumber: 3,
+                        certificatesNumber: 3 + tls.rootCertificates.length,
                     },
                 })
             )
