@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.4...chat-client-ui-types/v0.1.5) (2025-03-13)
+
+
+### Features
+
+* improvements for "openTab" request flow ([#366](https://github.com/aws/language-server-runtimes/issues/366)) ([8aa0a83](https://github.com/aws/language-server-runtimes/commit/8aa0a83e5b387e1e8df87862a6ec196ec2709731))
+
 ## [0.1.4](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.3...chat-client-ui-types/v0.1.4) (2025-03-10)
 
 
