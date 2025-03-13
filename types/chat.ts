@@ -15,6 +15,8 @@ export const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
 export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
 export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
 export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
+export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
+export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 
 export interface ChatItemAction {
     pillText: string
@@ -74,6 +76,12 @@ export interface EncryptedChatParams extends PartialResultParams {
     message: string
 }
 
+export interface FileList {
+    rootFolderTitle?: string
+    filePaths?: string[]
+    deletedFiles?: string[]
+}
+
 export interface ChatResult {
     body?: string
     messageId?: string
@@ -87,6 +95,7 @@ export interface ChatResult {
         options?: ChatItemAction[]
     }
     codeReference?: ReferenceTrackerInformation[]
+    fileList?: FileList
 }
 
 export type EndChatParams = { tabId: string }
@@ -204,3 +213,13 @@ export interface OpenTabParams extends Partial<TabEventParams> {
     }
 }
 export interface OpenTabResult extends TabEventParams {}
+
+export interface ChatUpdateParams {
+    tabId: string
+    placeholderText?: string
+    state?: {
+        isInProgress?: boolean
+        isCancellable?: boolean
+    }
+    messages: ChatResult[]
+}
