@@ -195,7 +195,12 @@ export interface FollowUpClickParams {
 
 /*
     Defines parameters for opening a tab.
-    Opens existing tab if `tabId` is provided, otherwise creates a new tab and opens it.
+    Opens existing tab if `tabId` is provided, otherwise creates a new tab
+    with options provided in `options` parameter and opens it.
 */
-export interface OpenTabParams extends Partial<TabEventParams> {}
+export interface OpenTabParams extends Partial<TabEventParams> {
+    options?: {
+        needWelcomeMessages?: boolean
+    }
+}
 export interface OpenTabResult extends TabEventParams {}
