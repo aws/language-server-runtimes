@@ -3,6 +3,8 @@ import {
     ChatOptions,
     CodeSelectionType,
     ReferenceTrackerInformation,
+    OPEN_TAB_REQUEST_METHOD,
+    OpenTabResult,
 } from '@aws/language-server-runtimes-types'
 export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
 
@@ -118,6 +120,21 @@ export interface CopyCodeToClipboardMessage {
     params: CopyCodeToClipboardParams
 }
 
+export type UiMessageResultCommand = typeof OPEN_TAB_REQUEST_METHOD
+export type UiMessageResult = OpenTabResult
+export interface UiResultMessage {
+    command: UiMessageResultCommand
+    params: UiMessageResultParams
+}
+export type UiMessageResultParams =
+    | {
+          success: true
+          result: UiMessageResult
+      }
+    | {
+          success: false
+          error: ErrorResult
+      }
 export interface ErrorResult {
     message: string
     type: 'InvalidRequest' | 'InternalError' | 'UnknownError' | string
