@@ -117,3 +117,8 @@ export interface CopyCodeToClipboardMessage {
     command: typeof COPY_TO_CLIPBOARD
     params: CopyCodeToClipboardParams
 }
+
+export interface ErrorResult {
+    message: string
+    type: 'InvalidRequest' | 'InternalError' | 'UnknownError' | string
+}
