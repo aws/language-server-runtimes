@@ -35,6 +35,10 @@ import {
     OPEN_TAB_REQUEST_METHOD,
     OpenTabParams,
     OpenTabResult,
+    CHAT_UPDATE_NOTIFICATION_METHOD,
+    FILE_CLICK_NOTIFICATION_METHOD,
+    ChatUpdateParams,
+    FileClickParams,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -80,4 +84,10 @@ export const followUpClickNotificationType = new ProtocolNotificationType<Follow
 )
 export const openTabRequestType = new ProtocolRequestType<OpenTabParams, OpenTabResult, never, void, void>(
     OPEN_TAB_REQUEST_METHOD
+)
+export const chatUpdateNotificationType = new ProtocolNotificationType<ChatUpdateParams, void>(
+    CHAT_UPDATE_NOTIFICATION_METHOD
+)
+export const fileClickNotificationType = new ProtocolNotificationType<FileClickParams, void>(
+    FILE_CLICK_NOTIFICATION_METHOD
 )
