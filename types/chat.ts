@@ -208,18 +208,29 @@ export interface FollowUpClickParams {
     with options provided in `options` parameter and opens it.
 */
 export interface OpenTabParams extends Partial<TabEventParams> {
-    options?: {
-        needWelcomeMessages?: boolean
+    tabData?: {
+        placeholderText?: string
+        messages: ChatResult[]
     }
 }
 export interface OpenTabResult extends TabEventParams {}
 
+export interface TabState {
+    isInProgress?: boolean
+    isCancellable?: boolean
+}
+
 export interface ChatUpdateParams {
     tabId: string
+    state?: TabState
     placeholderText?: string
-    state?: {
-        isInProgress?: boolean
-        isCancellable?: boolean
-    }
     messages: ChatResult[]
+}
+
+export type FileAction = 'accept-change' | 'reject-change' | string
+
+export interface FileClickParams {
+    tabId: string
+    filePath: string
+    action?: FileAction
 }
