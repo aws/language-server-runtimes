@@ -128,13 +128,13 @@ export interface UiResultMessage {
 }
 export type UiMessageResultParams =
     | {
-        success: true
-        result: UiMessageResult
-    }
+          success: true
+          result: UiMessageResult
+      }
     | {
-        success: false
-        error: ErrorResult
-    }
+          success: false
+          error: ErrorResult
+      }
 export interface ErrorResult {
     message: string
     type: 'InvalidRequest' | 'InternalError' | 'UnknownError' | string
