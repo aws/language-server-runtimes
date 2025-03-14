@@ -129,6 +129,11 @@ export interface QuickActions {
     quickActionsCommandGroups: QuickActionCommandGroup[]
 }
 
+export interface TabData {
+    placeholderText?: string
+    messages: ChatResult[]
+}
+
 /**
  * Registration options regarding chat data
  * Currently contains the available quick actions provided by a server
@@ -136,7 +141,7 @@ export interface QuickActions {
  */
 export interface ChatOptions {
     quickActions?: QuickActions
-    defaultTabData?: ChatResult
+    defaultTabData?: TabData
 }
 
 export interface QuickActionParams extends PartialResultParams {
@@ -208,16 +213,16 @@ export interface FollowUpClickParams {
     with options provided in `options` parameter and opens it.
 */
 export interface OpenTabParams extends Partial<TabEventParams> {
-    tabData?: {
-        placeholderText?: string
-        messages: ChatResult[]
+    options?: {
+        useDefaultTabData?: boolean
+        tabData?: TabData
     }
 }
 export interface OpenTabResult extends TabEventParams {}
 
 export interface TabState {
-    isInProgress?: boolean
-    isCancellable?: boolean
+    inProgress?: boolean
+    cancellable?: boolean
 }
 
 export interface ChatUpdateParams {
