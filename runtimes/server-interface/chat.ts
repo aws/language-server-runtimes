@@ -18,6 +18,8 @@ import {
     TabRemoveParams,
     OpenTabParams,
     OpenTabResult,
+    ChatUpdateParams,
+    FileClickParams,
 } from '../protocol'
 
 /**
@@ -30,6 +32,7 @@ export type Chat = {
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
     // Notifications
+    onQuickActionTrigger: (handler: NotificationHandler<QuickActionParams>) => void
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
     onTabAdd: (handler: NotificationHandler<TabAddParams>) => void
@@ -40,4 +43,6 @@ export type Chat = {
     onInfoLinkClick: (handler: NotificationHandler<InfoLinkClickParams>) => void
     onSourceLinkClick: (handler: NotificationHandler<SourceLinkClickParams>) => void
     onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
+    chatUpdate: (params: ChatUpdateParams) => void
+    onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
 }

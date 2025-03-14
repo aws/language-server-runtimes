@@ -32,6 +32,11 @@ import {
     OpenTabParams,
     OpenTabResult,
     openTabRequestType,
+    ChatUpdateParams,
+    chatUpdateNotificationType,
+    FileClickParams,
+    fileClickNotificationType,
+    quickActionNotificationType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -48,6 +53,10 @@ export class BaseChat implements Chat {
 
     public onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
         this.connection.onRequest(quickActionRequestType.method, handler)
+    }
+
+    public onQuickActionTrigger(handler: NotificationHandler<QuickActionParams>) {
+        this.connection.onRequest(quickActionNotificationType.method, handler)
     }
 
     public onSendFeedback(handler: NotificationHandler<FeedbackParams>) {
@@ -92,5 +101,13 @@ export class BaseChat implements Chat {
 
     public openTab(params: OpenTabParams): Promise<OpenTabResult> {
         return this.connection.sendRequest(openTabRequestType.method, params)
+    }
+
+    public chatUpdate(params: ChatUpdateParams) {
+        this.connection.sendNotification(chatUpdateNotificationType.method, params)
+    }
+
+    public onFileClicked(handler: NotificationHandler<FileClickParams>) {
+        this.connection.onNotification(fileClickNotificationType.method, handler)
     }
 }

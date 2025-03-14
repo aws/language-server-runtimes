@@ -13,6 +13,8 @@ import {
     quickActionRequestType,
     ResponseError,
     LSPErrorCodes,
+    NotificationHandler,
+    quickActionNotificationType,
 } from '../../protocol'
 import { CredentialsEncoding, encryptObjectWithKey, isMessageJWEEncrypted } from '../auth/standalone/encryption'
 import { BaseChat } from './baseChat'
@@ -49,6 +51,42 @@ export class EncryptedChat extends BaseChat {
         this.registerEncryptedRequestHandler<EncryptedQuickActionParams, QuickActionParams, QuickActionResult, void>(
             quickActionRequestType,
             handler
+        )
+    }
+
+    public onQuickActionTrigger(handler: NotificationHandler<QuickActionParams>) {
+        this.registerEncryptedNotificationHandler<EncryptedQuickActionParams, QuickActionParams>(
+            quickActionNotificationType,
+            handler
+        )
+    }
+
+    private registerEncryptedNotificationHandler<
+        EncryptedRequestType extends EncryptedRequestParams,
+        DecryptedRequestType extends ChatParams | QuickActionParams,
+    >(notificationType: any, handler: NotificationHandler<DecryptedRequestType>) {
+        this.connection.onNotification(
+            notificationType,
+            async (request: EncryptedRequestType | DecryptedRequestType, cancellationToken: CancellationToken) => {
+                // Verify the request is encrypted as expected
+                if (this.instanceOfEncryptedParams<EncryptedRequestType>(request)) {
+                    // Decrypt request
+                    let decryptedRequest
+                    try {
+                        decryptedRequest = await this.decodeRequest<DecryptedRequestType>(request)
+                    } catch (err: unknown) {
+                        let errorMessage = 'Request could not be decrypted'
+                        if (err instanceof Error) errorMessage = err.message
+                        return new ResponseError<ResponseType>(LSPErrorCodes.ServerCancelled, errorMessage)
+                    }
+
+                    // Preserve the partial result token
+                    decryptedRequest.partialResultToken = request.partialResultToken
+
+                    // Call the handler with decrypted params
+                    await handler(decryptedRequest)
+                }
+            }
         )
     }
 

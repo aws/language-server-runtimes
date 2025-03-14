@@ -4,6 +4,7 @@ import { Position, Range, TextDocumentIdentifier } from './lsp'
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
 export const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
 export const QUICK_ACTION_REQUEST_METHOD = 'aws/chat/sendChatQuickAction'
+export const QUICK_ACTION_NOTIFICATION_METHOD = 'aws/chat/triggerChatQuickAction'
 export const READY_NOTIFICATION_METHOD = 'aws/chat/ready'
 export const FEEDBACK_NOTIFICATION_METHOD = 'aws/chat/feedback'
 export const TAB_ADD_NOTIFICATION_METHOD = 'aws/chat/tabAdd'
@@ -15,6 +16,8 @@ export const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
 export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
 export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
 export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
+export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
+export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 
 export interface ChatItemAction {
     pillText: string
@@ -74,7 +77,13 @@ export interface EncryptedChatParams extends PartialResultParams {
     message: string
 }
 
-export interface ChatResult {
+export interface FileList {
+    rootFolderTitle?: string
+    filePaths?: string[]
+    deletedFiles?: string[]
+}
+
+export interface ChatMessage {
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
@@ -87,7 +96,9 @@ export interface ChatResult {
         options?: ChatItemAction[]
     }
     codeReference?: ReferenceTrackerInformation[]
+    fileList?: FileList
 }
+export interface ChatResult extends ChatMessage {}
 
 export type EndChatParams = { tabId: string }
 export type EndChatResult = boolean
@@ -97,9 +108,10 @@ export type EndChatResult = boolean
  */
 export interface QuickActionCommand {
     command: string
-    disabled?: boolean
     description?: string
-    placeholder?: string
+    disabled?: boolean
+    async?: boolean
+    defaultTabData?: TabData
 }
 
 /**
@@ -120,6 +132,11 @@ export interface QuickActions {
     quickActionsCommandGroups: QuickActionCommandGroup[]
 }
 
+export interface TabData {
+    placeholderText?: string
+    messages: ChatMessage[]
+}
+
 /**
  * Registration options regarding chat data
  * Currently contains the available quick actions provided by a server
@@ -127,7 +144,6 @@ export interface QuickActions {
  */
 export interface ChatOptions {
     quickActions?: QuickActions
-    defaultTabData?: ChatResult
 }
 
 export interface QuickActionParams extends PartialResultParams {
@@ -142,8 +158,10 @@ export interface EncryptedQuickActionParams extends PartialResultParams {
     message: string
 }
 
-// Currently the QuickAction result and ChatResult share the same shape
-export interface QuickActionResult extends ChatResult {}
+// Currently the QuickActionResult and ChatResult share the same shape,
+// however response for quick actions request is optional,
+// if server chooses to handle the request asynchronously
+export interface QuickActionResult extends ChatMessage {}
 
 export interface FeedbackParams {
     tabId: string
@@ -195,7 +213,33 @@ export interface FollowUpClickParams {
 
 /*
     Defines parameters for opening a tab.
-    Opens existing tab if `tabId` is provided, otherwise creates a new tab and opens it.
+    Opens existing tab if `tabId` is provided, otherwise creates a new tab
+    with options provided in `options` parameter and opens it.
 */
-export interface OpenTabParams extends Partial<TabEventParams> {}
+export interface OpenTabParams extends Partial<TabEventParams> {
+    newTabOptions?: {
+        useDefaultTabData?: boolean
+        state?: TabState
+        data?: TabData
+    }
+}
 export interface OpenTabResult extends TabEventParams {}
+
+export interface TabState {
+    inProgress?: boolean
+    cancellable?: boolean
+}
+
+export interface ChatUpdateParams {
+    tabId: string
+    state?: TabState
+    data?: TabData
+}
+
+export type FileAction = 'accept-change' | 'reject-change' | string
+
+export interface FileClickParams {
+    tabId: string
+    filePath: string
+    action?: FileAction
+}
