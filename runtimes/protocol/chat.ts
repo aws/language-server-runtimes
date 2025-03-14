@@ -53,7 +53,7 @@ export const endChatRequestType = new ProtocolRequestType<EndChatParams, EndChat
 )
 export const quickActionRequestType = new AutoParameterStructuresProtocolRequestType<
     QuickActionParams | EncryptedQuickActionParams,
-    QuickActionResult | string,
+    QuickActionResult | string | null,
     QuickActionResult | string,
     void,
     void
