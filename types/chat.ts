@@ -82,7 +82,7 @@ export interface FileList {
     deletedFiles?: string[]
 }
 
-export interface ChatResult {
+export interface ChatMessage {
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
@@ -97,6 +97,7 @@ export interface ChatResult {
     codeReference?: ReferenceTrackerInformation[]
     fileList?: FileList
 }
+export interface ChatResult extends ChatMessage {}
 
 export type EndChatParams = { tabId: string }
 export type EndChatResult = boolean
@@ -131,7 +132,7 @@ export interface QuickActions {
 
 export interface TabData {
     placeholderText?: string
-    messages: ChatResult[]
+    messages: ChatMessage[]
 }
 
 /**
@@ -156,8 +157,10 @@ export interface EncryptedQuickActionParams extends PartialResultParams {
     message: string
 }
 
-// Currently the QuickAction result and ChatResult share the same shape
-export interface QuickActionResult extends ChatResult {}
+// Currently the QuickActionResult and ChatResult share the same shape,
+// however response for quick actions request is optional,
+// if server chooses to handle the request asynchronously
+export interface QuickActionResult extends ChatMessage {}
 
 export interface FeedbackParams {
     tabId: string
@@ -213,9 +216,10 @@ export interface FollowUpClickParams {
     with options provided in `options` parameter and opens it.
 */
 export interface OpenTabParams extends Partial<TabEventParams> {
-    options?: {
+    newTabOptions?: {
         useDefaultTabData?: boolean
-        tabData?: TabData
+        state?: TabState
+        data?: TabData
     }
 }
 export interface OpenTabResult extends TabEventParams {}
@@ -228,8 +232,7 @@ export interface TabState {
 export interface ChatUpdateParams {
     tabId: string
     state?: TabState
-    placeholderText?: string
-    messages: ChatResult[]
+    data?: TabData
 }
 
 export type FileAction = 'accept-change' | 'reject-change' | string
