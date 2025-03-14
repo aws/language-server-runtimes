@@ -53,6 +53,7 @@ import {
     RenameFilesParams,
     DidChangeDependencyPathsParams,
     UpdateConfigurationParams,
+    InlineCompletionWithReferencesParams,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -143,7 +144,7 @@ export type Lsp = {
     extensions: {
         onInlineCompletionWithReferences: (
             handler: RequestHandler<
-                InlineCompletionParams,
+                InlineCompletionWithReferencesParams,
                 InlineCompletionItemWithReferences[] | InlineCompletionListWithReferences | undefined | null,
                 void
             >
