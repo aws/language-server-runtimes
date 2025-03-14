@@ -1,37 +1,25 @@
-# Language Server Runtimes for AWS Monorepo
+# Language Server Runtimes
 
-## Relation with Language Servers
+This project (the "runtime") defines the runtime library for creating a fully working [language server](https://github.com/aws/language-servers/tree/main). The runtime provides the interface of the servers, and expose the features of the protocol defined through them. All AWS Language Servers created using this implementation are stored in the [language-servers repo](https://github.com/aws/language-servers/tree/main).
 
-This monorepo hosts the runtime library for creating a fully working language server. The runtime is responsible to provide the interface of the server and expose the features of the protocol defined through them. All official AWS Language Servers created using this implementation is stored in the [Language Servers repo](https://github.com/aws/language-servers/tree/main).
+## Where things go
 
-Want to create a new protocol or feature that would be available to all language servers? See what we already provide in [runtimes package](runtimes).
-
-Want to create a new language capability? Head over to the [Language Servers repo](https://github.com/aws/language-servers/tree/main) and start building!
+- To create a new protocol or feature for all language servers: contribute to the [runtimes/](runtimes) package in this repo.
+- To create a new "capability" for a particular language, contribute to the [language-servers](https://github.com/aws/language-servers/tree/main) repo.
 
 ## Structure
 
 Monorepo
 
-```
-.
-── runtimes - library for creating fully working runtimes for language servers
-    └── protocol - LSP based protocol for communications between language servers and clients
-    └── runtimes - implementation of runtime features for language servers
-    └── server-interface - server type definition to create language servers
-── types - type definitions for the runtimes
-```
+- [runtimes/](runtimes) - library for creating fully working runtimes for language servers
+    - [protocol/](runtimes/protocol) - LSP based protocol for communications between language servers and clients
+    - [runtimes/](runtimes/runtimes) - implementation of runtime features for language servers
+    - [server-interface/](runtimes/server-interface) - server type definition to create language servers
+- [types/](types) - type definitions for the runtimes
 
-## How To Contribute
+## Contributing
 
-[How to contribute to the language server.](CONTRIBUTING.md#contributing)
-
-## Building The Language Server
-
-[How to build the language server.](CONTRIBUTING.md#building-the-language-server)
-
-## Troubleshooting
-
-[Troubleshooting information.](CONTRIBUTING.md#troubleshooting)
+- [How to contribute](CONTRIBUTING.md#contributing)
 
 ## Security
 
