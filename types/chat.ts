@@ -4,6 +4,7 @@ import { Position, Range, TextDocumentIdentifier } from './lsp'
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
 export const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
 export const QUICK_ACTION_REQUEST_METHOD = 'aws/chat/sendChatQuickAction'
+export const QUICK_ACTION_NOTIFICATION_METHOD = 'aws/chat/triggerChatQuickAction'
 export const READY_NOTIFICATION_METHOD = 'aws/chat/ready'
 export const FEEDBACK_NOTIFICATION_METHOD = 'aws/chat/feedback'
 export const TAB_ADD_NOTIFICATION_METHOD = 'aws/chat/tabAdd'
@@ -107,9 +108,10 @@ export type EndChatResult = boolean
  */
 export interface QuickActionCommand {
     command: string
-    disabled?: boolean
     description?: string
-    placeholder?: string
+    disabled?: boolean
+    async?: boolean
+    defaultTabData?: TabData
 }
 
 /**
@@ -142,7 +144,6 @@ export interface TabData {
  */
 export interface ChatOptions {
     quickActions?: QuickActions
-    defaultTabData?: TabData
 }
 
 export interface QuickActionParams extends PartialResultParams {

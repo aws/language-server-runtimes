@@ -88,4 +88,6 @@ describe('EncryptedChat', () => {
         assert(!(result instanceof Error))
         sinonAssert.calledOnce(handler)
     })
+
+    // TODO: Add tests
 })
