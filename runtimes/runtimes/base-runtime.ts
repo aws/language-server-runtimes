@@ -38,6 +38,7 @@ import {
     selectWorkspaceItemRequestType,
     chatUpdateNotificationType,
     fileClickNotificationType,
+    quickActionNotificationType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -127,6 +128,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onChatPrompt: handler => lspConnection.onRequest(chatRequestType.method, handler),
         onEndChat: handler => lspConnection.onRequest(endChatRequestType.method, handler),
         onQuickAction: handler => lspConnection.onRequest(quickActionRequestType.method, handler),
+        onQuickActionTrigger: handler => lspConnection.onNotification(quickActionNotificationType.method, handler),
         onSendFeedback: handler => lspConnection.onNotification(feedbackNotificationType.method, handler),
         onReady: handler => lspConnection.onNotification(readyNotificationType.method, handler),
         onTabAdd: handler => lspConnection.onNotification(tabAddNotificationType.method, handler),
