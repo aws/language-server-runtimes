@@ -25,6 +25,7 @@ import {
     SemanticTokensParams,
     TextDocument,
     SignatureHelpParams,
+    UpdateConfigurationParams,
 } from '../protocol'
 import { IdentityManagement } from '../server-interface/identity-management'
 import { Service } from 'aws-sdk'
@@ -165,6 +166,10 @@ export class TestFeatures {
 
     async doExecuteCommand(params: ExecuteCommandParams, token: CancellationToken) {
         return this.lsp.onExecuteCommand.args[0]?.[0](params, token)
+    }
+
+    async doUpdateConfiguration(params: UpdateConfigurationParams, token: CancellationToken) {
+        return this.lsp.workspace.onUpdateConfiguration.args[0]?.[0](params, token)
     }
 
     async simulateTyping(uri: string, text: string) {
