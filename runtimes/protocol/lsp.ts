@@ -107,6 +107,7 @@ export interface AWSInitializationOptions {
      * The client signals AWS capabilities it supports.
      */
     awsClientCapabilities?: {
+        [key: string]: any
         window?: {
             notifications?: boolean
         }
