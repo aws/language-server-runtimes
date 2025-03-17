@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.44](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.43...language-server-runtimes/v0.2.44) (2025-03-17)
+
+
+### Features
+
+* **types:** add next token to inline completion interface ([d42a832](https://github.com/aws/language-server-runtimes/commit/d42a832a70d0ee23d4cde18c8771bf46b2f18048))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.3 to ^0.1.4
+
 ## [0.2.43](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.42...language-server-runtimes/v0.2.43) (2025-03-17)
 
 
