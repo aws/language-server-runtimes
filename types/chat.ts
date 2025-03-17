@@ -84,6 +84,7 @@ export interface FileList {
 }
 
 export interface ChatMessage {
+    type?: 'answer' | 'prompt' | 'system-prompt' // will default to 'answer'
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
@@ -109,7 +110,6 @@ export type EndChatResult = boolean
 export interface QuickActionCommand {
     command: string
     description?: string
-    disabled?: boolean
     async?: boolean
     defaultTabData?: TabData
 }
