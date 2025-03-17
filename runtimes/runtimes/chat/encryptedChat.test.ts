@@ -3,7 +3,7 @@ import { SinonStub, stub, spy, assert as sinonAssert } from 'sinon'
 import { encryptObjectWithKey } from '../auth/standalone/encryption'
 import { CancellationToken } from 'vscode-languageserver-protocol'
 import assert from 'assert'
-import { chatRequestType, quickActionRequestType } from '../../protocol'
+import { chatRequestType, quickActionNotificationType, quickActionRequestType } from '../../protocol'
 
 class ConnectionMock {
     public onRequest: SinonStub
@@ -17,6 +17,11 @@ class ConnectionMock {
     public triggerRequest(method: string, params: any, cancellationToken: any) {
         const handler = this.onRequest.getCall(0).args[1]
         return handler(params, cancellationToken)
+    }
+
+    public triggerNotification(method: string, params: any) {
+        const handler = this.onNotification.getCall(0).args[1]
+        return handler(params)
     }
 }
 
@@ -89,5 +94,30 @@ describe('EncryptedChat', () => {
         sinonAssert.calledOnce(handler)
     })
 
-    // TODO: Add tests
+    it('should throw if unencrypted onQuickAction notification', async () => {
+        const handler = spy()
+        encryptedChat.onTriggerQuickAction(handler)
+
+        assert.rejects(
+            async () =>
+                await connection.triggerNotification(quickActionNotificationType.method, {
+                    message: 'unencryptedMessage',
+                }),
+            /The request was not encrypted correctly/
+        )
+        sinonAssert.notCalled(handler)
+    })
+
+    it('should handle encrypted onQuickAction notification', async () => {
+        const handler = spy(params => params)
+        encryptedChat.onTriggerQuickAction(handler)
+
+        const encryptedRequest = {
+            message: await encryptObjectWithKey({ tabId: 'tab-1', quickAction: '/help' }, testKey, 'dir', 'A256GCM'),
+        }
+
+        const result = await connection.triggerNotification(quickActionNotificationType.method, encryptedRequest)
+        assert(!(result instanceof Error))
+        sinonAssert.calledOnce(handler)
+    })
 })

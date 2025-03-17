@@ -55,7 +55,7 @@ export class BaseChat implements Chat {
         this.connection.onRequest(quickActionRequestType.method, handler)
     }
 
-    public onQuickActionTrigger(handler: NotificationHandler<QuickActionParams>) {
+    public onTriggerQuickAction(handler: NotificationHandler<QuickActionParams>) {
         this.connection.onRequest(quickActionNotificationType.method, handler)
     }
 
