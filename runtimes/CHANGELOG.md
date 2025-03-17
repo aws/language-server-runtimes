@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.43](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.42...language-server-runtimes/v0.2.43) (2025-03-17)
+
+
+### Features
+
+* **runtimes:** extend awsClientCapabilities generically to signal server-specific capabilities ([9fd0f00](https://github.com/aws/language-server-runtimes/commit/9fd0f00a784521c9ae4dac360d2eb8c81ab299fa))
+
+
+### Bug Fixes
+
+* **runtimes:** add doUpdateConfiguration to TestFeatures ([21d5d1d](https://github.com/aws/language-server-runtimes/commit/21d5d1dc7c73499475b7c88c98d2ce760e5d26c8))
+
 ## [0.2.42](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.41...language-server-runtimes/v0.2.42) (2025-03-12)
 
 
