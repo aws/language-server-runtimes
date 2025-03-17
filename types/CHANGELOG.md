@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.3...language-server-runtimes-types/v0.1.4) (2025-03-17)
+
+
+### Features
+
+* **types:** add next token to inline completion interface ([d42a832](https://github.com/aws/language-server-runtimes/commit/d42a832a70d0ee23d4cde18c8771bf46b2f18048))
+
 ## [0.1.3](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.2...language-server-runtimes-types/v0.1.3) (2025-03-10)
 
 
