@@ -36,6 +36,7 @@ export class LspServer {
     private initializeHandler?: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
     private initializedHandler?: NotificationHandler<InitializedParams>
     private updateConfigurationHandler?: RequestHandler<UpdateConfigurationParams, void, void>
+    private bearerCredentialsDeleteHandler?: () => void
 
     private clientSupportsNotifications?: boolean
     private initializeResult?: PartialInitializeResult
@@ -64,6 +65,10 @@ export class LspServer {
                 this.notificationFollowupHandler = handler
             },
         }
+    }
+
+    setBearerCredentialsDeleteHandler = (handler: () => void): void => {
+        this.bearerCredentialsDeleteHandler = handler
     }
 
     public setInitializedHandler = (handler: NotificationHandler<InitializedParams>): void => {
@@ -181,6 +186,12 @@ export class LspServer {
     public sendNotificationFollowup = (params: NotificationFollowupParams): void => {
         if (this.notificationFollowupHandler && this.notificationRouter) {
             this.notificationRouter.processFollowup(this.notificationFollowupHandler, params)
+        }
+    }
+
+    notifyBearerCredentialsDelete = (): void => {
+        if (this.bearerCredentialsDeleteHandler) {
+            this.bearerCredentialsDeleteHandler()
         }
     }
 }

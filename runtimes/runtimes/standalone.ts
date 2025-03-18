@@ -408,6 +408,10 @@ export const standalone = (props: RuntimeProps) => {
                 }
             )
 
+            if (credentialsProvider) {
+                credentialsProvider.onBearerCredentialsDelete = lspServer.setBearerCredentialsDeleteHandler
+            }
+
             return s({
                 chat,
                 credentialsProvider,

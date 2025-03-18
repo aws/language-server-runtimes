@@ -39,6 +39,7 @@ export class Auth {
     private key: Buffer | undefined
     private credentialsEncoding: CredentialsEncoding | undefined
     private lspRouter!: LspRouter
+    private bearerCredentialsDeleteHandler?: () => void
 
     constructor(
         private readonly connection: Connection,
@@ -74,10 +75,12 @@ export class Auth {
             getConnectionMetadata: () => {
                 return this.connectionMetadata
             },
-
             getConnectionType: () => {
                 const startUrl = this.connectionMetadata?.sso?.startUrl
                 return !startUrl ? 'none' : startUrl.includes(BUILDER_ID_START_URL) ? 'builderId' : 'identityCenter'
+            },
+            onBearerCredentialsDelete: (handler: () => void) => {
+                this.bearerCredentialsDeleteHandler = handler
             },
         }
 
@@ -145,18 +148,7 @@ export class Auth {
         this.connection.onNotification(bearerCredentialsDeleteNotificationType, () => {
             this.bearerCredentials = undefined
             this.connectionMetadata = undefined
-            let params: ExecuteCommandParams = {
-                command: 'bearerCredentialsDeleteCommand',
-            }
-            const tokenSource = new CancellationTokenSource()
-            this.lspRouter
-                ?.executeCommand(params, tokenSource.token)
-                .then(result => {
-                    this.connection.console.info(`Server notified of bearer token deletion`)
-                })
-                .catch(error => {
-                    this.connection.console.error(`Error while notifying server of bearer token update, ${error}`)
-                })
+            this.lspRouter.onBearerTokenDeletion()
             this.connection.console.info('Runtime: Deleted bearer credentials')
         })
     }

@@ -162,6 +162,10 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         )
     }
 
+    onBearerTokenDeletion = (): void => {
+        this.servers.forEach(server => server.notifyBearerCredentialsDelete())
+    }
+
     onInitialized = (params: InitializedParams): void => {
         const workspaceCapabilities = this.clientInitializeParams?.capabilities.workspace
         if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
