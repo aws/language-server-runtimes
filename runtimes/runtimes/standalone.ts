@@ -422,6 +422,8 @@ export const standalone = (props: RuntimeProps) => {
             })
         })
 
+        auth.setLspRouter(lspRouter)
+
         // Free up any resources or threads used by Servers
         lspConnection.onExit(() => {
             disposables.forEach(d => d())

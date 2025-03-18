@@ -1,5 +1,5 @@
 import { jwtDecrypt } from 'jose'
-import { Connection } from 'vscode-languageserver'
+import { CancellationTokenSource, Connection, ExecuteCommandParams } from 'vscode-languageserver'
 import { CredentialsEncoding } from './standalone/encryption'
 import {
     UpdateCredentialsParams,
@@ -17,6 +17,7 @@ import {
     CredentialsType,
     CredentialsProvider,
 } from '../../server-interface'
+import { LspRouter } from '../lsp/router/lspRouter'
 
 export const BUILDER_ID_START_URL = 'https://view.awsapps.com/start'
 
@@ -37,6 +38,7 @@ export class Auth {
 
     private key: Buffer | undefined
     private credentialsEncoding: CredentialsEncoding | undefined
+    private lspRouter!: LspRouter
 
     constructor(
         private readonly connection: Connection,
@@ -80,6 +82,10 @@ export class Auth {
         }
 
         this.registerLspCredentialsUpdateHandlers()
+    }
+
+    public setLspRouter(lspRouter: LspRouter) {
+        this.lspRouter = lspRouter
     }
 
     public getCredentialsProvider(): CredentialsProvider {
@@ -139,6 +145,18 @@ export class Auth {
         this.connection.onNotification(bearerCredentialsDeleteNotificationType, () => {
             this.bearerCredentials = undefined
             this.connectionMetadata = undefined
+            let params: ExecuteCommandParams = {
+                command: 'bearerCredentialsDeleteCommand',
+            }
+            const tokenSource = new CancellationTokenSource()
+            this.lspRouter
+                ?.executeCommand(params, tokenSource.token)
+                .then(result => {
+                    this.connection.console.info(`Server notified of bearer token deletion`)
+                })
+                .catch(error => {
+                    this.connection.console.error(`Error while notifying server of bearer token update, ${error}`)
+                })
             this.connection.console.info('Runtime: Deleted bearer credentials')
         })
     }
