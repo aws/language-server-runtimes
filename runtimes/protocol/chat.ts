@@ -39,7 +39,6 @@ import {
     FILE_CLICK_NOTIFICATION_METHOD,
     ChatUpdateParams,
     FileClickParams,
-    QUICK_ACTION_NOTIFICATION_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -59,10 +58,6 @@ export const quickActionRequestType = new AutoParameterStructuresProtocolRequest
     void,
     void
 >(QUICK_ACTION_REQUEST_METHOD)
-export const quickActionNotificationType = new ProtocolNotificationType<
-    QuickActionParams | EncryptedQuickActionParams,
-    void
->(QUICK_ACTION_NOTIFICATION_METHOD)
 export const readyNotificationType = new ProtocolNotificationType<void, void>(READY_NOTIFICATION_METHOD)
 export const feedbackNotificationType = new ProtocolNotificationType<FeedbackParams, void>(FEEDBACK_NOTIFICATION_METHOD)
 export const tabAddNotificationType = new ProtocolNotificationType<TabAddParams, void>(TAB_ADD_NOTIFICATION_METHOD)

@@ -14,7 +14,6 @@ import {
     ResponseError,
     LSPErrorCodes,
     NotificationHandler,
-    quickActionNotificationType,
 } from '../../protocol'
 import { CredentialsEncoding, encryptObjectWithKey, isMessageJWEEncrypted } from '../auth/standalone/encryption'
 import { BaseChat } from './baseChat'
@@ -51,37 +50,6 @@ export class EncryptedChat extends BaseChat {
         this.registerEncryptedRequestHandler<EncryptedQuickActionParams, QuickActionParams, QuickActionResult, void>(
             quickActionRequestType,
             handler
-        )
-    }
-
-    public onTriggerQuickAction(handler: NotificationHandler<QuickActionParams>) {
-        this.registerEncryptedNotificationHandler<EncryptedQuickActionParams, QuickActionParams>(
-            quickActionNotificationType,
-            handler
-        )
-    }
-
-    private registerEncryptedNotificationHandler<
-        EncryptedRequestType extends EncryptedRequestParams,
-        DecryptedRequestType extends ChatParams | QuickActionParams,
-    >(notificationType: any, handler: NotificationHandler<DecryptedRequestType>) {
-        this.connection.onNotification(
-            notificationType,
-            async (request: EncryptedRequestType | DecryptedRequestType) => {
-                // Verify the request is encrypted as expected
-                if (!this.instanceOfEncryptedParams<EncryptedRequestType>(request)) {
-                    throw new Error('The request was not encrypted correctly')
-                }
-
-                // Decrypt request
-                let decryptedRequest = await this.decodeRequest<DecryptedRequestType>(request)
-
-                // Preserve the partial result token
-                decryptedRequest.partialResultToken = request.partialResultToken
-
-                // Call the handler with decrypted params
-                await handler(decryptedRequest)
-            }
         )
     }
 

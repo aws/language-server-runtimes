@@ -32,7 +32,6 @@ export type Chat = {
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
     // Notifications
-    onTriggerQuickAction: (handler: NotificationHandler<QuickActionParams>) => void
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
     onTabAdd: (handler: NotificationHandler<TabAddParams>) => void

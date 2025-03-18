@@ -3,7 +3,7 @@ import { SinonStub, stub, spy, assert as sinonAssert } from 'sinon'
 import { encryptObjectWithKey } from '../auth/standalone/encryption'
 import { CancellationToken } from 'vscode-languageserver-protocol'
 import assert from 'assert'
-import { chatRequestType, quickActionNotificationType, quickActionRequestType } from '../../protocol'
+import { chatRequestType, quickActionRequestType } from '../../protocol'
 
 class ConnectionMock {
     public onRequest: SinonStub
@@ -90,33 +90,6 @@ describe('EncryptedChat', () => {
             encryptedRequest,
             CancellationToken.None
         )
-        assert(!(result instanceof Error))
-        sinonAssert.calledOnce(handler)
-    })
-
-    it('should throw if unencrypted onQuickAction notification', async () => {
-        const handler = spy()
-        encryptedChat.onTriggerQuickAction(handler)
-
-        assert.rejects(
-            async () =>
-                await connection.triggerNotification(quickActionNotificationType.method, {
-                    message: 'unencryptedMessage',
-                }),
-            /The request was not encrypted correctly/
-        )
-        sinonAssert.notCalled(handler)
-    })
-
-    it('should handle encrypted onQuickAction notification', async () => {
-        const handler = spy(params => params)
-        encryptedChat.onTriggerQuickAction(handler)
-
-        const encryptedRequest = {
-            message: await encryptObjectWithKey({ tabId: 'tab-1', quickAction: '/help' }, testKey, 'dir', 'A256GCM'),
-        }
-
-        const result = await connection.triggerNotification(quickActionNotificationType.method, encryptedRequest)
         assert(!(result instanceof Error))
         sinonAssert.calledOnce(handler)
     })
