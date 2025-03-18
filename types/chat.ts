@@ -111,7 +111,6 @@ export interface QuickActionCommand {
     command: string
     description?: string
     async?: boolean
-    defaultTabData?: TabData
 }
 
 /**
@@ -218,7 +217,6 @@ export interface FollowUpClickParams {
 */
 export interface OpenTabParams extends Partial<TabEventParams> {
     newTabOptions?: {
-        useDefaultTabData?: boolean
         state?: TabState
         data?: TabData
     }
