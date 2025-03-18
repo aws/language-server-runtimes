@@ -1,5 +1,5 @@
 import { jwtDecrypt } from 'jose'
-import { CancellationTokenSource, Connection, ExecuteCommandParams } from 'vscode-languageserver'
+import { Connection } from 'vscode-languageserver'
 import { CredentialsEncoding } from './standalone/encryption'
 import {
     UpdateCredentialsParams,
