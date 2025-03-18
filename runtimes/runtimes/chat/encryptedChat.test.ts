@@ -18,11 +18,6 @@ class ConnectionMock {
         const handler = this.onRequest.getCall(0).args[1]
         return handler(params, cancellationToken)
     }
-
-    public triggerNotification(method: string, params: any) {
-        const handler = this.onNotification.getCall(0).args[1]
-        return handler(params)
-    }
 }
 
 const testKey = Buffer.from('a'.repeat(32)).toString('base64') // Key has to be 256 bit long in our JWE configuration

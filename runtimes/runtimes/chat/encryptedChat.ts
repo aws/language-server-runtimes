@@ -13,7 +13,6 @@ import {
     quickActionRequestType,
     ResponseError,
     LSPErrorCodes,
-    NotificationHandler,
 } from '../../protocol'
 import { CredentialsEncoding, encryptObjectWithKey, isMessageJWEEncrypted } from '../auth/standalone/encryption'
 import { BaseChat } from './baseChat'
