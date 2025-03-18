@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.45](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.44...language-server-runtimes/v0.2.45) (2025-03-18)
+
+
+### Features
+
+* **runtimes:** cache and expose initializeParams as a feature ([#378](https://github.com/aws/language-server-runtimes/issues/378)) ([e3d4e17](https://github.com/aws/language-server-runtimes/commit/e3d4e1772d29955ae71a6761f1be3251c443215e))
+
 ## [0.2.44](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.43...language-server-runtimes/v0.2.44) (2025-03-17)
 
 
