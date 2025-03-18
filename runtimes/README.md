@@ -31,6 +31,13 @@ The server runtime implementation acts as a proxy for LSP methods, which means i
 | onInlineCompletion | Yes     | Provide list of inline completion suggestions from the Server                                                                         |
 | onExecuteCommand   | Yes     | Executes a custom command provided by the Server. Servers are advised to document custom commands they support in the package README. |
 
+##### LSP Workspace
+
+| Description                          | Method                            | Params                         | Method type                                                                                                                     | Response Type   |
+| ------------------------------------ | --------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Request to select workspace item | `aws/selectWorkspaceItem`         | `SelectWorkspaceItemParams`                   | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `SelectWorkspaceItemResult`    |
+| Sent open file differences for the new file content | `aws/openFileDiff`                | `OpenFileDiffParams`                | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage)           | n/a |
+
 ##### LSP Extensions
 
 | Method Name                         | Method                                            | Params                                    | Method Type                                                                                                                     | Response Type                        | Notes                                                                                                     |
@@ -174,6 +181,8 @@ The runtime supports chat by default
 | Send info link click event           | `aws/chat/infoLinkClick`          | `InfoLinkClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
 | Send source link click event         | `aws/chat/sourceLinkClick`        | `SourceLinkClickParams`        | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
 | Send followup chat item click event  | `aws/chat/followUpClick`          | `FollowUpClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
+| Send messages and state update to specific tab | `aws/chat/sendChatUpdate`          | `ChatUpdateParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
+| Send file or file action click event | `aws/chat/fileClick`          | `FileClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
 
 ```ts
 export interface ChatPrompt {
@@ -182,25 +191,15 @@ export interface ChatPrompt {
     command?: string
 }
 
-export interface ChatParams {
-    tabId: string
-    prompt: ChatPrompt
-    partialResultToken?: ProgressToken
+interface PartialResultParams {
+    partialResultToken?: number | string
 }
 
-export interface ChatResult {
-    body?: string
-    messageId?: string
-    canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
-    relatedContent?: {
-        title?: string
-        content: SourceLink[]
-    }
-    followUp?: {
-        text?: string
-        options?: ChatItemAction[]
-    }
-    codeReference?: ReferenceTrackerInformation[]
+export interface ChatParams extends PartialResultParams {
+    tabId: string
+    prompt: ChatPrompt
+    cursorState?: CursorState[]
+    textDocument?: TextDocumentIdentifier
 }
 ```
 
