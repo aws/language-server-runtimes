@@ -68,6 +68,7 @@ import { WebBase64Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -174,6 +175,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         const lsp: Lsp = {
             addInitializer: lspServer.setInitializeHandler,
             onInitialized: lspServer.setInitializedHandler,
+            getClientInitializeParams: getClientInitializeParamsHandlerFactory(lspRouter),
             onCompletion: handler => lspConnection.onCompletion(handler),
             onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
             didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
