@@ -71,6 +71,7 @@ import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getTelemetryLspServer } from './util/telemetryLspServer'
+import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -300,6 +301,7 @@ export const standalone = (props: RuntimeProps) => {
             const lsp: Lsp = {
                 addInitializer: lspServer.setInitializeHandler,
                 onInitialized: lspServer.setInitializedHandler,
+                getClientInitializeParams: getClientInitializeParamsHandlerFactory(lspRouter),
                 onCompletion: handler => lspConnection.onCompletion(handler),
                 onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
                 didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,

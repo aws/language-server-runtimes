@@ -103,6 +103,7 @@ export type Lsp = {
      */
     addInitializer: (handler: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>) => void
     onInitialized: (handler: NotificationHandler<InitializedParams>) => void
+    getClientInitializeParams: () => InitializeParams | undefined
     onInlineCompletion: (
         handler: RequestHandler<
             InlineCompletionParams,
