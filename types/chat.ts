@@ -109,7 +109,6 @@ export type EndChatResult = boolean
 export interface QuickActionCommand {
     command: string
     description?: string
-    async?: boolean
 }
 
 /**
