@@ -139,7 +139,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
         openTab: params => lspConnection.sendRequest(openTabRequestType.method, params),
-        chatUpdate: params => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
+        sendChatUpdate: params => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
     }
 

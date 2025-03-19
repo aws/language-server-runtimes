@@ -98,7 +98,7 @@ export class BaseChat implements Chat {
         return this.connection.sendRequest(openTabRequestType.method, params)
     }
 
-    public chatUpdate(params: ChatUpdateParams) {
+    public sendChatUpdate(params: ChatUpdateParams) {
         this.connection.sendNotification(chatUpdateNotificationType.method, params)
     }
 

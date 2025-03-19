@@ -42,6 +42,6 @@ export type Chat = {
     onInfoLinkClick: (handler: NotificationHandler<InfoLinkClickParams>) => void
     onSourceLinkClick: (handler: NotificationHandler<SourceLinkClickParams>) => void
     onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
-    chatUpdate: (params: ChatUpdateParams) => void
+    sendChatUpdate: (params: ChatUpdateParams) => void
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
 }
