@@ -140,11 +140,7 @@ export type Lsp = {
         onDidRenameFiles: (handler: NotificationHandler<RenameFilesParams>) => void
         onUpdateConfiguration: (handler: RequestHandler<UpdateConfigurationParams, void, void>) => void
         selectWorkspaceItem: (
-            handler: RequestHandler<
-                SelectWorkspaceItemParams,
-                SelectWorkspaceItemResult | undefined | null,
-                SelectWorkspaceItemResult
-            >
+            handler: RequestHandler<SelectWorkspaceItemParams, SelectWorkspaceItemResult | undefined | null, void>
         ) => void
         openFileDiff: (params: OpenFileDiffParams) => void
     }

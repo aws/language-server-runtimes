@@ -99,7 +99,7 @@ export interface ChatMessage {
     fileList?: FileList
 }
 // Response for chat prompt request can be empty,
-// if server chooses to handle the request and push updates synchronously.
+// if server chooses to handle the request and push updates asynchronously.
 export interface ChatResult extends ChatMessage {}
 
 export type EndChatParams = { tabId: string }
@@ -160,7 +160,7 @@ export interface EncryptedQuickActionParams extends PartialResultParams {
 
 // Currently the QuickActionResult and ChatResult share the same shape.
 // Response for quick actions request can be empty,
-// if server chooses to handle the request and push updates synchronously.
+// if server chooses to handle the request and push updates asynchronously.
 export interface QuickActionResult extends ChatMessage {}
 
 export interface FeedbackParams {
@@ -235,7 +235,7 @@ export interface ChatUpdateParams {
     data?: TabData
 }
 
-export type FileAction = 'accept-change' | 'reject-change' | string
+export type FileAction = 'accept-change' | 'reject-change'
 
 export interface FileClickParams {
     tabId: string
