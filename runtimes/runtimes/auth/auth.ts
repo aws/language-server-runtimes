@@ -120,6 +120,7 @@ export class Auth {
 
         this.connection.onNotification(iamCredentialsDeleteNotificationType, () => {
             this.iamCredentials = undefined
+            this.lspRouter.onCredentialsDeletion('iam')
             this.connection.console.info('Runtime: Deleted IAM credentials')
         })
     }
