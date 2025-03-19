@@ -117,6 +117,8 @@ export const standalone = (props: RuntimeProps) => {
 
     const lspConnection = createConnection(ProposedFeatures.all)
     const documentsObserver = observe(lspConnection)
+    // Create router that will be routing LSP events from the client to server(s)
+    const lspRouter = new LspRouter(lspConnection, props.name, props.version)
 
     let auth: Auth
     let chat: Chat
@@ -133,7 +135,7 @@ export const standalone = (props: RuntimeProps) => {
                     (encryptionDetails: EncryptionInitialization) => {
                         validateEncryptionDetails(encryptionDetails)
                         lspConnection.console.info('Runtime: Initializing runtime with encryption')
-                        auth = new Auth(lspConnection, encryptionDetails.key, encryptionDetails.mode)
+                        auth = new Auth(lspConnection, lspRouter, encryptionDetails.key, encryptionDetails.mode)
                         chat = new EncryptedChat(lspConnection, encryptionDetails.key, encryptionDetails.mode)
                         initializeRuntime(encryptionDetails.key)
                     },
@@ -147,7 +149,7 @@ export const standalone = (props: RuntimeProps) => {
                 })
         } else {
             lspConnection.console.info('Runtime: Initializing runtime without encryption')
-            auth = new Auth(lspConnection)
+            auth = new Auth(lspConnection, lspRouter)
 
             initializeRuntime()
         }
@@ -276,9 +278,6 @@ export const standalone = (props: RuntimeProps) => {
             encode: value => Buffer.from(value).toString('base64'),
             decode: value => Buffer.from(value, 'base64').toString('utf-8'),
         }
-
-        // Create router that will be routing LSP events from the client to server(s)
-        const lspRouter = new LspRouter(lspConnection, props.name, props.version)
 
         const loggingServer = new LoggingServer(lspConnection, encoding)
         const logging: Logging = loggingServer.getLoggingObject()
@@ -409,6 +408,8 @@ export const standalone = (props: RuntimeProps) => {
                     },
                 }
             )
+
+            credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
 
             return s({
                 chat,

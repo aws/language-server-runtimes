@@ -146,7 +146,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     }
 
     // Set up auth without encryption
-    const auth = new Auth(lspConnection)
+    const auth = new Auth(lspConnection, lspRouter)
     const credentialsProvider = auth.getCredentialsProvider()
     const runtime: Runtime = {
         serverInfo: {
@@ -231,6 +231,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 ): T => new Ctor({ ...current_config }),
             }
         )
+        credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
 
         return s({
             chat,

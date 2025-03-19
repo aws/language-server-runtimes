@@ -17,6 +17,7 @@ import {
     CredentialsType,
     CredentialsProvider,
 } from '../../server-interface'
+import { LspRouter } from '../lsp/router/lspRouter'
 
 export const BUILDER_ID_START_URL = 'https://view.awsapps.com/start'
 
@@ -37,9 +38,12 @@ export class Auth {
 
     private key: Buffer | undefined
     private credentialsEncoding: CredentialsEncoding | undefined
+    private lspRouter: LspRouter
+    private credentialsDeleteHandler?: (type: CredentialsType) => void
 
     constructor(
         private readonly connection: Connection,
+        lspRouter: LspRouter,
         key?: string,
         encoding?: CredentialsEncoding
     ) {
@@ -47,7 +51,7 @@ export class Auth {
             this.key = Buffer.from(key, 'base64')
             this.credentialsEncoding = encoding
         }
-
+        this.lspRouter = lspRouter
         this.credentialsProvider = {
             getCredentials: (type: CredentialsType): Credentials | undefined => {
                 if (type === 'iam') {
@@ -72,10 +76,12 @@ export class Auth {
             getConnectionMetadata: () => {
                 return this.connectionMetadata
             },
-
             getConnectionType: () => {
                 const startUrl = this.connectionMetadata?.sso?.startUrl
                 return !startUrl ? 'none' : startUrl.includes(BUILDER_ID_START_URL) ? 'builderId' : 'identityCenter'
+            },
+            onCredentialsDeleted: (handler: (type: CredentialsType) => void) => {
+                this.credentialsDeleteHandler = handler
             },
         }
 
@@ -114,6 +120,7 @@ export class Auth {
 
         this.connection.onNotification(iamCredentialsDeleteNotificationType, () => {
             this.iamCredentials = undefined
+            this.lspRouter.onCredentialsDeletion('iam')
             this.connection.console.info('Runtime: Deleted IAM credentials')
         })
     }
@@ -139,6 +146,7 @@ export class Auth {
         this.connection.onNotification(bearerCredentialsDeleteNotificationType, () => {
             this.bearerCredentials = undefined
             this.connectionMetadata = undefined
+            this.lspRouter.onCredentialsDeletion('bearer')
             this.connection.console.info('Runtime: Deleted bearer credentials')
         })
     }

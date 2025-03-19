@@ -12,4 +12,5 @@ export interface CredentialsProvider {
     getCredentials: (type: CredentialsType) => Credentials | undefined
     getConnectionMetadata: () => ConnectionMetadata | undefined
     getConnectionType: () => SsoConnectionType
+    onCredentialsDeleted: (handler: (type: CredentialsType) => void) => void
 }

@@ -30,6 +30,7 @@ describe('standalone', () => {
         stubConnection = stubInterface<vscodeLanguageServer.Connection>()
         stubConnection.console = stubInterface<vscodeLanguageServer.RemoteConsole>()
         stubConnection.telemetry = stubInterface<vscodeLanguageServer.Telemetry>()
+
         sinon.stub(vscodeLanguageServer, 'createConnection').returns(stubConnection)
 
         lspRouterStub = stubInterface<lspRouterModule.LspRouter>()
@@ -49,13 +50,20 @@ describe('standalone', () => {
         it('should initialize without encryption when no key is present', () => {
             sinon.stub(authEncryptionModule, 'shouldWaitForEncryptionKey').returns(false)
             authStub = stubInterface<authModule.Auth>()
+            authStub.getCredentialsProvider.returns({
+                hasCredentials: sinon.stub().returns(false),
+                getCredentials: sinon.stub().returns(undefined),
+                getConnectionMetadata: sinon.stub().returns(undefined),
+                getConnectionType: sinon.stub().returns('none'),
+                onCredentialsDeleted: sinon.stub(),
+            })
             sinon.stub(authModule, 'Auth').returns(authStub)
             baseChatStub = stubInterface<baseChatModule.BaseChat>()
             sinon.stub(baseChatModule, 'BaseChat').returns(baseChatStub)
 
             standalone(props)
 
-            sinon.assert.calledWithExactly(authModule.Auth as unknown as sinon.SinonStub, stubConnection)
+            sinon.assert.calledWithExactly(authModule.Auth as unknown as sinon.SinonStub, stubConnection, lspRouterStub)
             sinon.assert.calledWithExactly(
                 stubConnection.console.info as sinon.SinonStub,
                 'Runtime: Initializing runtime without encryption'
@@ -80,6 +88,13 @@ describe('standalone', () => {
                     )
                 )
             authStub = stubInterface<authModule.Auth>()
+            authStub.getCredentialsProvider.returns({
+                hasCredentials: sinon.stub().returns(false),
+                getCredentials: sinon.stub().returns(undefined),
+                getConnectionMetadata: sinon.stub().returns(undefined),
+                getConnectionType: sinon.stub().returns('none'),
+                onCredentialsDeleted: sinon.stub(),
+            })
             sinon.stub(authModule, 'Auth').returns(authStub)
             chatStub = stubInterface<encryptedChatModule.EncryptedChat>()
             sinon.stub(encryptedChatModule, 'EncryptedChat').returns(chatStub)
@@ -93,6 +108,7 @@ describe('standalone', () => {
             sinon.assert.calledWithExactly(
                 authModule.Auth as unknown as sinon.SinonStub,
                 stubConnection,
+                lspRouterStub,
                 encryptionInitialization.key,
                 encryptionInitialization.mode
             )

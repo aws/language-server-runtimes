@@ -26,7 +26,7 @@ import {
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { findDuplicates, mergeObjects } from './util'
-import { PartialInitializeResult } from '../../../server-interface'
+import { CredentialsType, PartialInitializeResult } from '../../../server-interface'
 
 export class LspRouter {
     public clientInitializeParams?: InitializeParams
@@ -160,6 +160,10 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
             (server, params) => server.sendDidChangeConfigurationNotification(params),
             params
         )
+    }
+
+    onCredentialsDeletion = (type: CredentialsType): void => {
+        this.routeNotificationToAllServers((server, type) => server.notifyCredentialsDeletion(type), type)
     }
 
     onInitialized = (params: InitializedParams): void => {
