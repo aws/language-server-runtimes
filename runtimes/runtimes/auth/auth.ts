@@ -38,11 +38,12 @@ export class Auth {
 
     private key: Buffer | undefined
     private credentialsEncoding: CredentialsEncoding | undefined
-    private lspRouter!: LspRouter
-    private bearerCredentialsDeleteHandler?: () => void
+    private lspRouter: LspRouter
+    private credentialsDeleteHandler?: (type: CredentialsType) => void
 
     constructor(
         private readonly connection: Connection,
+        lspRouter: LspRouter,
         key?: string,
         encoding?: CredentialsEncoding
     ) {
@@ -50,7 +51,7 @@ export class Auth {
             this.key = Buffer.from(key, 'base64')
             this.credentialsEncoding = encoding
         }
-
+        this.lspRouter = lspRouter
         this.credentialsProvider = {
             getCredentials: (type: CredentialsType): Credentials | undefined => {
                 if (type === 'iam') {
@@ -79,16 +80,12 @@ export class Auth {
                 const startUrl = this.connectionMetadata?.sso?.startUrl
                 return !startUrl ? 'none' : startUrl.includes(BUILDER_ID_START_URL) ? 'builderId' : 'identityCenter'
             },
-            onBearerCredentialsDelete: (handler: () => void) => {
-                this.bearerCredentialsDeleteHandler = handler
+            onCredentialsDeleted: (handler: (type: CredentialsType) => void) => {
+                this.credentialsDeleteHandler = handler
             },
         }
 
         this.registerLspCredentialsUpdateHandlers()
-    }
-
-    public setLspRouter(lspRouter: LspRouter) {
-        this.lspRouter = lspRouter
     }
 
     public getCredentialsProvider(): CredentialsProvider {
@@ -148,7 +145,7 @@ export class Auth {
         this.connection.onNotification(bearerCredentialsDeleteNotificationType, () => {
             this.bearerCredentials = undefined
             this.connectionMetadata = undefined
-            this.lspRouter.onBearerTokenDeletion()
+            this.lspRouter.onCredentialsDeletion('bearer')
             this.connection.console.info('Runtime: Deleted bearer credentials')
         })
     }

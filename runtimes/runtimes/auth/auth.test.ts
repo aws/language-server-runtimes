@@ -2,10 +2,20 @@ import assert from 'assert'
 import { randomBytes } from 'node:crypto'
 import * as jose from 'jose'
 import { Duplex } from 'stream'
-import { Connection, createConnection } from 'vscode-languageserver/node'
+import {
+    Connection,
+    createConnection,
+    DidChangeConfigurationParams,
+    ExecuteCommandParams,
+    InitializedParams,
+    InitializeError,
+    ServerRequestHandler,
+} from 'vscode-languageserver/node'
 import { Auth, BUILDER_ID_START_URL } from './auth'
-import { ParameterStructures, UpdateCredentialsParams } from '../../protocol'
+import { InitializeParams, InitializeResult, ParameterStructures, UpdateCredentialsParams } from '../../protocol'
 import { IamCredentials, BearerCredentials, CredentialsType, CredentialsProvider } from '../../server-interface'
+import { LspRouter } from '../lsp/router/lspRouter'
+import { NotificationHandler } from 'vscode-languageserver-protocol'
 
 export const credentialsProtocolMethodNames = {
     iamCredentialsUpdate: 'aws/credentials/iam/update',
@@ -69,7 +79,13 @@ const serverLspConnectionMock = <Connection>{
             console.warn(str)
         },
     },
+    onDidChangeConfiguration: (handler: NotificationHandler<DidChangeConfigurationParams>) => {},
+    onExecuteCommand: (handler: ServerRequestHandler<ExecuteCommandParams, any, never, void>) => {},
+    onInitialize: (handler: ServerRequestHandler<InitializeParams, InitializeResult, never, InitializeError>) => {},
+    onInitialized: (handler: NotificationHandler<InitializedParams>) => {},
 }
+
+const lspRouter = new LspRouter(serverLspConnectionMock, 'name')
 
 const bearerCredentials: BearerCredentials = {
     token: 'testToken',
@@ -102,7 +118,7 @@ describe('Auth', () => {
             data: iamCredentials,
             encrypted: false,
         }
-        const auth = new Auth(serverLspConnectionMock)
+        const auth = new Auth(serverLspConnectionMock, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         assert(!credentialsProvider.hasCredentials('iam'))
@@ -121,7 +137,7 @@ describe('Auth', () => {
             data: bearerCredentials,
             encrypted: false,
         }
-        const auth = new Auth(serverConnection)
+        const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         assert(!credentialsProvider.hasCredentials('bearer'))
@@ -142,7 +158,7 @@ describe('Auth', () => {
             data: bearerCredentials,
             encrypted: false,
         }
-        const auth = new Auth(serverConnection)
+        const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         assert(!credentialsProvider.hasCredentials('bearer'))
@@ -165,7 +181,7 @@ describe('Auth', () => {
             metadata: CONNECTION_METADATA,
             encrypted: false,
         }
-        const auth = new Auth(serverConnection)
+        const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         assert(!credentialsProvider.getConnectionMetadata())
@@ -189,7 +205,7 @@ describe('Auth', () => {
             data: bearerCredentials,
             encrypted: false,
         }
-        const auth = new Auth(serverConnection)
+        const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         assert(!credentialsProvider.getConnectionMetadata())
@@ -209,7 +225,7 @@ describe('Auth', () => {
             data: bearerCredentials,
             encrypted: false,
         }
-        const auth = new Auth(serverConnection)
+        const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
@@ -223,7 +239,7 @@ describe('Auth', () => {
             data: bearerCredentials,
             encrypted: false,
         }
-        const auth = new Auth(serverConnection)
+        const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         assert(!credentialsProvider.hasCredentials('bearer'))
@@ -245,7 +261,7 @@ describe('Auth', () => {
             data: malformedIamCredentials as IamCredentials,
             encrypted: false,
         }
-        const auth = new Auth(serverLspConnectionMock)
+        const auth = new Auth(serverLspConnectionMock, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         await assert.rejects(authHandlers.iamUpdateHandler(updateIamRequest), /Invalid IAM credentials/)
@@ -260,7 +276,7 @@ describe('Auth', () => {
             data: malformedBearerCredentials as BearerCredentials,
             encrypted: false,
         }
-        const auth = new Auth(serverLspConnectionMock)
+        const auth = new Auth(serverLspConnectionMock, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         await assert.rejects(authHandlers.bearerUpdateHandler(updateBearerRequest), /Invalid bearer credentials/)
@@ -273,7 +289,7 @@ describe('Auth', () => {
                 data: iamCredentials,
                 encrypted: false,
             }
-            const auth = new Auth(serverLspConnectionMock)
+            const auth = new Auth(serverLspConnectionMock, lspRouter)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             await authHandlers.iamUpdateHandler(updateIamRequest)
@@ -292,7 +308,7 @@ describe('Auth', () => {
                 encrypted: false,
             }
 
-            const auth = new Auth(serverLspConnectionMock)
+            const auth = new Auth(serverLspConnectionMock, lspRouter)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             await authHandlers.bearerUpdateHandler(updateBearerRequest)
@@ -305,7 +321,7 @@ describe('Auth', () => {
         })
 
         it('Throws on unsupported type', async () => {
-            const auth = new Auth(serverLspConnectionMock)
+            const auth = new Auth(serverLspConnectionMock, lspRouter)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             assert.throws(
@@ -330,7 +346,7 @@ describe('Auth', () => {
                 metadata: CONNECTION_METADATA,
                 encrypted: false,
             }
-            const auth = new Auth(serverConnection)
+            const auth = new Auth(serverConnection, lspRouter)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
@@ -350,7 +366,7 @@ describe('Auth', () => {
                 metadata: CONNECTION_METADATA,
                 encrypted: false,
             }
-            const auth = new Auth(serverConnection)
+            const auth = new Auth(serverConnection, lspRouter)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
@@ -368,7 +384,7 @@ describe('Auth', () => {
                 metadata: CONNECTION_METADATA,
                 encrypted: false,
             }
-            const auth = new Auth(serverConnection)
+            const auth = new Auth(serverConnection, lspRouter)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
@@ -383,7 +399,7 @@ describe('Auth', () => {
                 data: iamCredentials as IamCredentials,
                 encrypted: true,
             }
-            const auth = new Auth(serverLspConnectionMock)
+            const auth = new Auth(serverLspConnectionMock, lspRouter)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             await assert.rejects(authHandlers.iamUpdateHandler(updateIamRequest), /No encryption key/)
@@ -392,7 +408,7 @@ describe('Auth', () => {
         })
 
         it('Handles encrypted IAM credentials', async () => {
-            const auth = new Auth(serverLspConnectionMock, encryptionKey.toString('base64'), 'JWT')
+            const auth = new Auth(serverLspConnectionMock, lspRouter, encryptionKey.toString('base64'), 'JWT')
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             const payload = { data: iamCredentials }
@@ -410,7 +426,7 @@ describe('Auth', () => {
         })
 
         it('Handles encrypted bearer credentials', async () => {
-            const auth = new Auth(serverLspConnectionMock, encryptionKey.toString('base64'), 'JWT')
+            const auth = new Auth(serverLspConnectionMock, lspRouter, encryptionKey.toString('base64'), 'JWT')
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             const payload = { data: bearerCredentials }
@@ -428,7 +444,7 @@ describe('Auth', () => {
         })
 
         it('Rejects if encryption algorithm is not direct A256GCM', async () => {
-            const auth = new Auth(serverLspConnectionMock, encryptionKey.toString('base64'), 'JWT')
+            const auth = new Auth(serverLspConnectionMock, lspRouter, encryptionKey.toString('base64'), 'JWT')
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             const payload = { data: bearerCredentials }
@@ -449,7 +465,7 @@ describe('Auth', () => {
         })
 
         it('Verifies JWT claims', async () => {
-            const auth = new Auth(serverLspConnectionMock, encryptionKey.toString('base64'), 'JWT')
+            const auth = new Auth(serverLspConnectionMock, lspRouter, encryptionKey.toString('base64'), 'JWT')
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
             const payload = { data: bearerCredentials }

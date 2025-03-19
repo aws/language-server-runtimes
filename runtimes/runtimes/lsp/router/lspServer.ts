@@ -21,7 +21,7 @@ import {
     HandlerResult,
 } from '../../../protocol'
 import { InitializeParams, PartialInitializeResult } from '../../../server-interface/lsp'
-import { Logging, Notification } from '../../../server-interface'
+import { CredentialsType, Logging, Notification } from '../../../server-interface'
 import { asPromise } from './util'
 import { Connection } from 'vscode-languageserver/node'
 import { RouterByServerName } from './routerByServerName'
@@ -36,7 +36,7 @@ export class LspServer {
     private initializeHandler?: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
     private initializedHandler?: NotificationHandler<InitializedParams>
     private updateConfigurationHandler?: RequestHandler<UpdateConfigurationParams, void, void>
-    private bearerCredentialsDeleteHandler?: () => void
+    private credentialsDeleteHandler?: (type: CredentialsType) => void
 
     private clientSupportsNotifications?: boolean
     private initializeResult?: PartialInitializeResult
@@ -67,8 +67,8 @@ export class LspServer {
         }
     }
 
-    setBearerCredentialsDeleteHandler = (handler: () => void): void => {
-        this.bearerCredentialsDeleteHandler = handler
+    setCredentialsDeleteHandler = (handler: (type: CredentialsType) => void): void => {
+        this.credentialsDeleteHandler = handler
     }
 
     public setInitializedHandler = (handler: NotificationHandler<InitializedParams>): void => {
@@ -189,9 +189,9 @@ export class LspServer {
         }
     }
 
-    notifyBearerCredentialsDelete = (): void => {
-        if (this.bearerCredentialsDeleteHandler) {
-            this.bearerCredentialsDeleteHandler()
+    notifyCredentialsDeletion = (type: CredentialsType): void => {
+        if (this.credentialsDeleteHandler) {
+            this.credentialsDeleteHandler(type)
         }
     }
 }

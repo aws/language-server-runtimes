@@ -26,7 +26,7 @@ import {
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { findDuplicates, mergeObjects } from './util'
-import { PartialInitializeResult } from '../../../server-interface'
+import { CredentialsType, PartialInitializeResult } from '../../../server-interface'
 
 export class LspRouter {
     public clientInitializeParams?: InitializeParams
@@ -162,8 +162,8 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         )
     }
 
-    onBearerTokenDeletion = (): void => {
-        this.servers.forEach(server => server.notifyBearerCredentialsDelete())
+    onCredentialsDeletion = (type: CredentialsType): void => {
+        this.servers.forEach(server => server.notifyCredentialsDeletion(type))
     }
 
     onInitialized = (params: InitializedParams): void => {

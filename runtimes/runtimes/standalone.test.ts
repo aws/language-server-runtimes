@@ -30,6 +30,7 @@ describe('standalone', () => {
         stubConnection = stubInterface<vscodeLanguageServer.Connection>()
         stubConnection.console = stubInterface<vscodeLanguageServer.RemoteConsole>()
         stubConnection.telemetry = stubInterface<vscodeLanguageServer.Telemetry>()
+
         sinon.stub(vscodeLanguageServer, 'createConnection').returns(stubConnection)
 
         lspRouterStub = stubInterface<lspRouterModule.LspRouter>()
@@ -55,7 +56,7 @@ describe('standalone', () => {
 
             standalone(props)
 
-            sinon.assert.calledWithExactly(authModule.Auth as unknown as sinon.SinonStub, stubConnection)
+            sinon.assert.calledWithExactly(authModule.Auth as unknown as sinon.SinonStub, stubConnection, lspRouterStub)
             sinon.assert.calledWithExactly(
                 stubConnection.console.info as sinon.SinonStub,
                 'Runtime: Initializing runtime without encryption'
@@ -93,6 +94,7 @@ describe('standalone', () => {
             sinon.assert.calledWithExactly(
                 authModule.Auth as unknown as sinon.SinonStub,
                 stubConnection,
+                lspRouterStub,
                 encryptionInitialization.key,
                 encryptionInitialization.mode
             )
