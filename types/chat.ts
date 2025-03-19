@@ -98,6 +98,8 @@ export interface ChatMessage {
     codeReference?: ReferenceTrackerInformation[]
     fileList?: FileList
 }
+// Response for chat prompt request can be empty,
+// if server chooses to handle the request and push updates synchronously.
 export interface ChatResult extends ChatMessage {}
 
 export type EndChatParams = { tabId: string }
@@ -156,9 +158,9 @@ export interface EncryptedQuickActionParams extends PartialResultParams {
     message: string
 }
 
-// Currently the QuickActionResult and ChatResult share the same shape,
-// however response for quick actions request is optional,
-// if server chooses to handle the request asynchronously
+// Currently the QuickActionResult and ChatResult share the same shape.
+// Response for quick actions request can be empty,
+// if server chooses to handle the request and push updates synchronously.
 export interface QuickActionResult extends ChatMessage {}
 
 export interface FeedbackParams {
