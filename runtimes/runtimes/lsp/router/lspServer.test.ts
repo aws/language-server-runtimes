@@ -258,5 +258,16 @@ describe('LspServer', () => {
             assert(updateConfigurationHandler.calledOnce)
             assert(updateConfigurationHandler.calledWith(params))
         })
+
+        it('should handle delete credential notifications', async () => {
+            const credentialsDeleteHandler = sandbox.stub()
+            const params = 'bearer'
+
+            lspServer.setCredentialsDeleteHandler(credentialsDeleteHandler)
+            lspServer.notifyCredentialsDeletion(params)
+
+            assert(credentialsDeleteHandler.calledOnce)
+            assert(credentialsDeleteHandler.calledWith(params))
+        })
     })
 })

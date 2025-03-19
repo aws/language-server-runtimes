@@ -50,6 +50,13 @@ describe('standalone', () => {
         it('should initialize without encryption when no key is present', () => {
             sinon.stub(authEncryptionModule, 'shouldWaitForEncryptionKey').returns(false)
             authStub = stubInterface<authModule.Auth>()
+            authStub.getCredentialsProvider.returns({
+                hasCredentials: sinon.stub().returns(false),
+                getCredentials: sinon.stub().returns(undefined),
+                getConnectionMetadata: sinon.stub().returns(undefined),
+                getConnectionType: sinon.stub().returns('none'),
+                onCredentialsDeleted: sinon.stub(),
+            })
             sinon.stub(authModule, 'Auth').returns(authStub)
             baseChatStub = stubInterface<baseChatModule.BaseChat>()
             sinon.stub(baseChatModule, 'BaseChat').returns(baseChatStub)
@@ -81,6 +88,13 @@ describe('standalone', () => {
                     )
                 )
             authStub = stubInterface<authModule.Auth>()
+            authStub.getCredentialsProvider.returns({
+                hasCredentials: sinon.stub().returns(false),
+                getCredentials: sinon.stub().returns(undefined),
+                getConnectionMetadata: sinon.stub().returns(undefined),
+                getConnectionType: sinon.stub().returns('none'),
+                onCredentialsDeleted: sinon.stub(),
+            })
             sinon.stub(authModule, 'Auth').returns(authStub)
             chatStub = stubInterface<encryptedChatModule.EncryptedChat>()
             sinon.stub(encryptedChatModule, 'EncryptedChat').returns(chatStub)

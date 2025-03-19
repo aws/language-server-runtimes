@@ -163,7 +163,7 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
     }
 
     onCredentialsDeletion = (type: CredentialsType): void => {
-        this.servers.forEach(server => server.notifyCredentialsDeletion(type))
+        this.routeNotificationToAllServers((server, type) => server.notifyCredentialsDeletion(type), type)
     }
 
     onInitialized = (params: InitializedParams): void => {

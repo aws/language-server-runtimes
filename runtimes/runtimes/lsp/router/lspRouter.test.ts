@@ -18,7 +18,7 @@ import assert from 'assert'
 import sinon from 'sinon'
 import { PartialInitializeResult, InitializeParams } from '../../../server-interface/lsp'
 import { LspServer } from './lspServer'
-import { Logging } from '../../../server-interface'
+import { CredentialsType, Logging } from '../../../server-interface'
 import { Encoding } from '../../encoding'
 
 describe('LspRouter', () => {
@@ -355,6 +355,22 @@ describe('LspRouter', () => {
         })
     })
 
+    describe('onCredentialsDeletion', () => {
+        it('should send notifyCredentialsDeletion to all servers', () => {
+            const params: CredentialsType = 'bearer'
+
+            const spy1 = sandbox.spy()
+            const spy2 = sandbox.spy()
+            const server1 = newServer({ credentialsDeleteHandler: spy1 })
+            const server2 = newServer({ credentialsDeleteHandler: spy2 })
+
+            lspRouter.servers = [server1, server2]
+            lspRouter.onCredentialsDeletion(params)
+            assert(spy1.calledWith(params))
+            assert(spy2.calledWith(params))
+        })
+    })
+
     describe('handleGetConfigurationFromServer', () => {
         it('should return the result from the first server that handles the request', async () => {
             const initHandler1 = () => {
@@ -622,6 +638,7 @@ describe('LspRouter', () => {
         initializeHandler,
         initializedHandler,
         updateConfigurationHandler,
+        credentialsDeleteHandler,
     }: {
         lspConnection?: Connection
         didChangeConfigurationHandler?: any
@@ -630,6 +647,7 @@ describe('LspRouter', () => {
         initializeHandler?: any
         initializedHandler?: any
         updateConfigurationHandler?: any
+        credentialsDeleteHandler?: any
     }) {
         const server = new LspServer(lspConnection || stubLspConnection(), encoding, logging)
         server.setDidChangeConfigurationHandler(didChangeConfigurationHandler)
@@ -638,6 +656,7 @@ describe('LspRouter', () => {
         server.setInitializeHandler(initializeHandler)
         server.setInitializedHandler(initializedHandler)
         server.setUpdateConfigurationHandler(updateConfigurationHandler)
+        server.setCredentialsDeleteHandler(credentialsDeleteHandler)
         return server
     }
 })

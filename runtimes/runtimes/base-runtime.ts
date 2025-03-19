@@ -229,6 +229,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 ): T => new Ctor({ ...current_config }),
             }
         )
+        credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
 
         return s({
             chat,
