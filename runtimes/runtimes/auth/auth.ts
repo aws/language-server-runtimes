@@ -156,7 +156,6 @@ export class Auth {
             this.connectionMetadata = metadata
             return
         }
-
         this.connection.console.warn(
             'Runtime: metadata for bearer token connection was not provided - requesting from client'
         )
