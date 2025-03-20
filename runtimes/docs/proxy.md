@@ -3,6 +3,12 @@
 ## Overview
 The proxy configuration feature enables AWS SDK to work in environments with various HTTP proxy setups, including both explicitly configured proxies and transparent network proxies.
 
+There are two versions of proxy configuration available:
+- Old mechanism (default)
+- New experimental mechanism that can be enabled by setting `EXPERIMENTAL_HTTP_PROXY_SUPPORT=true` in environmental variables
+
+The following documentation details the new experimental mechanism.
+
 ## Certificate Management
 The system aggregates SSL/TLS certificates from multiple sources:
 1. Operating System certificates (automatically loaded)
