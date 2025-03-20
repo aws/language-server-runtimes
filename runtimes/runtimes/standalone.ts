@@ -67,13 +67,14 @@ import { LspServer } from './lsp/router/lspServer'
 import { BaseChat } from './chat/baseChat'
 import { checkAWSConfigFile } from './util/sharedConfigFile'
 import { getServerDataDirPath } from './util/serverDataDirPath'
-import { ProxyConfigManager } from './util/standalone/proxyUtil'
+import { ProxyConfigManager } from './util/standalone/experimentalProxyUtil'
 import { Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getTelemetryLspServer } from './util/telemetryLspServer'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
+import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -356,14 +357,21 @@ export const standalone = (props: RuntimeProps) => {
                 },
             }
 
+            const isExperimentalProxy = process.env.EXPERIMENTAL_HTTP_PROXY_SUPPORT === 'true'
             const sdkInitializator: SDKInitializator = Object.assign(
                 // Default v3 implementation as the callable function
                 <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
                     try {
+                        const requestHandler = isExperimentalProxy
+                            ? sdkProxyConfigManager.getV3ProxyConfig()
+                            : makeProxyConfigv3Standalone(workspace)
+
+                        logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
+
                         // setup proxy
                         let instance = new Ctor({
                             ...current_config,
-                            requestHandler: sdkProxyConfigManager.getV3ProxyConfig(),
+                            requestHandler: requestHandler,
                         })
                         logging.log(`Configured AWS SDK V3 Proxy for ${Ctor.name}`)
                         return instance
@@ -392,7 +400,13 @@ export const standalone = (props: RuntimeProps) => {
                         let instance = new Ctor({ ...current_config })
 
                         try {
-                            instance.config.update(sdkProxyConfigManager.getV2ProxyConfig())
+                            const configOptions = isExperimentalProxy
+                                ? sdkProxyConfigManager.getV2ProxyConfig()
+                                : makeProxyConfigv2Standalone(workspace)
+
+                            logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
+
+                            instance.config.update(configOptions)
                             logging.log(`Configured AWS SDK V2 Proxy for ${Ctor.name}`)
                             return instance
                         } catch (err) {
