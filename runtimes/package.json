@@ -51,7 +51,7 @@
         "hpagent": "^1.2.0",
         "jose": "^5.9.6",
         "mac-ca": "^3.1.1",
-        "rxjs": "^7.8.1",
+        "rxjs": "^7.8.2",
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-protocol": "^3.17.5",
         "win-ca": "^3.5.1"
