@@ -17,6 +17,14 @@ Monorepo
     - [server-interface/](runtimes/server-interface) - server type definition to create language servers
 - [types/](types) - type definitions for the runtimes
 
+## Artifacts
+
+This repo produces these NPM packages:
+
+- https://www.npmjs.com/package/@aws/chat-client-ui-types
+- https://www.npmjs.com/package/@aws/language-server-runtimes
+- https://www.npmjs.com/package/@aws/language-server-runtimes-types
+
 ## Contributing
 
 - [How to contribute](CONTRIBUTING.md#contributing)
