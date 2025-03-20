@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.47](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.46...language-server-runtimes/v0.2.47) (2025-03-20)
+
+
+### Features
+
+* extended protocol for conversation-based agents experience support ([#368](https://github.com/aws/language-server-runtimes/issues/368)) ([0bc496e](https://github.com/aws/language-server-runtimes/commit/0bc496ea8d9411b68efe7901168f5f8257a61a8e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.4 to ^0.1.5
+
 ## [0.2.46](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.45...language-server-runtimes/v0.2.46) (2025-03-20)
 
 
