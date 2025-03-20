@@ -31,6 +31,13 @@ The server runtime implementation acts as a proxy for LSP methods, which means i
 | onInlineCompletion | Yes     | Provide list of inline completion suggestions from the Server                                                                         |
 | onExecuteCommand   | Yes     | Executes a custom command provided by the Server. Servers are advised to document custom commands they support in the package README. |
 
+##### LSP Workspace
+
+| Description                          | Method                            | Params                         | Method type                                                                                                                     | Response Type   |
+| ------------------------------------ | --------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Request to select workspace item (folder, file) with the selected items returned | `aws/selectWorkspaceItem`         | `SelectWorkspaceItemParams`                   | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Server to Client           | `SelectWorkspaceItemResult`    |
+| Sent notification to open file differences for the new file content. Supports new, updated or removed files. | `aws/openFileDiff`                | `OpenFileDiffParams`                | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client          | n/a |
+
 ##### LSP Extensions
 
 | Method Name                         | Method                                            | Params                                    | Method Type                                                                                                                     | Response Type                        | Notes                                                                                                     |
@@ -159,21 +166,24 @@ The runtime supports chat by default
 
 | Description                          | Method                            | Params                         | Method type                                                                                                                     | Response Type   |
 | ------------------------------------ | --------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| Send chat prompt                     | `aws/chat/sendChatPrompt`         | `ChatParams`                   | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `ChatResult`    |
-| End conversation                     | `aws/chat/endChat`                | `EndChatParams`                | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `EndChatResult` |
-| Send chat quick action               | `aws/chat/sendChatQuickAction`    | `QuickActionParams`            | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage)           | `ChatResult`    |
-| Send chat UI ready event             | `aws/chat/ready`                  | n/a                            | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send chat vote event                 | `aws/chat/vote`                   | `VoteParams`                   | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send chat feedback event             | `aws/chat/feedback`               | `FeedbackParams`               | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send tab add event                   | `aws/chat/tabAdd`                 | `TabAddParams`                 | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send active tab change event         | `aws/chat/tabChange`              | `TabChangeParams`              | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send tab remove event                | `aws/chat/tabRemove`              | `TabRemoveParams`              | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send insert to cursor position event | `aws/chat/insertToCursorPosition` | `InsertToCursorPositionParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send copy code to clipboard event    | `aws/chat/copyCodeToClipboard`    | `CopyCodeToClipboardParams`    | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send link click event                | `aws/chat/linkClick`              | `LinkClickParams`              | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send info link click event           | `aws/chat/infoLinkClick`          | `InfoLinkClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send source link click event         | `aws/chat/sourceLinkClick`        | `SourceLinkClickParams`        | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
-| Send followup chat item click event  | `aws/chat/followUpClick`          | `FollowUpClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a             |
+| Send chat prompt. Supports streaming chat message content to client. Response is optional - this event can be used to only trigger chat prompt request and then `aws/chat/sendChatUpdate` can be used to send chat updates asyncronously. | `aws/chat/sendChatPrompt`         | `ChatParams`                   | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server          | `ChatResult`    |
+| End conversation                     | `aws/chat/endChat`                | `EndChatParams`                | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server          | `EndChatResult` |
+| Send chat quick action. Response is optional - this event can be used to only trigger chat quick action request and then `aws/chat/sendChatUpdate` can be used to send chat updates asyncronously. | `aws/chat/sendChatQuickAction`    | `QuickActionParams`            | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server          | `ChatResult`    |
+| Send chat UI ready event             | `aws/chat/ready`                  | n/a                            | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send chat vote event                 | `aws/chat/vote`                   | `VoteParams`                   | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send chat feedback event             | `aws/chat/feedback`               | `FeedbackParams`               | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send tab add event                   | `aws/chat/tabAdd`                 | `TabAddParams`                 | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send active tab change event         | `aws/chat/tabChange`              | `TabChangeParams`              | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send tab remove event                | `aws/chat/tabRemove`              | `TabRemoveParams`              | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send insert to cursor position event | `aws/chat/insertToCursorPosition` | `InsertToCursorPositionParams` | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send copy code to clipboard event    | `aws/chat/copyCodeToClipboard`    | `CopyCodeToClipboardParams`    | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send link click event                | `aws/chat/linkClick`              | `LinkClickParams`              | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send info link click event           | `aws/chat/infoLinkClick`          | `InfoLinkClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send source link click event         | `aws/chat/sourceLinkClick`        | `SourceLinkClickParams`        | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send followup chat item click event  | `aws/chat/followUpClick`          | `FollowUpClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send request to open existing tab, if `tabId` is passed or create and open new tab, if `tabId` is not passed. For the new tab, it's also possible to set tab state and content.  | `aws/chat/openTab`          | `OpenTabParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Server to Client | `OpenTabResult`             |
+| Send chat messages and tab state update to specific tab. Depending on new vs existing`messageId` within `ChatMessage` message, the massgage will be added or updated. | `aws/chat/sendChatUpdate`          | `ChatUpdateParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client | n/a             |
+| Send file or file action click event. | `aws/chat/fileClick`          | `FileClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
 
 ```ts
 export interface ChatPrompt {
@@ -182,25 +192,15 @@ export interface ChatPrompt {
     command?: string
 }
 
-export interface ChatParams {
-    tabId: string
-    prompt: ChatPrompt
-    partialResultToken?: ProgressToken
+interface PartialResultParams {
+    partialResultToken?: number | string
 }
 
-export interface ChatResult {
-    body?: string
-    messageId?: string
-    canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
-    relatedContent?: {
-        title?: string
-        content: SourceLink[]
-    }
-    followUp?: {
-        text?: string
-        options?: ChatItemAction[]
-    }
-    codeReference?: ReferenceTrackerInformation[]
+export interface ChatParams extends PartialResultParams {
+    tabId: string
+    prompt: ChatPrompt
+    cursorState?: CursorState[]
+    textDocument?: TextDocumentIdentifier
 }
 ```
 

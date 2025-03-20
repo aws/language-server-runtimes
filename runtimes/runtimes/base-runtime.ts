@@ -34,6 +34,10 @@ import {
     ShowMessageRequest,
     ShowDocumentRequest,
     openTabRequestType,
+    openFileDiffNotificationType,
+    selectWorkspaceItemRequestType,
+    chatUpdateNotificationType,
+    fileClickNotificationType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -135,6 +139,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
         openTab: params => lspConnection.sendRequest(openTabRequestType.method, params),
+        sendChatUpdate: params => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
+        onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
@@ -195,6 +201,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
                 onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
                 onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
+                selectWorkspaceItem: params => lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
+                openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
             },
             window: {
                 showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),

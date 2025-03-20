@@ -54,6 +54,9 @@ import {
     DidChangeDependencyPathsParams,
     UpdateConfigurationParams,
     InlineCompletionWithReferencesParams,
+    OpenFileDiffParams,
+    SelectWorkspaceItemParams,
+    SelectWorkspaceItemResult,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -136,6 +139,10 @@ export type Lsp = {
         onDidDeleteFiles: (handler: NotificationHandler<DeleteFilesParams>) => void
         onDidRenameFiles: (handler: NotificationHandler<RenameFilesParams>) => void
         onUpdateConfiguration: (handler: RequestHandler<UpdateConfigurationParams, void, void>) => void
+        selectWorkspaceItem: (
+            handler: RequestHandler<SelectWorkspaceItemParams, SelectWorkspaceItemResult | undefined | null, void>
+        ) => void
+        openFileDiff: (params: OpenFileDiffParams) => void
     }
     window: {
         showMessage: (params: ShowMessageParams) => Promise<void>

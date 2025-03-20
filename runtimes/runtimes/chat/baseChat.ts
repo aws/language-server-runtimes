@@ -32,6 +32,10 @@ import {
     OpenTabParams,
     OpenTabResult,
     openTabRequestType,
+    ChatUpdateParams,
+    chatUpdateNotificationType,
+    FileClickParams,
+    fileClickNotificationType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -92,5 +96,13 @@ export class BaseChat implements Chat {
 
     public openTab(params: OpenTabParams): Promise<OpenTabResult> {
         return this.connection.sendRequest(openTabRequestType.method, params)
+    }
+
+    public sendChatUpdate(params: ChatUpdateParams) {
+        this.connection.sendNotification(chatUpdateNotificationType.method, params)
+    }
+
+    public onFileClicked(handler: NotificationHandler<FileClickParams>) {
+        this.connection.onNotification(fileClickNotificationType.method, handler)
     }
 }

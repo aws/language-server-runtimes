@@ -21,6 +21,8 @@ import {
     CancellationToken,
     GetSsoTokenParams,
     didChangeDependencyPathsNotificationType,
+    openFileDiffNotificationType,
+    selectWorkspaceItemRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -320,6 +322,9 @@ export const standalone = (props: RuntimeProps) => {
                     onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
                     onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
                     onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
+                    selectWorkspaceItem: params =>
+                        lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
+                    openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
                 },
                 window: {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
