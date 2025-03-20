@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.46](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.45...language-server-runtimes/v0.2.46) (2025-03-20)
+
+
+### Features
+
+* empty line PR to release https://github.com/aws/language-server-runtimes/pull/379 ([#382](https://github.com/aws/language-server-runtimes/issues/382)) ([2663a5e](https://github.com/aws/language-server-runtimes/commit/2663a5e748e1b63e5b422968af562fd39f9a0da2))
+
 ## [0.2.45](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.44...language-server-runtimes/v0.2.45) (2025-03-18)
 
 
