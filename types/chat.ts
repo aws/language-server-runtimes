@@ -134,6 +134,7 @@ export interface QuickActions {
 
 export interface TabData {
     placeholderText?: string
+    /** New or updated messages (depending on `messageId`). */
     messages: ChatMessage[]
 }
 
