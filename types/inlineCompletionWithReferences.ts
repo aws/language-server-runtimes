@@ -1,7 +1,7 @@
 import { InlineCompletionItem } from 'vscode-languageserver-types'
 
 /**
- * Extend InlineCompletionItem to include optional references.
+ * Extend InlineCompletionItem to include optional references and imports.
  */
 export type InlineCompletionItemWithReferences = InlineCompletionItem & {
     /**
@@ -17,6 +17,10 @@ export type InlineCompletionItemWithReferences = InlineCompletionItem & {
             startCharacter?: number
             endCharacter?: number
         }
+    }[]
+
+    mostRelevantMissingImports?: {
+        statement?: string
     }[]
 }
 /**
