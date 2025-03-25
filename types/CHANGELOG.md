@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.5...language-server-runtimes-types/v0.1.6) (2025-03-25)
+
+
+### Features
+
+* **types:** add imports to InlineCompletionItemWithReferences type ([#388](https://github.com/aws/language-server-runtimes/issues/388)) ([e16977c](https://github.com/aws/language-server-runtimes/commit/e16977c0da3c343377079e3686f4d637363427d8))
+
 ## [0.1.5](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.4...language-server-runtimes-types/v0.1.5) (2025-03-20)
 
 
