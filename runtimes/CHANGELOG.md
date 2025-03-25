@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.48](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.47...language-server-runtimes/v0.2.48) (2025-03-25)
+
+
+### Bug Fixes
+
+* put extended proxy behind feature flag ([#385](https://github.com/aws/language-server-runtimes/issues/385)) ([41b01bd](https://github.com/aws/language-server-runtimes/commit/41b01bd0131afc76c2dd52f5d3b763751352ca3e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.5 to ^0.1.6
+
 ## [0.2.47](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.46...language-server-runtimes/v0.2.47) (2025-03-20)
 
 
