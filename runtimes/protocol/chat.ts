@@ -39,6 +39,8 @@ import {
     FILE_CLICK_NOTIFICATION_METHOD,
     ChatUpdateParams,
     FileClickParams,
+    INLINE_CHAT_REQUEST_METHOD,
+    InlineChatParams,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -48,6 +50,13 @@ export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
     void,
     void
 >(CHAT_REQUEST_METHOD)
+export const inlineChatRequestType = new AutoParameterStructuresProtocolRequestType<
+    InlineChatParams | EncryptedChatParams,
+    ChatResult | string,
+    ChatResult | string,
+    void,
+    void
+>(INLINE_CHAT_REQUEST_METHOD)
 export const endChatRequestType = new ProtocolRequestType<EndChatParams, EndChatResult, never, void, void>(
     END_CHAT_REQUEST_METHOD
 )
