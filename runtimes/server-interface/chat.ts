@@ -20,6 +20,7 @@ import {
     OpenTabResult,
     ChatUpdateParams,
     FileClickParams,
+    InlineChatParams,
 } from '../protocol'
 
 /**
@@ -28,6 +29,7 @@ import {
 export type Chat = {
     // Requests
     onChatPrompt: (handler: RequestHandler<ChatParams, ChatResult | undefined | null, ChatResult>) => void
+    onInlineChatPrompt: (handler: RequestHandler<InlineChatParams, ChatResult | undefined | null, ChatResult>) => void
     onEndChat: (handler: RequestHandler<EndChatParams, EndChatResult, void>) => void
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
