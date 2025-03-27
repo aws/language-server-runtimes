@@ -1,0 +1,52 @@
+name: License Check
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, reopened, ready_for_review, synchronize]
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install dependencies
+      run: |
+        npm install -g license-checker
+
+    - name: Run license check
+      run: |
+        #!/bin/bash
+
+        set -euo pipefail
+
+        EXCLUDED_PACKAGES=("@amzn/eevee-service" "@aws/lsp-codewhisperer" "@aws/lsp-core" "@c9/eevee-scanner" "@amzn/dexp-runtime-server-build-configuration")
+        EXCLUDED_LICENSES="MIT,Apache-2.0,BSD-2-Clause,BSD-3-Clause,ISC,0BSD,Python-2.0,BlueOak-1.0.0"
+
+        process_packages() {
+          local output="$1"
+          IFS=$'\n'
+
+          for line in $output; do
+            if [[ "$line" =~ ^├─\ (.+)@ ]]; then
+              package_name="${BASH_REMATCH[1]}"
+
+              if [[ ! "${EXCLUDED_PACKAGES[*]}" =~ "${package_name}" ]]; then
+                echo "License for package '$package_name' is either not pre-approved or package is not in the excluded package list."
+                exit 1
+              fi
+            fi
+          done
+
+          IFS=$' \t\n'
+        }
+
+        LICENSE_CHECK_RESULT=$(license-checker --production --exclude $EXCLUDED_LICENSES)
+        process_packages "$LICENSE_CHECK_RESULT"
