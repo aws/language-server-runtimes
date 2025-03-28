@@ -1,0 +1,45 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "ErrorEvent": {
+            "title": "ErrorEvent",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["baseInfo", "errorAttr"],
+            "properties": {
+                "baseInfo": {
+                    "type": "object",
+                    "$ref": "./base-event-schema.json"
+                },
+                "errorAttr": {
+                    "type": "object",
+                    "$ref": "#/definitions/ErrorEventAttr"
+                }
+            }
+        },
+        "ErrorEventAttr": {
+            "title": "ErrorEventAttr",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["errorName", "errorType"],
+            "properties": {
+                "errorName": {
+                    "type": "string"
+                },
+                "errorType": {
+                    "type": "string",
+                    "enum": ["caughtError", "uncaughtException", "unhandledRejection", "other"]
+                },
+                "errorCode": {
+                    "type": "string"
+                },
+                "errorMessage": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

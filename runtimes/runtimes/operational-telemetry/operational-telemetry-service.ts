@@ -1,6 +1,6 @@
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AwsMetricExporter } from './aws-metrics-exporter'
-import { OperationalTelemetry } from './operational-telemetry'
+import { EventName, OperationalEventAttr, OperationalTelemetry } from './operational-telemetry'
 import { diag, Attributes, DiagLogLevel, trace, metrics } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
@@ -151,15 +151,10 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         }
     }
 
-    recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void {
-        const tracer = trace.getTracer(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
-
-        const span = tracer.startSpan(eventType)
-        if (attributes) {
-            for (const [key, value] of Object.entries(attributes)) {
-                span.setAttribute(key, value)
-            }
-        }
+    recordEvent(eventName: EventName, eventAttr: OperationalEventAttr, scopeName?: string): void {
+        const tracer = trace.getTracer(scopeName ?? this.RUNTIMES_SCOPE_NAME)
+        const span = tracer.startSpan(eventName)
+        span.setAttribute('event.attributes', JSON.stringify(eventAttr))
         span.end()
     }
 
