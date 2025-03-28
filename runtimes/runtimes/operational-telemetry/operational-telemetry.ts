@@ -65,3 +65,7 @@ export class OperationalTelemetryProvider {
         return new ScopedTelemetryService(scopeName, OperationalTelemetryProvider.telemetryInstance)
     }
 }
+
+export enum TELEMETRY_SCOPES {
+    RUNTIMES = 'language-server-runtimes',
+}

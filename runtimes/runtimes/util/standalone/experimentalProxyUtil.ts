@@ -12,8 +12,7 @@ import { HttpsProxyAgent } from 'hpagent'
 import { NodeHttpHandler } from '@smithy/node-http-handler'
 import { readMacosCertificates, readLinuxCertificates, readWindowsCertificates } from './certificatesReaders'
 import { Telemetry } from '../../../server-interface'
-import { OperationalTelemetryProvider } from '../../operational-telemetry/operational-telemetry'
-import { getRuntimeScopeName } from '../telemetryLspServer'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
 
 export class ProxyConfigManager {
     /**
@@ -77,11 +76,14 @@ export class ProxyConfigManager {
 
             return cert
         } catch (error: any) {
-            OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName()).recordEvent('CaughtErrorEvent', {
-                errorName: error?.name ?? 'unknown',
-                errorCode: error?.code ?? '',
-                message: 'Failed to read certificates from given path',
-            })
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
+                'CaughtErrorEvent',
+                {
+                    errorName: error?.name ?? 'unknown',
+                    errorCode: error?.code ?? '',
+                    message: 'Failed to read certificates from given path',
+                }
+            )
             console.warn(`Failed to read certificates from ${path}:`, error)
         }
     }
@@ -123,11 +125,14 @@ export class ProxyConfigManager {
                 certificates.push(...certs)
             }
         } catch (error: any) {
-            OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName()).recordEvent('CaughtErrorEvent', {
-                errorName: error?.name ?? 'unknown',
-                errorCode: error?.code ?? '',
-                message: 'Failed to read system certificates',
-            })
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
+                'CaughtErrorEvent',
+                {
+                    errorName: error?.name ?? 'unknown',
+                    errorCode: error?.code ?? '',
+                    message: 'Failed to read system certificates',
+                }
+            )
             console.warn('Failed to read system certificates:', error)
         }
 
@@ -215,7 +220,7 @@ export class ProxyConfigManager {
 
                 return certDate > Date.now()
             } catch (error: any) {
-                OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName()).recordEvent(
+                OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
                     'CaughtErrorEvent',
                     {
                         errorName: error?.name ?? 'unknown',

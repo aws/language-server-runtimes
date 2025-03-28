@@ -16,8 +16,7 @@ import {
 } from '../../protocol'
 import { CredentialsEncoding, encryptObjectWithKey, isMessageJWEEncrypted } from '../auth/standalone/encryption'
 import { BaseChat } from './baseChat'
-import { OperationalTelemetryProvider } from '../operational-telemetry/operational-telemetry'
-import { getRuntimeScopeName } from '../util/telemetryLspServer'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-telemetry/operational-telemetry'
 
 // Default JWE configuration
 const KEY_MANAGEMENT_ALGORITHM = 'dir'
@@ -71,7 +70,7 @@ export class EncryptedChat extends BaseChat {
                         decryptedRequest = await this.decodeRequest<DecryptedRequestType>(request)
                     } catch (err: any) {
                         let errorMessage = 'Request could not be decrypted'
-                        OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName()).recordEvent(
+                        OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
                             'CaughtErrorEvent',
                             {
                                 errorName: err?.name ?? 'unknown',
