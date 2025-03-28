@@ -7,9 +7,18 @@
             "allOf": [
                 { "$ref": "./base-event-schema.json" },
                 {
-                    "required": ["errorType"],
+                    "required": ["errorName"],
                     "properties": {
-                        "errorType": {
+                        "errorName": {
+                            "type": "string"
+                        },
+                        "errorCode": {
+                            "type": "string"
+                        },
+                        "message": {
+                            "type": "string"
+                        },
+                        "errorMessage": {
                             "type": "string"
                         }
                     }

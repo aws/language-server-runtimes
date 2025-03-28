@@ -12,6 +12,32 @@ const DEFAULT_TELEMETRY_GATEWAY_ENDPOINT = ''
 const DEFAULT_TELEMETRY_COGNITO_REGION = ''
 const DEFAULT_TELEMETRY_COGNITO_POOL_ID = ''
 
+const RUNTIMES_SCOPE_NAME = 'language-server-runtimes'
+
+function setMemoryUsageTelemetry() {
+    const optel = OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName())
+    optel.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().user, { type: 'userCpuUsage' })
+    optel.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().user, { type: 'systemCpuUsage' })
+    optel.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().heapUsed, { type: 'heapUsed' })
+    optel.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().heapTotal, { type: 'heapTotal' })
+    optel.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().rss, { type: 'rss' })
+}
+
+function setServerCrashTelemetryListeners() {
+    const optel = OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName())
+
+    // Handles both 'uncaughtException' and 'unhandledRejection'
+    process.on('uncaughtExceptionMonitor', async (err, origin) => {
+        optel.recordEvent('ServerCrashEvent', {
+            crashType: origin,
+        })
+    })
+}
+
+export function getRuntimeScopeName() {
+    return RUNTIMES_SCOPE_NAME
+}
+
 export function getTelemetryLspServer(
     lspConnection: Connection,
     encoding: Encoding,
@@ -41,6 +67,9 @@ export function getTelemetryLspServer(
 
         // OperationalTelemetryProvider.setTelemetryInstance(optel)
 
+        setServerCrashTelemetryListeners()
+        setMemoryUsageTelemetry()
+
         return {
             capabilities: {},
         }
@@ -53,6 +82,7 @@ export function getTelemetryLspServer(
 
         if (typeof optOut === 'boolean') {
             OperationalTelemetryProvider.getTelemetryForScope('').toggleOptOut(optOut)
+            setMemoryUsageTelemetry()
         }
     })
 

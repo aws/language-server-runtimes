@@ -79,6 +79,18 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         if (!this.telemetryOptOut) {
             this.startupSdk()
         }
+
+        // Registering process events callbacks once
+        process.on('uncaughtException', async () => {
+            // Metrics and spans are force flushed to their exporters on shutdown.
+            await this.shutdownSdk()
+            process.exit(1)
+        })
+
+        process.on('beforeExit', async () => {
+            // Metrics and spans are force flushed to their exporters on shutdown.
+            await this.shutdownSdk()
+        })
     }
 
     toggleOptOut(telemetryOptOut: boolean): void {
@@ -129,15 +141,14 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         })
 
         this.sdk.start()
-
-        process.on('beforeExit', async () => {
-            // Metrics and spans are force flushed to their exporters on shutdown.
-            this.sdk?.shutdown()
-        })
     }
 
-    private shutdownSdk() {
-        this.sdk?.shutdown()
+    private async shutdownSdk() {
+        try {
+            await this.sdk?.shutdown()
+        } catch (error) {
+            console.error('Error during opentelemetry SDK shutdown:', error)
+        }
     }
 
     recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void {

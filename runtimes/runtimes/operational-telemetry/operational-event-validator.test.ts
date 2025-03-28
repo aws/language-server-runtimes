@@ -13,7 +13,7 @@ describe('OperationalEventValidator', () => {
             const event = {
                 name: 'CaughtErrorEvent',
                 timestamp: 100000,
-                errorType: 'Error',
+                errorName: 'Error',
             }
 
             const result = validator.validateEvent(event)
