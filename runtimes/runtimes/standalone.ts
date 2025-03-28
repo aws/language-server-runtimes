@@ -75,6 +75,7 @@ import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getTelemetryLspServer } from './util/telemetryLspServer'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
+import { newAgent } from './agent'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -430,6 +431,8 @@ export const standalone = (props: RuntimeProps) => {
 
             credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
 
+            const agent = newAgent()
+
             return s({
                 chat,
                 credentialsProvider,
@@ -441,6 +444,7 @@ export const standalone = (props: RuntimeProps) => {
                 identityManagement,
                 notification: lspServer.notification,
                 sdkInitializator: sdkInitializator,
+                agent,
             })
         })
 
