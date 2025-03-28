@@ -73,6 +73,7 @@ import { LoggingServer } from './lsp/router/loggingServer'
 import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
+import { newAgent } from './agent'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -241,6 +242,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         )
         credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
 
+        const agent = newAgent()
+
         return s({
             chat,
             credentialsProvider,
@@ -252,6 +255,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             identityManagement,
             notification: lspServer.notification,
             sdkInitializator: sdkInitializator,
+            agent,
         })
     })
 
