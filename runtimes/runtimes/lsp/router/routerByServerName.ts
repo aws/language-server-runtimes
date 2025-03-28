@@ -1,7 +1,6 @@
 import { EventIdentifier, FollowupIdentifier, NotificationHandler } from '../../../protocol'
 import { Encoding } from '../../encoding'
-import { OperationalTelemetryProvider } from '../../operational-telemetry/operational-telemetry'
-import { getRuntimeScopeName } from '../../util/telemetryLspServer'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
 
 type NotificationId = {
     serverName: string
@@ -53,11 +52,14 @@ export class RouterByServerName<P extends Partial<EventIdentifier>, F extends Fo
         try {
             return JSON.parse(idJson) as NotificationId
         } catch (error: any) {
-            OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName()).recordEvent('CaughtErrorEvent', {
-                errorName: error?.name ?? 'unknown',
-                errorCode: error?.code ?? '',
-                message: 'Failed to parse server name in LSP Router',
-            })
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
+                'CaughtErrorEvent',
+                {
+                    errorName: error?.name ?? 'unknown',
+                    errorCode: error?.code ?? '',
+                    message: 'Failed to parse server name in LSP Router',
+                }
+            )
             return null
         }
     }

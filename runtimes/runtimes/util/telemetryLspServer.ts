@@ -2,7 +2,7 @@ import { Connection } from 'vscode-languageserver/node'
 import { Encoding } from '../encoding'
 import { Logging } from '../../server-interface/logging'
 import { LspServer } from '../lsp/router/lspServer'
-import { OperationalTelemetryProvider } from '../operational-telemetry/operational-telemetry'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-telemetry/operational-telemetry'
 import { RuntimeProps } from '../runtime'
 import { OperationalTelemetryService } from '../operational-telemetry/operational-telemetry-service'
 import { InitializeParams, InitializeResult } from '../../protocol'
@@ -12,10 +12,8 @@ const DEFAULT_TELEMETRY_GATEWAY_ENDPOINT = ''
 const DEFAULT_TELEMETRY_COGNITO_REGION = ''
 const DEFAULT_TELEMETRY_COGNITO_POOL_ID = ''
 
-const RUNTIMES_SCOPE_NAME = 'language-server-runtimes'
-
 function setMemoryUsageTelemetry() {
-    const optel = OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName())
+    const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
     optel.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().user, { type: 'userCpuUsage' })
     optel.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().user, { type: 'systemCpuUsage' })
     optel.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().heapUsed, { type: 'heapUsed' })
@@ -24,7 +22,7 @@ function setMemoryUsageTelemetry() {
 }
 
 function setServerCrashTelemetryListeners() {
-    const optel = OperationalTelemetryProvider.getTelemetryForScope(getRuntimeScopeName())
+    const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
 
     // Handles both 'uncaughtException' and 'unhandledRejection'
     process.on('uncaughtExceptionMonitor', async (err, origin) => {
@@ -32,10 +30,6 @@ function setServerCrashTelemetryListeners() {
             crashType: origin,
         })
     })
-}
-
-export function getRuntimeScopeName() {
-    return RUNTIMES_SCOPE_NAME
 }
 
 export function getTelemetryLspServer(
