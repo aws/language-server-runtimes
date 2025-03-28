@@ -31,7 +31,7 @@ describe('AWSSpanExporter', () => {
             endTime: [1234567890, 838000000],
             name: 'CaughtErrorEvent',
             attributes: {
-                errorType: 'TestError',
+                errorName: 'TestError',
             },
         } as any,
         {
@@ -143,7 +143,7 @@ describe('AWSSpanExporter', () => {
                             {
                                 name: 'CaughtErrorEvent',
                                 timestamp: sinon.match.number,
-                                errorType: 'TestError',
+                                errorName: 'TestError',
                             },
                             {
                                 name: 'ServerCrashEvent',
