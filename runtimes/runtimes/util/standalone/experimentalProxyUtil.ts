@@ -76,14 +76,12 @@ export class ProxyConfigManager {
 
             return cert
         } catch (error: any) {
-            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
-                'CaughtErrorEvent',
-                {
-                    errorName: error?.name ?? 'unknown',
-                    errorCode: error?.code ?? '',
-                    message: 'Failed to read certificates from given path',
-                }
-            )
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+                errorType: 'caughtError',
+                errorName: error?.name ?? 'unknown',
+                errorCode: error?.code ?? '',
+                message: 'Failed to read certificates from given path',
+            })
             console.warn(`Failed to read certificates from ${path}:`, error)
         }
     }
@@ -125,14 +123,12 @@ export class ProxyConfigManager {
                 certificates.push(...certs)
             }
         } catch (error: any) {
-            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
-                'CaughtErrorEvent',
-                {
-                    errorName: error?.name ?? 'unknown',
-                    errorCode: error?.code ?? '',
-                    message: 'Failed to read system certificates',
-                }
-            )
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+                errorType: 'caughtError',
+                errorName: error?.name ?? 'unknown',
+                errorCode: error?.code ?? '',
+                message: 'Failed to read system certificates',
+            })
             console.warn('Failed to read system certificates:', error)
         }
 
@@ -220,14 +216,12 @@ export class ProxyConfigManager {
 
                 return certDate > Date.now()
             } catch (error: any) {
-                OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
-                    'CaughtErrorEvent',
-                    {
-                        errorName: error?.name ?? 'unknown',
-                        errorCode: error?.code ?? '',
-                        message: 'Error parsing certificate',
-                    }
-                )
+                OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+                    errorType: 'caughtError',
+                    errorName: error?.name ?? 'unknown',
+                    errorCode: error?.code ?? '',
+                    message: 'Error parsing certificate',
+                })
                 console.warn(`Error parsing certificate: ${error}`)
                 return false
             }

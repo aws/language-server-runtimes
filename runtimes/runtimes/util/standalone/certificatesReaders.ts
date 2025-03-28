@@ -60,7 +60,8 @@ export function readLinuxCertificates(): string[] {
     if (!hasSeenCertificate && firstError) {
         const errorMessage = 'Error when reading Linux certificates'
         console.log(errorMessage)
-        OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('CaughtErrorEvent', {
+        OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+            errorType: 'caughtError',
             errorName: firstError?.name ?? 'unknown',
             errorCode: '',
             message: errorMessage,

@@ -29,9 +29,9 @@ describe('AWSSpanExporter', () => {
                 name: 'test-scope',
             },
             endTime: [1234567890, 838000000],
-            name: 'CaughtErrorEvent',
+            name: 'ErrorEvent',
             attributes: {
-                errorName: 'TestError',
+                'event.attributes': `{"errorName":"Error1","errorType":"caughtError"}`,
             },
         } as any,
         {
@@ -46,9 +46,9 @@ describe('AWSSpanExporter', () => {
                 name: 'test-scope',
             },
             endTime: [1234567890, 838000000],
-            name: 'ServerCrashEvent',
+            name: 'ErrorEvent',
             attributes: {
-                crashType: 'unhandledException',
+                'event.attributes': `{"errorName":"Error2","errorType":"caughtError"}`,
             },
         } as any,
     ]
@@ -141,14 +141,24 @@ describe('AWSSpanExporter', () => {
                         scopeName: 'test-scope',
                         data: [
                             {
-                                name: 'CaughtErrorEvent',
-                                timestamp: sinon.match.number,
-                                errorName: 'TestError',
+                                baseInfo: {
+                                    name: 'ErrorEvent',
+                                    timestamp: sinon.match.number,
+                                },
+                                errorAttr: {
+                                    errorName: 'Error1',
+                                    errorType: 'caughtError',
+                                },
                             },
                             {
-                                name: 'ServerCrashEvent',
-                                timestamp: sinon.match.number,
-                                crashType: 'unhandledException',
+                                baseInfo: {
+                                    name: 'ErrorEvent',
+                                    timestamp: sinon.match.number,
+                                },
+                                errorAttr: {
+                                    errorName: 'Error2',
+                                    errorType: 'caughtError',
+                                },
                             },
                         ],
                     },
