@@ -1,6 +1,6 @@
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AwsMetricExporter } from './aws-metrics-exporter'
-import { OperationalTelemetry } from './operational-telemetry'
+import { EventName, OperationalEventAttr, OperationalTelemetry } from './operational-telemetry'
 import { diag, Attributes, DiagLogLevel, trace, metrics } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
@@ -79,6 +79,18 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         if (!this.telemetryOptOut) {
             this.startupSdk()
         }
+
+        // Registering process events callbacks once
+        process.on('uncaughtException', async () => {
+            // Metrics and spans are force flushed to their exporters on shutdown.
+            await this.shutdownSdk()
+            process.exit(1)
+        })
+
+        process.on('beforeExit', async () => {
+            // Metrics and spans are force flushed to their exporters on shutdown.
+            await this.shutdownSdk()
+        })
     }
 
     toggleOptOut(telemetryOptOut: boolean): void {
@@ -129,26 +141,20 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         })
 
         this.sdk.start()
-
-        process.on('beforeExit', async () => {
-            // Metrics and spans are force flushed to their exporters on shutdown.
-            this.sdk?.shutdown()
-        })
     }
 
-    private shutdownSdk() {
-        this.sdk?.shutdown()
-    }
-
-    recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void {
-        const tracer = trace.getTracer(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
-
-        const span = tracer.startSpan(eventType)
-        if (attributes) {
-            for (const [key, value] of Object.entries(attributes)) {
-                span.setAttribute(key, value)
-            }
+    private async shutdownSdk() {
+        try {
+            await this.sdk?.shutdown()
+        } catch (error) {
+            console.error('Error during opentelemetry SDK shutdown:', error)
         }
+    }
+
+    recordEvent(eventName: EventName, eventAttr: OperationalEventAttr, scopeName?: string): void {
+        const tracer = trace.getTracer(scopeName ?? this.RUNTIMES_SCOPE_NAME)
+        const span = tracer.startSpan(eventName)
+        span.setAttribute('event.attributes', JSON.stringify(eventAttr))
         span.end()
     }
 

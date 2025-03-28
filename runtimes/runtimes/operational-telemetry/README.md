@@ -40,7 +40,7 @@ telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.memo
 3. Record errors or server crashes:
 
 ```typescript
-telemetryService.recordEvent('CaughtErrorEvent', { errorType: 'TypeError' });
+telemetryService.recordEvent('CaughtErrorEvent', { errorName: 'TypeError' });
 telemetryService.recordEvent('ServerCrashEvent', { crashType: 'OutOfMemory' });
 ```
 

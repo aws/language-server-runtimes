@@ -105,9 +105,13 @@ export class AwsMetricExporter implements PushMetricExporter {
 
         const unixEpochSeconds = metric.dataPoints[0].endTime[0]
         const result = {
-            name: metric.descriptor.name,
-            timestamp: unixEpochSeconds,
-            ...dataPoints,
+            baseInfo: {
+                name: metric.descriptor.name,
+                timestamp: unixEpochSeconds,
+            },
+            resourceValues: {
+                ...dataPoints,
+            },
         }
 
         const isValid = this.eventValidator.validateEvent(result)
@@ -115,6 +119,6 @@ export class AwsMetricExporter implements PushMetricExporter {
             throw Error(`Invalid operational event: ${result}`)
         }
 
-        return result as OperationalEvent
+        return result as any
     }
 }
