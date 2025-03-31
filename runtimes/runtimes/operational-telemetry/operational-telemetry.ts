@@ -1,15 +1,19 @@
-import { ErrorEventAttr, ResourceUsageAttr, OperationalEvent } from './types/generated/telemetry'
+import { ErrorEventAttr, ResourceUsageAttr, OperationalEvent, ResourceUsageMetric } from './types/generated/telemetry'
 
 export type OperationalEventAttr = ResourceUsageAttr | ErrorEventAttr
 
 export type EventName = OperationalEvent['baseInfo']['name']
+export type MetricName = 'ResourceUsageMetric'
 export type ErrorType = ErrorEventAttr['errorType']
+
+export type ValueProviders<T> = {
+    [K in keyof T]: () => number
+}
 
 export interface OperationalTelemetry {
     registerGaugeProvider(
-        metricName: string,
-        valueProvider: () => number,
-        attributes?: Record<string, any>,
+        metricName: MetricName,
+        valueProviders: ValueProviders<ResourceUsageAttr>,
         scopeName?: string
     ): void
     recordEvent(eventName: EventName, eventAttr: OperationalEventAttr, scopeName?: string): void
@@ -20,9 +24,8 @@ class NoopOperationalTelemetry implements OperationalTelemetry {
     toggleOptOut(telemetryOptOut: boolean): void {}
 
     registerGaugeProvider(
-        _metricName: string,
-        _valueProvider: () => number,
-        _attributes?: Record<string, any>,
+        _metricName: MetricName,
+        _valueProvider: ValueProviders<ResourceUsageAttr>,
         _scopeName?: string
     ): void {}
 
@@ -47,15 +50,13 @@ class ScopedTelemetryService implements OperationalTelemetry {
     }
 
     registerGaugeProvider(
-        metricName: string,
-        valueProvider: () => number,
-        attributes?: Record<string, any>,
+        metricName: MetricName,
+        valueProviders: ValueProviders<ResourceUsageAttr>,
         scopeName?: string
     ): void {
         this.telemetryService.registerGaugeProvider(
             metricName,
-            valueProvider,
-            attributes,
+            valueProviders,
             scopeName ? scopeName : this.defaultScopeName
         )
     }
