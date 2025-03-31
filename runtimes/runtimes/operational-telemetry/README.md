@@ -2,8 +2,7 @@
 
 The Operational Telemetry Service collects, processes and exports operational telemetry data from language server runtimes. This service integrates with OpenTelemetry to gather various types of operational data. Based on the telemetry-schemas, curretnly it can collect:
 * resource usage metrics, 
-* caught errors, 
-* server crashes.
+* caught/uncaught errors.
 
 Json telemetry schemas can be extended in the future to send other type of operational data. These schemas have a strictly defined format that will be validated before sending an event.
 
@@ -30,18 +29,24 @@ OperationalTelemetryProvider.setTelemetryInstance(telemetryService)
 
 ```typescript
 const telemetryService = OperationalTelemetryProvider.getTelemetryForScope('myScope');
-telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().user, {type: 'userCpuUsage'});
-telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().system, {type: 'systemCpuUsage'});
-telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().heapUsed, {type: 'heapUsed'});
-telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().heapTotal, {type: 'heapTotal'});
-telemetryService.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().rss, {type: 'rss'});
+telemetryService.registerGaugeProvider('ResourceUsageMetric', {
+    userCpuUsage: () => process.cpuUsage().user,
+    systemCpuUsage: () => process.cpuUsage().system,
+    heapUsed: () => process.memoryUsage().heapUsed,
+    heapTotal: () => process.memoryUsage().heapTotal,
+    rss: () => process.memoryUsage().rss,
+})
 ```
 
 3. Record errors or server crashes:
 
 ```typescript
-telemetryService.recordEvent('CaughtErrorEvent', { errorName: 'TypeError' });
-telemetryService.recordEvent('ServerCrashEvent', { crashType: 'OutOfMemory' });
+optel.recordEvent('ErrorEvent', {
+    errorType: 'caughtError',
+    errorName: error?.name ?? 'unknown',
+    errorCode: error?.code ?? '',
+    message: 'Failed to parse server name',
+})
 ```
 
 ## Configuration
