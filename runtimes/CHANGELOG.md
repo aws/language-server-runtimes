@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.49](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.48...language-server-runtimes/v0.2.49) (2025-03-31)
+
+
+### Features
+
+* add agent interface for tool creation and usage ([c420d68](https://github.com/aws/language-server-runtimes/commit/c420d68c563260ea933907ceeefac117f5462ac9))
+
 ## [0.2.48](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.47...language-server-runtimes/v0.2.48) (2025-03-25)
 
 
