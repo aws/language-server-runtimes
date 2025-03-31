@@ -5,6 +5,7 @@ import {
     Lsp,
     Telemetry,
     Workspace,
+    Project,
     Chat,
     Runtime,
     Notification,
@@ -50,6 +51,7 @@ export class TestFeatures {
         extensions: StubbedInstance<Lsp['extensions']>
     }
     workspace: StubbedInstance<Workspace>
+    project: StubbedInstance<Project>
     logging: StubbedInstance<Logging>
     telemetry: StubbedInstance<Telemetry>
     documents: {
@@ -73,6 +75,7 @@ export class TestFeatures {
         this.lsp.workspace = stubInterface<typeof this.lsp.workspace>()
         this.lsp.extensions = stubInterface<typeof this.lsp.extensions>()
         this.workspace = stubInterface<Workspace>()
+        this.project = stubInterface<Project>()
         this.logging = stubInterface<Logging>()
         this.telemetry = stubInterface<Telemetry>()
         this.documents = {}

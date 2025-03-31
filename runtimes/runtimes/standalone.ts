@@ -23,6 +23,8 @@ import {
     didChangeDependencyPathsNotificationType,
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
+    queryVectorIndexRequestType,
+    queryInlineProjectContextRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -39,6 +41,7 @@ import {
     Workspace,
     CredentialsProvider,
     Chat,
+    Project,
     Runtime,
     getSsoTokenRequestType,
     IdentityManagement,
@@ -223,6 +226,12 @@ export const standalone = (props: RuntimeProps) => {
                 readFileSync: (path, options?) =>
                     readFileSync(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
             },
+        }
+
+        const project: Project = {
+            onQueryInlineProjectContext: handler =>
+                lspConnection.onRequest(queryInlineProjectContextRequestType, handler),
+            onQueryVectorIndex: handler => lspConnection.onRequest(queryVectorIndexRequestType, handler),
         }
 
         if (!encryptionKey) {
@@ -435,6 +444,7 @@ export const standalone = (props: RuntimeProps) => {
                 credentialsProvider,
                 lsp,
                 workspace,
+                project,
                 telemetry,
                 logging,
                 runtime,

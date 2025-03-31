@@ -38,6 +38,8 @@ import {
     selectWorkspaceItemRequestType,
     chatUpdateNotificationType,
     fileClickNotificationType,
+    queryInlineProjectContextRequestType,
+    queryVectorIndexRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -46,6 +48,7 @@ import {
     Lsp,
     Runtime,
     Telemetry,
+    Project,
     Workspace,
     SDKClientConstructorV2,
     SDKClientConstructorV3,
@@ -121,6 +124,11 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             mkdir: (_path, _options?) => Promise.resolve(''),
             readFileSync: (_path, _options?) => '',
         },
+    }
+
+    const project: Project = {
+        onQueryInlineProjectContext: handler => lspConnection.onRequest(queryInlineProjectContextRequestType, handler),
+        onQueryVectorIndex: handler => lspConnection.onRequest(queryVectorIndexRequestType, handler),
     }
 
     const chat: Chat = {
@@ -246,6 +254,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             credentialsProvider,
             lsp,
             workspace,
+            project,
             telemetry,
             logging,
             runtime,

@@ -3,6 +3,7 @@ import {
     Lsp,
     Telemetry,
     Workspace,
+    Project,
     CredentialsProvider,
     Chat,
     Runtime,
@@ -33,6 +34,7 @@ export type Features = {
     credentialsProvider: CredentialsProvider
     lsp: Lsp
     workspace: Workspace
+    project: Project
     logging: Logging
     telemetry: Telemetry
     runtime: Runtime
