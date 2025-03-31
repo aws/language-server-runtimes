@@ -39,6 +39,8 @@ import {
     inlineChatRequestType,
     InlineChatParams,
     InlineChatResult,
+    ContextCommandParams,
+    contextCommandsNotificationType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -113,5 +115,9 @@ export class BaseChat implements Chat {
 
     public onFileClicked(handler: NotificationHandler<FileClickParams>) {
         this.connection.onNotification(fileClickNotificationType.method, handler)
+    }
+
+    public sendContextCommands(params: ContextCommandParams) {
+        this.connection.sendNotification(contextCommandsNotificationType.method, params)
     }
 }

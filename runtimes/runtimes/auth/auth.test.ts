@@ -48,7 +48,7 @@ function clearHandlers() {
     authHandlers.bearerDeleteHandler = () => {}
 }
 
-const serverLspConnectionMock = <Connection>{
+const serverLspConnectionMock = {
     onRequest: (requestType: any, handler: any) => {
         if (requestType.method === credentialsProtocolMethodNames.iamCredentialsUpdate) {
             authHandlers.iamUpdateHandler = handler
@@ -83,7 +83,7 @@ const serverLspConnectionMock = <Connection>{
     onExecuteCommand: (handler: ServerRequestHandler<ExecuteCommandParams, any, never, void>) => {},
     onInitialize: (handler: ServerRequestHandler<InitializeParams, InitializeResult, never, InitializeError>) => {},
     onInitialized: (handler: NotificationHandler<InitializedParams>) => {},
-}
+} as Connection
 
 const lspRouter = new LspRouter(serverLspConnectionMock, 'name')
 
