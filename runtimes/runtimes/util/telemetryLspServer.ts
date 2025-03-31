@@ -14,11 +14,13 @@ const DEFAULT_TELEMETRY_COGNITO_POOL_ID = ''
 
 function setMemoryUsageTelemetry() {
     const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
-    optel.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().user, { type: 'userCpuUsage' })
-    optel.registerGaugeProvider('ResourceUsageMetric', () => process.cpuUsage().user, { type: 'systemCpuUsage' })
-    optel.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().heapUsed, { type: 'heapUsed' })
-    optel.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().heapTotal, { type: 'heapTotal' })
-    optel.registerGaugeProvider('ResourceUsageMetric', () => process.memoryUsage().rss, { type: 'rss' })
+    optel.registerGaugeProvider('ResourceUsageMetric', {
+        userCpuUsage: () => process.cpuUsage().user,
+        systemCpuUsage: () => process.cpuUsage().system,
+        heapUsed: () => process.memoryUsage().heapUsed,
+        heapTotal: () => process.memoryUsage().heapTotal,
+        rss: () => process.memoryUsage().rss,
+    })
 }
 
 function setServerCrashTelemetryListeners() {

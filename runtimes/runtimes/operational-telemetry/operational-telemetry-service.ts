@@ -1,6 +1,12 @@
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AwsMetricExporter } from './aws-metrics-exporter'
-import { EventName, OperationalEventAttr, OperationalTelemetry } from './operational-telemetry'
+import {
+    EventName,
+    MetricName,
+    OperationalEventAttr,
+    OperationalTelemetry,
+    ValueProviders,
+} from './operational-telemetry'
 import { diag, Attributes, DiagLogLevel, trace, metrics } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
@@ -12,6 +18,7 @@ import { AwsSpanExporter } from './aws-spans-exporter'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 import { OperationalEventValidator } from './operational-event-validator'
 import { ExtendedClientInfo } from '../../server-interface'
+import { ResourceUsageAttr, ResourceUsageMetric } from './types/generated/telemetry'
 
 type OperationalTelemetryConfig = {
     serviceName: string
@@ -159,15 +166,17 @@ export class OperationalTelemetryService implements OperationalTelemetry {
     }
 
     registerGaugeProvider(
-        metricName: string,
-        valueProvider: () => number,
-        attributes?: Record<string, any>,
+        metricName: MetricName,
+        valueProviders: ValueProviders<ResourceUsageAttr>,
         scopeName?: string
     ): void {
         const meter = metrics.getMeter(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
         const gauge = meter.createObservableGauge(metricName)
-        gauge.addCallback(result => {
-            result.observe(valueProvider(), attributes as Attributes)
-        })
+
+        for (const [key, valueProvider] of Object.entries(valueProviders)) {
+            gauge.addCallback(result => {
+                result.observe(valueProvider(), { type: key })
+            })
+        }
     }
 }
