@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.7](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.6...language-server-runtimes-types/v0.1.7) (2025-04-01)
+
+
+### Features
+
+* add extension for inline chat ([#391](https://github.com/aws/language-server-runtimes/issues/391)) ([52abd83](https://github.com/aws/language-server-runtimes/commit/52abd839b396c92863bca18c9bb33a7875192c3d))
+
 ## [0.1.6](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.5...language-server-runtimes-types/v0.1.6) (2025-03-25)
 
 
