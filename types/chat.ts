@@ -83,10 +83,16 @@ export interface EncryptedChatParams extends PartialResultParams {
     message: string
 }
 
+export interface FileDetails {
+    description?: string
+    lineRanges?: Array<{ first: number; second: number }>
+}
+
 export interface FileList {
     rootFolderTitle?: string
     filePaths?: string[]
     deletedFiles?: string[]
+    details?: Record<string, FileDetails>
 }
 
 export interface ChatMessage {
@@ -104,6 +110,7 @@ export interface ChatMessage {
     }
     codeReference?: ReferenceTrackerInformation[]
     fileList?: FileList
+    contextList?: FileList
 }
 // Response for chat prompt request can be empty,
 // if server chooses to handle the request and push updates asynchronously.
