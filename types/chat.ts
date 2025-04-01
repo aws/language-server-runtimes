@@ -17,6 +17,7 @@ export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
 export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
+export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
 
 export interface ChatItemAction {
     pillText: string
@@ -67,6 +68,12 @@ interface PartialResultParams {
 
 export interface ChatParams extends PartialResultParams {
     tabId: string
+    prompt: ChatPrompt
+    cursorState?: CursorState[]
+    textDocument?: TextDocumentIdentifier
+}
+
+export interface InlineChatParams extends PartialResultParams {
     prompt: ChatPrompt
     cursorState?: CursorState[]
     textDocument?: TextDocumentIdentifier
