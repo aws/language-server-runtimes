@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.8](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.7...language-server-runtimes-types/v0.1.8) (2025-04-01)
+
+
+### Features
+
+* add contextList to chat message for supporting context transparency ([#401](https://github.com/aws/language-server-runtimes/issues/401)) ([839247d](https://github.com/aws/language-server-runtimes/commit/839247d3be76e419030d364ffefb13e5f5a02ef9))
+
 ## [0.1.7](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.6...language-server-runtimes-types/v0.1.7) (2025-04-01)
 
 
