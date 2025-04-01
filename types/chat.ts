@@ -115,6 +115,9 @@ export interface ChatMessage {
 // Response for chat prompt request can be empty,
 // if server chooses to handle the request and push updates asynchronously.
 export interface ChatResult extends ChatMessage {}
+export interface InlineChatResult extends ChatMessage {
+    requestId?: string
+}
 
 export type EndChatParams = { tabId: string }
 export type EndChatResult = boolean
