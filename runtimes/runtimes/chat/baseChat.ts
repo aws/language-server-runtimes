@@ -38,6 +38,7 @@ import {
     fileClickNotificationType,
     inlineChatRequestType,
     InlineChatParams,
+    InlineChatResult,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -48,7 +49,9 @@ export class BaseChat implements Chat {
         this.connection.onRequest(chatRequestType.method, handler)
     }
 
-    public onInlineChatPrompt(handler: RequestHandler<InlineChatParams, ChatResult | null | undefined, ChatResult>) {
+    public onInlineChatPrompt(
+        handler: RequestHandler<InlineChatParams, InlineChatResult | null | undefined, InlineChatResult>
+    ) {
         this.connection.onRequest(inlineChatRequestType.method, handler)
     }
 

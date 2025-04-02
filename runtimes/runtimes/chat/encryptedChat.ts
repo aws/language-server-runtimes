@@ -15,6 +15,7 @@ import {
     LSPErrorCodes,
     InlineChatParams,
     inlineChatRequestType,
+    InlineChatResult,
 } from '../../protocol'
 import { CredentialsEncoding, encryptObjectWithKey, isMessageJWEEncrypted } from '../auth/standalone/encryption'
 import { BaseChat } from './baseChat'
@@ -51,8 +52,8 @@ export class EncryptedChat extends BaseChat {
         this.registerEncryptedRequestHandler<
             EncryptedChatParams,
             InlineChatParams,
-            ChatResult | null | undefined,
-            ChatResult
+            InlineChatResult | null | undefined,
+            InlineChatResult
         >(inlineChatRequestType, handler)
     }
 
