@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.53](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.52...language-server-runtimes/v0.2.53) (2025-04-02)
+
+
+### Features
+
+* context support in protocol ([#404](https://github.com/aws/language-server-runtimes/issues/404)) ([70b8507](https://github.com/aws/language-server-runtimes/commit/70b8507f1c95a79d74c49e7153e772d11372dc65))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.9 to ^0.1.10
+
 ## [0.2.52](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.51...language-server-runtimes/v0.2.52) (2025-04-02)
 
 
