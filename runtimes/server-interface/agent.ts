@@ -6,6 +6,7 @@ interface BaseSchema {
     $id?: string
     $schema?: string
     definitions?: Record<string, JSONSchema>
+    [extensionKeywords: string]: any
 }
 
 interface StringSchema extends BaseSchema {
@@ -74,9 +75,17 @@ type InferArray<T extends { type: 'array'; items: any }> = T['items'] extends { 
     ? InferSchema<T['items']>[]
     : never
 
-type InferObject<T extends { type: 'object'; properties: Record<string, any> }> = {
-    [K in keyof T['properties']]?: InferSchema<T['properties'][K]>
-} & (T extends { required: string[] } ? { [K in T['required'][number]]: InferSchema<T['properties'][K]> } : unknown)
+type InferObject<T extends { type: 'object'; properties: Record<string, any> }> = T extends {
+    required: readonly string[]
+}
+    ? {
+          [K in keyof T['properties'] as K extends T['required'][number] ? K : never]: InferSchema<T['properties'][K]>
+      } & {
+          [K in keyof T['properties'] as K extends T['required'][number] ? never : K]?: InferSchema<T['properties'][K]>
+      }
+    : {
+          [K in keyof T['properties']]?: InferSchema<T['properties'][K]>
+      }
 
 export type InferSchema<T> = T extends { type: 'array'; items: any }
     ? InferArray<T>
