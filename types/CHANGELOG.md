@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.9](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.8...language-server-runtimes-types/v0.1.9) (2025-04-02)
+
+
+### Bug Fixes
+
+* add requestId to InlineChat response ([#403](https://github.com/aws/language-server-runtimes/issues/403)) ([3bee702](https://github.com/aws/language-server-runtimes/commit/3bee70222b6d9bd3e5bde3b046593be2e80b8d4c))
+
 ## [0.1.8](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.7...language-server-runtimes-types/v0.1.8) (2025-04-01)
 
 
