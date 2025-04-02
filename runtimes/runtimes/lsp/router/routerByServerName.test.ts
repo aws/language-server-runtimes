@@ -4,10 +4,10 @@ import { EventIdentifier, FollowupIdentifier } from '../../../protocol'
 import { RouterByServerName } from './routerByServerName'
 
 describe('RouterByServerName', () => {
-    const encoding = <Encoding>{
+    const encoding = {
         encode: value => Buffer.from(value).toString('base64'),
         decode: value => Buffer.from(value, 'base64').toString('utf-8'),
-    }
+    } as Encoding
     const serverName = 'Server_XXX'
 
     let router: RouterByServerName<Partial<EventIdentifier>, FollowupIdentifier>

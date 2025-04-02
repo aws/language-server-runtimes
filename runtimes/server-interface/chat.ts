@@ -22,6 +22,8 @@ import {
     FileClickParams,
     InlineChatParams,
     InlineChatResult,
+    ContextCommandParams,
+    CreatePromptParams,
 } from '../protocol'
 
 /**
@@ -49,4 +51,6 @@ export type Chat = {
     onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
     sendChatUpdate: (params: ChatUpdateParams) => void
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
+    sendContextCommands: (params: ContextCommandParams) => void
+    onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
 }

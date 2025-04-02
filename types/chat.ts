@@ -18,6 +18,8 @@ export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
+export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
+export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
 
 export interface ChatItemAction {
     pillText: string
@@ -129,7 +131,10 @@ export interface QuickActionCommand {
     command: string
     description?: string
     placeholder?: string
+    icon?: IconType
 }
+
+export type IconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic' | 'help' | 'trash'
 
 /**
  * Configuration object for registering chat quick actions groups.
@@ -258,4 +263,24 @@ export interface FileClickParams {
     tabId: string
     filePath: string
     action?: FileAction
+}
+
+export interface ContextCommandGroup {
+    groupName?: string
+    commands: ContextCommand[]
+}
+
+export interface ContextCommand extends QuickActionCommand {
+    id?: string
+    route?: string[]
+    label?: 'file' | 'folder' | 'code'
+    children?: ContextCommandGroup[]
+}
+
+export interface ContextCommandParams {
+    contextCommandGroups: ContextCommandGroup[]
+}
+
+export interface CreatePromptParams {
+    promptName: string
 }

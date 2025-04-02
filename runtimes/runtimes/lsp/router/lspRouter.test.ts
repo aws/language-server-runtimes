@@ -28,13 +28,13 @@ describe('LspRouter', () => {
         encode: (value: string) => value,
         decode: (value: string) => value,
     }
-    const logging = <Logging>{
+    const logging = {
         log: sandbox.stub(),
         debug: sandbox.stub(),
         error: sandbox.stub(),
         warn: sandbox.stub(),
         info: sandbox.stub(),
-    }
+    } as Logging
     const lspConnection = stubLspConnection()
 
     let executeCommandHandler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
@@ -613,7 +613,7 @@ describe('LspRouter', () => {
     })
 
     function stubLspConnection(overrides = {}): Connection {
-        return <Connection>{
+        return {
             console: {
                 info: (message: any) => {},
             },
@@ -627,7 +627,7 @@ describe('LspRouter', () => {
             onNotification: (handler: any) => {},
             onDidChangeConfiguration: (handler: any) => {},
             ...overrides,
-        }
+        } as Connection
     }
 
     function newServer({

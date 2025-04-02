@@ -39,6 +39,10 @@ import {
     inlineChatRequestType,
     InlineChatParams,
     InlineChatResult,
+    ContextCommandParams,
+    contextCommandsNotificationType,
+    CreatePromptParams,
+    createPromptNotificationType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -113,5 +117,13 @@ export class BaseChat implements Chat {
 
     public onFileClicked(handler: NotificationHandler<FileClickParams>) {
         this.connection.onNotification(fileClickNotificationType.method, handler)
+    }
+
+    public sendContextCommands(params: ContextCommandParams) {
+        this.connection.sendNotification(contextCommandsNotificationType.method, params)
+    }
+
+    public onCreatePrompt(handler: NotificationHandler<CreatePromptParams>) {
+        this.connection.onNotification(createPromptNotificationType.method, handler)
     }
 }

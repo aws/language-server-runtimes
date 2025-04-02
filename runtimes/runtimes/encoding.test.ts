@@ -3,7 +3,7 @@ import { WebBase64Encoding } from './encoding'
 import sinon, { StubbedInstance, stubInterface } from 'ts-sinon'
 
 describe('WebBase64Encoding', () => {
-    const wdw = <WindowOrWorkerGlobalScope>{}
+    const wdw = {} as WindowOrWorkerGlobalScope
     const encoding = new WebBase64Encoding(wdw)
 
     it('encodes and decodes string', () => {

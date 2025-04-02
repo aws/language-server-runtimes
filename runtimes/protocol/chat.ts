@@ -42,6 +42,10 @@ import {
     INLINE_CHAT_REQUEST_METHOD,
     InlineChatParams,
     InlineChatResult,
+    CONTEXT_COMMAND_NOTIFICATION_METHOD,
+    ContextCommandParams,
+    CREATE_PROMPT_NOTIFICATION_METHOD,
+    CreatePromptParams,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -100,4 +104,10 @@ export const chatUpdateNotificationType = new ProtocolNotificationType<ChatUpdat
 )
 export const fileClickNotificationType = new ProtocolNotificationType<FileClickParams, void>(
     FILE_CLICK_NOTIFICATION_METHOD
+)
+export const contextCommandsNotificationType = new ProtocolNotificationType<ContextCommandParams, void>(
+    CONTEXT_COMMAND_NOTIFICATION_METHOD
+)
+export const createPromptNotificationType = new ProtocolNotificationType<CreatePromptParams, void>(
+    CREATE_PROMPT_NOTIFICATION_METHOD
 )
