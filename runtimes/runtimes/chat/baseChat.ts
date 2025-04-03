@@ -43,6 +43,8 @@ import {
     contextCommandsNotificationType,
     CreatePromptParams,
     createPromptNotificationType,
+    LogInlineChatResultParams,
+    logInlineChatResultNotificationType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -125,5 +127,9 @@ export class BaseChat implements Chat {
 
     public onCreatePrompt(handler: NotificationHandler<CreatePromptParams>) {
         this.connection.onNotification(createPromptNotificationType.method, handler)
+    }
+
+    public onLogInlineChatResult(handler: NotificationHandler<LogInlineChatResultParams>) {
+        this.connection.onNotification(logInlineChatResultNotificationType.method, handler)
     }
 }

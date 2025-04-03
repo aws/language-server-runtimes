@@ -20,6 +20,7 @@ export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
+export const LOG_INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/logInlineChatResult'
 
 export interface ChatItemAction {
     pillText: string
@@ -283,4 +284,26 @@ export interface ContextCommandParams {
 
 export interface CreatePromptParams {
     promptName: string
+}
+
+export interface ProgrammingLanguage {
+    languageName: string
+}
+
+export type InlineChatUserDecision = 'ACCEPT' | 'REJECT' | 'DISMISS' | string
+
+export interface LogInlineChatResultParams {
+    requestId: string
+    timestamp: Date
+    inputLength?: number
+    numSelectedLines?: number
+    numSuggestionAddChars?: number
+    numSuggestionAddLines?: number
+    numSuggestionDelChars?: number
+    numSuggestionDelLines?: number
+    codeIntent?: boolean
+    userDecision?: InlineChatUserDecision
+    responseStartLatency?: number
+    responseEndLatency?: number
+    programmingLanguage?: ProgrammingLanguage
 }
