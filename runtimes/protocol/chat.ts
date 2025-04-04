@@ -46,6 +46,8 @@ import {
     ContextCommandParams,
     CREATE_PROMPT_NOTIFICATION_METHOD,
     CreatePromptParams,
+    LOG_INLINE_CHAT_RESULT_NOTIFICATION_METHOD,
+    LogInlineChatResultParams,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -110,4 +112,7 @@ export const contextCommandsNotificationType = new ProtocolNotificationType<Cont
 )
 export const createPromptNotificationType = new ProtocolNotificationType<CreatePromptParams, void>(
     CREATE_PROMPT_NOTIFICATION_METHOD
+)
+export const logInlineChatResultNotificationType = new ProtocolNotificationType<LogInlineChatResultParams, void>(
+    LOG_INLINE_CHAT_RESULT_NOTIFICATION_METHOD
 )
