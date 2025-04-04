@@ -100,6 +100,8 @@ export interface FileList {
 export interface ChatMessage {
     type?: 'answer' | 'prompt' | 'system-prompt' // will default to 'answer'
     body?: string
+    buttons: ChatItemAction[]
+    icon?: IconType
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
     relatedContent?: {
@@ -155,7 +157,10 @@ export interface QuickActions {
 }
 
 export interface TabData {
+    title: string
     placeholderText?: string
+    placeHolderLabel?: string
+    centerContent?: boolean
     messages: ChatMessage[]
 }
 
