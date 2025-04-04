@@ -1,25 +1,29 @@
-// Chat Data Model
 import { Position, Range, TextDocumentIdentifier } from './lsp'
 
-export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
-export const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
-export const QUICK_ACTION_REQUEST_METHOD = 'aws/chat/sendChatQuickAction'
-export const READY_NOTIFICATION_METHOD = 'aws/chat/ready'
-export const FEEDBACK_NOTIFICATION_METHOD = 'aws/chat/feedback'
-export const TAB_ADD_NOTIFICATION_METHOD = 'aws/chat/tabAdd'
-export const TAB_CHANGE_NOTIFICATION_METHOD = 'aws/chat/tabChange'
-export const TAB_REMOVE_NOTIFICATION_METHOD = 'aws/chat/tabRemove'
-export const INSERT_TO_CURSOR_POSITION_NOTIFICATION_METHOD = 'aws/chat/insertToCursorPosition'
-export const LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/linkClick'
-export const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
-export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
-export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
-export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
-export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
-export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
-export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
-export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
-export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
+export declare const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
+export declare const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
+export declare const QUICK_ACTION_REQUEST_METHOD = 'aws/chat/sendChatQuickAction'
+export declare const READY_NOTIFICATION_METHOD = 'aws/chat/ready'
+export declare const FEEDBACK_NOTIFICATION_METHOD = 'aws/chat/feedback'
+export declare const TAB_ADD_NOTIFICATION_METHOD = 'aws/chat/tabAdd'
+export declare const TAB_CHANGE_NOTIFICATION_METHOD = 'aws/chat/tabChange'
+export declare const TAB_REMOVE_NOTIFICATION_METHOD = 'aws/chat/tabRemove'
+export declare const INSERT_TO_CURSOR_POSITION_NOTIFICATION_METHOD = 'aws/chat/insertToCursorPosition'
+export declare const LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/linkClick'
+export declare const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
+export declare const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
+export declare const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
+export declare const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
+export declare const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
+export declare const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
+export declare const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
+// context
+export declare const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
+export declare const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
+// history
+export declare const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
+export declare const CONVERSATION_CLICK_NOTIFICATION_METHOD = 'aws/chat/conversationClick'
+export declare const CONVERSATIONS_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendConversationsUpdate'
 
 export interface ChatItemAction {
     pillText: string
@@ -63,7 +67,6 @@ export type CodeSelectionType = 'selection' | 'block'
 
 export type CursorState = { position: Position } | { range: Range }
 
-// LSP Types
 interface PartialResultParams {
     partialResultToken?: number | string
 }
@@ -134,7 +137,8 @@ export interface QuickActionCommand {
     icon?: IconType
 }
 
-export type IconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic' | 'help' | 'trash'
+export type ContextCommandIconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic'
+export type IconType = ContextCommandIconType | 'help' | 'trash' | 'search' | 'calendar' | string
 
 /**
  * Configuration object for registering chat quick actions groups.
@@ -265,6 +269,8 @@ export interface FileClickParams {
     action?: FileAction
 }
 
+// context
+
 export interface ContextCommandGroup {
     groupName?: string
     commands: ContextCommand[]
@@ -283,4 +289,52 @@ export interface ContextCommandParams {
 
 export interface CreatePromptParams {
     promptName: string
+}
+
+// history
+
+export type TextBasedFilterOption = {
+    type: 'textarea' | 'textinput'
+    id: string
+    placeholder?: string
+    icon?: IconType
+}
+export type FilterValue = string
+export type FilterOption = TextBasedFilterOption
+export interface Action {
+    id: string
+    icon?: IconType
+    text: string
+}
+export interface ConversationItem {
+    id: string
+    icon?: IconType
+    description?: string
+    actions?: Action
+}
+
+export interface ConversationItemGroup {
+    groupName?: string
+    icon?: IconType
+    items?: ConversationItem[]
+}
+
+export interface ListConversationsParams {
+    filter?: Record<string, FilterValue>
+}
+
+export interface ConversationsList {
+    hearer?: { title: string }
+    filterOptions?: FilterOption[]
+    list: ConversationItemGroup[]
+}
+
+export interface ListConversationsResult extends ConversationsList {}
+export interface SendConversationsUpdateParams extends ConversationsList {}
+
+export type ConversationAction = 'delete' | 'export'
+
+export interface ConversationClickParams {
+    id: string
+    action?: ConversationAction
 }

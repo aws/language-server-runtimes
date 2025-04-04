@@ -43,6 +43,13 @@ import {
     contextCommandsNotificationType,
     CreatePromptParams,
     createPromptNotificationType,
+    listConversationsRequestType,
+    ListConversationsParams,
+    ListConversationsResult,
+    ConversationClickParams,
+    conversationClickNotificationType,
+    sendConversationsUpdateNotificationType,
+    ConversationsUpdateParams,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -125,5 +132,17 @@ export class BaseChat implements Chat {
 
     public onCreatePrompt(handler: NotificationHandler<CreatePromptParams>) {
         this.connection.onNotification(createPromptNotificationType.method, handler)
+    }
+
+    public onListConversations(handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) {
+        this.connection.onRequest(listConversationsRequestType.method, handler)
+    }
+
+    public onConversationClick(handler: NotificationHandler<ConversationClickParams>) {
+        this.connection.onNotification(conversationClickNotificationType.method, handler)
+    }
+
+    public sendConversationsUpdate(params: ConversationsUpdateParams) {
+        this.connection.sendNotification(sendConversationsUpdateNotificationType.method, params)
     }
 }
