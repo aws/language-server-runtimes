@@ -95,13 +95,17 @@ describe('AwsMetricExporter', () => {
                 scopeName: 'test-scope',
                 data: [
                     {
-                        name: 'ResourceUsageMetric',
-                        timestamp: sinon.match.number,
-                        heapUsed: 18227311,
-                        heapTotal: 18227312,
-                        rss: 18227313,
-                        userCpuUsage: 18227314,
-                        systemCpuUsage: 18227315,
+                        baseInfo: {
+                            name: 'ResourceUsageMetric',
+                            timestamp: sinon.match.number,
+                        },
+                        resourceValues: {
+                            heapUsed: 18227311,
+                            heapTotal: 18227312,
+                            rss: 18227313,
+                            userCpuUsage: 18227314,
+                            systemCpuUsage: 18227315,
+                        },
                     },
                 ],
             },
