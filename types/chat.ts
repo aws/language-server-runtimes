@@ -161,8 +161,15 @@ export interface TabData {
     title: string
     placeholderText?: string
     placeHolderLabel?: string
-    centerContent?: boolean
+    compactMode?: boolean
     messages: ChatMessage[]
+    tabHeaderDetails?: TabHeaderDetails
+}
+
+export interface TabHeaderDetails {
+    icon?: IconType
+    title?: string
+    description?: string
 }
 
 /**
