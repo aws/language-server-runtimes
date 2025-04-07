@@ -1,4 +1,3 @@
-// Chat Data Model
 import { Position, Range, TextDocumentIdentifier } from './lsp'
 
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
@@ -18,8 +17,12 @@ export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
+// context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
+// history
+export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
+export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
 
 export interface ChatItemAction {
     pillText: string
@@ -63,7 +66,6 @@ export type CodeSelectionType = 'selection' | 'block'
 
 export type CursorState = { position: Position } | { range: Range }
 
-// LSP Types
 interface PartialResultParams {
     partialResultToken?: number | string
 }
@@ -134,7 +136,8 @@ export interface QuickActionCommand {
     icon?: IconType
 }
 
-export type IconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic' | 'help' | 'trash'
+export type ContextCommandIconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic'
+export type IconType = ContextCommandIconType | 'help' | 'trash' | 'search' | 'calendar' | string
 
 /**
  * Configuration object for registering chat quick actions groups.
@@ -265,6 +268,8 @@ export interface FileClickParams {
     action?: FileAction
 }
 
+// context
+
 export interface ContextCommandGroup {
     groupName?: string
     commands: ContextCommand[]
@@ -283,4 +288,55 @@ export interface ContextCommandParams {
 
 export interface CreatePromptParams {
     promptName: string
+}
+
+// history
+
+export type TextBasedFilterOption = {
+    type: 'textarea' | 'textinput'
+    placeholder?: string
+    icon?: IconType
+}
+export type FilterValue = string
+export type FilterOption = { id: string } & TextBasedFilterOption
+export interface Action {
+    id: string
+    icon?: IconType
+    text: string
+}
+export interface ConversationItem {
+    id: string
+    icon?: IconType
+    description?: string
+    actions?: Action[]
+}
+
+export interface ConversationItemGroup {
+    groupName?: string
+    icon?: IconType
+    items?: ConversationItem[]
+}
+
+export interface ListConversationsParams {
+    // key maps to id in FilterOption and value to corresponding filter value
+    filter?: Record<string, FilterValue>
+}
+
+export interface ConversationsList {
+    header?: { title: string }
+    filterOptions?: FilterOption[]
+    list: ConversationItemGroup[]
+}
+
+export interface ListConversationsResult extends ConversationsList {}
+
+export type ConversationAction = 'delete' | 'export'
+
+export interface ConversationClickParams {
+    id: string
+    action?: ConversationAction
+}
+
+export interface ConversationClickResult extends ConversationClickParams {
+    success: boolean
 }

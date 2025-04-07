@@ -41,6 +41,8 @@ import {
     inlineChatRequestType,
     contextCommandsNotificationType,
     createPromptNotificationType,
+    listConversationsRequestType,
+    conversationClickRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -148,6 +150,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
         sendContextCommands: params => lspConnection.sendNotification(contextCommandsNotificationType.method, params),
         onCreatePrompt: handler => lspConnection.onNotification(createPromptNotificationType.method, handler),
+        onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
+        onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
