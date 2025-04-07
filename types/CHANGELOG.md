@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.11](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.10...language-server-runtimes-types/v0.1.11) (2025-04-07)
+
+
+### Features
+
+* added chat history protocol ([#410](https://github.com/aws/language-server-runtimes/issues/410)) ([a4fcef6](https://github.com/aws/language-server-runtimes/commit/a4fcef6459f4224a6bf16d3ce6e88ef326fec3aa))
+
 ## [0.1.10](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.9...language-server-runtimes-types/v0.1.10) (2025-04-02)
 
 
