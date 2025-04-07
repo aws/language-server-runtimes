@@ -158,18 +158,21 @@ export interface QuickActions {
 }
 
 export interface TabData {
-    title: string
-    placeholderText?: string
-    placeHolderLabel?: string
+    tabHeader?: TabHeader
+    promptInput?: PromptInput
     compactMode?: boolean
     messages: ChatMessage[]
-    tabHeaderDetails?: TabHeaderDetails
 }
 
-export interface TabHeaderDetails {
+export interface TabHeader {
     icon?: IconType
     title?: string
     description?: string
+}
+
+export interface PromptInput {
+    placeHolderText?: string
+    label?: string
 }
 
 /**
