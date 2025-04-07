@@ -337,4 +337,6 @@ export interface ConversationClickParams {
     action?: ConversationAction
 }
 
-export type ConversationClickResult = boolean
+export interface ConversationClickResult extends ConversationClickParams {
+    success: boolean
+}
