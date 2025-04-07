@@ -159,6 +159,7 @@ export interface QuickActions {
 }
 
 export interface TabData {
+    title?: string
     tabHeader?: TabHeader
     promptInput?: PromptInput
     compactMode?: boolean
