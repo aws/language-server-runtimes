@@ -122,7 +122,7 @@ export const createPromptNotificationType = new ProtocolNotificationType<CreateP
 )
 
 // history
-export const listConversationsRequestType = new ProtocolRequestType<
+export const listConversationsRequestType = new AutoParameterStructuresProtocolRequestType<
     ListConversationsParams,
     ListConversationsResult,
     never,
