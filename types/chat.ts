@@ -309,7 +309,7 @@ export interface ConversationItem {
     id: string
     icon?: IconType
     description?: string
-    actions?: Action
+    actions?: Action[]
 }
 
 export interface ConversationItemGroup {
@@ -324,7 +324,7 @@ export interface ListConversationsParams {
 }
 
 export interface ConversationsList {
-    hearer?: { title: string }
+    header?: { title: string }
     filterOptions?: FilterOption[]
     list: ConversationItemGroup[]
 }
