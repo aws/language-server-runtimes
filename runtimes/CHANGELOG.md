@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.54](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.53...language-server-runtimes/v0.2.54) (2025-04-07)
+
+
+### Bug Fixes
+
+* support JSON Schema extension keywords and properly infer required fields ([995a306](https://github.com/aws/language-server-runtimes/commit/995a3066a445b7466a22faeba0b4f7d35d0fb9a0))
+
 ## [0.2.53](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.52...language-server-runtimes/v0.2.53) (2025-04-02)
 
 
