@@ -28,6 +28,7 @@ export interface ChatItemAction {
     description?: string
     type?: string
     status?: string
+    id?: string
 }
 
 export interface SourceLink {
@@ -171,7 +172,7 @@ export interface TabHeader {
 }
 
 export interface PromptInput {
-    placeHolderText?: string
+    placeholderText?: string
     label?: string
 }
 
