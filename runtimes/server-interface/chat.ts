@@ -27,7 +27,7 @@ import {
     ListConversationsParams,
     ListConversationsResult,
     ConversationClickParams,
-    ConversationsUpdateParams,
+    ConversationClickResult,
 } from '../protocol'
 
 /**
@@ -43,6 +43,7 @@ export type Chat = {
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
     onListConversations: (handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) => void
+    onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
@@ -58,6 +59,4 @@ export type Chat = {
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
     sendContextCommands: (params: ContextCommandParams) => void
     onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
-    onConversationClick: (handler: NotificationHandler<ConversationClickParams>) => void
-    sendConversationsUpdate: (params: ConversationsUpdateParams) => void
 }

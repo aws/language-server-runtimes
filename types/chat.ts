@@ -22,8 +22,7 @@ export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
-export const CONVERSATION_CLICK_NOTIFICATION_METHOD = 'aws/chat/conversationClick'
-export const CONVERSATIONS_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendConversationsUpdate'
+export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
 
 export interface ChatItemAction {
     pillText: string
@@ -330,7 +329,6 @@ export interface ConversationsList {
 }
 
 export interface ListConversationsResult extends ConversationsList {}
-export interface ConversationsUpdateParams extends ConversationsList {}
 
 export type ConversationAction = 'delete' | 'export'
 
@@ -338,3 +336,5 @@ export interface ConversationClickParams {
     id: string
     action?: ConversationAction
 }
+
+export type ConversationClickResult = boolean

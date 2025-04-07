@@ -50,9 +50,8 @@ import {
     ListConversationsResult,
     LIST_CONVERSATIONS_REQUEST_METHOD,
     ConversationClickParams,
-    ConversationsUpdateParams,
-    CONVERSATION_CLICK_NOTIFICATION_METHOD,
-    CONVERSATIONS_UPDATE_NOTIFICATION_METHOD,
+    ConversationClickResult,
+    CONVERSATION_CLICK_REQUEST_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -129,9 +128,10 @@ export const listConversationsRequestType = new AutoParameterStructuresProtocolR
     void,
     void
 >(LIST_CONVERSATIONS_REQUEST_METHOD)
-export const conversationClickNotificationType = new ProtocolNotificationType<ConversationClickParams, void>(
-    CONVERSATION_CLICK_NOTIFICATION_METHOD
-)
-export const sendConversationsUpdateNotificationType = new ProtocolNotificationType<ConversationsUpdateParams, void>(
-    CONVERSATIONS_UPDATE_NOTIFICATION_METHOD
-)
+export const conversationClickRequestType = new AutoParameterStructuresProtocolRequestType<
+    ConversationClickParams,
+    ConversationClickResult,
+    never,
+    void,
+    void
+>(CONVERSATION_CLICK_REQUEST_METHOD)

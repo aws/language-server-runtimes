@@ -47,9 +47,8 @@ import {
     ListConversationsParams,
     ListConversationsResult,
     ConversationClickParams,
-    conversationClickNotificationType,
-    sendConversationsUpdateNotificationType,
-    ConversationsUpdateParams,
+    conversationClickRequestType,
+    ConversationClickResult,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -138,11 +137,7 @@ export class BaseChat implements Chat {
         this.connection.onRequest(listConversationsRequestType.method, handler)
     }
 
-    public onConversationClick(handler: NotificationHandler<ConversationClickParams>) {
-        this.connection.onNotification(conversationClickNotificationType.method, handler)
-    }
-
-    public sendConversationsUpdate(params: ConversationsUpdateParams) {
-        this.connection.sendNotification(sendConversationsUpdateNotificationType.method, params)
+    public onConversationClick(handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) {
+        this.connection.onRequest(conversationClickRequestType.method, handler)
     }
 }
