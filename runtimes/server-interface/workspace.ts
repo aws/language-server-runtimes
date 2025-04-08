@@ -5,7 +5,7 @@ interface Dirent {
     isFile(): boolean
     isDirectory(): boolean
     name: string
-    path: string
+    parentPath: string
 }
 
 /**
