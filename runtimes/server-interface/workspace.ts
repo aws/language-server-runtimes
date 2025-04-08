@@ -4,6 +4,7 @@ import { TextDocument, WorkspaceFolder } from '../protocol'
 interface Dirent {
     isFile(): boolean
     isDirectory(): boolean
+    isSymbolicLink(): boolean
     name: string
     parentPath: string
 }
