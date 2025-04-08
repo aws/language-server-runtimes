@@ -77,6 +77,11 @@ export interface ChatParams extends PartialResultParams {
     prompt: ChatPrompt
     cursorState?: CursorState[]
     textDocument?: TextDocumentIdentifier
+    /**
+     * Context of the current chat message to be handled by the servers.
+     * Context can be added through QuickActionCommand triggered by `@`.
+     */
+    context?: QuickActionCommand[]
 }
 
 export interface InlineChatParams extends PartialResultParams {
