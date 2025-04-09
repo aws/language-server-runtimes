@@ -1,4 +1,3 @@
-// Chat Data Model
 import { Position, Range, TextDocumentIdentifier } from './lsp'
 
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
@@ -18,9 +17,13 @@ export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
+// context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
 export const LOG_INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/logInlineChatResult'
+// history
+export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
+export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
 
 export interface ChatItemAction {
     pillText: string
@@ -28,6 +31,8 @@ export interface ChatItemAction {
     disabled?: boolean
     description?: string
     type?: string
+    status?: string
+    id?: string
 }
 
 export interface SourceLink {
@@ -64,7 +69,6 @@ export type CodeSelectionType = 'selection' | 'block'
 
 export type CursorState = { position: Position } | { range: Range }
 
-// LSP Types
 interface PartialResultParams {
     partialResultToken?: number | string
 }
@@ -74,6 +78,11 @@ export interface ChatParams extends PartialResultParams {
     prompt: ChatPrompt
     cursorState?: CursorState[]
     textDocument?: TextDocumentIdentifier
+    /**
+     * Context of the current chat message to be handled by the servers.
+     * Context can be added through QuickActionCommand triggered by `@`.
+     */
+    context?: QuickActionCommand[]
 }
 
 export interface InlineChatParams extends PartialResultParams {
@@ -101,6 +110,8 @@ export interface FileList {
 export interface ChatMessage {
     type?: 'answer' | 'prompt' | 'system-prompt' // will default to 'answer'
     body?: string
+    buttons: ChatItemAction[]
+    icon?: IconType
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
     relatedContent?: {
@@ -135,7 +146,8 @@ export interface QuickActionCommand {
     icon?: IconType
 }
 
-export type IconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic' | 'help' | 'trash'
+export type ContextCommandIconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic'
+export type IconType = ContextCommandIconType | 'help' | 'trash' | 'search' | 'calendar' | string
 
 /**
  * Configuration object for registering chat quick actions groups.
@@ -156,8 +168,22 @@ export interface QuickActions {
 }
 
 export interface TabData {
-    placeholderText?: string
+    title?: string
+    tabHeader?: TabHeader
+    promptInput?: PromptInput
+    compactMode?: boolean
     messages: ChatMessage[]
+}
+
+export interface TabHeader {
+    icon?: IconType
+    title?: string
+    description?: string
+}
+
+export interface PromptInput {
+    placeholderText?: string
+    label?: string
 }
 
 /**
@@ -266,6 +292,8 @@ export interface FileClickParams {
     action?: FileAction
 }
 
+// context
+
 export interface ContextCommandGroup {
     groupName?: string
     commands: ContextCommand[]
@@ -306,4 +334,54 @@ export interface LogInlineChatResultParams {
     responseStartLatency?: number
     responseEndLatency?: number
     programmingLanguage?: ProgrammingLanguage
+}
+
+// history
+export type TextBasedFilterOption = {
+    type: 'textarea' | 'textinput'
+    placeholder?: string
+    icon?: IconType
+}
+export type FilterValue = string
+export type FilterOption = { id: string } & TextBasedFilterOption
+export interface Action {
+    id: string
+    icon?: IconType
+    text: string
+}
+export interface ConversationItem {
+    id: string
+    icon?: IconType
+    description?: string
+    actions?: Action[]
+}
+
+export interface ConversationItemGroup {
+    groupName?: string
+    icon?: IconType
+    items?: ConversationItem[]
+}
+
+export interface ListConversationsParams {
+    // key maps to id in FilterOption and value to corresponding filter value
+    filter?: Record<string, FilterValue>
+}
+
+export interface ConversationsList {
+    header?: { title: string }
+    filterOptions?: FilterOption[]
+    list: ConversationItemGroup[]
+}
+
+export interface ListConversationsResult extends ConversationsList {}
+
+export type ConversationAction = 'delete' | 'export'
+
+export interface ConversationClickParams {
+    id: string
+    action?: ConversationAction
+}
+
+export interface ConversationClickResult extends ConversationClickParams {
+    success: boolean
 }

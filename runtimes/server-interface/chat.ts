@@ -25,6 +25,10 @@ import {
     ContextCommandParams,
     CreatePromptParams,
     LogInlineChatResultParams,
+    ListConversationsParams,
+    ListConversationsResult,
+    ConversationClickParams,
+    ConversationClickResult,
 } from '../protocol'
 
 /**
@@ -39,6 +43,8 @@ export type Chat = {
     onEndChat: (handler: RequestHandler<EndChatParams, EndChatResult, void>) => void
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
+    onListConversations: (handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) => void
+    onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void

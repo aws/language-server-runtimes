@@ -48,6 +48,12 @@ import {
     CreatePromptParams,
     LOG_INLINE_CHAT_RESULT_NOTIFICATION_METHOD,
     LogInlineChatResultParams,
+    ListConversationsParams,
+    ListConversationsResult,
+    LIST_CONVERSATIONS_REQUEST_METHOD,
+    ConversationClickParams,
+    ConversationClickResult,
+    CONVERSATION_CLICK_REQUEST_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -107,6 +113,8 @@ export const chatUpdateNotificationType = new ProtocolNotificationType<ChatUpdat
 export const fileClickNotificationType = new ProtocolNotificationType<FileClickParams, void>(
     FILE_CLICK_NOTIFICATION_METHOD
 )
+
+// context
 export const contextCommandsNotificationType = new ProtocolNotificationType<ContextCommandParams, void>(
     CONTEXT_COMMAND_NOTIFICATION_METHOD
 )
@@ -116,3 +124,19 @@ export const createPromptNotificationType = new ProtocolNotificationType<CreateP
 export const logInlineChatResultNotificationType = new ProtocolNotificationType<LogInlineChatResultParams, void>(
     LOG_INLINE_CHAT_RESULT_NOTIFICATION_METHOD
 )
+
+// history
+export const listConversationsRequestType = new AutoParameterStructuresProtocolRequestType<
+    ListConversationsParams,
+    ListConversationsResult,
+    never,
+    void,
+    void
+>(LIST_CONVERSATIONS_REQUEST_METHOD)
+export const conversationClickRequestType = new AutoParameterStructuresProtocolRequestType<
+    ConversationClickParams,
+    ConversationClickResult,
+    never,
+    void,
+    void
+>(CONVERSATION_CLICK_REQUEST_METHOD)

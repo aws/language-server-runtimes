@@ -11,7 +11,7 @@ type Tool<T, R> = {
 
 export const newAgent = (): Agent => {
     const tools: Record<string, Tool<any, any>> = {}
-    const ajv = new Ajv()
+    const ajv = new Ajv({ strictSchema: false })
 
     return {
         addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec>(

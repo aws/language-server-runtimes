@@ -17,6 +17,21 @@ describe('Agent Tools', () => {
             required: ['test'],
         },
     } as const
+
+    const SOME_TOOL_SPEC_WITH_EXTENSIONS = {
+        name: 'test',
+        description: 'test',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                test: {
+                    type: 'string',
+                },
+            },
+            required: ['test'],
+            someExtension: true,
+        },
+    } as const
     const SOME_TOOL_HANDLER = async (_: { test: string }) => true
 
     beforeEach(() => {
@@ -90,5 +105,14 @@ describe('Agent Tools', () => {
         assert.equal(tools[0].name, SOME_TOOL_SPEC.name)
         assert.equal(tools[0].description, SOME_TOOL_SPEC.description)
         assert.equal(tools[0].inputSchema, SOME_TOOL_SPEC.inputSchema)
+    })
+
+    it('should support JSON Schema extension keywords', () => {
+        AGENT.addTool(SOME_TOOL_SPEC_WITH_EXTENSIONS, SOME_TOOL_HANDLER)
+        const tools = AGENT.getTools({ format: 'bedrock' })
+        assert.equal(
+            tools[0].toolSpecification.inputSchema.json['someExtension'],
+            SOME_TOOL_SPEC_WITH_EXTENSIONS.inputSchema.someExtension
+        )
     })
 })

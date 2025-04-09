@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.55](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.54...language-server-runtimes/v0.2.55) (2025-04-07)
+
+
+### Features
+
+* added chat history protocol ([#410](https://github.com/aws/language-server-runtimes/issues/410)) ([a4fcef6](https://github.com/aws/language-server-runtimes/commit/a4fcef6459f4224a6bf16d3ce6e88ef326fec3aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.10 to ^0.1.11
+
+## [0.2.54](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.53...language-server-runtimes/v0.2.54) (2025-04-07)
+
+
+### Bug Fixes
+
+* support JSON Schema extension keywords and properly infer required fields ([995a306](https://github.com/aws/language-server-runtimes/commit/995a3066a445b7466a22faeba0b4f7d35d0fb9a0))
+
 ## [0.2.53](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.52...language-server-runtimes/v0.2.53) (2025-04-02)
 
 
