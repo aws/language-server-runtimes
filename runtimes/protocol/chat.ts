@@ -52,6 +52,9 @@ import {
     ConversationClickParams,
     ConversationClickResult,
     CONVERSATION_CLICK_REQUEST_METHOD,
+    SAVE_CONVERSATION_TO_FILE_REQUEST_METHOD,
+    SaveChatToFileParams,
+    SaveChatToFileResult,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -135,3 +138,10 @@ export const conversationClickRequestType = new AutoParameterStructuresProtocolR
     void,
     void
 >(CONVERSATION_CLICK_REQUEST_METHOD)
+export const saveConversationToFileRequestType = new AutoParameterStructuresProtocolRequestType<
+    SaveChatToFileParams,
+    SaveChatToFileResult,
+    never,
+    void,
+    void
+>(SAVE_CONVERSATION_TO_FILE_REQUEST_METHOD)

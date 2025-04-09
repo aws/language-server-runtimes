@@ -28,6 +28,8 @@ import {
     ListConversationsResult,
     ConversationClickParams,
     ConversationClickResult,
+    SaveChatToFileParams,
+    SaveChatToFileResult,
 } from '../protocol'
 
 /**
@@ -44,6 +46,7 @@ export type Chat = {
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
     onListConversations: (handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) => void
     onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
+    onSaveConversationToFile: (handler: RequestHandler<SaveChatToFileParams, SaveChatToFileResult, void>) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void

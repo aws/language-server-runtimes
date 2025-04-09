@@ -43,6 +43,7 @@ import {
     createPromptNotificationType,
     listConversationsRequestType,
     conversationClickRequestType,
+    saveConversationToFileRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -152,6 +153,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onCreatePrompt: handler => lspConnection.onNotification(createPromptNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
+        onSaveConversationToFile: handler => lspConnection.onRequest(saveConversationToFileRequestType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {

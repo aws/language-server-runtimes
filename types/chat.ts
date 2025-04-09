@@ -23,6 +23,7 @@ export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
+export const SAVE_CONVERSATION_TO_FILE_REQUEST_METHOD = 'aws/chat/saveConversationToFile'
 
 export interface ChatItemAction {
     pillText: string
@@ -174,6 +175,8 @@ export interface TabData {
  */
 export interface ChatOptions {
     quickActions?: QuickActions
+    showHistory?: boolean
+    exportConversations?: boolean
 }
 
 export interface QuickActionParams extends PartialResultParams {
@@ -343,5 +346,15 @@ export interface ConversationClickParams {
 }
 
 export interface ConversationClickResult extends ConversationClickParams {
+    success: boolean
+}
+
+export interface SaveChatToFileParams extends TabEventParams {
+    filePath: string
+    serializedChat: string
+}
+
+export interface SaveChatToFileResult {
+    tabId: string
     success: boolean
 }

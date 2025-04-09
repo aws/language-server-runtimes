@@ -49,6 +49,9 @@ import {
     ConversationClickParams,
     conversationClickRequestType,
     ConversationClickResult,
+    SaveChatToFileParams,
+    SaveChatToFileResult,
+    saveConversationToFileRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -139,5 +142,9 @@ export class BaseChat implements Chat {
 
     public onConversationClick(handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) {
         this.connection.onRequest(conversationClickRequestType.method, handler)
+    }
+
+    public onSaveConversationToFile(handler: RequestHandler<SaveChatToFileParams, SaveChatToFileResult, void>) {
+        this.connection.onRequest(saveConversationToFileRequestType.method, handler)
     }
 }
