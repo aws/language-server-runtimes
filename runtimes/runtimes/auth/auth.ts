@@ -214,10 +214,10 @@ export class Auth {
                 `Runtime: Failed to update Connection metadata with error: ${error?.message || 'unknown'}`
             )
             OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
-                errorType: 'caughtError',
+                errorOrigin: 'caughtError',
+                errorType: 'connectionMetadata',
                 errorName: error?.name ?? 'unknown',
                 errorCode: error?.code ?? '',
-                message: 'Failed to update Connection metadata',
             })
         }
     }

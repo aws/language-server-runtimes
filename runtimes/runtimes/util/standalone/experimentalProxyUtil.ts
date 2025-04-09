@@ -77,10 +77,11 @@ export class ProxyConfigManager {
             return cert
         } catch (error: any) {
             OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
-                errorType: 'caughtError',
+                errorOrigin: 'caughtError',
                 errorName: error?.name ?? 'unknown',
+                errorType: 'proxyCertificateReadFile',
                 errorCode: error?.code ?? '',
-                message: 'Failed to read certificates from given path',
+                errorMessage: 'Failed to read certificates from given path',
             })
             console.warn(`Failed to read certificates from ${path}:`, error)
         }
@@ -124,10 +125,11 @@ export class ProxyConfigManager {
             }
         } catch (error: any) {
             OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
-                errorType: 'caughtError',
+                errorOrigin: 'caughtError',
                 errorName: error?.name ?? 'unknown',
+                errorType: 'proxySystemCertificateRead',
                 errorCode: error?.code ?? '',
-                message: 'Failed to read system certificates',
+                errorMessage: 'Failed to read system certificates',
             })
             console.warn('Failed to read system certificates:', error)
         }
@@ -217,10 +219,11 @@ export class ProxyConfigManager {
                 return certDate > Date.now()
             } catch (error: any) {
                 OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
-                    errorType: 'caughtError',
+                    errorOrigin: 'caughtError',
                     errorName: error?.name ?? 'unknown',
+                    errorType: 'proxyCertificateRemove',
                     errorCode: error?.code ?? '',
-                    message: 'Error parsing certificate',
+                    errorMessage: 'Error parsing certificate',
                 })
                 console.warn(`Error parsing certificate: ${error}`)
                 return false

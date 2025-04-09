@@ -31,7 +31,7 @@ describe('AWSSpanExporter', () => {
             endTime: [1234567890, 838000000],
             name: 'ErrorEvent',
             attributes: {
-                'event.attributes': `{"errorName":"Error1","errorType":"caughtError"}`,
+                'event.attributes': `{"errorName":"Error1","errorOrigin":"caughtError","errorType":"parseError"}`,
             },
         } as any,
         {
@@ -48,7 +48,7 @@ describe('AWSSpanExporter', () => {
             endTime: [1234567890, 838000000],
             name: 'ErrorEvent',
             attributes: {
-                'event.attributes': `{"errorName":"Error2","errorType":"caughtError"}`,
+                'event.attributes': `{"errorName":"Error2","errorOrigin":"caughtError","errorType":"parseError"}`,
             },
         } as any,
     ]
@@ -147,7 +147,8 @@ describe('AWSSpanExporter', () => {
                                 },
                                 errorAttr: {
                                     errorName: 'Error1',
-                                    errorType: 'caughtError',
+                                    errorOrigin: 'caughtError',
+                                    errorType: 'parseError',
                                 },
                             },
                             {
@@ -157,7 +158,8 @@ describe('AWSSpanExporter', () => {
                                 },
                                 errorAttr: {
                                     errorName: 'Error2',
-                                    errorType: 'caughtError',
+                                    errorOrigin: 'caughtError',
+                                    errorType: 'parseError',
                                 },
                             },
                         ],

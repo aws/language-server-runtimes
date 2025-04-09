@@ -21,22 +21,22 @@
             "title": "ErrorEventAttr",
             "type": "object",
             "additionalProperties": false,
-            "required": ["errorName", "errorType"],
+            "required": ["errorName", "errorOrigin", "errorType"],
             "properties": {
                 "errorName": {
                     "type": "string"
                 },
-                "errorType": {
+                "errorOrigin": {
                     "type": "string",
                     "enum": ["caughtError", "uncaughtException", "unhandledRejection", "other"]
+                },
+                "errorType": {
+                    "type": "string"
                 },
                 "errorCode": {
                     "type": "string"
                 },
                 "errorMessage": {
-                    "type": "string"
-                },
-                "message": {
                     "type": "string"
                 }
             }

@@ -29,7 +29,8 @@ function setServerCrashTelemetryListeners() {
     // Handles both 'uncaughtException' and 'unhandledRejection'
     process.on('uncaughtExceptionMonitor', async (err, origin) => {
         optel.recordEvent('ErrorEvent', {
-            errorType: origin,
+            errorOrigin: origin,
+            errorType: 'unknownServerCrash',
             errorName: err?.name ?? 'unknown',
         })
     })

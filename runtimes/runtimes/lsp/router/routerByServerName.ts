@@ -53,10 +53,10 @@ export class RouterByServerName<P extends Partial<EventIdentifier>, F extends Fo
             return JSON.parse(idJson) as NotificationId
         } catch (error: any) {
             OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
-                errorType: 'caughtError',
+                errorOrigin: 'caughtError',
+                errorType: 'routerServerNameParse',
                 errorName: error?.name ?? 'unknown',
                 errorCode: error?.code ?? '',
-                message: 'Failed to parse server name in LSP Router',
             })
             return null
         }

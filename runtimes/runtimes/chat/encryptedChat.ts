@@ -90,10 +90,11 @@ export class EncryptedChat extends BaseChat {
                         OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
                             'ErrorEvent',
                             {
-                                errorType: 'caughtError',
+                                errorOrigin: 'caughtError',
+                                errorType: 'encryptedChatDecodeRequest',
                                 errorName: err?.name ?? 'unknown',
                                 errorCode: err?.code ?? '',
-                                message: errorMessage,
+                                errorMessage: errorMessage,
                             }
                         )
                         if (err instanceof Error) errorMessage = err.message
