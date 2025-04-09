@@ -13,6 +13,7 @@ import * as authModule from './auth/auth'
 import * as encryptedChatModule from './chat/encryptedChat'
 import * as baseChatModule from './chat/baseChat'
 import { pathToFileURL } from 'url'
+import { generateSharedRegistryFeatureTest } from './util/testUtils'
 
 describe('standalone', () => {
     let stubServer: sinon.SinonStub
@@ -126,12 +127,12 @@ describe('standalone', () => {
     describe('features', () => {
         let features: Features
 
-        beforeEach(() => {
-            standalone(props)
-            features = stubServer.getCall(0).args[0]
-        })
-
         describe('Workspace', () => {
+            beforeEach(() => {
+                standalone(props)
+                features = stubServer.getCall(0).args[0]
+            })
+
             describe('fs.getTempDirPath', () => {
                 it('should use /tmp path when on Darwin', () => {
                     sinon.stub(os, 'type').returns('Darwin')
@@ -154,6 +155,11 @@ describe('standalone', () => {
             })
 
             describe('getWorkspaceFolder', () => {
+                beforeEach(() => {
+                    standalone(props)
+                    features = stubServer.getCall(0).args[0]
+                })
+
                 it('should return undefined when no workspace folders are configured', () => {
                     const fileUri = pathToFileURL('/sample/files').href
                     lspRouterStub.clientInitializeParams!.workspaceFolders = undefined
@@ -196,10 +202,17 @@ describe('standalone', () => {
         })
 
         describe('Runtime', () => {
+            beforeEach(() => {
+                standalone(props)
+                features = stubServer.getCall(0).args[0]
+            })
+
             it('should set params from runtime properties', () => {
                 assert.strictEqual(features.runtime.serverInfo.name, props.name)
                 assert.strictEqual(features.runtime.serverInfo.version, props.version)
             })
         })
+
+        generateSharedRegistryFeatureTest(standalone)
     })
 })

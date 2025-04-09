@@ -4,6 +4,7 @@ import * as vscodeLanguageServer from 'vscode-languageserver/node'
 import assert from 'assert'
 import proxyquire from 'proxyquire'
 import { Features } from '../server-interface/server'
+import { generateSharedRegistryFeatureTest } from './util/testUtils'
 
 describe('webworker', () => {
     let stubServer: sinon.SinonStub
@@ -45,17 +46,19 @@ describe('webworker', () => {
     describe('features', () => {
         let features: Features
 
-        beforeEach(() => {
-            webworker(props)
-            features = stubServer.getCall(0).args[0]
-        })
-
         describe('Runtime', () => {
+            beforeEach(() => {
+                webworker(props)
+                features = stubServer.getCall(0).args[0]
+            })
+
             it('should set params from runtime properties', () => {
                 assert.strictEqual(features.runtime.serverInfo.name, props.name)
                 assert.strictEqual(features.runtime.serverInfo.version, props.version)
                 assert.strictEqual(features.runtime.platform, 'browser')
             })
         })
+
+        generateSharedRegistryFeatureTest((props: RuntimeProps) => webworker(props))
     })
 })
