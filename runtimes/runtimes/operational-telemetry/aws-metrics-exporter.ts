@@ -1,4 +1,4 @@
-import { ExportResult, ExportResultCode } from '@opentelemetry/core'
+import { ExportResult, ExportResultCode, hrTimeToMilliseconds } from '@opentelemetry/core'
 import { MetricData, PushMetricExporter, ResourceMetrics, ScopeMetrics } from '@opentelemetry/sdk-metrics'
 import { diag } from '@opentelemetry/api'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
@@ -103,11 +103,11 @@ export class AwsMetricExporter implements PushMetricExporter {
             {} as Record<string, number>
         )
 
-        const unixEpochSeconds = metric.dataPoints[0].endTime[0]
+        const unixEpochMiliseconds = Math.round(hrTimeToMilliseconds(metric.dataPoints[0].endTime))
         const result = {
             baseInfo: {
                 name: metric.descriptor.name,
-                timestamp: unixEpochSeconds,
+                timestamp: unixEpochMiliseconds,
             },
             resourceValues: {
                 ...dataPoints,
