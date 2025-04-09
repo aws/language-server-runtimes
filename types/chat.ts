@@ -109,7 +109,7 @@ export interface FileList {
 export interface ChatMessage {
     type?: 'answer' | 'prompt' | 'system-prompt' // will default to 'answer'
     body?: string
-    buttons: ChatItemAction[]
+    buttons?: ChatItemAction[]
     icon?: IconType
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
