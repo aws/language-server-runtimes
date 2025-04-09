@@ -76,6 +76,7 @@ import { getTelemetryLspServer } from './util/telemetryLspServer'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
 import { newAgent } from './agent'
+import { newSharedRegistry } from './shared-registry'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -292,6 +293,8 @@ export const standalone = (props: RuntimeProps) => {
 
         const sdkProxyConfigManager = new ProxyConfigManager(telemetry)
 
+        const sharedRegistry = newSharedRegistry()
+
         // Initialize every Server
         const disposables = props.servers.map(s => {
             // Create LSP server representation that holds internal server state
@@ -445,6 +448,7 @@ export const standalone = (props: RuntimeProps) => {
                 notification: lspServer.notification,
                 sdkInitializator: sdkInitializator,
                 agent,
+                sharedRegistry,
             })
         })
 

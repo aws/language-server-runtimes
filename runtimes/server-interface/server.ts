@@ -9,6 +9,7 @@ import {
     Notification,
     SDKInitializator,
     Agent,
+    SharedRegistry,
 } from '.'
 import { IdentityManagement } from './identity-management'
 
@@ -41,4 +42,5 @@ export type Features = {
     notification: Notification
     sdkInitializator: SDKInitializator
     agent: Agent
+    sharedRegistry: SharedRegistry
 }

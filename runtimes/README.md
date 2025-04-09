@@ -391,6 +391,42 @@ const AgentServer: Server = ({ chat, agent }) => {
 }
 ```
 
+### Shared Registry
+A Language Server can consist of multiple Servers in the same runtime, and the shared registry allows these Servers to expose common functionality or dependencies to each other by registering and invoking named handlers. These handlers are maintained in the runtime itself. It is the responsibility of the Server implementors to ensure handlers are registered and invoked correctly, and handle errors accordingly.
+
+Usage example:
+```ts
+interface CommonFunctionality {
+    getSomething(): Promise<Something>
+    doSomething(something: Something): Promise<Something>
+}
+
+const CommonFunctionalityServer: Server = ({ sharedRegistry }) => {
+    const commonFunctionality: CommonFunctionality = {
+        // ...
+    }
+
+    sharedRegistry.registerHandler('getSomething', () => commonFunctionality.getSomething()))
+    sharedRegistry.registerHandler('doSomething', (something: Something) => commonFunctionality.doSomething(something)))
+}
+
+
+const OtherServer: Server = ({ lsp, sharedRegistry } => {
+    let something: Something
+
+    lsp.onCompletion(() => {
+        try {
+            something = sharedRegistry.invokeHandler('getSomething')
+            // ...
+            something = sharedRegistry.invokeHandler('doSomething', something)
+            // ...
+        } catch(error) {
+            // ...
+        }
+    })
+})
+```
+
 ## Runtime Host Environments
 
 Servers typically run as processes or web workers. Details are provided below on how to initialize each type of server runtime.
