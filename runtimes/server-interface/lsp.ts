@@ -57,6 +57,9 @@ import {
     OpenFileDiffParams,
     SelectWorkspaceItemParams,
     SelectWorkspaceItemResult,
+    EditSuggestionsParams,
+    EditSuggestionsResult,
+    LogEditSuggestionsParams,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -162,5 +165,7 @@ export type Lsp = {
         ) => void
         onGetConfigurationFromServer: (handler: RequestHandler<GetConfigurationFromServerParams, LSPAny, void>) => void
         onDidChangeDependencyPaths: (handler: NotificationHandler<DidChangeDependencyPathsParams>) => void
+        onEditSuggestions: (handler: RequestHandler<EditSuggestionsParams, EditSuggestionsResult | null, void>) => void
+        onLogEditSuggestionsResults: (handler: NotificationHandler<LogEditSuggestionsParams>) => void
     }
 }

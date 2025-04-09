@@ -16,6 +16,8 @@ import {
     telemetryNotificationType,
     SemanticTokensRequest,
     didChangeDependencyPathsNotificationType,
+    editSuggestionsRequestType,
+    logEditSuggestionsNotificationType,
     // Chat
     chatRequestType,
     endChatRequestType,
@@ -235,6 +237,10 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 },
                 onDidChangeDependencyPaths(handler) {
                     lspConnection.onNotification(didChangeDependencyPathsNotificationType, handler)
+                },
+                onEditSuggestions: handler => lspConnection.onRequest(editSuggestionsRequestType, handler),
+                onLogEditSuggestionsResults: handler => {
+                    lspConnection.onNotification(logEditSuggestionsNotificationType.method, handler)
                 },
             },
         }

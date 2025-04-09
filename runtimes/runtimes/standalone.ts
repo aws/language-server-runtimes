@@ -23,6 +23,8 @@ import {
     didChangeDependencyPathsNotificationType,
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
+    editSuggestionsRequestType,
+    logEditSuggestionsNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -354,6 +356,10 @@ export const standalone = (props: RuntimeProps) => {
                     },
                     onDidChangeDependencyPaths(handler) {
                         lspConnection.onNotification(didChangeDependencyPathsNotificationType, handler)
+                    },
+                    onEditSuggestions: handler => lspConnection.onRequest(editSuggestionsRequestType, handler),
+                    onLogEditSuggestionsResults: handler => {
+                        lspConnection.onNotification(logEditSuggestionsNotificationType.method, handler)
                     },
                 },
             }
