@@ -42,10 +42,11 @@ telemetryService.registerGaugeProvider('ResourceUsageMetric', {
 
 ```typescript
 optel.recordEvent('ErrorEvent', {
-    errorType: 'caughtError',
+    errorOrigin: 'caughtError',
+    errorType: 'proxyCertificateRead',
     errorName: error?.name ?? 'unknown',
     errorCode: error?.code ?? '',
-    message: 'Failed to parse server name',
+    errorMessage: 'Failed to parse server name',
 })
 ```
 

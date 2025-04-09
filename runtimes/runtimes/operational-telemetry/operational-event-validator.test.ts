@@ -36,7 +36,8 @@ describe('OperationalEventValidator', () => {
                 },
                 errorAttr: {
                     errorName: 'Error',
-                    errorType: 'uncaughtException',
+                    errorOrigin: 'uncaughtException',
+                    errorType: 'responseFailed',
                 },
             }
 
