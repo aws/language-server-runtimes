@@ -24,7 +24,6 @@ export const AUTH_FOLLOW_UP_CLICKED = 'authFollowUpClicked'
 export const GENERIC_COMMAND = 'genericCommand'
 export const CHAT_OPTIONS = 'chatOptions'
 export const DISCLAIMER_ACKNOWLEDGED = 'disclaimerAcknowledged'
-export const WELCOME_COUNTER_UPDATE_MESSAGE = 'welcomeCounterUpdateMessage'
 
 export type UiMessageCommand =
     | typeof SEND_TO_PROMPT
@@ -35,7 +34,6 @@ export type UiMessageCommand =
     | typeof CHAT_OPTIONS
     | typeof COPY_TO_CLIPBOARD
     | typeof DISCLAIMER_ACKNOWLEDGED
-    | typeof WELCOME_COUNTER_UPDATE_MESSAGE
 
 export interface UiMessage {
     command: UiMessageCommand
