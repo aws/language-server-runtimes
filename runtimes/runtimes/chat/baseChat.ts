@@ -138,7 +138,7 @@ export class BaseChat implements Chat {
     public onLogInlineChatResult(handler: NotificationHandler<LogInlineChatResultParams>) {
         this.connection.onNotification(logInlineChatResultNotificationType.method, handler)
     }
-  
+
     public onListConversations(handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) {
         this.connection.onRequest(listConversationsRequestType.method, handler)
     }
