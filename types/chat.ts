@@ -30,6 +30,8 @@ export interface ChatItemAction {
     disabled?: boolean
     description?: string
     type?: string
+    status?: string
+    id?: string
 }
 
 export interface SourceLink {
@@ -102,6 +104,8 @@ export interface FileList {
 export interface ChatMessage {
     type?: 'answer' | 'prompt' | 'system-prompt' // will default to 'answer'
     body?: string
+    buttons: ChatItemAction[]
+    icon?: IconType
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
     relatedContent?: {
@@ -158,8 +162,22 @@ export interface QuickActions {
 }
 
 export interface TabData {
-    placeholderText?: string
+    title?: string
+    tabHeader?: TabHeader
+    promptInput?: PromptInput
+    compactMode?: boolean
     messages: ChatMessage[]
+}
+
+export interface TabHeader {
+    icon?: IconType
+    title?: string
+    description?: string
+}
+
+export interface PromptInput {
+    placeholderText?: string
+    label?: string
 }
 
 /**
