@@ -79,6 +79,7 @@ import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
+import { newSharedRegistry } from './shared-registry'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -181,6 +182,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     const logging: Logging = loggingServer.getLoggingObject()
     lspRouter.servers.push(loggingServer.getLspServer())
 
+    const sharedRegistry = newSharedRegistry()
+
     // Initialize every Server
     const disposables = props.servers.map(s => {
         // Create server representation, processing LSP event handlers, in runtimes
@@ -266,6 +269,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             notification: lspServer.notification,
             sdkInitializator: sdkInitializator,
             agent,
+            sharedRegistry,
         })
     })
 

@@ -12,6 +12,7 @@ import {
     SDKClientConstructorV3,
     SDKInitializator,
     Agent,
+    SharedRegistry,
 } from '../server-interface'
 import { StubbedInstance, stubInterface } from 'ts-sinon'
 import {
@@ -61,6 +62,7 @@ export class TestFeatures {
     notification: StubbedInstance<Notification>
     sdkInitializator: SDKInitializator
     agent: Agent
+    sharedRegistry: SharedRegistry
 
     private disposables: (() => void)[] = []
 
@@ -95,6 +97,7 @@ export class TestFeatures {
         this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
         this.workspace.getAllTextDocuments.callsFake(async () => Object.values(this.documents))
         this.agent = stubInterface<Agent>()
+        this.sharedRegistry = stubInterface<SharedRegistry>()
     }
 
     async start(server: Server) {
