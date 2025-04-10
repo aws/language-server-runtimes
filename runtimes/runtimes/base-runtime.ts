@@ -119,7 +119,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             getServerDataDirPath: serverName =>
                 lspRouter.clientInitializeParams?.initializationOptions?.aws?.clientDataFolder ?? `/${serverName}`,
             getTempDirPath: () => '/tmp',
-            getUserHomeDir: () => '',
+            getUserHomeDir: () => '/home/user',
             readFile: (_path, _options?) => Promise.resolve(''),
             readdir: _path => Promise.resolve([]),
             isFile: _path => Promise.resolve(false),
