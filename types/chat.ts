@@ -173,7 +173,14 @@ export interface TabData {
  * and the default tab data to be shown to the user in the chat UI
  */
 export interface ChatOptions {
+    /**
+     * Chat QuickActions, supported by Server. Chat Client renders and sets up actions handler for registered QuickAction in UI.
+     */
     quickActions?: QuickActions
+
+    /**
+     * Server signals to Chat Client if it supports conversation history.
+     */
     history?: boolean
 }
 
