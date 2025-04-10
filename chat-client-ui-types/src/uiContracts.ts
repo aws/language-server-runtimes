@@ -143,6 +143,7 @@ export interface ExportConversationDialogMessage {
 export interface ExportConversationDialogParams {
     tabId: string
     supportedFormats: ['markdown', 'html']
+    defaultFileName: string
 }
 
 /**
@@ -158,8 +159,6 @@ export interface ExportConversationMessage {
 export interface ExportConversationParams {
     tabId: string
     filepath: string
-    // Check if we need to pass format, or we can compute it in Chat Client based on filetype
-    format?: 'markdown' | 'html'
 }
 
 /**
