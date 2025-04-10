@@ -174,8 +174,7 @@ export interface TabData {
  */
 export interface ChatOptions {
     quickActions?: QuickActions
-    showHistory?: boolean
-    exportConversations?: boolean
+    history?: boolean
 }
 
 export interface QuickActionParams extends PartialResultParams {
