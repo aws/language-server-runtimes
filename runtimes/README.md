@@ -188,8 +188,6 @@ The runtime supports chat by default
 | Send create prompt event that triggers new prompt creation flow on server. | `aws/chat/createPrompt`          | `CreatePromptParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
 | Send request to list the conversations available in history: all or based on filter if provided. As there can be several filter options used, the filter in the request is a map of filter option ids to corresponding values. Possible filter options are expected to be provided in the previous `listConversations` result before filter can be used. | `aws/chat/listConversations`          | `ListConversationsParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `ListConversationsResult`             |
 | Send conversation or conversation action click event. If no action is provided, the default action is "open". | `aws/chat/conversationClick`          | `ConversationClickParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `ConversationClickResult`             |
-| Write serialized chat history to file on the filesyste. | `aws/chat/saveConversationToFile`          | `SaveChatToFileParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `SaveChatToFileResult`             |
-
 
 ```ts
 export interface ChatPrompt {
