@@ -24,6 +24,16 @@ export const AUTH_FOLLOW_UP_CLICKED = 'authFollowUpClicked'
 export const GENERIC_COMMAND = 'genericCommand'
 export const CHAT_OPTIONS = 'chatOptions'
 export const DISCLAIMER_ACKNOWLEDGED = 'disclaimerAcknowledged'
+export const EXPORT_CONVERSATION_DIALOG = 'exportConversationDialog'
+export const EXPORT_CONVERSATION = 'exportConversation'
+
+/**
+ * A message sent from Chat Client to Extension in response to various actions triggered from Chat UI.
+ */
+export interface UiMessage {
+    command: UiMessageCommand
+    params?: UiMessageParams
+}
 
 export type UiMessageCommand =
     | typeof SEND_TO_PROMPT
@@ -34,11 +44,8 @@ export type UiMessageCommand =
     | typeof CHAT_OPTIONS
     | typeof COPY_TO_CLIPBOARD
     | typeof DISCLAIMER_ACKNOWLEDGED
-
-export interface UiMessage {
-    command: UiMessageCommand
-    params?: UiMessageParams
-}
+    | typeof EXPORT_CONVERSATION_DIALOG
+    | typeof EXPORT_CONVERSATION
 
 export type UiMessageParams =
     | InsertToCursorPositionParams
@@ -48,6 +55,8 @@ export type UiMessageParams =
     | SendToPromptParams
     | ChatOptions
     | CopyCodeToClipboardParams
+    | ExportConversationDialogParams
+    | ExportConversationParams
 
 export interface SendToPromptParams {
     selection: string
@@ -120,12 +129,67 @@ export interface CopyCodeToClipboardMessage {
     params: CopyCodeToClipboardParams
 }
 
-export type UiMessageResultCommand = typeof OPEN_TAB_REQUEST_METHOD
-export type UiMessageResult = OpenTabResult
+/**
+ * A notification sent from Chat Client to Extension when "Export Chat" action tiggered in chat client UI.
+ * Extension should show a dialog to let user choose the format and select path to export the chat conversation.
+ *
+ * After user selects destination file, Extension should send `ExportConversationMessage` to Chat Client to receive serialized conversation content.
+ */
+export interface ExportConversationDialogMessage {
+    command: typeof EXPORT_CONVERSATION_DIALOG
+    params: ExportConversationDialogParams
+}
+
+export interface ExportConversationDialogParams {
+    tabId: string
+    supportedFormats: ['markdown', 'html']
+    defaultFileName: string
+}
+
+/**
+ * A notification sent from Extension to Chat Client to export serialized conversation history for specific chat tab.
+ * `ExportConversationMessage` can be sent as result of `ExportConversationDialogMessage` handler,
+ * after user selected a destination for saving conversation.
+ */
+export interface ExportConversationMessage {
+    command: typeof EXPORT_CONVERSATION
+    params: ExportConversationParams
+}
+
+export interface ExportConversationParams {
+    tabId: string
+    filepath: string
+}
+
+/**
+ * A notification sent from Chat Client to Extension to export serialized conversation history to given filepath.
+ * Chat Client sends serialized chat conversation messages in selected format.
+ */
+export interface ExportSerializedConversationMessage {
+    command: typeof EXPORT_CONVERSATION
+    params: ExportSerializedConversationParams
+}
+export interface ExportSerializedConversationParams {
+    tabId: string
+    filepath: string
+    format: 'markdown' | 'html'
+    serializedChat: string
+}
+
+/**
+ * A message sent from Chat Client to Extension in response to request triggered from Extension.
+ * As Chat Client uses PostMessage API for transport with integrating Extensions, this is a loose implementation of request-response model.
+ * Responses order is not guaranteed.
+ */
 export interface UiResultMessage {
     command: UiMessageResultCommand
     params: UiMessageResultParams
 }
+
+export type UiMessageResultCommand = typeof OPEN_TAB_REQUEST_METHOD
+
+export type UiMessageResult = OpenTabResult
+
 export type UiMessageResultParams =
     | {
           success: true
