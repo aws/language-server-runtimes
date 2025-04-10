@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.1.14](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.13...chat-client-ui-types/v0.1.14) (2025-04-10)
+
+
+### Features
+
+* add protocol for export chat history ([#418](https://github.com/aws/language-server-runtimes/issues/418)) ([c31fadc](https://github.com/aws/language-server-runtimes/commit/c31fadc36752d3300d53fc22b59e66f07ecc75ac))
+* extend tabdata interface to include support for welcome screen ([#411](https://github.com/aws/language-server-runtimes/issues/411)) ([68354d9](https://github.com/aws/language-server-runtimes/commit/68354d9e51b17637c91bcf79e320df3fd0975678))
+
+
+### Reverts
+
+* feat: extend tabdata interface to include support for welcome screen ([#411](https://github.com/aws/language-server-runtimes/issues/411)) ([#420](https://github.com/aws/language-server-runtimes/issues/420)) ([53084ad](https://github.com/aws/language-server-runtimes/commit/53084adee2b375b998a15222d56a2e56593728e5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.11 to ^0.1.12
+
 ## [0.1.13](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.12...chat-client-ui-types/v0.1.13) (2025-04-07)
 
 
