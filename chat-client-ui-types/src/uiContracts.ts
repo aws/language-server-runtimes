@@ -186,7 +186,7 @@ export interface UiResultMessage {
     params: UiMessageResultParams
 }
 
-export type UiMessageResultCommand = typeof OPEN_TAB_REQUEST_METHOD | typeof EXPORT_CONVERSATION
+export type UiMessageResultCommand = typeof OPEN_TAB_REQUEST_METHOD
 
 export type UiMessageResult = OpenTabResult
 
