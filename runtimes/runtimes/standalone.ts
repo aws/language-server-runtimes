@@ -213,6 +213,7 @@ export const standalone = (props: RuntimeProps) => {
                         os.type() === 'Darwin' ? '/tmp' : os.tmpdir(),
                         'aws-language-servers'
                     ),
+                getUserHomeDir: () => os.homedir(),
                 readdir: path => readdir(path, { withFileTypes: true }),
                 readFile: (path, options?) =>
                     readFile(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
