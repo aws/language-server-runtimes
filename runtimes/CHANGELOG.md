@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.2.56](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.55...language-server-runtimes/v0.2.56) (2025-04-10)
+
+
+### Features
+
+* expose predicate to check symbolic link ([02002af](https://github.com/aws/language-server-runtimes/commit/02002af823cce5feeefb00e243d8b48beab576e6))
+* **types:** add mode to fs writeFile ([#423](https://github.com/aws/language-server-runtimes/issues/423)) ([daae4e8](https://github.com/aws/language-server-runtimes/commit/daae4e8e665bd334e6109921d9efcd5ab12c4ff8))
+
+
+### Bug Fixes
+
+* avoid deprecated attribute path ([8efb2de](https://github.com/aws/language-server-runtimes/commit/8efb2deff9aeb670f211920d892f0ba3c17bab0e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.11 to ^0.1.12
+
 ## [0.2.55](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.54...language-server-runtimes/v0.2.55) (2025-04-07)
 
 
