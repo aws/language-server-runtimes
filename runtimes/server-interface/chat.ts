@@ -20,6 +20,14 @@ import {
     OpenTabResult,
     ChatUpdateParams,
     FileClickParams,
+    InlineChatParams,
+    InlineChatResult,
+    ContextCommandParams,
+    CreatePromptParams,
+    ListConversationsParams,
+    ListConversationsResult,
+    ConversationClickParams,
+    ConversationClickResult,
 } from '../protocol'
 
 /**
@@ -28,9 +36,14 @@ import {
 export type Chat = {
     // Requests
     onChatPrompt: (handler: RequestHandler<ChatParams, ChatResult | undefined | null, ChatResult>) => void
+    onInlineChatPrompt: (
+        handler: RequestHandler<InlineChatParams, InlineChatResult | undefined | null, InlineChatResult>
+    ) => void
     onEndChat: (handler: RequestHandler<EndChatParams, EndChatResult, void>) => void
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
+    onListConversations: (handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) => void
+    onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
@@ -44,4 +57,6 @@ export type Chat = {
     onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
     sendChatUpdate: (params: ChatUpdateParams) => void
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
+    sendContextCommands: (params: ContextCommandParams) => void
+    onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
 }

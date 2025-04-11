@@ -13,6 +13,9 @@ import {
     quickActionRequestType,
     ResponseError,
     LSPErrorCodes,
+    InlineChatParams,
+    inlineChatRequestType,
+    InlineChatResult,
 } from '../../protocol'
 import { CredentialsEncoding, encryptObjectWithKey, isMessageJWEEncrypted } from '../auth/standalone/encryption'
 import { BaseChat } from './baseChat'
@@ -46,6 +49,15 @@ export class EncryptedChat extends BaseChat {
         >(chatRequestType, handler)
     }
 
+    public onInlineChatPrompt(handler: RequestHandler<InlineChatParams, ChatResult | null | undefined, ChatResult>) {
+        this.registerEncryptedRequestHandler<
+            EncryptedChatParams,
+            InlineChatParams,
+            InlineChatResult | null | undefined,
+            InlineChatResult
+        >(inlineChatRequestType, handler)
+    }
+
     public onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
         this.registerEncryptedRequestHandler<EncryptedQuickActionParams, QuickActionParams, QuickActionResult, void>(
             quickActionRequestType,
@@ -55,7 +67,7 @@ export class EncryptedChat extends BaseChat {
 
     private registerEncryptedRequestHandler<
         EncryptedRequestType extends EncryptedRequestParams,
-        DecryptedRequestType extends ChatParams | QuickActionParams,
+        DecryptedRequestType extends ChatParams | QuickActionParams | InlineChatParams,
         ResponseType,
         ErrorType,
     >(requestType: any, handler: RequestHandler<DecryptedRequestType, ResponseType, ErrorType>) {

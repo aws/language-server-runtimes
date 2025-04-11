@@ -1,5 +1,118 @@
 # Changelog
 
+## [0.2.56](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.55...language-server-runtimes/v0.2.56) (2025-04-10)
+
+
+### Features
+
+* expose predicate to check symbolic link ([02002af](https://github.com/aws/language-server-runtimes/commit/02002af823cce5feeefb00e243d8b48beab576e6))
+* **types:** add mode to fs writeFile ([#423](https://github.com/aws/language-server-runtimes/issues/423)) ([daae4e8](https://github.com/aws/language-server-runtimes/commit/daae4e8e665bd334e6109921d9efcd5ab12c4ff8))
+
+
+### Bug Fixes
+
+* avoid deprecated attribute path ([8efb2de](https://github.com/aws/language-server-runtimes/commit/8efb2deff9aeb670f211920d892f0ba3c17bab0e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.11 to ^0.1.12
+
+## [0.2.55](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.54...language-server-runtimes/v0.2.55) (2025-04-07)
+
+
+### Features
+
+* added chat history protocol ([#410](https://github.com/aws/language-server-runtimes/issues/410)) ([a4fcef6](https://github.com/aws/language-server-runtimes/commit/a4fcef6459f4224a6bf16d3ce6e88ef326fec3aa))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.10 to ^0.1.11
+
+## [0.2.54](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.53...language-server-runtimes/v0.2.54) (2025-04-07)
+
+
+### Bug Fixes
+
+* support JSON Schema extension keywords and properly infer required fields ([995a306](https://github.com/aws/language-server-runtimes/commit/995a3066a445b7466a22faeba0b4f7d35d0fb9a0))
+
+## [0.2.53](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.52...language-server-runtimes/v0.2.53) (2025-04-02)
+
+
+### Features
+
+* context support in protocol ([#404](https://github.com/aws/language-server-runtimes/issues/404)) ([70b8507](https://github.com/aws/language-server-runtimes/commit/70b8507f1c95a79d74c49e7153e772d11372dc65))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.9 to ^0.1.10
+
+## [0.2.52](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.51...language-server-runtimes/v0.2.52) (2025-04-02)
+
+
+### Bug Fixes
+
+* add requestId to InlineChat response ([#403](https://github.com/aws/language-server-runtimes/issues/403)) ([3bee702](https://github.com/aws/language-server-runtimes/commit/3bee70222b6d9bd3e5bde3b046593be2e80b8d4c))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.8 to ^0.1.9
+
+## [0.2.51](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.50...language-server-runtimes/v0.2.51) (2025-04-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.7 to ^0.1.8
+
+## [0.2.50](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.49...language-server-runtimes/v0.2.50) (2025-04-01)
+
+
+### Features
+
+* add extension for inline chat ([#391](https://github.com/aws/language-server-runtimes/issues/391)) ([52abd83](https://github.com/aws/language-server-runtimes/commit/52abd839b396c92863bca18c9bb33a7875192c3d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.6 to ^0.1.7
+
+## [0.2.49](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.48...language-server-runtimes/v0.2.49) (2025-03-31)
+
+
+### Features
+
+* add agent interface for tool creation and usage ([c420d68](https://github.com/aws/language-server-runtimes/commit/c420d68c563260ea933907ceeefac117f5462ac9))
+
+## [0.2.48](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.47...language-server-runtimes/v0.2.48) (2025-03-25)
+
+
+### Bug Fixes
+
+* put extended proxy behind feature flag ([#385](https://github.com/aws/language-server-runtimes/issues/385)) ([41b01bd](https://github.com/aws/language-server-runtimes/commit/41b01bd0131afc76c2dd52f5d3b763751352ca3e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.5 to ^0.1.6
+
 ## [0.2.47](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.46...language-server-runtimes/v0.2.47) (2025-03-20)
 
 

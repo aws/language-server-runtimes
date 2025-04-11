@@ -184,6 +184,10 @@ The runtime supports chat by default
 | Send request to open existing tab, if `tabId` is passed or create and open new tab, if `tabId` is not passed. For the new tab, it's also possible to set tab state and content.  | `aws/chat/openTab`          | `OpenTabParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Server to Client | `OpenTabResult`             |
 | Send chat messages and tab state update to specific tab. Depending on new vs existing`messageId` within `ChatMessage` message, the massgage will be added or updated. | `aws/chat/sendChatUpdate`          | `ChatUpdateParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client | n/a             |
 | Send file or file action click event. | `aws/chat/fileClick`          | `FileClickParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send or update context commands that customer can attach to their prompt request (available via `@` in chat UI). | `aws/chat/sendContextCommands`          | `ContextCommandParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client | n/a             |
+| Send create prompt event that triggers new prompt creation flow on server. | `aws/chat/createPrompt`          | `CreatePromptParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+| Send request to list the conversations available in history: all or based on filter if provided. As there can be several filter options used, the filter in the request is a map of filter option ids to corresponding values. Possible filter options are expected to be provided in the previous `listConversations` result before filter can be used. | `aws/chat/listConversations`          | `ListConversationsParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `ListConversationsResult`             |
+| Send conversation or conversation action click event. If no action is provided, the default action is "open". | `aws/chat/conversationClick`          | `ConversationClickParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `ConversationClickResult`             |
 
 ```ts
 export interface ChatPrompt {
@@ -271,6 +275,121 @@ Consider using LSP [ShowMessage notification](https://microsoft.github.io/langua
 | ------------------------------------ | --------------------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
 | Show notification to customer              | `aws/window/showNotification`     | `NotificationParams`           | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
 | Send notification followup back to server   | `aws/window/notificationFollowup`  | `NotificationFollowupParams`    | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) | n/a |
+
+### Agent Tools
+In order to create agentic applications Servers can define tools that can be sent to a model backend for use. Tools can be created in multiple servers, and are shared between all servers in the same runtime. There is no JSON/RPC component to Tool usage, Tools are all maintained in Runtime memory.
+
+Tool invocations can use LSP, Workspace or Chat capabilities to interact with the client environment.
+
+The agent feature uses the following interface:
+
+```ts
+export type Agent = {
+    /**
+     * Add a tool to the local tool repository. Tools with the same name will be overwritten.
+     *
+     * Tools should be called using `runTool`.
+     *
+     * @param spec Tool Specification
+     * @param handler The async method to execute when the tool is called
+     */
+    addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec, R>(
+        spec: S,
+        handler: (input: T) => Promise<R>
+    ) => void
+
+    /**
+     * Run a tool by name. This method will lookup the tool in the local tool repository and
+     * validate the input against the tool's schema.
+     *
+     * Throws an error if the tool is not found, or if validation fails.
+     *
+     * @param toolName The name of the tool to run
+     * @param input The input to the tool
+     * @returns The result of the tool execution
+     */
+    runTool: (toolName: string, input: any) => Promise<any>
+
+    /**
+     * Get the list of tools in the local tool repository.
+     * @param options Options for the format of the output. Can be either 'bedrock' or 'mcp' (the default)
+     * @returns The tool repository in the requested output format
+     */
+    getTools: <T extends GetToolsOptions>(options?: T) => T extends { format: 'bedrock' } ? BedrockTools : Tools
+}
+```
+
+A typical agent loop would look like this:
+
+```ts
+const AgentServer: Server = ({ chat, agent }) => {
+
+    agent.addTool({
+        name: 'use_greeting',
+        description: 'A kind greeting to the user'
+        inputSchema: {
+            type: 'object',
+            parameters: {
+                name: {
+                    type: 'string'
+                }
+            }
+        }
+    }, async (input: { name: string }) => {
+        return `hello, ${name}`
+    })
+
+    chat.onChatPrompt((params: ChatParams) => {
+        let currentStep = 0;
+        const maxSteps = 5; // Prevent infinite loops
+        let finalResponse = '';
+        const conversationHistory = [];
+
+        while (currentStep < maxSteps) {
+            const response = await invokeModel(conversationHistory, params.prompt.prompt, agent.getTools({format: 'bedrock'})) // or { format: 'mcp' }
+            
+            // Check if the response includes tool uses
+            if (response.tool_use && response.tool_use.length > 0) {
+                // Execute each tool use
+                const toolResults = await Promise.all(
+                    response.tool_use.map((toolUse) => ({
+                        toolUseId: toolUse.Id,
+                        content: await agent.runTool(toolUse.name, toolUse.input)
+                    }))
+                )
+
+                // Ensure error handling and validation errors
+
+                // You could also emit partial results here to keep the user informed of progress
+
+                // Add tool results to conversation
+                conversationHistory.push({
+                    role: "tool",
+                    content: JSON.stringify(toolResults)
+                })
+
+                // Continue the conversation with tool results
+                userInput = `Tool execution results: ${JSON.stringify(toolResults)}. Please continue with the task.`
+            } else {
+                // No more tool calls needed, return final response
+                finalResponse = response.content;
+                break;
+            }
+
+            currentStep++
+        }
+
+        return {
+            body: finalResponse
+        }
+    })
+
+    // disposable
+    return () => {
+        // Do nothing
+    }
+}
+```
 
 ## Runtime Host Environments
 

@@ -36,6 +36,19 @@ import {
     chatUpdateNotificationType,
     FileClickParams,
     fileClickNotificationType,
+    inlineChatRequestType,
+    InlineChatParams,
+    InlineChatResult,
+    ContextCommandParams,
+    contextCommandsNotificationType,
+    CreatePromptParams,
+    createPromptNotificationType,
+    listConversationsRequestType,
+    ListConversationsParams,
+    ListConversationsResult,
+    ConversationClickParams,
+    conversationClickRequestType,
+    ConversationClickResult,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -44,6 +57,12 @@ export class BaseChat implements Chat {
 
     public onChatPrompt(handler: RequestHandler<ChatParams, ChatResult | null | undefined, ChatResult>) {
         this.connection.onRequest(chatRequestType.method, handler)
+    }
+
+    public onInlineChatPrompt(
+        handler: RequestHandler<InlineChatParams, InlineChatResult | null | undefined, InlineChatResult>
+    ) {
+        this.connection.onRequest(inlineChatRequestType.method, handler)
     }
 
     public onEndChat(handler: RequestHandler<EndChatParams, boolean, void>) {
@@ -104,5 +123,21 @@ export class BaseChat implements Chat {
 
     public onFileClicked(handler: NotificationHandler<FileClickParams>) {
         this.connection.onNotification(fileClickNotificationType.method, handler)
+    }
+
+    public sendContextCommands(params: ContextCommandParams) {
+        this.connection.sendNotification(contextCommandsNotificationType.method, params)
+    }
+
+    public onCreatePrompt(handler: NotificationHandler<CreatePromptParams>) {
+        this.connection.onNotification(createPromptNotificationType.method, handler)
+    }
+
+    public onListConversations(handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) {
+        this.connection.onRequest(listConversationsRequestType.method, handler)
+    }
+
+    public onConversationClick(handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) {
+        this.connection.onRequest(conversationClickRequestType.method, handler)
     }
 }

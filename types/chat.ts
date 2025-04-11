@@ -1,4 +1,3 @@
-// Chat Data Model
 import { Position, Range, TextDocumentIdentifier } from './lsp'
 
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
@@ -17,6 +16,13 @@ export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
 export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
+export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
+// context
+export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
+export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
+// history
+export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
+export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
 
 export interface ChatItemAction {
     pillText: string
@@ -60,7 +66,6 @@ export type CodeSelectionType = 'selection' | 'block'
 
 export type CursorState = { position: Position } | { range: Range }
 
-// LSP Types
 interface PartialResultParams {
     partialResultToken?: number | string
 }
@@ -70,16 +75,33 @@ export interface ChatParams extends PartialResultParams {
     prompt: ChatPrompt
     cursorState?: CursorState[]
     textDocument?: TextDocumentIdentifier
+    /**
+     * Context of the current chat message to be handled by the servers.
+     * Context can be added through QuickActionCommand triggered by `@`.
+     */
+    context?: QuickActionCommand[]
+}
+
+export interface InlineChatParams extends PartialResultParams {
+    prompt: ChatPrompt
+    cursorState?: CursorState[]
+    textDocument?: TextDocumentIdentifier
 }
 
 export interface EncryptedChatParams extends PartialResultParams {
     message: string
 }
 
+export interface FileDetails {
+    description?: string
+    lineRanges?: Array<{ first: number; second: number }>
+}
+
 export interface FileList {
     rootFolderTitle?: string
     filePaths?: string[]
     deletedFiles?: string[]
+    details?: Record<string, FileDetails>
 }
 
 export interface ChatMessage {
@@ -97,10 +119,14 @@ export interface ChatMessage {
     }
     codeReference?: ReferenceTrackerInformation[]
     fileList?: FileList
+    contextList?: FileList
 }
 // Response for chat prompt request can be empty,
 // if server chooses to handle the request and push updates asynchronously.
 export interface ChatResult extends ChatMessage {}
+export interface InlineChatResult extends ChatMessage {
+    requestId?: string
+}
 
 export type EndChatParams = { tabId: string }
 export type EndChatResult = boolean
@@ -112,7 +138,11 @@ export interface QuickActionCommand {
     command: string
     description?: string
     placeholder?: string
+    icon?: IconType
 }
+
+export type ContextCommandIconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic'
+export type IconType = ContextCommandIconType | 'help' | 'trash' | 'search' | 'calendar' | string
 
 /**
  * Configuration object for registering chat quick actions groups.
@@ -143,7 +173,15 @@ export interface TabData {
  * and the default tab data to be shown to the user in the chat UI
  */
 export interface ChatOptions {
+    /**
+     * Chat QuickActions, supported by Server. Chat Client renders and sets up actions handler for registered QuickAction in UI.
+     */
     quickActions?: QuickActions
+
+    /**
+     * Server signals to Chat Client if it supports conversation history.
+     */
+    history?: boolean
 }
 
 export interface QuickActionParams extends PartialResultParams {
@@ -241,4 +279,77 @@ export interface FileClickParams {
     tabId: string
     filePath: string
     action?: FileAction
+}
+
+// context
+
+export interface ContextCommandGroup {
+    groupName?: string
+    commands: ContextCommand[]
+}
+
+export interface ContextCommand extends QuickActionCommand {
+    id?: string
+    route?: string[]
+    label?: 'file' | 'folder' | 'code'
+    children?: ContextCommandGroup[]
+}
+
+export interface ContextCommandParams {
+    contextCommandGroups: ContextCommandGroup[]
+}
+
+export interface CreatePromptParams {
+    promptName: string
+}
+
+// history
+
+export type TextBasedFilterOption = {
+    type: 'textarea' | 'textinput'
+    placeholder?: string
+    icon?: IconType
+}
+export type FilterValue = string
+export type FilterOption = { id: string } & TextBasedFilterOption
+export interface Action {
+    id: string
+    icon?: IconType
+    text: string
+}
+export interface ConversationItem {
+    id: string
+    icon?: IconType
+    description?: string
+    actions?: Action[]
+}
+
+export interface ConversationItemGroup {
+    groupName?: string
+    icon?: IconType
+    items?: ConversationItem[]
+}
+
+export interface ListConversationsParams {
+    // key maps to id in FilterOption and value to corresponding filter value
+    filter?: Record<string, FilterValue>
+}
+
+export interface ConversationsList {
+    header?: { title: string }
+    filterOptions?: FilterOption[]
+    list: ConversationItemGroup[]
+}
+
+export interface ListConversationsResult extends ConversationsList {}
+
+export type ConversationAction = 'delete' | 'export'
+
+export interface ConversationClickParams {
+    id: string
+    action?: ConversationAction
+}
+
+export interface ConversationClickResult extends ConversationClickParams {
+    success: boolean
 }

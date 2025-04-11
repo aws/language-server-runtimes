@@ -75,6 +75,7 @@ import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getTelemetryLspServer } from './util/telemetryLspServer'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
+import { newAgent } from './agent'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -216,7 +217,7 @@ export const standalone = (props: RuntimeProps) => {
                     readFile(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
                 rm: (dir, options?) => rm(dir, options),
                 isFile: path => stat(path).then(({ isFile }) => isFile()),
-                writeFile: (path, data) => writeFile(path, data),
+                writeFile: (path, data, options?) => writeFile(path, data, options),
                 appendFile: (path, data) => appendFile(path, data),
                 mkdir: (path, options?) => mkdir(path, options),
                 readFileSync: (path, options?) =>
@@ -429,6 +430,8 @@ export const standalone = (props: RuntimeProps) => {
 
             credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
 
+            const agent = newAgent()
+
             return s({
                 chat,
                 credentialsProvider,
@@ -440,6 +443,7 @@ export const standalone = (props: RuntimeProps) => {
                 identityManagement,
                 notification: lspServer.notification,
                 sdkInitializator: sdkInitializator,
+                agent,
             })
         })
 

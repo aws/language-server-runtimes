@@ -1,5 +1,61 @@
 # Changelog
 
+## [0.1.12](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.11...language-server-runtimes-types/v0.1.12) (2025-04-10)
+
+
+### Features
+
+* add protocol for export chat history ([#418](https://github.com/aws/language-server-runtimes/issues/418)) ([c31fadc](https://github.com/aws/language-server-runtimes/commit/c31fadc36752d3300d53fc22b59e66f07ecc75ac))
+* extend tabdata interface to include support for welcome screen ([#411](https://github.com/aws/language-server-runtimes/issues/411)) ([68354d9](https://github.com/aws/language-server-runtimes/commit/68354d9e51b17637c91bcf79e320df3fd0975678))
+* **types:** add context to ChatParams ([cea7a71](https://github.com/aws/language-server-runtimes/commit/cea7a71be95a8ea7847188e36d803bb2759c6f87))
+
+
+### Reverts
+
+* feat: extend tabdata interface to include support for welcome screen ([#411](https://github.com/aws/language-server-runtimes/issues/411)) ([#420](https://github.com/aws/language-server-runtimes/issues/420)) ([53084ad](https://github.com/aws/language-server-runtimes/commit/53084adee2b375b998a15222d56a2e56593728e5))
+
+## [0.1.11](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.10...language-server-runtimes-types/v0.1.11) (2025-04-07)
+
+
+### Features
+
+* added chat history protocol ([#410](https://github.com/aws/language-server-runtimes/issues/410)) ([a4fcef6](https://github.com/aws/language-server-runtimes/commit/a4fcef6459f4224a6bf16d3ce6e88ef326fec3aa))
+
+## [0.1.10](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.9...language-server-runtimes-types/v0.1.10) (2025-04-02)
+
+
+### Features
+
+* context support in protocol ([#404](https://github.com/aws/language-server-runtimes/issues/404)) ([70b8507](https://github.com/aws/language-server-runtimes/commit/70b8507f1c95a79d74c49e7153e772d11372dc65))
+
+## [0.1.9](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.8...language-server-runtimes-types/v0.1.9) (2025-04-02)
+
+
+### Bug Fixes
+
+* add requestId to InlineChat response ([#403](https://github.com/aws/language-server-runtimes/issues/403)) ([3bee702](https://github.com/aws/language-server-runtimes/commit/3bee70222b6d9bd3e5bde3b046593be2e80b8d4c))
+
+## [0.1.8](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.7...language-server-runtimes-types/v0.1.8) (2025-04-01)
+
+
+### Features
+
+* add contextList to chat message for supporting context transparency ([#401](https://github.com/aws/language-server-runtimes/issues/401)) ([839247d](https://github.com/aws/language-server-runtimes/commit/839247d3be76e419030d364ffefb13e5f5a02ef9))
+
+## [0.1.7](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.6...language-server-runtimes-types/v0.1.7) (2025-04-01)
+
+
+### Features
+
+* add extension for inline chat ([#391](https://github.com/aws/language-server-runtimes/issues/391)) ([52abd83](https://github.com/aws/language-server-runtimes/commit/52abd839b396c92863bca18c9bb33a7875192c3d))
+
+## [0.1.6](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.5...language-server-runtimes-types/v0.1.6) (2025-03-25)
+
+
+### Features
+
+* **types:** add imports to InlineCompletionItemWithReferences type ([#388](https://github.com/aws/language-server-runtimes/issues/388)) ([e16977c](https://github.com/aws/language-server-runtimes/commit/e16977c0da3c343377079e3686f4d637363427d8))
+
 ## [0.1.5](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.4...language-server-runtimes-types/v0.1.5) (2025-03-20)
 
 

@@ -39,6 +39,19 @@ import {
     FILE_CLICK_NOTIFICATION_METHOD,
     ChatUpdateParams,
     FileClickParams,
+    INLINE_CHAT_REQUEST_METHOD,
+    InlineChatParams,
+    InlineChatResult,
+    CONTEXT_COMMAND_NOTIFICATION_METHOD,
+    ContextCommandParams,
+    CREATE_PROMPT_NOTIFICATION_METHOD,
+    CreatePromptParams,
+    ListConversationsParams,
+    ListConversationsResult,
+    LIST_CONVERSATIONS_REQUEST_METHOD,
+    ConversationClickParams,
+    ConversationClickResult,
+    CONVERSATION_CLICK_REQUEST_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -48,6 +61,13 @@ export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
     void,
     void
 >(CHAT_REQUEST_METHOD)
+export const inlineChatRequestType = new AutoParameterStructuresProtocolRequestType<
+    InlineChatParams | EncryptedChatParams,
+    InlineChatResult | string,
+    InlineChatResult | string,
+    void,
+    void
+>(INLINE_CHAT_REQUEST_METHOD)
 export const endChatRequestType = new ProtocolRequestType<EndChatParams, EndChatResult, never, void, void>(
     END_CHAT_REQUEST_METHOD
 )
@@ -91,3 +111,27 @@ export const chatUpdateNotificationType = new ProtocolNotificationType<ChatUpdat
 export const fileClickNotificationType = new ProtocolNotificationType<FileClickParams, void>(
     FILE_CLICK_NOTIFICATION_METHOD
 )
+
+// context
+export const contextCommandsNotificationType = new ProtocolNotificationType<ContextCommandParams, void>(
+    CONTEXT_COMMAND_NOTIFICATION_METHOD
+)
+export const createPromptNotificationType = new ProtocolNotificationType<CreatePromptParams, void>(
+    CREATE_PROMPT_NOTIFICATION_METHOD
+)
+
+// history
+export const listConversationsRequestType = new AutoParameterStructuresProtocolRequestType<
+    ListConversationsParams,
+    ListConversationsResult,
+    never,
+    void,
+    void
+>(LIST_CONVERSATIONS_REQUEST_METHOD)
+export const conversationClickRequestType = new AutoParameterStructuresProtocolRequestType<
+    ConversationClickParams,
+    ConversationClickResult,
+    never,
+    void,
+    void
+>(CONVERSATION_CLICK_REQUEST_METHOD)
