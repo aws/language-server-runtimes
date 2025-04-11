@@ -34,7 +34,7 @@ describe('OperationalEventValidator', () => {
                     name: 'ErrorEvent',
                     timestamp: 100000,
                 },
-                errorAttr: {
+                errorAttributes: {
                     errorName: 'Error',
                     errorOrigin: 'uncaughtException',
                     errorType: 'responseFailed',
@@ -51,9 +51,9 @@ describe('OperationalEventValidator', () => {
                     name: 'ErrorEvent',
                     timestamp: 100000,
                 },
-                errorAttr: {
+                errorAttributes: {
                     errorName: 'Error',
-                    errorType: 'uncoughtException',
+                    errorType: 'uncaughtException',
                 },
             }
 

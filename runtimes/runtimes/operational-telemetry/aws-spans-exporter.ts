@@ -105,7 +105,7 @@ export class AwsSpanExporter implements SpanExporter {
                 name: span.name,
                 timestamp: unixEpochMiliseconds,
             },
-            errorAttr: {
+            errorAttributes: {
                 ...event,
             },
         }

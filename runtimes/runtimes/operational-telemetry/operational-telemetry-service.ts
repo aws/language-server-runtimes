@@ -3,7 +3,7 @@ import { AwsMetricExporter } from './aws-metrics-exporter'
 import {
     EventName,
     MetricName,
-    OperationalEventAttr,
+    OperationalEventAttributes,
     OperationalTelemetry,
     ValueProviders,
 } from './operational-telemetry'
@@ -18,7 +18,7 @@ import { AwsSpanExporter } from './aws-spans-exporter'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 import { OperationalEventValidator } from './operational-event-validator'
 import { ExtendedClientInfo } from '../../server-interface'
-import { ResourceUsageAttr, ResourceUsageMetric } from './types/generated/telemetry'
+import { ResourceUsageAttributes } from './types/generated/telemetry'
 
 type OperationalTelemetryConfig = {
     serviceName: string
@@ -158,7 +158,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         }
     }
 
-    recordEvent(eventName: EventName, eventAttr: OperationalEventAttr, scopeName?: string): void {
+    recordEvent(eventName: EventName, eventAttr: OperationalEventAttributes, scopeName?: string): void {
         const tracer = trace.getTracer(scopeName ?? this.RUNTIMES_SCOPE_NAME)
         const span = tracer.startSpan(eventName)
         span.setAttribute('event.attributes', JSON.stringify(eventAttr))
@@ -167,7 +167,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
     registerGaugeProvider(
         metricName: MetricName,
-        valueProviders: ValueProviders<ResourceUsageAttr>,
+        valueProviders: ValueProviders<ResourceUsageAttributes>,
         scopeName?: string
     ): void {
         const meter = metrics.getMeter(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)

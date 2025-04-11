@@ -13,12 +13,12 @@
                 },
                 "resourceValues": {
                     "type": "object",
-                    "$ref": "#/definitions/ResourceUsageAttr"
+                    "$ref": "#/definitions/ResourceUsageAttributes"
                 }
             }
         },
-        "ResourceUsageAttr": {
-            "title": "ResourceUsageAttr",
+        "ResourceUsageAttributes": {
+            "title": "ResourceUsageAttributes",
             "type": "object",
             "additionalProperties": false,
             "required": ["userCpuUsage", "systemCpuUsage", "heapUsed", "heapTotal", "rss"],

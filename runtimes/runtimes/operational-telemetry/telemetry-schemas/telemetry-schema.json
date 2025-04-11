@@ -89,15 +89,15 @@
                 }
             ]
         },
-        "OperationalEventAttr": {
-            "title": "OperationalEventAttr",
+        "OperationalEventAttributes": {
+            "title": "OperationalEventAttributes",
             "type": "object",
             "oneOf": [
                 {
-                    "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageAttr"
+                    "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageAttributes"
                 },
                 {
-                    "$ref": "./error-event-schema.json#/definitions/ErrorEventAttr"
+                    "$ref": "./error-event-schema.json#/definitions/ErrorEventAttributes"
                 }
             ]
         }

@@ -18,12 +18,7 @@ import {
     CredentialsProvider,
 } from '../../server-interface'
 import { LspRouter } from '../lsp/router/lspRouter'
-import {
-    OperationalTelemetryProvider,
-    TELEMETRY_SCOPES,
-    EventName,
-    ErrorType,
-} from '../operational-telemetry/operational-telemetry'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-telemetry/operational-telemetry'
 
 export const BUILDER_ID_START_URL = 'https://view.awsapps.com/start'
 
