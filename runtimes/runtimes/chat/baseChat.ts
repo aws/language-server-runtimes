@@ -43,6 +43,8 @@ import {
     contextCommandsNotificationType,
     CreatePromptParams,
     createPromptNotificationType,
+    InlineChatResultParams,
+    inlineChatResultNotificationType,
     listConversationsRequestType,
     ListConversationsParams,
     ListConversationsResult,
@@ -131,6 +133,10 @@ export class BaseChat implements Chat {
 
     public onCreatePrompt(handler: NotificationHandler<CreatePromptParams>) {
         this.connection.onNotification(createPromptNotificationType.method, handler)
+    }
+
+    public onInlineChatResult(handler: NotificationHandler<InlineChatResultParams>) {
+        this.connection.onNotification(inlineChatResultNotificationType.method, handler)
     }
 
     public onListConversations(handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) {

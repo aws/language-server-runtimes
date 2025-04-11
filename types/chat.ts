@@ -20,6 +20,7 @@ export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
+export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult'
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
@@ -303,8 +304,29 @@ export interface CreatePromptParams {
     promptName: string
 }
 
-// history
+export interface ProgrammingLanguage {
+    languageName: string
+}
 
+export type InlineChatUserDecision = 'ACCEPT' | 'REJECT' | 'DISMISS' | string
+
+export interface InlineChatResultParams {
+    requestId: string
+    timestamp: Date
+    inputLength?: number
+    numSelectedLines?: number
+    numSuggestionAddChars?: number
+    numSuggestionAddLines?: number
+    numSuggestionDelChars?: number
+    numSuggestionDelLines?: number
+    codeIntent?: boolean
+    userDecision?: InlineChatUserDecision
+    responseStartLatency?: number
+    responseEndLatency?: number
+    programmingLanguage?: ProgrammingLanguage
+}
+
+// history
 export type TextBasedFilterOption = {
     type: 'textarea' | 'textinput'
     placeholder?: string

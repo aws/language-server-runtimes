@@ -41,6 +41,7 @@ import {
     inlineChatRequestType,
     contextCommandsNotificationType,
     createPromptNotificationType,
+    inlineChatResultNotificationType,
     listConversationsRequestType,
     conversationClickRequestType,
 } from '../protocol'
@@ -150,6 +151,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
         sendContextCommands: params => lspConnection.sendNotification(contextCommandsNotificationType.method, params),
         onCreatePrompt: handler => lspConnection.onNotification(createPromptNotificationType.method, handler),
+        onInlineChatResult: handler => lspConnection.onNotification(inlineChatResultNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
     }

@@ -46,6 +46,8 @@ import {
     ContextCommandParams,
     CREATE_PROMPT_NOTIFICATION_METHOD,
     CreatePromptParams,
+    INLINE_CHAT_RESULT_NOTIFICATION_METHOD,
+    InlineChatResultParams,
     ListConversationsParams,
     ListConversationsResult,
     LIST_CONVERSATIONS_REQUEST_METHOD,
@@ -118,6 +120,9 @@ export const contextCommandsNotificationType = new ProtocolNotificationType<Cont
 )
 export const createPromptNotificationType = new ProtocolNotificationType<CreatePromptParams, void>(
     CREATE_PROMPT_NOTIFICATION_METHOD
+)
+export const inlineChatResultNotificationType = new ProtocolNotificationType<InlineChatResultParams, void>(
+    INLINE_CHAT_RESULT_NOTIFICATION_METHOD
 )
 
 // history

@@ -24,6 +24,7 @@ import {
     InlineChatResult,
     ContextCommandParams,
     CreatePromptParams,
+    InlineChatResultParams,
     ListConversationsParams,
     ListConversationsResult,
     ConversationClickParams,
@@ -59,4 +60,5 @@ export type Chat = {
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
     sendContextCommands: (params: ContextCommandParams) => void
     onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
+    onInlineChatResult: (handler: NotificationHandler<InlineChatResultParams>) => void
 }
