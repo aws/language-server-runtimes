@@ -32,6 +32,7 @@ export type Workspace = {
         getFileSize: (path: string) => Promise<{ size: number }>
         getServerDataDirPath: (serverName: string) => string
         getTempDirPath: () => string
+        getUserHomeDir: () => string
         /**
          * Reads the contents of a directory.
          * @param {string} path - The path to the directory.
