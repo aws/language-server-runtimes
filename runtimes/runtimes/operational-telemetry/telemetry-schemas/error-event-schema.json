@@ -5,20 +5,20 @@
             "title": "ErrorEvent",
             "type": "object",
             "additionalProperties": false,
-            "required": ["baseInfo", "errorAttr"],
+            "required": ["baseInfo", "errorAttributes"],
             "properties": {
                 "baseInfo": {
                     "type": "object",
                     "$ref": "./base-event-schema.json"
                 },
-                "errorAttr": {
+                "errorAttributes": {
                     "type": "object",
-                    "$ref": "#/definitions/ErrorEventAttr"
+                    "$ref": "#/definitions/ErrorEventAttributes"
                 }
             }
         },
-        "ErrorEventAttr": {
-            "title": "ErrorEventAttr",
+        "ErrorEventAttributes": {
+            "title": "ErrorEventAttributes",
             "type": "object",
             "additionalProperties": false,
             "required": ["errorName", "errorOrigin", "errorType"],

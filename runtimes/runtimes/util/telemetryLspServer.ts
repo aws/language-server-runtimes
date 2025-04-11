@@ -4,7 +4,6 @@ import { Logging } from '../../server-interface/logging'
 import { LspServer } from '../lsp/router/lspServer'
 import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-telemetry/operational-telemetry'
 import { RuntimeProps } from '../runtime'
-import { OperationalTelemetryService } from '../operational-telemetry/operational-telemetry-service'
 import { InitializeParams, InitializeResult } from '../../protocol'
 import { Runtime } from '../../server-interface'
 

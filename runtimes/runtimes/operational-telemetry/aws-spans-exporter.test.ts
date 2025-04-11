@@ -145,7 +145,7 @@ describe('AWSSpanExporter', () => {
                                     name: 'ErrorEvent',
                                     timestamp: sinon.match.number,
                                 },
-                                errorAttr: {
+                                errorAttributes: {
                                     errorName: 'Error1',
                                     errorOrigin: 'caughtError',
                                     errorType: 'parseError',
@@ -156,7 +156,7 @@ describe('AWSSpanExporter', () => {
                                     name: 'ErrorEvent',
                                     timestamp: sinon.match.number,
                                 },
-                                errorAttr: {
+                                errorAttributes: {
                                     errorName: 'Error2',
                                     errorOrigin: 'caughtError',
                                     errorType: 'parseError',

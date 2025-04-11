@@ -19,12 +19,7 @@ import {
 } from '../../protocol'
 import { CredentialsEncoding, encryptObjectWithKey, isMessageJWEEncrypted } from '../auth/standalone/encryption'
 import { BaseChat } from './baseChat'
-import {
-    OperationalTelemetryProvider,
-    TELEMETRY_SCOPES,
-    ErrorType,
-    EventName,
-} from '../operational-telemetry/operational-telemetry'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-telemetry/operational-telemetry'
 
 // Default JWE configuration
 const KEY_MANAGEMENT_ALGORITHM = 'dir'
