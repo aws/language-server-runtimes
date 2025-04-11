@@ -85,10 +85,19 @@
                     "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageMetric"
                 },
                 {
-                    "$ref": "./caught-error-schema.json#/definitions/CaughtErrorEvent"
+                    "$ref": "./error-event-schema.json#/definitions/ErrorEvent"
+                }
+            ]
+        },
+        "OperationalEventAttributes": {
+            "title": "OperationalEventAttributes",
+            "type": "object",
+            "oneOf": [
+                {
+                    "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageAttributes"
                 },
                 {
-                    "$ref": "./server-crash-schema.json#/definitions/ServerCrashEvent"
+                    "$ref": "./error-event-schema.json#/definitions/ErrorEventAttributes"
                 }
             ]
         }

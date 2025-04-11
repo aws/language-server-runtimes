@@ -3,10 +3,11 @@
     "title": "BaseEventSchema",
     "type": "object",
     "required": ["name", "timestamp"],
+    "additionalProperties": false,
     "properties": {
         "name": {
             "type": "string",
-            "enum": ["CaughtErrorEvent", "ResourceUsageMetric", "ServerCrashEvent"]
+            "enum": ["ErrorEvent", "ResourceUsageMetric"]
         },
         "timestamp": {
             "type": "number",

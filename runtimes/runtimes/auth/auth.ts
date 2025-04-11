@@ -18,6 +18,7 @@ import {
     CredentialsProvider,
 } from '../../server-interface'
 import { LspRouter } from '../lsp/router/lspRouter'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-telemetry/operational-telemetry'
 
 export const BUILDER_ID_START_URL = 'https://view.awsapps.com/start'
 
@@ -207,6 +208,12 @@ export class Auth {
             this.connection.console.info(
                 `Runtime: Failed to update Connection metadata with error: ${error?.message || 'unknown'}`
             )
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+                errorOrigin: 'caughtError',
+                errorType: 'connectionMetadata',
+                errorName: error?.name ?? 'unknown',
+                errorCode: error?.code ?? '',
+            })
         }
     }
 }

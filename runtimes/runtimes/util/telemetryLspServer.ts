@@ -2,15 +2,38 @@ import { Connection } from 'vscode-languageserver/node'
 import { Encoding } from '../encoding'
 import { Logging } from '../../server-interface/logging'
 import { LspServer } from '../lsp/router/lspServer'
-import { OperationalTelemetryProvider } from '../operational-telemetry/operational-telemetry'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-telemetry/operational-telemetry'
 import { RuntimeProps } from '../runtime'
-import { OperationalTelemetryService } from '../operational-telemetry/operational-telemetry-service'
 import { InitializeParams, InitializeResult } from '../../protocol'
 import { Runtime } from '../../server-interface'
 
 const DEFAULT_TELEMETRY_GATEWAY_ENDPOINT = ''
 const DEFAULT_TELEMETRY_COGNITO_REGION = ''
 const DEFAULT_TELEMETRY_COGNITO_POOL_ID = ''
+
+function setMemoryUsageTelemetry() {
+    const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
+    optel.registerGaugeProvider('ResourceUsageMetric', {
+        userCpuUsage: () => process.cpuUsage().user,
+        systemCpuUsage: () => process.cpuUsage().system,
+        heapUsed: () => process.memoryUsage().heapUsed,
+        heapTotal: () => process.memoryUsage().heapTotal,
+        rss: () => process.memoryUsage().rss,
+    })
+}
+
+function setServerCrashTelemetryListeners() {
+    const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
+
+    // Handles both 'uncaughtException' and 'unhandledRejection'
+    process.on('uncaughtExceptionMonitor', async (err, origin) => {
+        optel.recordEvent('ErrorEvent', {
+            errorOrigin: origin,
+            errorType: 'unknownServerCrash',
+            errorName: err?.name ?? 'unknown',
+        })
+    })
+}
 
 export function getTelemetryLspServer(
     lspConnection: Connection,
@@ -41,6 +64,9 @@ export function getTelemetryLspServer(
 
         // OperationalTelemetryProvider.setTelemetryInstance(optel)
 
+        setServerCrashTelemetryListeners()
+        setMemoryUsageTelemetry()
+
         return {
             capabilities: {},
         }
@@ -53,6 +79,7 @@ export function getTelemetryLspServer(
 
         if (typeof optOut === 'boolean') {
             OperationalTelemetryProvider.getTelemetryForScope('').toggleOptOut(optOut)
+            setMemoryUsageTelemetry()
         }
     })
 

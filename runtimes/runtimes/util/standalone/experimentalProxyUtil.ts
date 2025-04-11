@@ -12,6 +12,7 @@ import { HttpsProxyAgent } from 'hpagent'
 import { NodeHttpHandler } from '@smithy/node-http-handler'
 import { readMacosCertificates, readLinuxCertificates, readWindowsCertificates } from './certificatesReaders'
 import { Telemetry } from '../../../server-interface'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
 
 export class ProxyConfigManager {
     /**
@@ -74,7 +75,14 @@ export class ProxyConfigManager {
             console.log(`Successfully read certificates from ${path}`)
 
             return cert
-        } catch (error) {
+        } catch (error: any) {
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+                errorOrigin: 'caughtError',
+                errorName: error?.name ?? 'unknown',
+                errorType: 'proxyCertificateReadFile',
+                errorCode: error?.code ?? '',
+                errorMessage: 'Failed to read certificates from given path',
+            })
             console.warn(`Failed to read certificates from ${path}:`, error)
         }
     }
@@ -115,7 +123,14 @@ export class ProxyConfigManager {
             if (certs) {
                 certificates.push(...certs)
             }
-        } catch (error) {
+        } catch (error: any) {
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+                errorOrigin: 'caughtError',
+                errorName: error?.name ?? 'unknown',
+                errorType: 'proxySystemCertificateRead',
+                errorCode: error?.code ?? '',
+                errorMessage: 'Failed to read system certificates',
+            })
             console.warn('Failed to read system certificates:', error)
         }
 
@@ -202,7 +217,14 @@ export class ProxyConfigManager {
                 const certDate = Date.parse(certObj.validTo)
 
                 return certDate > Date.now()
-            } catch (error) {
+            } catch (error: any) {
+                OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+                    errorOrigin: 'caughtError',
+                    errorName: error?.name ?? 'unknown',
+                    errorType: 'proxyCertificateRemove',
+                    errorCode: error?.code ?? '',
+                    errorMessage: 'Error parsing certificate',
+                })
                 console.warn(`Error parsing certificate: ${error}`)
                 return false
             }
