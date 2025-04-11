@@ -75,8 +75,8 @@ import {
 import { IdentityManagement } from '../server-interface/identity-management'
 import { WebBase64Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
-import { Service } from 'aws-sdk'
-import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import type { Service } from 'aws-sdk'
+import type { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
 
