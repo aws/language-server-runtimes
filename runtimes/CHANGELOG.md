@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.57](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.56...language-server-runtimes/v0.2.57) (2025-04-11)
+
+
+### Features
+
+* inject home directory into runtimes.  ([#424](https://github.com/aws/language-server-runtimes/issues/424)) ([595475e](https://github.com/aws/language-server-runtimes/commit/595475e448e9dc8fb74c4aec9c31eb7852db6e45))
+
 ## [0.2.56](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.55...language-server-runtimes/v0.2.56) (2025-04-10)
 
 
