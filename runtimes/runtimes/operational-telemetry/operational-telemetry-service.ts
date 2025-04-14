@@ -1,6 +1,12 @@
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
 import { AwsMetricExporter } from './aws-metrics-exporter'
-import { OperationalTelemetry } from './operational-telemetry'
+import {
+    EventName,
+    MetricName,
+    OperationalEventAttributes,
+    OperationalTelemetry,
+    ValueProviders,
+} from './operational-telemetry'
 import { diag, Attributes, DiagLogLevel, trace, metrics } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
@@ -12,6 +18,7 @@ import { AwsSpanExporter } from './aws-spans-exporter'
 import { BatchSpanProcessor } from '@opentelemetry/sdk-trace-base'
 import { OperationalEventValidator } from './operational-event-validator'
 import { ExtendedClientInfo } from '../../server-interface'
+import { ResourceUsageAttributes } from './types/generated/telemetry'
 
 type OperationalTelemetryConfig = {
     serviceName: string
@@ -79,6 +86,18 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         if (!this.telemetryOptOut) {
             this.startupSdk()
         }
+
+        // Registering process events callbacks once
+        process.on('uncaughtException', async () => {
+            // Metrics and spans are force flushed to their exporters on shutdown.
+            await this.shutdownSdk()
+            process.exit(1)
+        })
+
+        process.on('beforeExit', async () => {
+            // Metrics and spans are force flushed to their exporters on shutdown.
+            await this.shutdownSdk()
+        })
     }
 
     toggleOptOut(telemetryOptOut: boolean): void {
@@ -129,39 +148,35 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         })
 
         this.sdk.start()
-
-        process.on('beforeExit', async () => {
-            // Metrics and spans are force flushed to their exporters on shutdown.
-            this.sdk?.shutdown()
-        })
     }
 
-    private shutdownSdk() {
-        this.sdk?.shutdown()
-    }
-
-    recordEvent(eventType: string, attributes?: Record<string, any>, scopeName?: string): void {
-        const tracer = trace.getTracer(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
-
-        const span = tracer.startSpan(eventType)
-        if (attributes) {
-            for (const [key, value] of Object.entries(attributes)) {
-                span.setAttribute(key, value)
-            }
+    private async shutdownSdk() {
+        try {
+            await this.sdk?.shutdown()
+        } catch (error) {
+            console.error('Error during opentelemetry SDK shutdown:', error)
         }
+    }
+
+    recordEvent(eventName: EventName, eventAttr: OperationalEventAttributes, scopeName?: string): void {
+        const tracer = trace.getTracer(scopeName ?? this.RUNTIMES_SCOPE_NAME)
+        const span = tracer.startSpan(eventName)
+        span.setAttribute('event.attributes', JSON.stringify(eventAttr))
         span.end()
     }
 
     registerGaugeProvider(
-        metricName: string,
-        valueProvider: () => number,
-        attributes?: Record<string, any>,
+        metricName: MetricName,
+        valueProviders: ValueProviders<ResourceUsageAttributes>,
         scopeName?: string
     ): void {
         const meter = metrics.getMeter(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
         const gauge = meter.createObservableGauge(metricName)
-        gauge.addCallback(result => {
-            result.observe(valueProvider(), attributes as Attributes)
-        })
+
+        for (const [key, valueProvider] of Object.entries(valueProviders)) {
+            gauge.addCallback(result => {
+                result.observe(valueProvider(), { type: key })
+            })
+        }
     }
 }

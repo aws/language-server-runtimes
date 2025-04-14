@@ -1,5 +1,5 @@
 import { ReadableSpan, SpanExporter } from '@opentelemetry/sdk-trace-base'
-import { ExportResult, ExportResultCode } from '@opentelemetry/core'
+import { ExportResult, ExportResultCode, hrTimeToMilliseconds } from '@opentelemetry/core'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
 import { diag } from '@opentelemetry/api'
 import { OperationalEvent, OperationalTelemetrySchema } from './types/generated/telemetry'
@@ -98,17 +98,21 @@ export class AwsSpanExporter implements SpanExporter {
     }
 
     private spanToOperationalEvent(span: ReadableSpan): OperationalEvent {
-        const unixEpochSeconds = span.endTime[0]
-        const result: Record<string, any> = {}
-
-        result['name'] = span.name
-        result['timestamp'] = unixEpochSeconds
-        for (const key of Object.keys(span.attributes)) {
-            result[key] = String(span.attributes[key])
+        const unixEpochMiliseconds = Math.round(hrTimeToMilliseconds(span.endTime))
+        const event = JSON.parse(span.attributes['event.attributes'] as string)
+        const result: Record<string, any> = {
+            baseInfo: {
+                name: span.name,
+                timestamp: unixEpochMiliseconds,
+            },
+            errorAttributes: {
+                ...event,
+            },
         }
 
         const isValid = this.eventValidator.validateEvent(result)
         if (!isValid) {
+            diag.error('Invalid operational event:', result)
             throw Error(`Invalid operational event: ${result}`)
         }
         return result as OperationalEvent

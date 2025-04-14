@@ -1,4 +1,4 @@
-import { ExportResult, ExportResultCode } from '@opentelemetry/core'
+import { ExportResult, ExportResultCode, hrTimeToMilliseconds } from '@opentelemetry/core'
 import { MetricData, PushMetricExporter, ResourceMetrics, ScopeMetrics } from '@opentelemetry/sdk-metrics'
 import { diag } from '@opentelemetry/api'
 import { AwsCognitoApiGatewaySender } from './aws-cognito-gateway-sender'
@@ -103,11 +103,15 @@ export class AwsMetricExporter implements PushMetricExporter {
             {} as Record<string, number>
         )
 
-        const unixEpochSeconds = metric.dataPoints[0].endTime[0]
+        const unixEpochMiliseconds = Math.round(hrTimeToMilliseconds(metric.dataPoints[0].endTime))
         const result = {
-            name: metric.descriptor.name,
-            timestamp: unixEpochSeconds,
-            ...dataPoints,
+            baseInfo: {
+                name: metric.descriptor.name,
+                timestamp: unixEpochMiliseconds,
+            },
+            resourceValues: {
+                ...dataPoints,
+            },
         }
 
         const isValid = this.eventValidator.validateEvent(result)
@@ -115,6 +119,6 @@ export class AwsMetricExporter implements PushMetricExporter {
             throw Error(`Invalid operational event: ${result}`)
         }
 
-        return result as OperationalEvent
+        return result as any
     }
 }

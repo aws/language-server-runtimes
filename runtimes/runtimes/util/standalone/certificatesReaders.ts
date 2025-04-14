@@ -5,6 +5,7 @@
 
 import { readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
+import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
 
 const UNIX_CERT_FILES = [
     '/etc/ssl/certs/ca-certificates.crt',
@@ -57,7 +58,14 @@ export function readLinuxCertificates(): string[] {
 
     // Step 3: Handle errors and return results
     if (!hasSeenCertificate && firstError) {
-        console.log('Error when reading Linux certificates')
+        const errorMessage = 'Error when reading Linux certificates'
+        console.log(errorMessage)
+        OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+            errorOrigin: 'caughtError',
+            errorName: firstError?.name ?? 'unknown',
+            errorType: 'linuxCertificateReader',
+            errorMessage: errorMessage,
+        })
         console.error(firstError)
         return []
     }

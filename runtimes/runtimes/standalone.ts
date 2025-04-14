@@ -84,9 +84,8 @@ if (checkAWSConfigFile()) {
     process.env.AWS_SDK_LOAD_CONFIG = '1'
 }
 
-process.on('uncaughtException', err => {
+process.on('uncaughtExceptionMonitor', err => {
     console.error('Uncaught Exception:', err.message)
-    process.exit(1)
 })
 
 /**
