@@ -87,6 +87,7 @@ import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType } from '../protocol/window'
+import { join } from 'path'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -115,6 +116,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     }
 
     // Set up the workspace to use the LSP Text Documents component
+    const defaultHomeDir = '/home/user'
     const workspace: Workspace = {
         getTextDocument: async uri => documents.get(uri),
         getAllTextDocuments: async () => documents.all(),
@@ -124,8 +126,13 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             copyFile: (_src, _dest, _options?) => Promise.resolve(),
             exists: _path => Promise.resolve(false),
             getFileSize: _path => Promise.resolve({ size: 0 }),
-            getServerDataDirPath: _serverName => '',
+            getServerDataDirPath: serverName =>
+                join(
+                    lspRouter.clientInitializeParams?.initializationOptions?.aws?.clientDataFolder ?? defaultHomeDir,
+                    serverName
+                ),
             getTempDirPath: () => '/tmp',
+            getUserHomeDir: () => defaultHomeDir,
             readFile: (_path, _options?) => Promise.resolve(''),
             readdir: _path => Promise.resolve([]),
             isFile: _path => Promise.resolve(false),
