@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.58](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.57...language-server-runtimes/v0.2.58) (2025-04-14)
+
+
+### Features
+
+* collect telemetry data from standalone runtime ([#392](https://github.com/aws/language-server-runtimes/issues/392)) ([76d6869](https://github.com/aws/language-server-runtimes/commit/76d68699fdb49147427b22574d7d1794c0bc31e6))
+
+
+### Bug Fixes
+
+* agent tools are shared between servers ([01a9f08](https://github.com/aws/language-server-runtimes/commit/01a9f08f5c1f5920f519461fae8a7b8d92578233))
+
 ## [0.2.57](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.56...language-server-runtimes/v0.2.57) (2025-04-14)
 
 
