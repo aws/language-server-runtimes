@@ -32,8 +32,7 @@ export * from './inlineCompletions'
 // AutoParameterStructuresProtocolRequestType allows ParameterStructures both by-name and by-position
 export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
     extends RequestType<P, R, E>
-    implements ProgressType<PR>, RegistrationType<RO>
-{
+    implements ProgressType<PR>, RegistrationType<RO> {
     /**
      * Clients must not use this property. It is here to ensure correct typing.
      */
@@ -45,6 +44,24 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
     public constructor(method: string) {
         super(method, ParameterStructures.auto)
     }
+}
+
+/**
+ * Configuration interface for setting up local context file indexing.
+ * Controls what files are indexed, size limitations, and indexing behavior.
+ */
+export interface ContextConfiguration {
+    /**
+     * Array of file patterns to be be excluded from indexing. Patterns must follow the git ignore convention.
+     */
+    ignoreFilePatterns?: string[]
+
+    /**
+     * List of file extensions that should be included.
+     * Example: ['.ts', '.js', '.json']
+     * Files with extensions not in this list will be ignored.
+     */
+    fileExtensions?: string[]
 }
 
 /**
@@ -117,6 +134,10 @@ export interface AWSInitializationOptions {
             showSaveFileDialog?: boolean
         }
     }
+    /**
+     * Local project context file indexing configuration options
+     */
+    contextConfiguration?: ContextConfiguration
     /**
      * Global region configuration option set by the client application.
      * Server implementations can use this value to preconfigure SDKs, API clients, etc. at server process startup.
