@@ -110,10 +110,11 @@ export interface AWSInitializationOptions {
         [key: string]: any
         window?: {
             notifications?: boolean
-        }
-        chat?: {
-            history?: boolean
-            export?: boolean
+
+            /**
+             * Indicates client support for `aws/showSaveFileDialog` request from server.
+             */
+            showSaveFileDialog?: boolean
         }
     }
     /**

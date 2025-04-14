@@ -187,7 +187,7 @@ export interface ChatOptions {
     history?: boolean
 
     /**
-     * Server signals to Chat Client support of export conversation.
+     * Server signals to Chat Client support of Chat export feature.
      */
     export?: boolean
 }
