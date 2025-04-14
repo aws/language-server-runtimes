@@ -5,6 +5,8 @@ import {
     ReferenceTrackerInformation,
     OPEN_TAB_REQUEST_METHOD,
     OpenTabResult,
+    GET_SERIALIZED_CHAT_REQUEST_METHOD,
+    GetSerializedChatResult,
 } from '@aws/language-server-runtimes-types'
 export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
 
@@ -186,9 +188,9 @@ export interface UiResultMessage {
     params: UiMessageResultParams
 }
 
-export type UiMessageResultCommand = typeof OPEN_TAB_REQUEST_METHOD
+export type UiMessageResultCommand = typeof OPEN_TAB_REQUEST_METHOD | typeof GET_SERIALIZED_CHAT_REQUEST_METHOD
 
-export type UiMessageResult = OpenTabResult
+export type UiMessageResult = OpenTabResult | GetSerializedChatResult
 
 export type UiMessageResultParams =
     | {

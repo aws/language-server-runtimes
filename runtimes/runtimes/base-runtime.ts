@@ -43,6 +43,13 @@ import {
     createPromptNotificationType,
     listConversationsRequestType,
     conversationClickRequestType,
+    GetSerializedChatParams,
+    GetSerializedChatResult,
+    RequestHandler,
+    TabBarActionParams,
+    TabBarActionResult,
+    getSerializedChatRequestType,
+    tabBarActionRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -79,6 +86,7 @@ import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
+import { ShowSaveFileDialogRequestType } from '../protocol/window'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -152,6 +160,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onCreatePrompt: handler => lspConnection.onNotification(createPromptNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
+        getSerializedChat: params => lspConnection.sendRequest(getSerializedChatRequestType.method, params),
+        onTabBarAction: handler => lspConnection.onRequest(tabBarActionRequestType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
@@ -219,6 +229,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
                 showMessageRequest: params => lspConnection.sendRequest(ShowMessageRequest.method, params),
                 showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
+                showSaveFileDialog: params => lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {

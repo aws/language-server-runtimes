@@ -111,6 +111,10 @@ export interface AWSInitializationOptions {
         window?: {
             notifications?: boolean
         }
+        chat?: {
+            history?: boolean
+            export?: boolean
+        }
     }
     /**
      * Global region configuration option set by the client application.

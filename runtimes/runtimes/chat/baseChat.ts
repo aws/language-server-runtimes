@@ -49,6 +49,12 @@ import {
     ConversationClickParams,
     conversationClickRequestType,
     ConversationClickResult,
+    GetSerializedChatParams,
+    GetSerializedChatResult,
+    getSerializedChatRequestType,
+    TabBarActionParams,
+    TabBarActionResult,
+    tabBarActionRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -139,5 +145,13 @@ export class BaseChat implements Chat {
 
     public onConversationClick(handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) {
         this.connection.onRequest(conversationClickRequestType.method, handler)
+    }
+
+    public getSerializedChat(params: GetSerializedChatParams): Promise<GetSerializedChatResult> {
+        return this.connection.sendRequest(getSerializedChatRequestType.method, params)
+    }
+
+    public onTabBarAction(handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) {
+        this.connection.onRequest(tabBarActionRequestType.method, handler)
     }
 }
