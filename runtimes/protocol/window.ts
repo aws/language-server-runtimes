@@ -5,6 +5,10 @@ import {
     ShowSaveFileDialogResult,
 } from './lsp'
 
+/**
+ * The show message notification is sent from a server to a client to ask the client to display "Save File" dialog.
+ * Server may indicate list of filetypes and default save path to show in the dialog.
+ */
 export const ShowSaveFileDialogRequestType = new ProtocolRequestType<
     ShowSaveFileDialogParams,
     ShowSaveFileDialogResult,
