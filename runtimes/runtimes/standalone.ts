@@ -375,7 +375,7 @@ export const standalone = (props: RuntimeProps) => {
                             ...current_config,
                             requestHandler: requestHandler,
                         })
-                        logging.log(`Configured AWS SDK V3 Proxy for ${Ctor.name}`)
+                        logging.log(`Configured AWS SDK V3 Proxy for client.`)
                         return instance
                     } catch (err) {
                         telemetry.emitMetric({
@@ -387,9 +387,7 @@ export const standalone = (props: RuntimeProps) => {
                         })
 
                         // Fallback
-                        logging.log(
-                            `Failed to configure AWS SDK V3 Proxy for client ${Ctor.name}. Starting without proxy.`
-                        )
+                        logging.log(`Failed to configure AWS SDK V3 Proxy for client. Starting without proxy.`)
                         return new Ctor({ ...current_config })
                     }
                 },
@@ -409,7 +407,7 @@ export const standalone = (props: RuntimeProps) => {
                             logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
 
                             instance.config.update(configOptions)
-                            logging.log(`Configured AWS SDK V2 Proxy for ${Ctor.name}`)
+                            logging.log(`Configured AWS SDK V2 Proxy for client.`)
                             return instance
                         } catch (err) {
                             telemetry.emitMetric({
@@ -421,9 +419,7 @@ export const standalone = (props: RuntimeProps) => {
                             })
 
                             // Fallback
-                            logging.log(
-                                `Failed to configure AWS SDK V2 Proxy for client ${Ctor.name}. Starting without proxy.`
-                            )
+                            logging.log(`Failed to configure AWS SDK V2 Proxy for client. Starting without proxy.`)
                             return instance
                         }
                     },
