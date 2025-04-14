@@ -32,7 +32,8 @@ export * from './inlineCompletions'
 // AutoParameterStructuresProtocolRequestType allows ParameterStructures both by-name and by-position
 export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
     extends RequestType<P, R, E>
-    implements ProgressType<PR>, RegistrationType<RO> {
+    implements ProgressType<PR>, RegistrationType<RO>
+{
     /**
      * Clients must not use this property. It is here to ensure correct typing.
      */
