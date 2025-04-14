@@ -41,7 +41,7 @@ telemetryService.registerGaugeProvider('ResourceUsageMetric', {
 3. Record errors or server crashes:
 
 ```typescript
-optel.recordEvent('ErrorEvent', {
+optel.emitEvent('ErrorEvent', {
     errorOrigin: 'caughtError',
     errorType: 'proxyCertificateRead',
     errorName: error?.name ?? 'unknown',
