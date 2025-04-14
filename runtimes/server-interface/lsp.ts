@@ -57,6 +57,8 @@ import {
     OpenFileDiffParams,
     SelectWorkspaceItemParams,
     SelectWorkspaceItemResult,
+    ShowSaveFileDialogParams,
+    ShowSaveFileDialogResult,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -148,6 +150,7 @@ export type Lsp = {
         showMessage: (params: ShowMessageParams) => Promise<void>
         showMessageRequest: (params: ShowMessageRequestParams) => Promise<MessageActionItem | null>
         showDocument: (params: ShowDocumentParams) => Promise<ShowDocumentResult>
+        showSaveFileDialog: (params: ShowSaveFileDialogParams) => Promise<ShowSaveFileDialogResult>
     }
     extensions: {
         onInlineCompletionWithReferences: (

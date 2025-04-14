@@ -23,6 +23,7 @@ import {
     didChangeDependencyPathsNotificationType,
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
+    ShowSaveFileDialogParams,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -76,6 +77,7 @@ import { getTelemetryLspServer } from './util/telemetryLspServer'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
 import { newAgent } from './agent'
+import { ShowSaveFileDialogRequestType } from '../protocol/window'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -333,6 +335,8 @@ export const standalone = (props: RuntimeProps) => {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
                     showMessageRequest: params => lspConnection.sendRequest(ShowMessageRequest.method, params),
                     showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
+                    showSaveFileDialog: (params: ShowSaveFileDialogParams) =>
+                        lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
                 },
                 publishDiagnostics: params =>
                     lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),

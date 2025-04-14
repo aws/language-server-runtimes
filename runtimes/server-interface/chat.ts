@@ -28,6 +28,10 @@ import {
     ListConversationsResult,
     ConversationClickParams,
     ConversationClickResult,
+    GetSerializedChatResult,
+    GetSerializedChatParams,
+    TabBarActionParams,
+    TabBarActionResult,
 } from '../protocol'
 
 /**
@@ -44,6 +48,8 @@ export type Chat = {
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
     onListConversations: (handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) => void
     onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
+    onTabBarAction: (handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) => void
+    getSerializedChat: (params: GetSerializedChatParams) => Promise<GetSerializedChatResult>
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
