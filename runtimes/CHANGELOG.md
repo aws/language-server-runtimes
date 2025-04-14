@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.2.57](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.56...language-server-runtimes/v0.2.57) (2025-04-14)
+
+
+### Features
+
+* inject home directory into runtimes.  ([#424](https://github.com/aws/language-server-runtimes/issues/424)) ([595475e](https://github.com/aws/language-server-runtimes/commit/595475e448e9dc8fb74c4aec9c31eb7852db6e45))
+* protocol extensions for chat tab actions and export features ([#433](https://github.com/aws/language-server-runtimes/issues/433)) ([10019fe](https://github.com/aws/language-server-runtimes/commit/10019fe875658ac46bf26b995d01416a852e2432))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.12 to ^0.1.13
+
 ## [0.2.56](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.55...language-server-runtimes/v0.2.56) (2025-04-10)
 
 

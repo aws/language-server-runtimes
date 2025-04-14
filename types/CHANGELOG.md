@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.13](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.12...language-server-runtimes-types/v0.1.13) (2025-04-14)
+
+
+### Features
+
+* protocol extensions for chat tab actions and export features ([#433](https://github.com/aws/language-server-runtimes/issues/433)) ([10019fe](https://github.com/aws/language-server-runtimes/commit/10019fe875658ac46bf26b995d01416a852e2432))
+
 ## [0.1.12](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.11...language-server-runtimes-types/v0.1.12) (2025-04-10)
 
 

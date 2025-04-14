@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.1.15](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.14...chat-client-ui-types/v0.1.15) (2025-04-14)
+
+
+### Features
+
+* protocol extensions for chat tab actions and export features ([#433](https://github.com/aws/language-server-runtimes/issues/433)) ([10019fe](https://github.com/aws/language-server-runtimes/commit/10019fe875658ac46bf26b995d01416a852e2432))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.12 to ^0.1.13
+
 ## [0.1.14](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.13...chat-client-ui-types/v0.1.14) (2025-04-10)
 
 
