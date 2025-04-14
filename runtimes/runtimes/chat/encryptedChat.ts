@@ -82,16 +82,13 @@ export class EncryptedChat extends BaseChat {
                         decryptedRequest = await this.decodeRequest<DecryptedRequestType>(request)
                     } catch (err: any) {
                         let errorMessage = 'Request could not be decrypted'
-                        OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent(
-                            'ErrorEvent',
-                            {
-                                errorOrigin: 'caughtError',
-                                errorType: 'encryptedChatDecodeRequest',
-                                errorName: err?.name ?? 'unknown',
-                                errorCode: err?.code ?? '',
-                                errorMessage: errorMessage,
-                            }
-                        )
+                        OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).emitEvent({
+                            errorOrigin: 'caughtError',
+                            errorType: 'encryptedChatDecodeRequest',
+                            errorName: err?.name ?? 'unknown',
+                            errorCode: err?.code ?? '',
+                            errorMessage: errorMessage,
+                        })
                         if (err instanceof Error) errorMessage = err.message
                         return new ResponseError<ResponseType>(LSPErrorCodes.ServerCancelled, errorMessage)
                     }

@@ -1,22 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
-        "ErrorEvent": {
-            "title": "ErrorEvent",
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["baseInfo", "errorAttributes"],
-            "properties": {
-                "baseInfo": {
-                    "type": "object",
-                    "$ref": "./base-event-schema.json"
-                },
-                "errorAttributes": {
-                    "type": "object",
-                    "$ref": "#/definitions/ErrorEventAttributes"
-                }
-            }
-        },
         "ErrorEventAttributes": {
             "title": "ErrorEventAttributes",
             "type": "object",
