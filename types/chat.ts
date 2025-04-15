@@ -17,6 +17,7 @@ export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
+export const TAB_BAR_ACTION_REQUEST_METHOD = 'aws/chat/tabBarAction'
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
@@ -24,6 +25,8 @@ export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
+// export
+export const GET_SERIALIZED_CHAT_REQUEST_METHOD = 'aws/chat/getSerializedChat'
 
 export interface ChatItemAction {
     pillText: string
@@ -180,9 +183,14 @@ export interface ChatOptions {
     quickActions?: QuickActions
 
     /**
-     * Server signals to Chat Client if it supports conversation history.
+     * Server signals to Chat Client support of conversation history.
      */
     history?: boolean
+
+    /**
+     * Server signals to Chat Client support of Chat export feature.
+     */
+    export?: boolean
 }
 
 export interface QuickActionParams extends PartialResultParams {
@@ -374,4 +382,22 @@ export interface ConversationClickParams {
 
 export interface ConversationClickResult extends ConversationClickParams {
     success: boolean
+}
+
+export type TabBarAction = 'export'
+export interface TabBarActionParams {
+    tabId?: string
+    action: TabBarAction
+}
+
+export interface TabBarActionResult extends TabBarActionParams {
+    success: boolean
+}
+
+export interface GetSerializedChatParams extends TabEventParams {
+    format: 'html' | 'markdown'
+}
+
+export interface GetSerializedChatResult {
+    content: string
 }

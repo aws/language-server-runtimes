@@ -23,6 +23,7 @@ import {
     didChangeDependencyPathsNotificationType,
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
+    ShowSaveFileDialogParams,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -76,15 +77,15 @@ import { getTelemetryLspServer } from './util/telemetryLspServer'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
 import { newAgent } from './agent'
+import { ShowSaveFileDialogRequestType } from '../protocol/window'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
     process.env.AWS_SDK_LOAD_CONFIG = '1'
 }
 
-process.on('uncaughtException', err => {
+process.on('uncaughtExceptionMonitor', err => {
     console.error('Uncaught Exception:', err.message)
-    process.exit(1)
 })
 
 /**
@@ -213,6 +214,7 @@ export const standalone = (props: RuntimeProps) => {
                         os.type() === 'Darwin' ? '/tmp' : os.tmpdir(),
                         'aws-language-servers'
                     ),
+                getUserHomeDir: () => os.homedir(),
                 readdir: path => readdir(path, { withFileTypes: true }),
                 readFile: (path, options?) =>
                     readFile(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
@@ -292,6 +294,8 @@ export const standalone = (props: RuntimeProps) => {
 
         const sdkProxyConfigManager = new ProxyConfigManager(telemetry)
 
+        const agent = newAgent()
+
         // Initialize every Server
         const disposables = props.servers.map(s => {
             // Create LSP server representation that holds internal server state
@@ -332,6 +336,8 @@ export const standalone = (props: RuntimeProps) => {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
                     showMessageRequest: params => lspConnection.sendRequest(ShowMessageRequest.method, params),
                     showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
+                    showSaveFileDialog: (params: ShowSaveFileDialogParams) =>
+                        lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
                 },
                 publishDiagnostics: params =>
                     lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
@@ -374,7 +380,7 @@ export const standalone = (props: RuntimeProps) => {
                             ...current_config,
                             requestHandler: requestHandler,
                         })
-                        logging.log(`Configured AWS SDK V3 Proxy for ${Ctor.name}`)
+                        logging.log(`Configured AWS SDK V3 Proxy for client.`)
                         return instance
                     } catch (err) {
                         telemetry.emitMetric({
@@ -386,9 +392,7 @@ export const standalone = (props: RuntimeProps) => {
                         })
 
                         // Fallback
-                        logging.log(
-                            `Failed to configure AWS SDK V3 Proxy for client ${Ctor.name}. Starting without proxy.`
-                        )
+                        logging.log(`Failed to configure AWS SDK V3 Proxy for client. Starting without proxy.`)
                         return new Ctor({ ...current_config })
                     }
                 },
@@ -408,7 +412,7 @@ export const standalone = (props: RuntimeProps) => {
                             logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
 
                             instance.config.update(configOptions)
-                            logging.log(`Configured AWS SDK V2 Proxy for ${Ctor.name}`)
+                            logging.log(`Configured AWS SDK V2 Proxy for client.`)
                             return instance
                         } catch (err) {
                             telemetry.emitMetric({
@@ -420,9 +424,7 @@ export const standalone = (props: RuntimeProps) => {
                             })
 
                             // Fallback
-                            logging.log(
-                                `Failed to configure AWS SDK V2 Proxy for client ${Ctor.name}. Starting without proxy.`
-                            )
+                            logging.log(`Failed to configure AWS SDK V2 Proxy for client. Starting without proxy.`)
                             return instance
                         }
                     },
@@ -430,8 +432,6 @@ export const standalone = (props: RuntimeProps) => {
             )
 
             credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
-
-            const agent = newAgent()
 
             return s({
                 chat,

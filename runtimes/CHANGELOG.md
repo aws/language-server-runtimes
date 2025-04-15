@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.2.58](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.57...language-server-runtimes/v0.2.58) (2025-04-14)
+
+
+### Features
+
+* collect telemetry data from standalone runtime ([#392](https://github.com/aws/language-server-runtimes/issues/392)) ([76d6869](https://github.com/aws/language-server-runtimes/commit/76d68699fdb49147427b22574d7d1794c0bc31e6))
+
+
+### Bug Fixes
+
+* agent tools are shared between servers ([01a9f08](https://github.com/aws/language-server-runtimes/commit/01a9f08f5c1f5920f519461fae8a7b8d92578233))
+
+## [0.2.57](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.56...language-server-runtimes/v0.2.57) (2025-04-14)
+
+
+### Features
+
+* inject home directory into runtimes.  ([#424](https://github.com/aws/language-server-runtimes/issues/424)) ([595475e](https://github.com/aws/language-server-runtimes/commit/595475e448e9dc8fb74c4aec9c31eb7852db6e45))
+* protocol extensions for chat tab actions and export features ([#433](https://github.com/aws/language-server-runtimes/issues/433)) ([10019fe](https://github.com/aws/language-server-runtimes/commit/10019fe875658ac46bf26b995d01416a852e2432))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.12 to ^0.1.13
+
 ## [0.2.56](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.55...language-server-runtimes/v0.2.56) (2025-04-10)
 
 

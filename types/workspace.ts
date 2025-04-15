@@ -1,4 +1,4 @@
-import { URI, TextDocument } from './lsp'
+import { URI } from './lsp'
 
 export const SELECT_WORKSPACE_ITEM_REQUEST_METHOD = 'aws/selectWorkspaceItem'
 export const OPEN_FILE_DIFF_NOTIFICATION_METHOD = 'aws/openFileDiff'

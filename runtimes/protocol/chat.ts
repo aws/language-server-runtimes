@@ -54,6 +54,12 @@ import {
     ConversationClickParams,
     ConversationClickResult,
     CONVERSATION_CLICK_REQUEST_METHOD,
+    GetSerializedChatParams,
+    GetSerializedChatResult,
+    GET_SERIALIZED_CHAT_REQUEST_METHOD,
+    TabBarActionParams,
+    TabBarActionResult,
+    TAB_BAR_ACTION_REQUEST_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -140,3 +146,28 @@ export const conversationClickRequestType = new AutoParameterStructuresProtocolR
     void,
     void
 >(CONVERSATION_CLICK_REQUEST_METHOD)
+
+/**
+ * The tab bar action request is sent from client to server to execute action from Chat tab bar UI.
+ * Tab bar action may have TabId attached to indicate that action is performed on specific tab.
+ *
+ * See `TabBarActionParams` for supported actions.
+ */
+export const tabBarActionRequestType = new ProtocolRequestType<
+    TabBarActionParams,
+    TabBarActionResult,
+    never,
+    void,
+    void
+>(TAB_BAR_ACTION_REQUEST_METHOD)
+
+/**
+ * The get serialized chat request is sent from server to client to retrieve chat conversation messages serialized to specified format.
+ */
+export const getSerializedChatRequestType = new ProtocolRequestType<
+    GetSerializedChatParams,
+    GetSerializedChatResult,
+    never,
+    void,
+    void
+>(GET_SERIALIZED_CHAT_REQUEST_METHOD)

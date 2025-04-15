@@ -4,29 +4,41 @@
         "ResourceUsageMetric": {
             "title": "ResourceUsageMetric",
             "type": "object",
-            "allOf": [
-                { "$ref": "./base-event-schema.json" },
-                {
-                    "required": ["userCpuUsage", "systemCpuUsage", "heapUsed", "heapTotal", "rss"],
-                    "properties": {
-                        "userCpuUsage": {
-                            "type": "number"
-                        },
-                        "systemCpuUsage": {
-                            "type": "number"
-                        },
-                        "heapUsed": {
-                            "type": "number"
-                        },
-                        "heapTotal": {
-                            "type": "number"
-                        },
-                        "rss": {
-                            "type": "number"
-                        }
-                    }
+            "additionalProperties": false,
+            "required": ["baseInfo", "resourceValues"],
+            "properties": {
+                "baseInfo": {
+                    "type": "object",
+                    "$ref": "./base-event-schema.json"
+                },
+                "resourceValues": {
+                    "type": "object",
+                    "$ref": "#/definitions/ResourceUsageAttributes"
                 }
-            ]
+            }
+        },
+        "ResourceUsageAttributes": {
+            "title": "ResourceUsageAttributes",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["userCpuUsage", "systemCpuUsage", "heapUsed", "heapTotal", "rss"],
+            "properties": {
+                "userCpuUsage": {
+                    "type": "number"
+                },
+                "systemCpuUsage": {
+                    "type": "number"
+                },
+                "heapUsed": {
+                    "type": "number"
+                },
+                "heapTotal": {
+                    "type": "number"
+                },
+                "rss": {
+                    "type": "number"
+                }
+            }
         }
     }
 }

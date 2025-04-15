@@ -44,6 +44,13 @@ import {
     inlineChatResultNotificationType,
     listConversationsRequestType,
     conversationClickRequestType,
+    GetSerializedChatParams,
+    GetSerializedChatResult,
+    RequestHandler,
+    TabBarActionParams,
+    TabBarActionResult,
+    getSerializedChatRequestType,
+    tabBarActionRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -80,6 +87,8 @@ import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
+import { ShowSaveFileDialogRequestType } from '../protocol/window'
+import { join } from 'path'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -108,6 +117,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     }
 
     // Set up the workspace to use the LSP Text Documents component
+    const defaultHomeDir = '/home/user'
     const workspace: Workspace = {
         getTextDocument: async uri => documents.get(uri),
         getAllTextDocuments: async () => documents.all(),
@@ -117,8 +127,13 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             copyFile: (_src, _dest, _options?) => Promise.resolve(),
             exists: _path => Promise.resolve(false),
             getFileSize: _path => Promise.resolve({ size: 0 }),
-            getServerDataDirPath: _serverName => '',
+            getServerDataDirPath: serverName =>
+                join(
+                    lspRouter.clientInitializeParams?.initializationOptions?.aws?.clientDataFolder ?? defaultHomeDir,
+                    serverName
+                ),
             getTempDirPath: () => '/tmp',
+            getUserHomeDir: () => defaultHomeDir,
             readFile: (_path, _options?) => Promise.resolve(''),
             readdir: _path => Promise.resolve([]),
             isFile: _path => Promise.resolve(false),
@@ -154,6 +169,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onInlineChatResult: handler => lspConnection.onNotification(inlineChatResultNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
+        getSerializedChat: params => lspConnection.sendRequest(getSerializedChatRequestType.method, params),
+        onTabBarAction: handler => lspConnection.onRequest(tabBarActionRequestType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
@@ -221,6 +238,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
                 showMessageRequest: params => lspConnection.sendRequest(ShowMessageRequest.method, params),
                 showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
+                showSaveFileDialog: params => lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {

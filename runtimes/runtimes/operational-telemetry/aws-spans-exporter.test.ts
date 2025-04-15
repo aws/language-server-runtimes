@@ -29,9 +29,9 @@ describe('AWSSpanExporter', () => {
                 name: 'test-scope',
             },
             endTime: [1234567890, 838000000],
-            name: 'CaughtErrorEvent',
+            name: 'ErrorEvent',
             attributes: {
-                errorType: 'TestError',
+                'event.attributes': `{"errorName":"Error1","errorOrigin":"caughtError","errorType":"parseError"}`,
             },
         } as any,
         {
@@ -46,9 +46,9 @@ describe('AWSSpanExporter', () => {
                 name: 'test-scope',
             },
             endTime: [1234567890, 838000000],
-            name: 'ServerCrashEvent',
+            name: 'ErrorEvent',
             attributes: {
-                crashType: 'unhandledException',
+                'event.attributes': `{"errorName":"Error2","errorOrigin":"caughtError","errorType":"parseError"}`,
             },
         } as any,
     ]
@@ -141,14 +141,26 @@ describe('AWSSpanExporter', () => {
                         scopeName: 'test-scope',
                         data: [
                             {
-                                name: 'CaughtErrorEvent',
-                                timestamp: sinon.match.number,
-                                errorType: 'TestError',
+                                baseInfo: {
+                                    name: 'ErrorEvent',
+                                    timestamp: sinon.match.number,
+                                },
+                                errorAttributes: {
+                                    errorName: 'Error1',
+                                    errorOrigin: 'caughtError',
+                                    errorType: 'parseError',
+                                },
                             },
                             {
-                                name: 'ServerCrashEvent',
-                                timestamp: sinon.match.number,
-                                crashType: 'unhandledException',
+                                baseInfo: {
+                                    name: 'ErrorEvent',
+                                    timestamp: sinon.match.number,
+                                },
+                                errorAttributes: {
+                                    errorName: 'Error2',
+                                    errorOrigin: 'caughtError',
+                                    errorType: 'parseError',
+                                },
                             },
                         ],
                     },
