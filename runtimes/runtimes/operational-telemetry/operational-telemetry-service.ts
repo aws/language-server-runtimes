@@ -1,14 +1,13 @@
 import { PeriodicExportingMetricReader } from '@opentelemetry/sdk-metrics'
-import { MetricName, OperationalEventAttributes, OperationalTelemetry, ValueProviders } from './operational-telemetry'
+import { OperationalEventAttributes, OperationalTelemetry } from './operational-telemetry'
 import { diag, DiagLogLevel, metrics } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource, resourceFromAttributes } from '@opentelemetry/resources'
-import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions'
 import { randomUUID } from 'crypto'
 import { RemoteConsole } from 'vscode-languageserver'
 import * as optelLogs from '@opentelemetry/api-logs'
 import { ExtendedClientInfo } from '../../server-interface'
-import { OperationalTelemetryResource, ResourceUsageAttributes } from './types/generated/telemetry'
+import { OperationalTelemetryResource, MetricName } from './types/generated/telemetry'
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http'
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http'
 import { BatchLogRecordProcessor } from '@opentelemetry/sdk-logs'
@@ -53,28 +52,18 @@ export class OperationalTelemetryService implements OperationalTelemetry {
             DiagLogLevel.ALL
         )
 
-        // const opresource: OperationalTelemetryResource = {
-        //     'service.name': config.serviceName,
-        //     'service.version': config.serviceVersion,
-        //     'clientInfo.name': config.extendedClientInfo?.name,
-        //     'clientInfo.version': config.extendedClientInfo?.version,
-        //     'clientInfo.clientId': config.extendedClientInfo?.clientId,
-        //     'clientInfo.extension.name': config.extendedClientInfo?.extension.name,
-        //     'clientInfo.extension.version': config.extendedClientInfo?.extension.version,
-        //     'operational.telemetry.version': '1.0.0',
-        //     sessionId: randomUUID(),
-        // }
-        this.baseResource = resourceFromAttributes({
-            [ATTR_SERVICE_NAME]: config.serviceName,
-            [ATTR_SERVICE_VERSION]: config.serviceVersion,
+        const operationalTelemetryResource: OperationalTelemetryResource = {
+            'server.name': config.serviceName,
+            'server.version': config.serviceVersion,
             'clientInfo.name': config.extendedClientInfo?.name,
             'clientInfo.version': config.extendedClientInfo?.version,
             'clientInfo.clientId': config.extendedClientInfo?.clientId,
             'clientInfo.extension.name': config.extendedClientInfo?.extension.name,
             'clientInfo.extension.version': config.extendedClientInfo?.extension.version,
-            'operational.telemetry.version': '1.0.0',
+            'operational.telemetry.schema.version': '1.0.0',
             sessionId: randomUUID(),
-        })
+        }
+        this.baseResource = resourceFromAttributes({ ...operationalTelemetryResource })
 
         this.awsConfig = {
             endpoint: config.endpoint,
@@ -128,7 +117,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         // Registered callbacks are evaluated once during the collection process.
         const metricReader = new PeriodicExportingMetricReader({
             exporter: metricExporter,
-            exportIntervalMillis: fiveSeconds,
+            exportIntervalMillis: fiveMinutes,
         })
 
         // Sends collected logs every `scheduledDelayMillis` if batch is non-empty.
@@ -166,16 +155,14 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
     registerGaugeProvider(
         metricName: MetricName,
-        valueProviders: ValueProviders<ResourceUsageAttributes>,
+        valueProvider: () => number,
+        unit?: string,
         scopeName?: string
     ): void {
         const meter = metrics.getMeter(scopeName ? scopeName : this.RUNTIMES_SCOPE_NAME)
-        const gauge = meter.createObservableGauge(metricName)
-
-        for (const [key, valueProvider] of Object.entries(valueProviders)) {
-            gauge.addCallback(result => {
-                result.observe(valueProvider(), { type: key })
-            })
-        }
+        const gauge = meter.createObservableGauge(metricName, { unit: unit })
+        gauge.addCallback(result => {
+            result.observe(valueProvider())
+        })
     }
 }

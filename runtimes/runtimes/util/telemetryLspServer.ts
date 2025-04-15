@@ -6,18 +6,18 @@ import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-t
 import { RuntimeProps } from '../runtime'
 import { InitializeParams, InitializeResult } from '../../protocol'
 import { Runtime } from '../../server-interface'
+import { totalmem } from 'os'
 
 const DEFAULT_TELEMETRY_GATEWAY_ENDPOINT = ''
 
 function setMemoryUsageTelemetry() {
     const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
-    optel.registerGaugeProvider('ResourceUsageMetric', {
-        userCpuUsage: () => process.cpuUsage().user,
-        systemCpuUsage: () => process.cpuUsage().system,
-        heapUsed: () => process.memoryUsage().heapUsed,
-        heapTotal: () => process.memoryUsage().heapTotal,
-        rss: () => process.memoryUsage().rss,
-    })
+    optel.registerGaugeProvider('heapTotal', () => process.memoryUsage().heapTotal, 'byte')
+    optel.registerGaugeProvider('heapUsed', () => process.memoryUsage().heapUsed, 'byte')
+    optel.registerGaugeProvider('rss', () => process.memoryUsage().rss, 'byte')
+    optel.registerGaugeProvider('userCpuUsage', () => process.cpuUsage().user, 'second')
+    optel.registerGaugeProvider('systemCpuUsage', () => process.cpuUsage().system, 'second')
+    optel.registerGaugeProvider('memoryUsage', () => (process.memoryUsage().rss / totalmem()) * 100, 'percent')
 }
 
 function setServerCrashTelemetryListeners() {

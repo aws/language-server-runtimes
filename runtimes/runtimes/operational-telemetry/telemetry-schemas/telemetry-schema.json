@@ -4,7 +4,7 @@
     "type": "object",
     "oneOf": [
         {
-            "$ref": "#/definitions/ResourceUsageMetric"
+            "$ref": "#/definitions/MetricName"
         },
         {
             "$ref": "#/definitions/OperationalTelemetryResource"
@@ -14,45 +14,15 @@
         }
     ],
     "definitions": {
-        "ResourceUsageMetric": {
-            "title": "ResourceUsageMetric",
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["baseInfo", "resourceValues"],
-            "properties": {
-                "resourceValues": {
-                    "type": "object",
-                    "$ref": "#/definitions/ResourceUsageAttributes"
-                }
-            }
-        },
-        "ResourceUsageAttributes": {
-            "title": "ResourceUsageAttributes",
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["userCpuUsage", "systemCpuUsage", "heapUsed", "heapTotal", "rss"],
-            "properties": {
-                "userCpuUsage": {
-                    "type": "number"
-                },
-                "systemCpuUsage": {
-                    "type": "number"
-                },
-                "heapUsed": {
-                    "type": "number"
-                },
-                "heapTotal": {
-                    "type": "number"
-                },
-                "rss": {
-                    "type": "number"
-                }
-            }
+        "MetricName": {
+            "title": "MetricName",
+            "type": "string",
+            "enum": ["userCpuUsage", "systemCpuUsage", "heapUsed", "heapTotal", "rss", "memoryUsage"]
         },
         "OperationalTelemetryResource": {
             "title": "OperationalTelemetryResource",
             "type": "object",
-            "required": ["operational.telemetry.schema.version", "sessionId", "server.name", "server.version"],
+            "required": ["operational.telemetry.schema.version", "sessionId", "server.name"],
             "additionalProperties": false,
             "properties": {
                 "operational.telemetry.schema.version": {
