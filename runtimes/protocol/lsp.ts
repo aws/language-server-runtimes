@@ -145,7 +145,7 @@ export interface AWSInitializationOptions {
     /**
      * Represents the global context configuration settings.
      */
-    contextConfiguration?: WorkspaceIndexConfiguration
+    contextConfiguration?: ContextConfiguration
     /**
      * Global region configuration option set by the client application.
      * Server implementations can use this value to preconfigure SDKs, API clients, etc. at server process startup.
