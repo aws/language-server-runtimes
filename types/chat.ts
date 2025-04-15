@@ -320,13 +320,12 @@ export type InlineChatUserDecision = 'ACCEPT' | 'REJECT' | 'DISMISS' | string
 
 export interface InlineChatResultParams {
     requestId: string
-    timestamp: Date
     inputLength?: number
-    numSelectedLines?: number
-    numSuggestionAddChars?: number
-    numSuggestionAddLines?: number
-    numSuggestionDelChars?: number
-    numSuggestionDelLines?: number
+    numberOfSelectedLines?: number
+    numberOfCharactersAddedFromSuggestion?: number
+    numberOfLinesAddedFromSuggestion?: number
+    numberOfCharactersDeletedFromSuggestion?: number
+    numberOfLinesDeletedFromSuggestion?: number
     codeIntent?: boolean
     userDecision?: InlineChatUserDecision
     responseStartLatency?: number

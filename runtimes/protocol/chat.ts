@@ -127,6 +127,10 @@ export const contextCommandsNotificationType = new ProtocolNotificationType<Cont
 export const createPromptNotificationType = new ProtocolNotificationType<CreatePromptParams, void>(
     CREATE_PROMPT_NOTIFICATION_METHOD
 )
+/**
+ * The inline chat result notification is sent from client to server to notify the action taken by the user
+ * from the suggested response returned by the server.
+ */
 export const inlineChatResultNotificationType = new ProtocolNotificationType<InlineChatResultParams, void>(
     INLINE_CHAT_RESULT_NOTIFICATION_METHOD
 )
