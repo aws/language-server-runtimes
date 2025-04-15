@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.59](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.58...language-server-runtimes/v0.2.59) (2025-04-15)
+
+
+### Features
+
+* add initialization configuration options for file indexing ([#436](https://github.com/aws/language-server-runtimes/issues/436)) ([155546f](https://github.com/aws/language-server-runtimes/commit/155546fe092bad040817abd21816ec5051b897f3))
+
 ## [0.2.58](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.57...language-server-runtimes/v0.2.58) (2025-04-14)
 
 
