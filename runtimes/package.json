@@ -15,7 +15,7 @@
     "scripts": {
         "clean": "rm -rf out/",
         "precompile": "npm run generate-types",
-        "compile": "tsc --build && npm run copy-files && npm run resolve-schemas",
+        "compile": "tsc --build && npm run copy-files",
         "fix:prettier": "prettier . --write",
         "format": "npm run fix:prettier",
         "prepare": "husky install",
@@ -27,11 +27,9 @@
         "preversion": "npm run test",
         "version": "npm run compile && git add -A .",
         "copy-files": "copyfiles runtimes/operational-telemetry/types/generated/* out",
-        "generate-types": "ts-node ./script/generate-types.ts",
-        "resolve-schemas": "ts-node ./script/resolve-schema-refs.ts"
+        "generate-types": "ts-node ./script/generate-types.ts"
     },
     "dependencies": {
-        "@apidevtools/json-schema-ref-parser": "^11.9.3",
         "@aws/language-server-runtimes-types": "^0.1.13",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/api-logs": "^0.200.0",

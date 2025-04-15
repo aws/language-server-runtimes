@@ -8,8 +8,6 @@ import { InitializeParams, InitializeResult } from '../../protocol'
 import { Runtime } from '../../server-interface'
 
 const DEFAULT_TELEMETRY_GATEWAY_ENDPOINT = ''
-const DEFAULT_TELEMETRY_COGNITO_REGION = ''
-const DEFAULT_TELEMETRY_COGNITO_POOL_ID = ''
 
 function setMemoryUsageTelemetry() {
     const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
@@ -48,16 +46,12 @@ export function getTelemetryLspServer(
         const optOut = params.initializationOptions?.telemetryOptOut ?? true // telemetry disabled if option not provided
 
         const endpoint = runtime.getConfiguration('TELEMETRY_GATEWAY_ENDPOINT') ?? DEFAULT_TELEMETRY_GATEWAY_ENDPOINT
-        const region = runtime.getConfiguration('TELEMETRY_COGNITO_REGION') ?? DEFAULT_TELEMETRY_COGNITO_REGION
-        const poolId = runtime.getConfiguration('TELEMETRY_COGNITO_POOL_ID') ?? DEFAULT_TELEMETRY_COGNITO_POOL_ID
 
         // const optel = OperationalTelemetryService.getInstance({
         //     serviceName: props.name,
         //     serviceVersion: props.version,
         //     extendedClientInfo: params.initializationOptions?.aws?.clientInfo,
         //     lspConsole: lspConnection.console,
-        //     poolId: poolId,
-        //     region: region,
         //     endpoint: endpoint,
         //     telemetryOptOut: optOut,
         // })

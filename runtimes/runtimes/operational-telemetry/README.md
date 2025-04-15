@@ -21,7 +21,7 @@ For the standalone runtime, the OperationalTelemetryService instance is initiali
 1. Initialize the OperationalTelemetryService and set it in the OperationalTelemetryProvider:
 
 ```typescript
-const telemetryService = OperationalTelemetryService.getInstance({serviceName: 'language-server-runtimes', serviceVersion: '1.0.0', lspConsole: lspConnection.console, poolId: 'poolId', region: 'us-east-1', endpoint: 'example.com', telemetryOptOut: false});
+const telemetryService = OperationalTelemetryService.getInstance({serviceName: 'language-server-runtimes', serviceVersion: '1.0.0', lspConsole: lspConnection.console, endpoint: 'example.com', telemetryOptOut: false});
 OperationalTelemetryProvider.setTelemetryInstance(telemetryService)
 ```
 
@@ -53,15 +53,10 @@ optel.emitEvent('ErrorEvent', {
 ## Configuration
 
 The service requires the following configuration:
-
-- AWS Cognito Identity Pool ID
-- AWS Region
 - AWS API Gateway Endpoint
 
 This can be configured using the following environment variables:
 - `TELEMETRY_GATEWAY_ENDPOINT` - The endpoint URL for the telemetry gateway
-- `TELEMETRY_COGNITO_REGION` - AWS region for Cognito authentication
-- `TELEMETRY_COGNITO_POOL_ID` - Cognito Pool ID for authentication
 
 Default values for these configurations can be found in `language-server-runtimes/runtimes/runtimes/util/telemetryLspServer.ts`.
 

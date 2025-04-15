@@ -1,6 +1,6 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "OperationalTelemetrySchema",
+    "title": "OperationalTelemetrySchemas",
     "type": "object",
     "oneOf": [
         {
@@ -52,49 +52,45 @@
         "OperationalTelemetryResource": {
             "title": "OperationalTelemetryResource",
             "type": "object",
-            "required": [
-                "sessionId",
-                "server.name",
-                "server.version",
-                "clientInfo.name",
-                "clientInfo.version",
-                "clientInfo.extension.name",
-                "clientInfo.extension.version"
-            ],
+            "required": ["operational.telemetry.schema.version", "sessionId", "server.name", "server.version"],
             "additionalProperties": false,
             "properties": {
-                "sessionId": {
-                    "type": "string",
-                    "description": "The session id of the runtime that emitted the telemetry data"
-                },
                 "operational.telemetry.schema.version": {
                     "type": "string",
                     "description": "The version of the operational telemetry schema that the telemetry data is compliant with",
                     "const": "1.0.0"
                 },
+                "sessionId": {
+                    "type": "string",
+                    "description": "A unique identifier for the runtime session that persists through the lifetime of the language server"
+                },
                 "server.name": {
                     "type": "string",
-                    "description": "The name of the server that emitted the telemetry data"
+                    "description": "The name of the language server as reported during the LSP initialize request"
                 },
                 "server.version": {
                     "type": "string",
-                    "description": "The version of the server that emitted the telemetry data"
+                    "description": "The version of the language server as reported during the LSP initialize request"
                 },
                 "clientInfo.name": {
                     "type": "string",
-                    "description": "The name of the client that emitted the telemetry data"
+                    "description": "The name of the client (IDE/editor) that connects to the server as reported during the LSP initialize request"
                 },
                 "clientInfo.version": {
                     "type": "string",
-                    "description": "The version of the client that emitted the telemetry data"
+                    "description": "The version of the client as reported during the LSP initialize request"
+                },
+                "clientInfo.clientId": {
+                    "type": "string",
+                    "description": "Unique identifier for the client as reported during the LSP initialize request"
                 },
                 "clientInfo.extension.name": {
                     "type": "string",
-                    "description": "The name of the client extension that emitted the telemetry data"
+                    "description": "The name of the client extension as reported during the LSP initialize request"
                 },
                 "clientInfo.extension.version": {
                     "type": "string",
-                    "description": "The version of the client extension that emitted the telemetry data"
+                    "description": "The version of the client extensionas as reported during the LSP initialize request"
                 }
             }
         },
