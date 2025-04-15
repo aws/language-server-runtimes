@@ -48,10 +48,10 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 }
 
 /**
- * Configuration interface for setting up local context file indexing.
- * Controls what files are indexed, size limitations, and indexing behavior.
+ * Configuration options for file indexing in local project context.
+ * Controls what files are indexed.
  */
-export interface ContextConfiguration {
+export interface WorkspaceIndexConfiguration {
     /**
      * Array of file patterns to be be excluded from indexing. Patterns must follow the git ignore convention.
      */
@@ -63,6 +63,13 @@ export interface ContextConfiguration {
      * Files with extensions not in this list will be ignored.
      */
     fileExtensions?: string[]
+}
+
+/**
+ * Represents the global context configuration settings.
+ */
+export interface ContextConfiguration {
+    workspaceIndexConfiguration?: WorkspaceIndexConfiguration
 }
 
 /**
@@ -136,9 +143,9 @@ export interface AWSInitializationOptions {
         }
     }
     /**
-     * Local project context file indexing configuration options
+     * Represents the global context configuration settings.
      */
-    contextConfiguration?: ContextConfiguration
+    contextConfiguration?: WorkspaceIndexConfiguration
     /**
      * Global region configuration option set by the client application.
      * Server implementations can use this value to preconfigure SDKs, API clients, etc. at server process startup.
