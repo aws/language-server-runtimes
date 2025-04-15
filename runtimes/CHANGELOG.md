@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.60](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.59...language-server-runtimes/v0.2.60) (2025-04-15)
+
+
+### Bug Fixes
+
+* correct global context configuration param type ([#439](https://github.com/aws/language-server-runtimes/issues/439)) ([95c40fc](https://github.com/aws/language-server-runtimes/commit/95c40fca6212cc7d0f0e7c33d44fb0d8322f22f7))
+
 ## [0.2.59](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.58...language-server-runtimes/v0.2.59) (2025-04-15)
 
 
