@@ -119,6 +119,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     const defaultHomeDir = '/home/user'
     const workspace: Workspace = {
         getTextDocument: async uri => documents.get(uri),
+        hasTextDocument: async uri => documents.get(uri) !== undefined,
         getAllTextDocuments: async () => documents.all(),
         getWorkspaceFolder: _uri =>
             lspRouter.clientInitializeParams!.workspaceFolders && lspRouter.clientInitializeParams!.workspaceFolders[0],
