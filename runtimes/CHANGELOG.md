@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.62](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.61...language-server-runtimes/v0.2.62) (2025-04-16)
+
+
+### Features
+
+* show dev profile protocol changes ([#432](https://github.com/aws/language-server-runtimes/issues/432)) ([730460c](https://github.com/aws/language-server-runtimes/commit/730460cdcc77341c2731b9064ab1eb6297ec4a64))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.13 to ^0.1.14
+
 ## [0.2.61](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.60...language-server-runtimes/v0.2.61) (2025-04-16)
 
 
