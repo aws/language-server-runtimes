@@ -170,7 +170,11 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
             this.lspConnection.client
                 .register(DidChangeConfigurationNotification.type, undefined)
                 .then(() => {})
-                .catch(() => {})
+                .catch(e => {
+                    this.lspConnection.console.error(
+                        `Failed to register DidChangeConfigurationNotification: ${e.message}`
+                    )
+                })
         }
 
         this.routeNotificationToAllServers((server, params) => server.sendInitializedNotification(params), params)
