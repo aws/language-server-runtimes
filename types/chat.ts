@@ -22,6 +22,7 @@ export const CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD = 'aws/chat/chatOptionsUpda
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
+export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult'
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
@@ -327,8 +328,28 @@ export interface CreatePromptParams {
     promptName: string
 }
 
-// history
+export interface ProgrammingLanguage {
+    languageName: string
+}
 
+export type InlineChatUserDecision = 'ACCEPT' | 'REJECT' | 'DISMISS' | string
+
+export interface InlineChatResultParams {
+    requestId: string
+    inputLength?: number
+    selectedLines?: number
+    suggestionAddedChars?: number
+    suggestionAddedLines?: number
+    suggestionDeletedChars?: number
+    suggestionDeletedLines?: number
+    codeIntent?: boolean
+    userDecision?: InlineChatUserDecision
+    responseStartLatency?: number
+    responseEndLatency?: number
+    programmingLanguage?: ProgrammingLanguage
+}
+
+// history
 export type TextBasedFilterOption = {
     type: 'textarea' | 'textinput'
     placeholder?: string

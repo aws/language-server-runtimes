@@ -24,6 +24,7 @@ import {
     InlineChatResult,
     ContextCommandParams,
     CreatePromptParams,
+    InlineChatResultParams,
     ListConversationsParams,
     ListConversationsResult,
     ConversationClickParams,
@@ -67,4 +68,5 @@ export type Chat = {
     chatOptionsUpdate: (params: ChatOptionsUpdateParams) => void
     sendContextCommands: (params: ContextCommandParams) => void
     onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
+    onInlineChatResult: (handler: NotificationHandler<InlineChatResultParams>) => void
 }
