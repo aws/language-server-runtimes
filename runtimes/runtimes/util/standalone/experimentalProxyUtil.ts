@@ -76,7 +76,7 @@ export class ProxyConfigManager {
 
             return cert
         } catch (error: any) {
-            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).emitEvent({
                 errorOrigin: 'caughtError',
                 errorName: error?.name ?? 'unknown',
                 errorType: 'proxyCertificateReadFile',
@@ -124,7 +124,7 @@ export class ProxyConfigManager {
                 certificates.push(...certs)
             }
         } catch (error: any) {
-            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).emitEvent({
                 errorOrigin: 'caughtError',
                 errorName: error?.name ?? 'unknown',
                 errorType: 'proxySystemCertificateRead',
@@ -218,7 +218,7 @@ export class ProxyConfigManager {
 
                 return certDate > Date.now()
             } catch (error: any) {
-                OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+                OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).emitEvent({
                     errorOrigin: 'caughtError',
                     errorName: error?.name ?? 'unknown',
                     errorType: 'proxyCertificateRemove',

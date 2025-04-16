@@ -6,20 +6,18 @@ import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-t
 import { RuntimeProps } from '../runtime'
 import { InitializeParams, InitializeResult } from '../../protocol'
 import { Runtime } from '../../server-interface'
+import { totalmem } from 'os'
 
 const DEFAULT_TELEMETRY_GATEWAY_ENDPOINT = ''
-const DEFAULT_TELEMETRY_COGNITO_REGION = ''
-const DEFAULT_TELEMETRY_COGNITO_POOL_ID = ''
 
 function setMemoryUsageTelemetry() {
     const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
-    optel.registerGaugeProvider('ResourceUsageMetric', {
-        userCpuUsage: () => process.cpuUsage().user,
-        systemCpuUsage: () => process.cpuUsage().system,
-        heapUsed: () => process.memoryUsage().heapUsed,
-        heapTotal: () => process.memoryUsage().heapTotal,
-        rss: () => process.memoryUsage().rss,
-    })
+    optel.registerGaugeProvider('heapTotal', () => process.memoryUsage().heapTotal, 'byte')
+    optel.registerGaugeProvider('heapUsed', () => process.memoryUsage().heapUsed, 'byte')
+    optel.registerGaugeProvider('rss', () => process.memoryUsage().rss, 'byte')
+    optel.registerGaugeProvider('userCpuUsage', () => process.cpuUsage().user, 'second')
+    optel.registerGaugeProvider('systemCpuUsage', () => process.cpuUsage().system, 'second')
+    optel.registerGaugeProvider('memoryUsage', () => (process.memoryUsage().rss / totalmem()) * 100, 'percent')
 }
 
 function setServerCrashTelemetryListeners() {
@@ -27,7 +25,7 @@ function setServerCrashTelemetryListeners() {
 
     // Handles both 'uncaughtException' and 'unhandledRejection'
     process.on('uncaughtExceptionMonitor', async (err, origin) => {
-        optel.recordEvent('ErrorEvent', {
+        optel.emitEvent({
             errorOrigin: origin,
             errorType: 'unknownServerCrash',
             errorName: err?.name ?? 'unknown',
@@ -48,16 +46,12 @@ export function getTelemetryLspServer(
         const optOut = params.initializationOptions?.telemetryOptOut ?? true // telemetry disabled if option not provided
 
         const endpoint = runtime.getConfiguration('TELEMETRY_GATEWAY_ENDPOINT') ?? DEFAULT_TELEMETRY_GATEWAY_ENDPOINT
-        const region = runtime.getConfiguration('TELEMETRY_COGNITO_REGION') ?? DEFAULT_TELEMETRY_COGNITO_REGION
-        const poolId = runtime.getConfiguration('TELEMETRY_COGNITO_POOL_ID') ?? DEFAULT_TELEMETRY_COGNITO_POOL_ID
 
         // const optel = OperationalTelemetryService.getInstance({
         //     serviceName: props.name,
         //     serviceVersion: props.version,
         //     extendedClientInfo: params.initializationOptions?.aws?.clientInfo,
         //     lspConsole: lspConnection.console,
-        //     poolId: poolId,
-        //     region: region,
         //     endpoint: endpoint,
         //     telemetryOptOut: optOut,
         // })

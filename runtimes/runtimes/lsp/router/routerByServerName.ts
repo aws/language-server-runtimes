@@ -52,7 +52,7 @@ export class RouterByServerName<P extends Partial<EventIdentifier>, F extends Fo
         try {
             return JSON.parse(idJson) as NotificationId
         } catch (error: any) {
-            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).emitEvent({
                 errorOrigin: 'caughtError',
                 errorType: 'routerServerNameParse',
                 errorName: error?.name ?? 'unknown',

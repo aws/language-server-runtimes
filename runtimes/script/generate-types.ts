@@ -11,7 +11,7 @@ async function generateTypes() {
         const output = path.join(schemaDir, '../types/generated/telemetry.d.ts')
 
         console.log('Generating TypeScript types from json schemas...')
-        await execAsync(`json2ts -i "${input}" -o "${output}"`, { cwd: schemaDir })
+        await execAsync(`json2ts -i "${input}" -o "${output}" --unreachableDefinition`, { cwd: schemaDir })
         console.log('Types generated successfully')
     } catch (error) {
         console.error('Error generating types:', error)
