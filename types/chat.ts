@@ -188,7 +188,7 @@ export interface QuickActionCommand {
 }
 
 export type ContextCommandIconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic'
-export type IconType = 'ContextCommandIconType' | 'help' | 'trash' | 'search' | 'calendar'
+export type IconType = ContextCommandIconType | 'help' | 'trash' | 'search' | 'calendar' | string
 
 /**
  * Configuration object for registering chat quick actions groups.
