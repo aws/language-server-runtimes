@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.15](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.14...language-server-runtimes-types/v0.1.15) (2025-04-16)
+
+
+### Features
+
+* add LSP extension for sending telemetry for inline chat result action ([#408](https://github.com/aws/language-server-runtimes/issues/408)) ([26c7a0f](https://github.com/aws/language-server-runtimes/commit/26c7a0f43aaf535fcec6d081fd9bee0ecfd2c13f))
+
 ## [0.1.14](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.13...language-server-runtimes-types/v0.1.14) (2025-04-16)
 
 
