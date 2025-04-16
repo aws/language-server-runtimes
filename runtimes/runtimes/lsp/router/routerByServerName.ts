@@ -17,7 +17,7 @@ export class RouterByServerName<P extends Partial<EventIdentifier>, F extends Fo
         const attachServerName = (): P => {
             const idObject = {
                 serverName: this.serverName,
-                id: params.id!,
+                id: params.id,
             }
             const id = this.encoding.encode(JSON.stringify(idObject))
             return {
@@ -28,6 +28,8 @@ export class RouterByServerName<P extends Partial<EventIdentifier>, F extends Fo
 
         const sendParams = params.id ? attachServerName() : params
         sendHandler(sendParams)
+            .then(() => {})
+            .catch(() => {})
     }
 
     processFollowup(followupHandler: NotificationHandler<F>, params: F) {

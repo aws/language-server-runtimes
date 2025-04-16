@@ -13,16 +13,16 @@ export interface NotificationContent {
     readonly title?: string
 }
 
-export namespace FollowupNotificationActionType {
-    export const Acknowledge = 'Acknowledge'
-}
+export const FollowupNotificationActionType = {
+    Acknowledge: 'Acknowledge',
+} as const
 
 export type FollowupNotificationActionType = typeof FollowupNotificationActionType.Acknowledge
 
-export namespace NotificationActionType {
-    export const Url = 'Url'
-    export const Marketplace = 'Marketplace'
-}
+const NotificationActionType = {
+    Url: 'Url',
+    Marketplace: 'Marketplace',
+} as const
 
 export type NotificationActionType =
     | typeof NotificationActionType.Url

@@ -58,13 +58,13 @@ describe('TextDocumentConnection', () => {
         calledFirst = false
         calledSecond = false
 
-        Object.keys(notificationHandlers).forEach(
-            k => (notificationHandlers[k as keyof typeof notificationHandlers] = undefined)
-        )
+        for (const k of Object.keys(notificationHandlers)) {
+            notificationHandlers[k as keyof typeof notificationHandlers] = undefined
+        }
     })
 
     describe('without observable (baseline)', () => {
-        Object.keys(notificationHandlers).forEach(key => {
+        for (const key of Object.keys(notificationHandlers)) {
             it(key + ' only supports the last callback', () => {
                 testConnection[key as keyof typeof notificationHandlers](() => {
                     calledFirst = true
@@ -76,11 +76,11 @@ describe('TextDocumentConnection', () => {
                 assert.equal(calledFirst, false)
                 assert.equal(calledSecond, true)
             })
-        })
+        }
     })
 
     describe('with observable', () => {
-        Object.keys(notificationHandlers).forEach(key => {
+        for (const key of Object.keys(notificationHandlers)) {
             let observableConnection: ReturnType<typeof observe>
 
             beforeEach(async () => {
@@ -141,7 +141,7 @@ describe('TextDocumentConnection', () => {
                 assert.equal(calledFirst, false)
                 assert.equal(calledSecond, true)
             })
-        })
+        }
     })
 
     describe('onWillSaveTextDocumentWaitUntil', () => {

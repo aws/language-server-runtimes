@@ -72,10 +72,10 @@ export class LspRouter {
         }
 
         let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
-        responsesList = responsesList.filter(r => r != undefined)
+        responsesList = responsesList.filter(r => r !== undefined)
         const responseError = responsesList.find(el => el instanceof ResponseError)
         if (responseError) {
-            return responseError as ResponseError<InitializeError>
+            return responseError
         }
         const dupServerNames = findDuplicates(responsesList.map(r => (r as PartialInitializeResult).serverInfo?.name))
         if (dupServerNames) {
@@ -113,10 +113,7 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         return result
     }
 
-    executeCommand = async (
-        params: ExecuteCommandParams,
-        token: CancellationToken
-    ): Promise<any | undefined | null> => {
+    executeCommand = async (params: ExecuteCommandParams, token: CancellationToken): Promise<any> => {
         return this.routeRequestToFirstCapableServer(
             (server, params, token) => server.tryExecuteCommand(params, token),
             params,
@@ -142,11 +139,11 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         const errors = results.filter(result => result instanceof ResponseError)
 
         if (errors.length > 0) {
-            errors.forEach(error => {
+            for (const error of errors) {
                 this.lspConnection.console.log(
                     `Error updating configration section ${params.section}: ${error.message}`
                 )
-            })
+            }
 
             return new ResponseError(ErrorCodes.InternalError, 'Error during updating configuration', errors)
         }
@@ -170,7 +167,10 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         const workspaceCapabilities = this.clientInitializeParams?.capabilities.workspace
         if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
             // Ask the client to notify the server on configuration changes
-            this.lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
+            this.lspConnection.client
+                .register(DidChangeConfigurationNotification.type, undefined)
+                .then(() => {})
+                .catch(() => {})
         }
 
         this.routeNotificationToAllServers((server, params) => server.sendInitializedNotification(params), params)
@@ -193,7 +193,7 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         }
     }
 
-    private async routeNotificationToAllServers<P>(action: (server: LspServer, params: P) => void, params: P) {
+    private routeNotificationToAllServers<P>(action: (server: LspServer, params: P) => void, params: P) {
         for (const server of this.servers) {
             action(server, params)
         }

@@ -43,11 +43,6 @@ import {
     createPromptNotificationType,
     listConversationsRequestType,
     conversationClickRequestType,
-    GetSerializedChatParams,
-    GetSerializedChatResult,
-    RequestHandler,
-    TabBarActionParams,
-    TabBarActionResult,
     getSerializedChatRequestType,
     tabBarActionRequestType,
 } from '../protocol'
@@ -118,10 +113,11 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     // Set up the workspace to use the LSP Text Documents component
     const defaultHomeDir = '/home/user'
     const workspace: Workspace = {
-        getTextDocument: async uri => documents.get(uri),
-        getAllTextDocuments: async () => documents.all(),
-        getWorkspaceFolder: _uri =>
-            lspRouter.clientInitializeParams!.workspaceFolders && lspRouter.clientInitializeParams!.workspaceFolders[0],
+        getTextDocument: uri => Promise.resolve(documents.get(uri)),
+        getAllTextDocuments: () => Promise.resolve(documents.all()),
+        getWorkspaceFolder: _ =>
+            lspRouter.clientInitializeParams?.workspaceFolders &&
+            lspRouter.clientInitializeParams.workspaceFolders?.[0],
         fs: {
             copyFile: (_src, _dest, _options?) => Promise.resolve(),
             exists: _path => Promise.resolve(false),
@@ -161,9 +157,10 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
         openTab: params => lspConnection.sendRequest(openTabRequestType.method, params),
-        sendChatUpdate: params => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
+        sendChatUpdate: params => () => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
-        sendContextCommands: params => lspConnection.sendNotification(contextCommandsNotificationType.method, params),
+        sendContextCommands: params => () =>
+            lspConnection.sendNotification(contextCommandsNotificationType.method, params),
         onCreatePrompt: handler => lspConnection.onNotification(createPromptNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
@@ -176,7 +173,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
         onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
         onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-        sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+        sendSsoTokenChanged: params => () => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
     }
 
     // Set up auth without encryption
@@ -188,7 +185,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             version: props.version,
         },
         platform: 'browser',
-        getConfiguration(key: string) {
+        getConfiguration(_key: string) {
             return undefined
         },
     }
@@ -229,8 +226,10 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
                 onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
                 onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
-                selectWorkspaceItem: params => lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
-                openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
+                selectWorkspaceItem: params => () =>
+                    lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
+                openFileDiff: params => () =>
+                    lspConnection.sendNotification(openFileDiffNotificationType.method, params),
             },
             window: {
                 showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
@@ -289,7 +288,9 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
 
     // Free up any resources or threads used by Servers
     lspConnection.onExit(() => {
-        disposables.forEach(d => d())
+        for (const d of disposables) {
+            d()
+        }
     })
 
     // Initialize the documents listener and start the LSP connection

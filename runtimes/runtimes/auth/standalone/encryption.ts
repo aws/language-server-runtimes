@@ -2,7 +2,7 @@ import { Readable } from 'stream'
 import { CompactEncrypt } from 'jose'
 
 export function shouldWaitForEncryptionKey(): boolean {
-    return process.argv.some(arg => arg === '--set-credentials-encryption-key')
+    return process.argv.includes('--set-credentials-encryption-key')
 }
 
 export type CredentialsEncoding = 'JWT'
@@ -38,7 +38,7 @@ export function validateEncryptionDetails(encryptionDetails: EncryptionInitializ
     }
 
     if (encryptionDetails.mode !== 'JWT') {
-        throw new Error(`Unsupported encoding mode: ${encryptionDetails.mode}`)
+        throw new Error(`Unsupported encoding mode: ${String(encryptionDetails.mode)}`)
     }
 }
 
@@ -65,9 +65,9 @@ export function readEncryptionDetails(stream: Readable): Promise<EncryptionIniti
 
         // Fires when the stream has contents that can be read
         const onStreamIsReadable = () => {
-            let byteRead
+            let byteRead: Buffer | null
             while ((byteRead = stream.read(1)) !== null) {
-                if (byteRead.toString('utf-8') == '\n') {
+                if (byteRead.toString('utf-8') === '\n') {
                     clearTimer()
                     // Stop reading this stream, we have read a line from it
                     stream.removeListener('readable', onStreamIsReadable)
@@ -90,7 +90,12 @@ export function readEncryptionDetails(stream: Readable): Promise<EncryptionIniti
 /**
  * Encrypt an object with the provided key
  */
-export function encryptObjectWithKey(request: Object, key: string, alg?: string, enc?: string): Promise<string> {
+export function encryptObjectWithKey(
+    request: NonNullable<unknown>,
+    key: string,
+    alg?: string,
+    enc?: string
+): Promise<string> {
     const payload = new TextEncoder().encode(JSON.stringify(request))
     const keyBuffer = Buffer.from(key, 'base64')
     return new CompactEncrypt(payload)
@@ -126,8 +131,8 @@ export function isMessageJWEEncrypted(message: string, algorithm: string, encodi
         if (
             protectedHeader.alg &&
             protectedHeader.enc &&
-            protectedHeader.alg == algorithm &&
-            protectedHeader.enc == encoding
+            protectedHeader.alg === algorithm &&
+            protectedHeader.enc === encoding
         ) {
             return true
         }

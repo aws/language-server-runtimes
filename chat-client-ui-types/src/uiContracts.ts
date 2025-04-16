@@ -150,5 +150,5 @@ export type UiMessageResultParams =
       }
 export interface ErrorResult {
     message: string
-    type: 'InvalidRequest' | 'InternalError' | 'UnknownError' | string
+    type: 'InvalidRequest' | 'InternalError' | 'UnknownError'
 }

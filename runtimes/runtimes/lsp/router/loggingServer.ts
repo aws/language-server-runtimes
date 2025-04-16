@@ -12,15 +12,15 @@ export class LoggingServer {
         private lspConnection: Connection,
         private encoding: Encoding
     ) {
-        this.logger = new DefaultLogger(DEFAULT_LOG_LEVEL as LogLevel, this.lspConnection)
+        this.logger = new DefaultLogger(DEFAULT_LOG_LEVEL, this.lspConnection)
         this.lspServer = new LspServer(this.lspConnection, this.encoding, this.logger)
-        this.lspServer.setInitializeHandler(async (params: InitializeParams): Promise<InitializeResult> => {
+        this.lspServer.setInitializeHandler((params: InitializeParams): Promise<InitializeResult> => {
             this.updateLoggingLevel(params.initializationOptions?.logLevel ?? ('log' as LogLevel))
             return {
                 capabilities: {},
             }
         })
-        this.lspServer.setDidChangeConfigurationHandler(async params => {
+        this.lspServer.setDidChangeConfigurationHandler(async _params => {
             const logLevelConfig = await lspConnection.workspace.getConfiguration({
                 section: 'aws.logLevel',
             })

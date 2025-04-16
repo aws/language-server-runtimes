@@ -42,21 +42,21 @@ type TextDocumentObservable = {
 export const observe = (
     connection: TextDocumentConnection
 ): { callbacks: TextDocumentConnection } & TextDocumentObservable => {
-    const onDidChangeTextDocument = fromEventPattern<DidChangeTextDocumentParams>(
-        connection.onDidChangeTextDocument
+    const onDidChangeTextDocument = fromEventPattern<DidChangeTextDocumentParams>(handler =>
+        connection.onDidChangeTextDocument(handler)
     ).pipe(share())
-    const onDidOpenTextDocument = fromEventPattern<DidOpenTextDocumentParams>(connection.onDidOpenTextDocument).pipe(
-        share()
-    )
-    const onDidCloseTextDocument = fromEventPattern<DidCloseTextDocumentParams>(connection.onDidCloseTextDocument).pipe(
-        share()
-    )
-    const onWillSaveTextDocument = fromEventPattern<WillSaveTextDocumentParams>(connection.onWillSaveTextDocument).pipe(
-        share()
-    )
-    const onDidSaveTextDocument = fromEventPattern<DidSaveTextDocumentParams>(connection.onDidSaveTextDocument).pipe(
-        share()
-    )
+    const onDidOpenTextDocument = fromEventPattern<DidOpenTextDocumentParams>(handler =>
+        connection.onDidOpenTextDocument(handler)
+    ).pipe(share())
+    const onDidCloseTextDocument = fromEventPattern<DidCloseTextDocumentParams>(handler =>
+        connection.onDidCloseTextDocument(handler)
+    ).pipe(share())
+    const onWillSaveTextDocument = fromEventPattern<WillSaveTextDocumentParams>(handler =>
+        connection.onWillSaveTextDocument(handler)
+    ).pipe(share())
+    const onDidSaveTextDocument = fromEventPattern<DidSaveTextDocumentParams>(handler =>
+        connection.onDidSaveTextDocument(handler)
+    ).pipe(share())
 
     return {
         callbacks: {
