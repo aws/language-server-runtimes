@@ -16,9 +16,9 @@ export class LoggingServer {
         this.lspServer = new LspServer(this.lspConnection, this.encoding, this.logger)
         this.lspServer.setInitializeHandler((params: InitializeParams): Promise<InitializeResult> => {
             this.updateLoggingLevel(params.initializationOptions?.logLevel ?? ('log' as LogLevel))
-            return {
+            return Promise.resolve({
                 capabilities: {},
-            }
+            })
         })
         this.lspServer.setDidChangeConfigurationHandler(async _params => {
             const logLevelConfig = await lspConnection.workspace.getConfiguration({

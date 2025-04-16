@@ -67,9 +67,9 @@ export function getTelemetryLspServer(
         setServerCrashTelemetryListeners()
         setMemoryUsageTelemetry()
 
-        return {
+        return Promise.resolve({
             capabilities: {},
-        }
+        })
     })
 
     lspServer.setDidChangeConfigurationHandler(async _params => {

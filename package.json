@@ -36,8 +36,8 @@
         "preversion": "npm run test",
         "version": "npm run compile && git add -A .",
         "watch": "tsc --build --watch",
-        "lint": "eslint . --ext .ts,.tsx",
-        "lint:fix": "eslint . --ext .ts,.tsx --fix"
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix"
     },
     "devDependencies": {
         "@commitlint/cli": "^19.8.0",
@@ -86,6 +86,7 @@
         "endOfLine": "lf"
     },
     "dependencies": {
+        "mac-ca": "^3.1.1",
         "win-ca": "^3.5.1"
     }
 }
