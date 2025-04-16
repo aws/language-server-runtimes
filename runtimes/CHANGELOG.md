@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.61](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.60...language-server-runtimes/v0.2.61) (2025-04-16)
+
+
+### Bug Fixes
+
+* revert the version of jose to 5.9.6 ([#441](https://github.com/aws/language-server-runtimes/issues/441)) ([6ebc326](https://github.com/aws/language-server-runtimes/commit/6ebc326eaf577159ba1bbaace37c24b6a0633226))
+
 ## [0.2.60](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.59...language-server-runtimes/v0.2.60) (2025-04-15)
 
 
