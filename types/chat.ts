@@ -18,6 +18,7 @@ export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
 export const TAB_BAR_ACTION_REQUEST_METHOD = 'aws/chat/tabBarAction'
+export const CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD = 'aws/chat/chatOptionsUpdate'
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
@@ -191,6 +192,13 @@ export interface ChatOptions {
      * Server signals to Chat Client support of Chat export feature.
      */
     export?: boolean
+
+    /*
+        Server signals to Chat Client support of Chat notifications.
+        Currently used for sending chat notifications for developer profile updates.
+        Can be extended to support other types of notifications.
+    */
+    chatNotifications?: ChatMessage[]
 }
 
 export interface QuickActionParams extends PartialResultParams {
@@ -280,6 +288,14 @@ export interface ChatUpdateParams {
     tabId: string
     state?: TabState
     data?: TabData
+}
+
+/**
+ * Server-initiated chat metadata updates.
+ * Processes changes of developer profiles.
+ */
+export interface ChatOptionsUpdateParams {
+    chatNotifications?: ChatMessage[]
 }
 
 export type FileAction = 'accept-change' | 'reject-change'
