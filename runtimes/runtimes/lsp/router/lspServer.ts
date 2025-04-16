@@ -31,7 +31,7 @@ export class LspServer {
     readonly notification: Notification
 
     private didChangeConfigurationHandler?: NotificationHandler<DidChangeConfigurationParams>
-    private executeCommandHandler?: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
+    private executeCommandHandler?: RequestHandler<ExecuteCommandParams, unknown, void>
     private getServerConfigurationHandler?: RequestHandler<GetConfigurationFromServerParams, any, void>
     private initializeHandler?: RequestHandler<InitializeParams, PartialInitializeResult, InitializeError>
     private initializedHandler?: NotificationHandler<InitializedParams>
@@ -89,9 +89,7 @@ export class LspServer {
         this.initializeHandler = handler
     }
 
-    public setExecuteCommandHandler = (
-        handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>
-    ): void => {
+    public setExecuteCommandHandler = (handler: RequestHandler<ExecuteCommandParams, unknown, void>): void => {
         this.executeCommandHandler = handler
     }
 
@@ -121,7 +119,7 @@ export class LspServer {
             }
 
             return initializeResult
-        } catch (e) {
+        } catch (e: any) {
             this.logger.log(
                 `Runtime Initialization Error\nInitializationOptions: ${JSON.stringify(params.initializationOptions)}\n${e}`
             )
@@ -135,9 +133,9 @@ export class LspServer {
     public tryExecuteCommand = async (
         params: ExecuteCommandParams,
         token: CancellationToken
-    ): Promise<[boolean, any | undefined | null]> => {
+    ): Promise<[boolean, unknown]> => {
         if (
-            this.initializeResult?.capabilities?.executeCommandProvider?.commands.some(c => c === params.command) &&
+            this.initializeResult?.capabilities?.executeCommandProvider?.commands.includes(params.command) &&
             this.executeCommandHandler
         ) {
             const result = await asPromise(this.executeCommandHandler(params, token))
@@ -150,11 +148,9 @@ export class LspServer {
     public tryGetServerConfiguration = async (
         params: GetConfigurationFromServerParams,
         token: CancellationToken
-    ): Promise<[boolean, any | undefined | null]> => {
+    ): Promise<[boolean, unknown]> => {
         if (
-            this.initializeResult?.awsServerCapabilities?.configurationProvider?.sections.some(
-                c => c === params.section
-            ) &&
+            this.initializeResult?.awsServerCapabilities?.configurationProvider?.sections.includes(params.section) &&
             this.getServerConfigurationHandler
         ) {
             const result = await asPromise(this.getServerConfigurationHandler(params, token))

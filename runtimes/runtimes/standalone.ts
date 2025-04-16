@@ -174,15 +174,17 @@ export const standalone = (props: RuntimeProps) => {
 
         // Set up the workspace sync to use the LSP Text Document Sync capability
         const workspace: Workspace = {
-            getTextDocument: async uri => documents.get(uri),
-            getAllTextDocuments: async () => documents.all(),
+            getTextDocument: uri => Promise.resolve(documents.get(uri)),
+            getAllTextDocuments: () => Promise.resolve(documents.all()),
             // Get all workspace folders and return the workspace folder that contains the uri
             getWorkspaceFolder: uri => {
                 const fileUrl = new URL(uri)
                 const normalizedFileUri = fileUrl.pathname || ''
 
-                const folders = lspRouter.clientInitializeParams!.workspaceFolders
-                if (!folders) return undefined
+                const folders = lspRouter.clientInitializeParams?.workspaceFolders
+                if (!folders) {
+                    return undefined
+                }
 
                 for (const folder of folders) {
                     const folderUrl = new URL(folder.uri)
@@ -219,7 +221,7 @@ export const standalone = (props: RuntimeProps) => {
                 readFile: (path, options?) =>
                     readFile(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
                 rm: (dir, options?) => rm(dir, options),
-                isFile: path => stat(path).then(({ isFile }) => isFile()),
+                isFile: path => stat(path).then(stats => stats.isFile()),
                 writeFile: (path, data, options?) => writeFile(path, data, options),
                 appendFile: (path, data) => appendFile(path, data),
                 mkdir: (path, options?) => mkdir(path, options),
@@ -263,7 +265,7 @@ export const standalone = (props: RuntimeProps) => {
                     }
                 ),
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-            sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+            sendSsoTokenChanged: params => () => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
         }
 
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
@@ -328,9 +330,10 @@ export const standalone = (props: RuntimeProps) => {
                     onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
                     onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
                     onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
-                    selectWorkspaceItem: params =>
+                    selectWorkspaceItem: params => () =>
                         lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
-                    openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
+                    openFileDiff: params => () =>
+                        lspConnection.sendNotification(openFileDiffNotificationType.method, params),
                 },
                 window: {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
@@ -343,7 +346,7 @@ export const standalone = (props: RuntimeProps) => {
                     lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
                 sendProgress: async <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
                     if (encryptionKey) {
-                        const encryptedProgress = await encryptObjectWithKey(value as Object, encryptionKey)
+                        const encryptedProgress = await encryptObjectWithKey(value as object, encryptionKey)
                         return lspConnection.sendProgress(type, token, encryptedProgress as P)
                     }
 
@@ -376,7 +379,7 @@ export const standalone = (props: RuntimeProps) => {
                         logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
 
                         // setup proxy
-                        let instance = new Ctor({
+                        const instance = new Ctor({
                             ...current_config,
                             requestHandler: requestHandler,
                         })
@@ -402,7 +405,7 @@ export const standalone = (props: RuntimeProps) => {
                         Ctor: SDKClientConstructorV2<T, P>,
                         current_config: P
                     ): T => {
-                        let instance = new Ctor({ ...current_config })
+                        const instance = new Ctor({ ...current_config })
 
                         try {
                             const configOptions = isExperimentalProxy
@@ -450,7 +453,9 @@ export const standalone = (props: RuntimeProps) => {
 
         // Free up any resources or threads used by Servers
         lspConnection.onExit(() => {
-            disposables.forEach(d => d())
+            for (const d of disposables) {
+                d()
+            }
         })
 
         // Initialize the documents listener and start the LSP connection

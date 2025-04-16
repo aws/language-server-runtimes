@@ -396,7 +396,7 @@ describe('Auth', () => {
     describe('Encrypted credentials', () => {
         it('Rejects when encrypted flag is set wrong', async () => {
             const updateIamRequest: UpdateCredentialsParams = {
-                data: iamCredentials as IamCredentials,
+                data: iamCredentials,
                 encrypted: true,
             }
             const auth = new Auth(serverLspConnectionMock, lspRouter)
@@ -472,8 +472,8 @@ describe('Auth', () => {
 
             const jwt = await new jose.EncryptJWT(payload)
                 .setProtectedHeader({ alg: 'dir', enc: 'A256GCM' })
-                .setNotBefore(new Date().getTime() / 1000 + 50) //allows up to 60s clockTolerance
-                .setExpirationTime(new Date().getTime() / 1000 - 70) //not allowed
+                .setNotBefore(Date.now() / 1000 + 50) // allows up to 60s clockTolerance
+                .setExpirationTime(Date.now() / 1000 - 70) // not allowed
                 .encrypt(encryptionKey)
 
             const updateBearerRequest: UpdateCredentialsParams = {

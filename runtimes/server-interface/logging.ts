@@ -1,5 +1,3 @@
-import { LogLevel } from '../runtimes/util/loggingUtil'
-
 /**
  * The logging feature interface
  */

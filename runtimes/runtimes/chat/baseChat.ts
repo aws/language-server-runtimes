@@ -132,7 +132,7 @@ export class BaseChat implements Chat {
     }
 
     public sendChatUpdate(params: ChatUpdateParams) {
-        this.connection.sendNotification(chatUpdateNotificationType.method, params)
+        return this.connection.sendNotification(chatUpdateNotificationType.method, params)
     }
 
     public onFileClicked(handler: NotificationHandler<FileClickParams>) {
@@ -140,7 +140,7 @@ export class BaseChat implements Chat {
     }
 
     public sendContextCommands(params: ContextCommandParams) {
-        this.connection.sendNotification(contextCommandsNotificationType.method, params)
+        return this.connection.sendNotification(contextCommandsNotificationType.method, params)
     }
 
     public onCreatePrompt(handler: NotificationHandler<CreatePromptParams>) {

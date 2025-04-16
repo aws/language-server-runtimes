@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { jwtDecrypt } from 'jose'
 import { Connection } from 'vscode-languageserver'
 import { CredentialsEncoding } from './standalone/encryption'
@@ -97,7 +98,7 @@ export class Auth {
         return creds && (isIamCredentials(creds) || isBearerCredentials(creds))
     }
 
-    private async registerLspCredentialsUpdateHandlers() {
+    private registerLspCredentialsUpdateHandlers() {
         this.registerIamCredentialsUpdateHandlers()
         this.registerBearerCredentialsUpdateHandlers()
     }
@@ -166,11 +167,11 @@ export class Auth {
     private setCredentials(creds: Credentials) {
         if (this.areValidCredentials(creds)) {
             if (isIamCredentials(creds)) {
-                this.iamCredentials = creds as IamCredentials
+                this.iamCredentials = creds
                 // Prevent modifying credentials by implementors
                 Object.freeze(this.iamCredentials)
             } else {
-                this.bearerCredentials = creds as BearerCredentials
+                this.bearerCredentials = creds
                 Object.freeze(this.bearerCredentials)
             }
         }

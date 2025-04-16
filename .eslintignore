@@ -1,0 +1,24 @@
+.eslintrc.js
+
+# Ignore build output
+**/out/**
+**/dist/**
+**/node_modules/**
+**/coverage/**
+**/.nyc_output/**
+
+# Ignore generated files
+**/generated/**
+**/*.d.ts
+**/*.test.ts
+
+# Ignore test fixtures
+**/test/fixtures/**
+
+# Ignore third-party code
+**/vendor/**
+
+# Ignore script directories
+**/script/**
+**/scripts/**
+

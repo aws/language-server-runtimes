@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /*!
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
@@ -43,7 +44,9 @@ export function readLinuxCertificates(): string[] {
             const matches = content.match(PEM_CERT_REGEXP)
 
             // Skip if no certificates found in this file
-            if (!matches) continue
+            if (!matches) {
+                continue
+            }
 
             // Track if we've found any valid certificates
             hasSeenCertificate = hasSeenCertificate || matches.length > 0
@@ -74,7 +77,7 @@ export function readLinuxCertificates(): string[] {
 }
 
 export function readWindowsCertificates(): string[] {
-    const winCaReader = require('win-ca/api')
+    const winCaReader = require('win-ca')
     const certs: string[] = []
 
     winCaReader({
@@ -88,7 +91,8 @@ export function readWindowsCertificates(): string[] {
 
 export function readMacosCertificates(): string[] {
     const macCertsReader = require('mac-ca')
-    const certs = macCertsReader.get({
+
+    const certs: string[] = macCertsReader.get({
         excludeBundled: false,
     })
 

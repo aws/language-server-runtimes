@@ -20,7 +20,7 @@ export const generateCert = (validityDays = 365) => {
     cert.publicKey = keys.publicKey
 
     cert.validity.notBefore = new Date()
-    cert.validity.notAfter = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * validityDays)
+    cert.validity.notAfter = new Date(Date.now() + 1000 * 60 * 60 * 24 * validityDays)
     cert.sign(keys.privateKey)
 
     return {

@@ -267,9 +267,9 @@ describe('LspRouter', () => {
                 () => ({ serverInfo: { name: 'C' } }),
             ]
 
-            handlers.forEach(h => {
+            for (const h of handlers) {
                 lspRouter.servers.push(newServer({ initializeHandler: h }))
-            })
+            }
 
             const result = await initializeHandler({} as InitializeParams, {} as CancellationToken)
 
