@@ -84,5 +84,8 @@
         "bracketSpacing": true,
         "arrowParens": "avoid",
         "endOfLine": "lf"
+    },
+    "dependencies": {
+        "win-ca": "^3.5.1"
     }
 }
