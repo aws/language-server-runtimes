@@ -55,6 +55,8 @@ import {
     TabBarActionParams,
     TabBarActionResult,
     tabBarActionRequestType,
+    chatOptionsUpdateType,
+    ChatOptionsUpdateParams,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -121,6 +123,10 @@ export class BaseChat implements Chat {
 
     public openTab(params: OpenTabParams): Promise<OpenTabResult> {
         return this.connection.sendRequest(openTabRequestType.method, params)
+    }
+
+    public chatOptionsUpdate(params: ChatOptionsUpdateParams): void {
+        this.connection.sendNotification(chatOptionsUpdateType.method, params)
     }
 
     public sendChatUpdate(params: ChatUpdateParams) {

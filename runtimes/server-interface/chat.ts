@@ -32,6 +32,7 @@ import {
     GetSerializedChatParams,
     TabBarActionParams,
     TabBarActionResult,
+    ChatOptionsUpdateParams,
 } from '../protocol'
 
 /**
@@ -63,6 +64,7 @@ export type Chat = {
     onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
     sendChatUpdate: (params: ChatUpdateParams) => void
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
+    chatOptionsUpdate: (params: ChatOptionsUpdateParams) => void
     sendContextCommands: (params: ContextCommandParams) => void
     onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
 }
