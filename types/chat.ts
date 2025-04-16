@@ -337,11 +337,11 @@ export type InlineChatUserDecision = 'ACCEPT' | 'REJECT' | 'DISMISS' | string
 export interface InlineChatResultParams {
     requestId: string
     inputLength?: number
-    numberOfSelectedLines?: number
-    numberOfCharactersAddedFromSuggestion?: number
-    numberOfLinesAddedFromSuggestion?: number
-    numberOfCharactersDeletedFromSuggestion?: number
-    numberOfLinesDeletedFromSuggestion?: number
+    selectedLines?: number
+    suggestionAddedChars?: number
+    suggestionAddedLines?: number
+    suggestionDeletedChars?: number
+    suggestionDeletedLines?: number
     codeIntent?: boolean
     userDecision?: InlineChatUserDecision
     responseStartLatency?: number
