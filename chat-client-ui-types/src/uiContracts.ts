@@ -55,6 +55,7 @@ export type UiMessageParams =
     | SendToPromptParams
     | ChatOptions
     | CopyCodeToClipboardParams
+    | ChatPromptOptionAcknowledgedParams
 
 export interface SendToPromptParams {
     selection: string
@@ -92,6 +93,15 @@ export interface GenericCommandParams {
 export interface GenericCommandMessage {
     command: typeof GENERIC_COMMAND
     params: GenericCommandParams
+}
+
+export interface ChatPromptOptionAcknowledgedParams {
+    messageId: string
+}
+
+export interface ChatPromptOptionAcknowledgedMessage {
+    command: typeof CHAT_PROMPT_OPTION_ACKNOWLEDGED
+    params: ChatPromptOptionAcknowledgedParams
 }
 
 export interface ErrorParams {
