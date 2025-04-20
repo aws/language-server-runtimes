@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.17](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.16...language-server-runtimes-types/v0.1.17) (2025-04-20)
+
+
+### Features
+
+* support additional chat message content to enable tool use ([68319c9](https://github.com/aws/language-server-runtimes/commit/68319c975d29a8ba9b084c9fa780ebff75b286bb))
+
 ## [0.1.16](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.15...language-server-runtimes-types/v0.1.16) (2025-04-20)
 
 
