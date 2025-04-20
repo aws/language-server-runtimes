@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.18](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.17...language-server-runtimes-types/v0.1.18) (2025-04-20)
+
+
+### Bug Fixes
+
+* buttons should be optional ([c630c78](https://github.com/aws/language-server-runtimes/commit/c630c784e0c6d60f8f01e1f1b2bb9982abcc8cc8))
+
 ## [0.1.17](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.16...language-server-runtimes-types/v0.1.17) (2025-04-20)
 
 
