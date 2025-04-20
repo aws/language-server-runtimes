@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.19](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.18...language-server-runtimes-types/v0.1.19) (2025-04-20)
+
+
+### Bug Fixes
+
+* header icon should be optional ([5bebbe8](https://github.com/aws/language-server-runtimes/commit/5bebbe8106dd536e3cf5701341868cee0e8cb43a))
+
 ## [0.1.18](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.17...language-server-runtimes-types/v0.1.18) (2025-04-20)
 
 
