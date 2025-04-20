@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.22](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.21...chat-client-ui-types/v0.1.22) (2025-04-20)
+
+
+### Bug Fixes
+
+* change pair programming acknowledged to chat prompt option acknowledged ([#460](https://github.com/aws/language-server-runtimes/issues/460)) ([3d9431d](https://github.com/aws/language-server-runtimes/commit/3d9431dfba74825beb45dd4e6b83217c61a64b28))
+
 ## [0.1.21](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.20...chat-client-ui-types/v0.1.21) (2025-04-20)
 
 
