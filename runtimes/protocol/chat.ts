@@ -62,6 +62,8 @@ import {
     TAB_BAR_ACTION_REQUEST_METHOD,
     ChatOptionsUpdateParams,
     CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD,
+    PromptInputOptionChangeParams,
+    PROMPT_INPUT_OPTION_CHANGE_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -180,3 +182,8 @@ export const getSerializedChatRequestType = new ProtocolRequestType<
     void,
     void
 >(GET_SERIALIZED_CHAT_REQUEST_METHOD)
+
+export const promptInputOptionChangeNotificationType = new ProtocolNotificationType<
+    PromptInputOptionChangeParams,
+    void
+>(PROMPT_INPUT_OPTION_CHANGE_METHOD)

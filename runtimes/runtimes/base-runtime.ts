@@ -52,6 +52,7 @@ import {
     getSerializedChatRequestType,
     tabBarActionRequestType,
     chatOptionsUpdateType,
+    promptInputOptionChangeNotificationType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -173,6 +174,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
         getSerializedChat: params => lspConnection.sendRequest(getSerializedChatRequestType.method, params),
         onTabBarAction: handler => lspConnection.onRequest(tabBarActionRequestType.method, handler),
+        onPromptInputOptionChange: handler =>
+            lspConnection.onNotification(promptInputOptionChangeNotificationType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {

@@ -34,6 +34,7 @@ import {
     TabBarActionParams,
     TabBarActionResult,
     ChatOptionsUpdateParams,
+    PromptInputOptionChangeParams,
 } from '../protocol'
 
 /**
@@ -69,4 +70,5 @@ export type Chat = {
     sendContextCommands: (params: ContextCommandParams) => void
     onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
     onInlineChatResult: (handler: NotificationHandler<InlineChatResultParams>) => void
+    onPromptInputOptionChange: (handler: NotificationHandler<PromptInputOptionChangeParams>) => void
 }
