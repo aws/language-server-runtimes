@@ -126,7 +126,7 @@ export interface Button {
 export interface ChatMessage {
     type?: 'answer' | 'prompt' | 'system-prompt' | 'directive' | 'tool' // will default to 'answer'
     header?: Omit<ChatMessage, 'header'> & { icon: IconType }
-    buttons: Button[]
+    buttons?: Button[]
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
