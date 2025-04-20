@@ -1,4 +1,6 @@
 import { Position, Range, TextDocumentIdentifier } from './lsp'
+import { Timestamp } from 'aws-sdk/clients/apigateway'
+import { ChatItemButton, ChatItemContent, CodeBlockActions, MynahIcons, MynahIconsType, Status } from '@aws/mynah-ui'
 
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
 export const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
@@ -122,15 +124,88 @@ export interface ChatMessage {
         text?: string
         options?: ChatItemAction[]
     }
+    followUpsHeader?: string
     codeReference?: ReferenceTrackerInformation[]
+    relatedSuggestions?: Suggestion[]
+    searchResults?: Suggestion[]
+    triggerID?: string
+    userIntent?: string
+    codeBlockLanguage?: string
     fileList?: FileList
     contextList?: FileList
+    title?: string
+    fullWidth?: boolean
+    padding?: boolean
 }
 // Response for chat prompt request can be empty,
 // if server chooses to handle the request and push updates asynchronously.
-export interface ChatResult extends ChatMessage {}
+export interface ChatResult extends ChatMessage {
+    codeBlockActions?: CodeBlockActions | null
+    buttons?: ChatItemButton[]
+    header?: ChatItemHeader
+}
+
+export type ChatItemHeader =
+    | (ChatItemContent & {
+          icon?: MynahIcons | MynahIconsType
+          status?: {
+              status?: Status
+              icon?: MynahIcons | MynahIconsType
+              text?: string
+          }
+      })
+    | null
+
 export interface InlineChatResult extends ChatMessage {
     requestId?: string
+}
+
+interface SearchSuggestionCommonProps {
+    readonly title: string
+    readonly url: string
+    readonly body: string
+    readonly id: number
+}
+
+class SearchSuggestionCommon {
+    readonly title!: string
+    readonly url!: string
+    readonly body!: string
+    readonly id!: number
+
+    constructor(props: SearchSuggestionCommonProps) {
+        this.title = props.title
+        this.url = props.url
+        this.body = props.body
+        this.id = props.id
+    }
+}
+
+interface SuggestionMetadata {
+    readonly stackOverflow: StackOverflowMetadata
+}
+
+interface StackOverflowMetadata {
+    readonly answerCount: number
+    readonly isAccepted: boolean
+    readonly score: number
+    readonly lastActivityDate: Timestamp
+}
+
+export interface SuggestionProps extends SearchSuggestionCommonProps {
+    readonly metadata?: SuggestionMetadata
+    readonly context: string[]
+}
+
+export class Suggestion extends SearchSuggestionCommon {
+    readonly metadata?: SuggestionMetadata
+    readonly context: string[]
+
+    constructor(props: SuggestionProps) {
+        super(props)
+        this.metadata = props.metadata
+        this.context = props.context
+    }
 }
 
 export type EndChatParams = { tabId: string }
