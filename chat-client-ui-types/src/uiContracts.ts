@@ -26,7 +26,7 @@ export const AUTH_FOLLOW_UP_CLICKED = 'authFollowUpClicked'
 export const GENERIC_COMMAND = 'genericCommand'
 export const CHAT_OPTIONS = 'chatOptions'
 export const DISCLAIMER_ACKNOWLEDGED = 'disclaimerAcknowledged'
-export const PAIR_PROGRAMMING_ACKNOWLEDGED = 'pairProgrammingAcknowledged'
+export const CHAT_PROMPT_OPTION_ACKNOWLEDGED = 'chatPromptOptionAcknowledged'
 
 /**
  * A message sent from Chat Client to Extension in response to various actions triggered from Chat UI.
@@ -45,7 +45,7 @@ export type UiMessageCommand =
     | typeof CHAT_OPTIONS
     | typeof COPY_TO_CLIPBOARD
     | typeof DISCLAIMER_ACKNOWLEDGED
-    | typeof PAIR_PROGRAMMING_ACKNOWLEDGED
+    | typeof CHAT_PROMPT_OPTION_ACKNOWLEDGED
 
 export type UiMessageParams =
     | InsertToCursorPositionParams
