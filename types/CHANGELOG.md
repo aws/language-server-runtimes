@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.16](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.15...language-server-runtimes-types/v0.1.16) (2025-04-20)
+
+
+### Features
+
+* **types:** add prompt input option change ([#449](https://github.com/aws/language-server-runtimes/issues/449)) ([dea0fb9](https://github.com/aws/language-server-runtimes/commit/dea0fb99acb3fc3b2231a239b98593bfbbb9292e))
+
 ## [0.1.15](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.14...language-server-runtimes-types/v0.1.15) (2025-04-16)
 
 

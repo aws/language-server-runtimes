@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.64](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.63...language-server-runtimes/v0.2.64) (2025-04-20)
+
+
+### Features
+
+* **types:** add prompt input option change ([#449](https://github.com/aws/language-server-runtimes/issues/449)) ([dea0fb9](https://github.com/aws/language-server-runtimes/commit/dea0fb99acb3fc3b2231a239b98593bfbbb9292e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.15 to ^0.1.16
+
 ## [0.2.63](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.62...language-server-runtimes/v0.2.63) (2025-04-16)
 
 
