@@ -59,6 +59,8 @@ import {
     tabBarActionRequestType,
     chatOptionsUpdateType,
     ChatOptionsUpdateParams,
+    PromptInputOptionChangeParams,
+    promptInputOptionChangeNotificationType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -165,5 +167,9 @@ export class BaseChat implements Chat {
 
     public onTabBarAction(handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) {
         this.connection.onRequest(tabBarActionRequestType.method, handler)
+    }
+
+    public onPromptInputOptionChange(handler: NotificationHandler<PromptInputOptionChangeParams>) {
+        this.connection.onNotification(promptInputOptionChangeNotificationType.method, handler)
     }
 }
