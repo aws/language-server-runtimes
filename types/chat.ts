@@ -142,9 +142,33 @@ export interface ChatMessage {
     fileList?: FileList
     contextList?: FileList
 }
-// Response for chat prompt request can be empty,
-// if server chooses to handle the request and push updates asynchronously.
-export interface ChatResult extends ChatMessage {}
+
+/**
+ * Represents the result of a chat interaction.
+ * A ChatResult extends ChatMessage and can optionally include additional messages
+ * that provide context, reasoning, or intermediate steps that led to the final response.
+ *
+ * Response for chat prompt request can be empty, if server chooses to handle the request and push updates asynchronously.
+ */
+export interface ChatResult extends ChatMessage {
+    /**
+     * Optional array of supporting messages that provide additional context for the primary message.
+     * These can include:
+     * - Reasoning steps that led to the final answer
+     * - Tool usage and outputs during processing
+     * - Intermediate calculations or decision points
+     * - Status updates about the processing
+     * - Human interactions that influenced the response
+     *
+     * The primary message (this ChatResult itself) should contain the final, complete response,
+     * while additionalMessages provides transparency into how that response was generated.
+     *
+     * UI implementations should typically display the primary message prominently,
+     * with additionalMessages shown as supporting information when relevant.
+     */
+    additionalMessages?: ChatMessage[]
+}
+
 export interface InlineChatResult extends ChatMessage {
     requestId?: string
 }
