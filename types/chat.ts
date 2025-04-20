@@ -101,6 +101,11 @@ export interface EncryptedChatParams extends PartialResultParams {
 export interface FileDetails {
     description?: string
     lineRanges?: Array<{ first: number; second: number }>
+    changes?: {
+        added?: number
+        deleted?: number
+        total?: number
+    }
 }
 
 export interface FileList {
@@ -110,8 +115,18 @@ export interface FileList {
     details?: Record<string, FileDetails>
 }
 
+export interface Button {
+    id: string
+    text?: string
+    description?: string
+    icon?: IconType
+    disabled?: boolean
+}
+
 export interface ChatMessage {
-    type?: 'answer' | 'prompt' | 'system-prompt' // will default to 'answer'
+    type?: 'answer' | 'prompt' | 'system-prompt' | 'directive' | 'tool' // will default to 'answer'
+    header?: Omit<ChatMessage, 'header'> & { icon: IconType }
+    buttons: Button[]
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
