@@ -106,6 +106,15 @@ export interface ChatPromptOptionAcknowledgedMessage {
     params: ChatPromptOptionAcknowledgedParams
 }
 
+export interface StopResponseParams {
+    tabId: string
+}
+
+export interface StopResponseMessage {
+    command: typeof STOP_RESPONSE
+    params: StopResponseParams
+}
+
 export interface ErrorParams {
     tabId: string
     triggerType?: TriggerType
