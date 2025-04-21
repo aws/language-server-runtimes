@@ -65,7 +65,8 @@ import {
     PromptInputOptionChangeParams,
     PROMPT_INPUT_OPTION_CHANGE_METHOD,
     ButtonClickParams,
-    BUTTON_CLICK_NOTIFICATION_METHOD,
+    ButtonClickResult,
+    BUTTON_CLICK_REQUEST_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -116,11 +117,11 @@ export const sourceLinkClickNotificationType = new ProtocolNotificationType<Sour
 export const followUpClickNotificationType = new ProtocolNotificationType<FollowUpClickParams, void>(
     FOLLOW_UP_CLICK_NOTIFICATION_METHOD
 )
-export const buttonClickNotificationType = new ProtocolNotificationType<ButtonClickParams, void>(
-    BUTTON_CLICK_NOTIFICATION_METHOD
-)
 export const openTabRequestType = new ProtocolRequestType<OpenTabParams, OpenTabResult, never, void, void>(
     OPEN_TAB_REQUEST_METHOD
+)
+export const buttonClickRequestType = new ProtocolRequestType<ButtonClickParams, ButtonClickResult, never, void, void>(
+    BUTTON_CLICK_REQUEST_METHOD
 )
 export const chatOptionsUpdateType = new ProtocolNotificationType<ChatOptionsUpdateParams, void>(
     CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD

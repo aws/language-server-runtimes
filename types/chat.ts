@@ -13,8 +13,8 @@ export const LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/linkClick'
 export const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
 export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
 export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
-export const BUTTON_CLICK_NOTIFICATION_METHOD = 'aws/chat/buttonClick'
 export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
+export const BUTTON_CLICK_REQUEST_METHOD = 'aws/chat/buttonClick'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
@@ -307,12 +307,6 @@ export interface FollowUpClickParams {
     followUp: ChatItemAction
 }
 
-export interface ButtonClickParams {
-    tabId: string
-    messageId: string
-    buttonId: string
-}
-
 /*
     Defines parameters for opening a tab.
     Opens existing tab if `tabId` is provided, otherwise creates a new tab
@@ -325,6 +319,17 @@ export interface OpenTabParams extends Partial<TabEventParams> {
     }
 }
 export interface OpenTabResult extends TabEventParams {}
+
+export interface ButtonClickParams {
+    tabId: string
+    messageId: string
+    buttonId: string
+}
+
+export interface ButtonClickResult {
+    success: boolean
+    failureReason?: string
+}
 
 export interface TabState {
     inProgress?: boolean

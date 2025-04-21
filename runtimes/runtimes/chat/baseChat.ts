@@ -62,7 +62,8 @@ import {
     PromptInputOptionChangeParams,
     promptInputOptionChangeNotificationType,
     ButtonClickParams,
-    buttonClickNotificationType,
+    ButtonClickResult,
+    buttonClickRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -85,6 +86,10 @@ export class BaseChat implements Chat {
 
     public onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
         this.connection.onRequest(quickActionRequestType.method, handler)
+    }
+
+    public onButtonClick(handler: RequestHandler<ButtonClickParams, ButtonClickResult, ButtonClickResult>) {
+        this.connection.onRequest(buttonClickRequestType.method, handler)
     }
 
     public onSendFeedback(handler: NotificationHandler<FeedbackParams>) {
@@ -125,10 +130,6 @@ export class BaseChat implements Chat {
 
     public onFollowUpClicked(handler: NotificationHandler<FollowUpClickParams>) {
         this.connection.onNotification(followUpClickNotificationType.method, handler)
-    }
-
-    public onButtonClick(handler: NotificationHandler<ButtonClickParams>) {
-        this.connection.onNotification(buttonClickNotificationType.method, handler)
     }
 
     public openTab(params: OpenTabParams): Promise<OpenTabResult> {

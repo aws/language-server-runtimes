@@ -36,6 +36,7 @@ import {
     ChatOptionsUpdateParams,
     PromptInputOptionChangeParams,
     ButtonClickParams,
+    ButtonClickResult,
 } from '../protocol'
 
 /**
@@ -50,6 +51,7 @@ export type Chat = {
     onEndChat: (handler: RequestHandler<EndChatParams, EndChatResult, void>) => void
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
+    onButtonClick: (handler: RequestHandler<ButtonClickParams, ButtonClickResult, ButtonClickResult>) => void
     onListConversations: (handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) => void
     onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
     onTabBarAction: (handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) => void
@@ -65,7 +67,6 @@ export type Chat = {
     onInfoLinkClick: (handler: NotificationHandler<InfoLinkClickParams>) => void
     onSourceLinkClick: (handler: NotificationHandler<SourceLinkClickParams>) => void
     onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
-    onButtonClick: (handler: NotificationHandler<ButtonClickParams>) => void
     sendChatUpdate: (params: ChatUpdateParams) => void
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
     chatOptionsUpdate: (params: ChatOptionsUpdateParams) => void
