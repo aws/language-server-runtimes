@@ -27,6 +27,7 @@ export const GENERIC_COMMAND = 'genericCommand'
 export const CHAT_OPTIONS = 'chatOptions'
 export const DISCLAIMER_ACKNOWLEDGED = 'disclaimerAcknowledged'
 export const CHAT_PROMPT_OPTION_ACKNOWLEDGED = 'chatPromptOptionAcknowledged'
+export const STOP_CHAT_RESPONSE = 'stopChatResponse'
 
 /**
  * A message sent from Chat Client to Extension in response to various actions triggered from Chat UI.
@@ -46,6 +47,7 @@ export type UiMessageCommand =
     | typeof COPY_TO_CLIPBOARD
     | typeof DISCLAIMER_ACKNOWLEDGED
     | typeof CHAT_PROMPT_OPTION_ACKNOWLEDGED
+    | typeof STOP_CHAT_RESPONSE
 
 export type UiMessageParams =
     | InsertToCursorPositionParams
@@ -56,6 +58,7 @@ export type UiMessageParams =
     | ChatOptions
     | CopyCodeToClipboardParams
     | ChatPromptOptionAcknowledgedParams
+    | StopChatResponseParams
 
 export interface SendToPromptParams {
     selection: string
@@ -102,6 +105,15 @@ export interface ChatPromptOptionAcknowledgedParams {
 export interface ChatPromptOptionAcknowledgedMessage {
     command: typeof CHAT_PROMPT_OPTION_ACKNOWLEDGED
     params: ChatPromptOptionAcknowledgedParams
+}
+
+export interface StopChatResponseParams {
+    tabId: string
+}
+
+export interface StopChatResponseMessage {
+    command: typeof STOP_CHAT_RESPONSE
+    params: StopChatResponseParams
 }
 
 export interface ErrorParams {
