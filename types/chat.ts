@@ -13,6 +13,7 @@ export const LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/linkClick'
 export const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
 export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
 export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
+export const BUTTON_CLICK_NOTIFICATION_METHOD = 'aws/chat/buttonClick'
 export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
@@ -304,6 +305,12 @@ export interface FollowUpClickParams {
     tabId: string
     messageId: string
     followUp: ChatItemAction
+}
+
+export interface ButtonClickParams {
+    tabId: string
+    messageId: string
+    buttonId: string
 }
 
 /*

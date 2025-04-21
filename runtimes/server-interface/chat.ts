@@ -35,6 +35,7 @@ import {
     TabBarActionResult,
     ChatOptionsUpdateParams,
     PromptInputOptionChangeParams,
+    ButtonClickParams,
 } from '../protocol'
 
 /**
@@ -64,6 +65,7 @@ export type Chat = {
     onInfoLinkClick: (handler: NotificationHandler<InfoLinkClickParams>) => void
     onSourceLinkClick: (handler: NotificationHandler<SourceLinkClickParams>) => void
     onFollowUpClicked: (handler: NotificationHandler<FollowUpClickParams>) => void
+    onButtonClick: (handler: NotificationHandler<ButtonClickParams>) => void
     sendChatUpdate: (params: ChatUpdateParams) => void
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
     chatOptionsUpdate: (params: ChatOptionsUpdateParams) => void

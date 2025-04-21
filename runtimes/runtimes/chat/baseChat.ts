@@ -61,6 +61,8 @@ import {
     ChatOptionsUpdateParams,
     PromptInputOptionChangeParams,
     promptInputOptionChangeNotificationType,
+    ButtonClickParams,
+    buttonClickNotificationType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -123,6 +125,10 @@ export class BaseChat implements Chat {
 
     public onFollowUpClicked(handler: NotificationHandler<FollowUpClickParams>) {
         this.connection.onNotification(followUpClickNotificationType.method, handler)
+    }
+
+    public onButtonClick(handler: NotificationHandler<ButtonClickParams>) {
+        this.connection.onNotification(buttonClickNotificationType.method, handler)
     }
 
     public openTab(params: OpenTabParams): Promise<OpenTabResult> {
