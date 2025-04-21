@@ -61,6 +61,9 @@ import {
     ChatOptionsUpdateParams,
     PromptInputOptionChangeParams,
     promptInputOptionChangeNotificationType,
+    ButtonClickParams,
+    ButtonClickResult,
+    buttonClickRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -83,6 +86,10 @@ export class BaseChat implements Chat {
 
     public onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
         this.connection.onRequest(quickActionRequestType.method, handler)
+    }
+
+    public onButtonClick(handler: RequestHandler<ButtonClickParams, ButtonClickResult, ButtonClickResult>) {
+        this.connection.onRequest(buttonClickRequestType.method, handler)
     }
 
     public onSendFeedback(handler: NotificationHandler<FeedbackParams>) {

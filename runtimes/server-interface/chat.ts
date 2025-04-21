@@ -35,6 +35,8 @@ import {
     TabBarActionResult,
     ChatOptionsUpdateParams,
     PromptInputOptionChangeParams,
+    ButtonClickParams,
+    ButtonClickResult,
 } from '../protocol'
 
 /**
@@ -49,6 +51,7 @@ export type Chat = {
     onEndChat: (handler: RequestHandler<EndChatParams, EndChatResult, void>) => void
     onQuickAction: (handler: RequestHandler<QuickActionParams, QuickActionResult, void>) => void
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
+    onButtonClick: (handler: RequestHandler<ButtonClickParams, ButtonClickResult, ButtonClickResult>) => void
     onListConversations: (handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) => void
     onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
     onTabBarAction: (handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) => void
