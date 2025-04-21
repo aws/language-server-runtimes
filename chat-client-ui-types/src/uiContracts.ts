@@ -58,6 +58,7 @@ export type UiMessageParams =
     | ChatOptions
     | CopyCodeToClipboardParams
     | ChatPromptOptionAcknowledgedParams
+    | StopResponseParams
 
 export interface SendToPromptParams {
     selection: string
