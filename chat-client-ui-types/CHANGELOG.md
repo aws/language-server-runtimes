@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.24](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.23...chat-client-ui-types/v0.1.24) (2025-04-21)
+
+
+### Features
+
+* add stopResponse ui event ([#463](https://github.com/aws/language-server-runtimes/issues/463)) ([6934a1b](https://github.com/aws/language-server-runtimes/commit/6934a1b50357ebae4c8776ebf5a687b886b9c8f3))
+
 ## [0.1.23](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.22...chat-client-ui-types/v0.1.23) (2025-04-21)
 
 
