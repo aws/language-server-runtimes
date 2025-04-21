@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.21](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.20...language-server-runtimes-types/v0.1.21) (2025-04-21)
+
+
+### Features
+
+* add buttonClick event to chat ([#464](https://github.com/aws/language-server-runtimes/issues/464)) ([32b3bb9](https://github.com/aws/language-server-runtimes/commit/32b3bb9cca7bf09d412e87cc9e062ac99d847bd2))
+
 ## [0.1.20](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.19...language-server-runtimes-types/v0.1.20) (2025-04-21)
 
 
