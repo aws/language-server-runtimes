@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.20](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.19...language-server-runtimes-types/v0.1.20) (2025-04-21)
+
+
+### Features
+
+* add additional messages in support of the final response ([bc7522a](https://github.com/aws/language-server-runtimes/commit/bc7522a690520731facf7dee8eccaf6468fc94df))
+
 ## [0.1.19](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.18...language-server-runtimes-types/v0.1.19) (2025-04-20)
 
 
