@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.68](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.67...language-server-runtimes/v0.2.68) (2025-04-21)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.19 to ^0.1.20
+
 ## [0.2.67](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.66...language-server-runtimes/v0.2.67) (2025-04-20)
 
 
