@@ -1,5 +1,6 @@
 import { Position, Range, TextDocumentIdentifier } from './lsp'
 
+// protocol methods
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
 export const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
 export const QUICK_ACTION_REQUEST_METHOD = 'aws/chat/sendChatQuickAction'
@@ -30,6 +31,9 @@ export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
 // export
 export const GET_SERIALIZED_CHAT_REQUEST_METHOD = 'aws/chat/getSerializedChat'
+
+// button ids
+export const OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID = 'open-settings-for-ws-index'
 
 export interface ChatItemAction {
     pillText: string
@@ -116,12 +120,15 @@ export interface FileList {
     details?: Record<string, FileDetails>
 }
 
+export type Status = 'info' | 'success' | 'warning' | 'error'
 export interface Button {
     id: string
     text?: string
     description?: string
     icon?: IconType
     disabled?: boolean
+    keepCardAfterClick?: boolean
+    status?: 'main' | 'primary' | 'clear' | Status
 }
 
 export interface ChatMessage {
