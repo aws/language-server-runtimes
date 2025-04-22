@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.70](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.69...language-server-runtimes/v0.2.70) (2025-04-22)
+
+
+### Bug Fixes
+
+* route correct request type to button click ([#467](https://github.com/aws/language-server-runtimes/issues/467)) ([d481123](https://github.com/aws/language-server-runtimes/commit/d4811237789514df1420f0842819f9a4de83dc5f))
+
 ## [0.2.69](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.68...language-server-runtimes/v0.2.69) (2025-04-21)
 
 
