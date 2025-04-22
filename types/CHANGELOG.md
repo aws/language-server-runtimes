@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.23](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.22...language-server-runtimes-types/v0.1.23) (2025-04-22)
+
+
+### Features
+
+* extended UI and protocol types for openning settings ([#474](https://github.com/aws/language-server-runtimes/issues/474)) ([f622458](https://github.com/aws/language-server-runtimes/commit/f622458baeea7df72e1b3ce91d002faecc745f89))
+
 ## [0.1.22](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.21...language-server-runtimes-types/v0.1.22) (2025-04-22)
 
 
