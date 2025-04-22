@@ -124,7 +124,7 @@ export type Agent = {
      */
     addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec, R>(
         spec: S,
-        handler: (input: T, token?: CancellationToken) => Promise<R>
+        handler: (input: T, token?: CancellationToken) => Promise<R>,
         options?: {
             requiresAcceptance?: (input: T) => boolean
             queueDescription?: (input: T, requiresAcceptance?: boolean) => string
