@@ -7,6 +7,8 @@ type Tool<T, R> = {
     inputSchema: ObjectSchema
     validate: (input: T) => boolean
     invoke: (input: T) => Promise<R>
+    requiresAcceptance?: (input: T) => boolean
+    queueDescription?: (input: T, requiresAcceptance?: boolean) => string
 }
 
 export const newAgent = (): Agent => {
@@ -16,7 +18,11 @@ export const newAgent = (): Agent => {
     return {
         addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec>(
             spec: S,
-            handler: (input: T) => Promise<any>
+            handler: (input: T) => Promise<any>,
+            options?: {
+                requiresAcceptance?: (input: T) => boolean
+                queueDescription?: (input: T, requiresAcceptance?: boolean) => string
+            }
         ) => {
             const validator = ajv.compile(spec.inputSchema)
             const tool = {
@@ -27,9 +33,42 @@ export const newAgent = (): Agent => {
                 name: spec.name,
                 description: spec.description,
                 inputSchema: spec.inputSchema,
+                requiresAcceptance: options?.requiresAcceptance,
+                queueDescription: options?.queueDescription,
             }
 
             tools[spec.name] = tool
+        },
+
+        requiresAcceptance: (toolName: string, input: any) => {
+            const tool = tools[toolName]
+            if (!tool) {
+                throw new Error(`Tool ${toolName} not found`)
+            }
+
+            if (!tool.validate(input)) {
+                throw new Error(`Input for tool ${toolName} is invalid`)
+            }
+
+            const requiresAcceptance = tool.requiresAcceptance ? tool.requiresAcceptance(input) : false
+            return { requiresAcceptance }
+        },
+
+        queueDescription: (toolName: string, input: any, requiresAcceptance?: boolean) => {
+            const tool = tools[toolName]
+            if (!tool) {
+                throw new Error(`Tool ${toolName} not found`)
+            }
+
+            if (!tool.validate(input)) {
+                throw new Error(`Input for tool ${toolName} is invalid`)
+            }
+
+            if (tool.queueDescription) {
+                return tool.queueDescription(input, requiresAcceptance)
+            }
+
+            return `Executing ${tool.name}...`
         },
 
         runTool: async (toolName: string, input: any) => {

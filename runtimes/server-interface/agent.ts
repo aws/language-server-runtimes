@@ -118,11 +118,43 @@ export type Agent = {
      *
      * @param spec Tool Specification
      * @param handler The async method to execute when the tool is called
+     * @param options Optional configuration for tool behavior
      */
     addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec, R>(
         spec: S,
-        handler: (input: T) => Promise<R>
+        handler: (input: T) => Promise<R>,
+        options?: {
+            requiresAcceptance?: (input: T) => boolean
+            queueDescription?: (input: T, requiresAcceptance?: boolean) => string
+        }
     ) => void
+
+    /**
+     * Validates a tool input and checks if the tool requires acceptance.
+     * This method will lookup the tool in the local tool repository and validate the input against
+     * the tool's schema.
+     *
+     * Throws an error if the tool is not found, or if validation fails.
+     *
+     * @param toolName The name of the tool to validate
+     * @param input The input to validate
+     * @returns Object containing requiresAcceptance boolean
+     */
+    requiresAcceptance: (toolName: string, input: any) => { requiresAcceptance: boolean }
+
+    /**
+     * Gets the queue description for a tool.
+     * This method will lookup the tool in the local tool repository and validate the input against
+     * the tool's schema.
+     *
+     * Throws an error if the tool is not found, or if validation fails.
+     *
+     * @param toolName The name of the tool to get the queue description for
+     * @param input The input to the tool
+     * @param requiresAcceptance Whether the tool requires acceptance (optional)
+     * @returns A string description of the queued tool execution
+     */
+    queueDescription: (toolName: string, input: any, requiresAcceptance?: boolean) => string
 
     /**
      * Run a tool by name. This method will lookup the tool in the local tool repository and
