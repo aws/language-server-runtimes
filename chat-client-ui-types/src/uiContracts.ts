@@ -28,6 +28,7 @@ export const CHAT_OPTIONS = 'chatOptions'
 export const DISCLAIMER_ACKNOWLEDGED = 'disclaimerAcknowledged'
 export const CHAT_PROMPT_OPTION_ACKNOWLEDGED = 'chatPromptOptionAcknowledged'
 export const STOP_CHAT_RESPONSE = 'stopChatResponse'
+export const OPEN_SETTINGS = 'openSettings'
 
 /**
  * A message sent from Chat Client to Extension in response to various actions triggered from Chat UI.
@@ -48,6 +49,7 @@ export type UiMessageCommand =
     | typeof DISCLAIMER_ACKNOWLEDGED
     | typeof CHAT_PROMPT_OPTION_ACKNOWLEDGED
     | typeof STOP_CHAT_RESPONSE
+    | typeof OPEN_SETTINGS
 
 export type UiMessageParams =
     | InsertToCursorPositionParams
@@ -59,6 +61,7 @@ export type UiMessageParams =
     | CopyCodeToClipboardParams
     | ChatPromptOptionAcknowledgedParams
     | StopChatResponseParams
+    | OpenSettingsParams
 
 export interface SendToPromptParams {
     selection: string
@@ -149,6 +152,10 @@ export interface CopyCodeToClipboardMessage {
     params: CopyCodeToClipboardParams
 }
 
+export interface OpenSettingsParams {
+    settingKey: string
+}
+
 /**
  * A message sent from Chat Client to Extension in response to request triggered from Extension.
  * As Chat Client uses PostMessage API for transport with integrating Extensions, this is a loose implementation of request-response model.
@@ -175,4 +182,20 @@ export type UiMessageResultParams =
 export interface ErrorResult {
     message: string
     type: 'InvalidRequest' | 'InternalError' | 'UnknownError' | string
+}
+
+/*
+ * A message injected into the client to dynamically add new features, namely the UI.
+ */
+export interface FeatureValue {
+    boolValue?: boolean
+    doubleValue?: number
+    longValue?: number
+    stringValue?: string
+}
+
+export interface FeatureContext {
+    name?: string
+    variation: string
+    value: FeatureValue
 }

@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.1.28](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.27...chat-client-ui-types/v0.1.28) (2025-04-22)
+
+
+### Features
+
+* extended UI and protocol types for openning settings ([#474](https://github.com/aws/language-server-runtimes/issues/474)) ([f622458](https://github.com/aws/language-server-runtimes/commit/f622458baeea7df72e1b3ce91d002faecc745f89))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.22 to ^0.1.23
+
+## [0.1.27](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.26...chat-client-ui-types/v0.1.27) (2025-04-22)
+
+
+### Features
+
+* extending ui contract with dynamic feature config types ([#448](https://github.com/aws/language-server-runtimes/issues/448)) ([5012832](https://github.com/aws/language-server-runtimes/commit/5012832e9c9068abea92c78a4ef79fb26aa24bd1))
+
 ## [0.1.26](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.25...chat-client-ui-types/v0.1.26) (2025-04-22)
 
 

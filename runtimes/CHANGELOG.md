@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.73](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.72...language-server-runtimes/v0.2.73) (2025-04-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.22 to ^0.1.23
+
+## [0.2.72](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.71...language-server-runtimes/v0.2.72) (2025-04-22)
+
+
+### Features
+
+* add cancellation token to agent spec ([#472](https://github.com/aws/language-server-runtimes/issues/472)) ([1e65017](https://github.com/aws/language-server-runtimes/commit/1e650179dc22692ffe2c5399a45731dc520506a4))
+
 ## [0.2.71](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.70...language-server-runtimes/v0.2.71) (2025-04-22)
 
 

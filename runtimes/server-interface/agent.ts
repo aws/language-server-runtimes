@@ -1,3 +1,5 @@
+import { CancellationToken } from '../protocol'
+
 interface BaseSchema {
     title?: string
     description?: string
@@ -122,7 +124,7 @@ export type Agent = {
      */
     addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec, R>(
         spec: S,
-        handler: (input: T) => Promise<R>,
+        handler: (input: T, token?: CancellationToken) => Promise<R>
         options?: {
             requiresAcceptance?: (input: T) => boolean
             queueDescription?: (input: T, requiresAcceptance?: boolean) => string
@@ -166,7 +168,7 @@ export type Agent = {
      * @param input The input to the tool
      * @returns The result of the tool execution
      */
-    runTool: (toolName: string, input: any) => Promise<any>
+    runTool: (toolName: string, input: any, token?: CancellationToken) => Promise<any>
 
     /**
      * Get the list of tools in the local tool repository.

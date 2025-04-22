@@ -1,12 +1,21 @@
 import Ajv from 'ajv'
-import { Agent, BedrockTools, GetToolsOptions, InferSchema, ObjectSchema, Tools, ToolSpec } from '../server-interface'
+import {
+    Agent,
+    BedrockTools,
+    CancellationToken,
+    GetToolsOptions,
+    InferSchema,
+    ObjectSchema,
+    Tools,
+    ToolSpec,
+} from '../server-interface'
 
 type Tool<T, R> = {
     name: string
     description: string
     inputSchema: ObjectSchema
-    validate: (input: T) => boolean
-    invoke: (input: T) => Promise<R>
+    validate: (input: T, token?: CancellationToken) => boolean
+    invoke: (input: T, token?: CancellationToken) => Promise<R>
     requiresAcceptance?: (input: T) => boolean
     queueDescription?: (input: T, requiresAcceptance?: boolean) => string
 }
@@ -18,7 +27,7 @@ export const newAgent = (): Agent => {
     return {
         addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec>(
             spec: S,
-            handler: (input: T) => Promise<any>,
+            handler: (input: T, token?: CancellationToken) => Promise<any>
             options?: {
                 requiresAcceptance?: (input: T) => boolean
                 queueDescription?: (input: T, requiresAcceptance?: boolean) => string
@@ -71,17 +80,17 @@ export const newAgent = (): Agent => {
             return `Executing ${tool.name}...`
         },
 
-        runTool: async (toolName: string, input: any) => {
+        runTool: async (toolName: string, input: any, token?: CancellationToken) => {
             const tool = tools[toolName]
             if (!tool) {
                 throw new Error(`Tool ${toolName} not found`)
             }
 
-            if (!tool.validate(input)) {
+            if (!tool.validate(input, token)) {
                 throw new Error(`Input for tool ${toolName} is invalid`)
             }
 
-            return tool.invoke(input)
+            return tool.invoke(input, token)
         },
 
         getTools: <T extends GetToolsOptions>(options?: T) => {
