@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.27](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.26...chat-client-ui-types/v0.1.27) (2025-04-22)
+
+
+### Features
+
+* extending ui contract with dynamic feature config types ([#448](https://github.com/aws/language-server-runtimes/issues/448)) ([5012832](https://github.com/aws/language-server-runtimes/commit/5012832e9c9068abea92c78a4ef79fb26aa24bd1))
+
 ## [0.1.26](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.25...chat-client-ui-types/v0.1.26) (2025-04-22)
 
 
