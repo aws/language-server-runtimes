@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.24](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.23...language-server-runtimes-types/v0.1.24) (2025-04-22)
+
+
+### Features
+
+* support status in header ([#477](https://github.com/aws/language-server-runtimes/issues/477)) ([a4812d4](https://github.com/aws/language-server-runtimes/commit/a4812d4e12a25bd0cc2abff1ff31a971fdabe59f))
+
 ## [0.1.23](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.22...language-server-runtimes-types/v0.1.23) (2025-04-22)
 
 
