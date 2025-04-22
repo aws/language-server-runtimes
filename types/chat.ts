@@ -320,6 +320,7 @@ export interface FileClickParams {
     tabId: string
     filePath: string
     action?: FileAction
+    messageId?: string
 }
 
 // context
