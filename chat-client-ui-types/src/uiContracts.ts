@@ -176,3 +176,19 @@ export interface ErrorResult {
     message: string
     type: 'InvalidRequest' | 'InternalError' | 'UnknownError' | string
 }
+
+/*
+ * A message injected into the client to dynamically add new features, namely the UI.
+ */
+export interface FeatureValue {
+    boolValue?: boolean
+    doubleValue?: number
+    longValue?: number
+    stringValue?: string
+}
+
+export interface FeatureContext {
+    name?: string
+    variation: string
+    value: FeatureValue
+}
