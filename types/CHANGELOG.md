@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.22](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.21...language-server-runtimes-types/v0.1.22) (2025-04-22)
+
+
+### Bug Fixes
+
+* missing messageId in fileClickParams ([#469](https://github.com/aws/language-server-runtimes/issues/469)) ([4515a29](https://github.com/aws/language-server-runtimes/commit/4515a2960a90c1d89fc488740b80672bbe930e3a))
+
 ## [0.1.21](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.20...language-server-runtimes-types/v0.1.21) (2025-04-21)
 
 
