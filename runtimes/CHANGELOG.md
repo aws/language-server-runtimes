@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.75](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.74...language-server-runtimes/v0.2.75) (2025-04-23)
+
+
+### Features
+
+* allow write stream for tool invocations ([07e7c53](https://github.com/aws/language-server-runtimes/commit/07e7c534d715836c99c08451e07805d8bf5cd668))
+
 ## [0.2.74](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.73...language-server-runtimes/v0.2.74) (2025-04-22)
 
 
