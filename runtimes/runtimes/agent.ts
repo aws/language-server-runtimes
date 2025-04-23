@@ -15,7 +15,7 @@ type Tool<T, R> = {
     description: string
     inputSchema: ObjectSchema
     validate: (input: T, token?: CancellationToken) => boolean
-    invoke: (input: T, token?: CancellationToken) => Promise<R>
+    invoke: (input: T, token?: CancellationToken, updates?: WritableStream) => Promise<R>
 }
 
 export const newAgent = (): Agent => {
@@ -41,7 +41,7 @@ export const newAgent = (): Agent => {
             tools[spec.name] = tool
         },
 
-        runTool: async (toolName: string, input: any, token?: CancellationToken) => {
+        runTool: async (toolName: string, input: any, token?: CancellationToken, updates?: WritableStream) => {
             const tool = tools[toolName]
             if (!tool) {
                 throw new Error(`Tool ${toolName} not found`)
@@ -51,7 +51,7 @@ export const newAgent = (): Agent => {
                 throw new Error(`Input for tool ${toolName} is invalid`)
             }
 
-            return tool.invoke(input, token)
+            return tool.invoke(input, token, updates)
         },
 
         getTools: <T extends GetToolsOptions>(options?: T) => {
