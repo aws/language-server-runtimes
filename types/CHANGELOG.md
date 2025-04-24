@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.25](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.24...language-server-runtimes-types/v0.1.25) (2025-04-24)
+
+
+### Bug Fixes
+
+* file click outside of workspace crashes whole process ([#481](https://github.com/aws/language-server-runtimes/issues/481)) ([a91623f](https://github.com/aws/language-server-runtimes/commit/a91623feecc4aab8766b13cda1b45a7db62453f3))
+
 ## [0.1.24](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.23...language-server-runtimes-types/v0.1.24) (2025-04-22)
 
 
