@@ -105,6 +105,7 @@ export interface EncryptedChatParams extends PartialResultParams {
 
 export interface FileDetails {
     description?: string
+    fullPath?: string
     lineRanges?: Array<{ first: number; second: number }>
     changes?: {
         added?: number
@@ -367,6 +368,7 @@ export interface FileClickParams {
     filePath: string
     action?: FileAction
     messageId?: string
+    fullPath?: string
 }
 
 // context
