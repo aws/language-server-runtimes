@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.26](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.25...language-server-runtimes-types/v0.1.26) (2025-04-25)
+
+
+### Features
+
+* support file snapshot for diffs ([#486](https://github.com/aws/language-server-runtimes/issues/486)) ([9a52fd7](https://github.com/aws/language-server-runtimes/commit/9a52fd7c9558e1cf90641cd6147aa2cec330cb89))
+
 ## [0.1.25](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.24...language-server-runtimes-types/v0.1.25) (2025-04-24)
 
 
