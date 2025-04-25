@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.77](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.76...language-server-runtimes/v0.2.77) (2025-04-25)
+
+
+### Features
+
+* **runtimes:** extend TestFeatures with API for simulating LSP init flow ([#483](https://github.com/aws/language-server-runtimes/issues/483)) ([fa41c3d](https://github.com/aws/language-server-runtimes/commit/fa41c3d662cdf5f9cd5c2312f7f11abbda50045f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.25 to ^0.1.26
+
 ## [0.2.76](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.75...language-server-runtimes/v0.2.76) (2025-04-24)
 
 
