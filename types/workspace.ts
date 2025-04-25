@@ -19,6 +19,7 @@ export interface SelectWorkspaceItemResult {
 
 export interface OpenFileDiffParams {
     originalFileUri: URI
+    originalFileContent?: string
     isDeleted: boolean
     fileContent?: string
 }
