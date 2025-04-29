@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.32](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.31...chat-client-ui-types/v0.1.32) (2025-04-29)
+
+
+### Features
+
+* extend sendToPrompt to support optional prompt messages ([#484](https://github.com/aws/language-server-runtimes/issues/484)) ([90384e3](https://github.com/aws/language-server-runtimes/commit/90384e3cbacfd3728fbba02f26bb4e46b4c88c34))
+
 ## [0.1.31](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.30...chat-client-ui-types/v0.1.31) (2025-04-25)
 
 
