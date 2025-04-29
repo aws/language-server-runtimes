@@ -9,6 +9,14 @@ export type InlineCompletionItemWithReferences = InlineCompletionItem & {
      */
     itemId: string
 
+    /**
+     * POC-NEP: Flag to indicate if this is an edit suggestion rather than an inline completion.
+     * This uses the same name as the proposed VSCode API's isInlineEdit property.
+     * When the VSCode API is finalized, this property can be removed as it will be
+     * part of the standard InlineCompletionItem interface.
+     */
+    isInlineEdit?: boolean
+
     references?: {
         referenceName?: string
         referenceUrl?: string
