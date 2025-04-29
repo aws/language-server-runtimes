@@ -9,6 +9,14 @@ export type InlineCompletionItemWithReferences = InlineCompletionItem & {
      */
     itemId: string
 
+    /**
+     * POC-NEP: Flag to indicate if this is an edit suggestion rather than an inline completion.
+     * When true, the client should render this as an edit suggestion using the VSCode proposed API.
+     * This is used by the Next Edit Prediction feature to distinguish between inline completions
+     * and edit suggestions.
+     */
+    isEdit?: boolean
+
     references?: {
         referenceName?: string
         referenceUrl?: string
@@ -58,6 +66,12 @@ export interface InlineCompletionStates {
      * Recommendation was filtered out on the client-side and marked as discarded.
      */
     discarded: boolean
+
+    /**
+     * POC-NEP: Flag to indicate if this was an edit suggestion rather than an inline completion.
+     * This is used by the Next Edit Prediction feature for telemetry and to improve future suggestions.
+     */
+    isEdit?: boolean
 }
 
 export interface LogInlineCompletionSessionResultsParams {
