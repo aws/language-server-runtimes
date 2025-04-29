@@ -7,6 +7,7 @@ import {
     OpenTabResult,
     GET_SERIALIZED_CHAT_REQUEST_METHOD,
     GetSerializedChatResult,
+    ChatPrompt,
 } from '@aws/language-server-runtimes-types'
 export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
 
@@ -66,6 +67,8 @@ export type UiMessageParams =
 export interface SendToPromptParams {
     selection: string
     triggerType: TriggerType
+    prompt?: ChatPrompt
+    autoSubmit?: boolean
 }
 
 export interface SendToPromptMessage {
