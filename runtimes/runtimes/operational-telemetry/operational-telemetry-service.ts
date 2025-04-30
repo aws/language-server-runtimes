@@ -108,9 +108,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         this.telemetryOptOut = telemetryOptOut
 
         if (this.telemetryOptOut) {
-            this.shutdownSdk()
-                .then(() => {})
-                .catch(() => {})
+            void this.shutdownSdk()
         } else {
             this.startupSdk()
         }

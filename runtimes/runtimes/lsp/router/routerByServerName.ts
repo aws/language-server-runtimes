@@ -27,9 +27,7 @@ export class RouterByServerName<P extends Partial<EventIdentifier>, F extends Fo
         }
 
         const sendParams = params.id ? attachServerName() : params
-        sendHandler(sendParams)
-            .then(() => {})
-            .catch(() => {})
+        void sendHandler(sendParams)
     }
 
     processFollowup(followupHandler: NotificationHandler<F>, params: F) {

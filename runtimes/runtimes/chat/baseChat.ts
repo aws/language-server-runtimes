@@ -136,11 +136,8 @@ export class BaseChat implements Chat {
         return this.connection.sendRequest(openTabRequestType.method, params)
     }
 
-    public chatOptionsUpdate(params: ChatOptionsUpdateParams): void {
-        this.connection
-            .sendNotification(chatOptionsUpdateType.method, params)
-            .then(() => {})
-            .catch(() => {})
+    public chatOptionsUpdate(params: ChatOptionsUpdateParams): Promise<void> {
+        return this.connection.sendNotification(chatOptionsUpdateType.method, params)
     }
 
     public sendChatUpdate(params: ChatUpdateParams) {
