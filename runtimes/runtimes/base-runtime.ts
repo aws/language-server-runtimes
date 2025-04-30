@@ -48,6 +48,7 @@ import {
     tabBarActionRequestType,
     chatOptionsUpdateType,
     promptInputOptionChangeNotificationType,
+    buttonClickRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -161,6 +162,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
         chatOptionsUpdate: params => lspConnection.sendNotification(chatOptionsUpdateType.method, params),
         openTab: params => lspConnection.sendRequest(openTabRequestType.method, params),
+        onButtonClick: params => lspConnection.onRequest(buttonClickRequestType.method, params),
         sendChatUpdate: params => () => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
         sendContextCommands: params => () =>
