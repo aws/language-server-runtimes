@@ -1,4 +1,4 @@
-function func(value: any): value is Function {
+function func(value: any): value is (...args: any[]) => any {
     return typeof value === 'function'
 }
 
@@ -27,25 +27,28 @@ export function asPromise(value: any): Promise<any> {
 export function mergeObjects(obj1: any, obj2: any) {
     let merged: any = {}
 
-    for (let key in obj1) {
-        if (obj1.hasOwnProperty(key)) {
+    for (const key in obj1) {
+        if (Object.prototype.hasOwnProperty.call(obj1, key)) {
             if (Array.isArray(obj1) && Array.isArray(obj2)) {
                 merged = [...new Set([...obj1, ...obj2])]
             } else if (typeof obj1[key] === 'object' && typeof obj2[key] === 'object') {
                 merged[key] = mergeObjects(obj1[key], obj2[key])
             } else {
                 merged[key] = obj1[key]
-                if (obj2.hasOwnProperty(key)) {
+                if (Object.prototype.hasOwnProperty.call(obj2, key)) {
                     merged[key] = obj2[key]
                 }
             }
         }
     }
 
-    for (let key in obj2) {
+    for (const key in obj2) {
         if (Array.isArray(obj1) && Array.isArray(obj2)) {
             continue
-        } else if (obj2.hasOwnProperty(key) && !obj1.hasOwnProperty(key)) {
+        } else if (
+            Object.prototype.hasOwnProperty.call(obj2, key) &&
+            !Object.prototype.hasOwnProperty.call(obj1, key)
+        ) {
             merged[key] = obj2[key]
         }
     }

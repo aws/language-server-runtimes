@@ -1,5 +1,6 @@
 import { ErrorEventAttributes, ResourceUsageAttributes, OperationalEvent } from './types/generated/telemetry'
 
+// eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents
 export type OperationalEventAttributes = ResourceUsageAttributes | ErrorEventAttributes
 
 export type EventName = OperationalEvent['baseInfo']['name']
@@ -21,7 +22,7 @@ export interface OperationalTelemetry {
 }
 
 class NoopOperationalTelemetry implements OperationalTelemetry {
-    toggleOptOut(telemetryOptOut: boolean): void {}
+    toggleOptOut(_telemetryOptOut: boolean): void {}
 
     registerGaugeProvider(
         _metricName: MetricName,

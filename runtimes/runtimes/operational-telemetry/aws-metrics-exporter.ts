@@ -116,7 +116,7 @@ export class AwsMetricExporter implements PushMetricExporter {
 
         const isValid = this.eventValidator.validateEvent(result)
         if (!isValid) {
-            throw Error(`Invalid operational event: ${result}`)
+            throw Error(`Invalid operational event: ${JSON.stringify(result)}`)
         }
 
         return result as any

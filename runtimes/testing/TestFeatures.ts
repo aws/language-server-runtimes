@@ -92,8 +92,8 @@ export class TestFeatures {
                 ): T => new Ctor({ ...current_config }),
             }
         )
-        this.workspace.getTextDocument.callsFake(async uri => this.documents[uri])
-        this.workspace.getAllTextDocuments.callsFake(async () => Object.values(this.documents))
+        this.workspace.getTextDocument.callsFake(uri => Promise.resolve(this.documents[uri]))
+        this.workspace.getAllTextDocuments.callsFake(() => Promise.resolve(Object.values(this.documents)))
         this.agent = stubInterface<Agent>()
     }
 
@@ -135,7 +135,7 @@ export class TestFeatures {
         return this.lsp.extensions.onInlineCompletionWithReferences.args[0]?.[0](...args)
     }
 
-    async doLogInlineCompletionSessionResults(
+    doLogInlineCompletionSessionResults(
         ...args: Parameters<Parameters<Lsp['extensions']['onLogInlineCompletionSessionResults']>[0]>
     ) {
         return this.lsp.extensions.onLogInlineCompletionSessionResults.args[0]?.[0](...args)
@@ -148,26 +148,26 @@ export class TestFeatures {
 
     async doChangeConfiguration() {
         // Force the call to handle after the current task completes
-        await undefined
+        await Promise.resolve()
         this.lsp.didChangeConfiguration.args[0]?.[0]({ settings: undefined })
         return this
     }
 
     async doChangeTextDocument(params: DidChangeTextDocumentParams) {
         // Force the call to handle after the current task completes
-        await undefined
+        await Promise.resolve()
         this.lsp.onDidChangeTextDocument.args[0]?.[0](params)
         return this
     }
 
     async doOpenTextDocument(params: DidOpenTextDocumentParams) {
         // Force the call to handle after the current task completes
-        await undefined
+        await Promise.resolve()
         this.lsp.onDidOpenTextDocument.args[0]?.[0](params)
         return this
     }
 
-    async doExecuteCommand(params: ExecuteCommandParams, token: CancellationToken) {
+    doExecuteCommand(params: ExecuteCommandParams, token: CancellationToken) {
         return this.lsp.onExecuteCommand.args[0]?.[0](params, token)
     }
 
@@ -179,7 +179,7 @@ export class TestFeatures {
         let remainder = text
 
         while (remainder.length > 0) {
-            const document = this.documents[uri]!
+            const document = this.documents[uri]
             const contentChange = remainder.substring(0, 1)
             remainder = remainder.substring(1)
             const newDocument = TextDocument.create(
@@ -197,7 +197,7 @@ export class TestFeatures {
             }
 
             // Force the call to handle after the current task completes
-            await undefined
+            await Promise.resolve()
             this.lsp.onDidChangeTextDocument.args[0]?.[0]({
                 textDocument: {
                     uri,
@@ -216,6 +216,8 @@ export class TestFeatures {
     }
 
     dispose() {
-        this.disposables.forEach(d => d())
+        for (const d of this.disposables) {
+            d()
+        }
     }
 }

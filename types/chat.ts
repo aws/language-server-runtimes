@@ -188,7 +188,7 @@ export interface QuickActionCommand {
 }
 
 export type ContextCommandIconType = 'file' | 'folder' | 'code-block' | 'list-add' | 'magic'
-export type IconType = ContextCommandIconType | 'help' | 'trash' | 'search' | 'calendar' | string
+export type IconType = 'ContextCommandIconType' | 'help' | 'trash' | 'search' | 'calendar'
 
 /**
  * Configuration object for registering chat quick actions groups.
@@ -385,7 +385,7 @@ export interface ProgrammingLanguage {
     languageName: string
 }
 
-export type InlineChatUserDecision = 'ACCEPT' | 'REJECT' | 'DISMISS' | string
+export type InlineChatUserDecision = string
 
 export interface InlineChatResultParams {
     requestId: string

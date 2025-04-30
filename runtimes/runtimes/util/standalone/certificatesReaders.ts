@@ -6,6 +6,8 @@
 import { readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
+import winCaReader from 'win-ca/api'
+import macCertsReader from 'mac-ca'
 
 const UNIX_CERT_FILES = [
     '/etc/ssl/certs/ca-certificates.crt',
@@ -43,7 +45,9 @@ export function readLinuxCertificates(): string[] {
             const matches = content.match(PEM_CERT_REGEXP)
 
             // Skip if no certificates found in this file
-            if (!matches) continue
+            if (!matches) {
+                continue
+            }
 
             // Track if we've found any valid certificates
             hasSeenCertificate = hasSeenCertificate || matches.length > 0
@@ -74,7 +78,6 @@ export function readLinuxCertificates(): string[] {
 }
 
 export function readWindowsCertificates(): string[] {
-    const winCaReader = require('win-ca/api')
     const certs: string[] = []
 
     winCaReader({
@@ -87,8 +90,7 @@ export function readWindowsCertificates(): string[] {
 }
 
 export function readMacosCertificates(): string[] {
-    const macCertsReader = require('mac-ca')
-    const certs = macCertsReader.get({
+    const certs: string[] = macCertsReader.get({
         excludeBundled: false,
     })
 

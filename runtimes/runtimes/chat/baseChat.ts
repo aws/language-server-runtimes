@@ -137,11 +137,17 @@ export class BaseChat implements Chat {
     }
 
     public chatOptionsUpdate(params: ChatOptionsUpdateParams): void {
-        this.connection.sendNotification(chatOptionsUpdateType.method, params)
+        this.connection
+            .sendNotification(chatOptionsUpdateType.method, params)
+            .then(() => {})
+            .catch(() => {})
     }
 
     public sendChatUpdate(params: ChatUpdateParams) {
-        this.connection.sendNotification(chatUpdateNotificationType.method, params)
+        this.connection
+            .sendNotification(chatUpdateNotificationType.method, params)
+            .then(() => {})
+            .catch(() => {})
     }
 
     public onFileClicked(handler: NotificationHandler<FileClickParams>) {
@@ -149,7 +155,10 @@ export class BaseChat implements Chat {
     }
 
     public sendContextCommands(params: ContextCommandParams) {
-        this.connection.sendNotification(contextCommandsNotificationType.method, params)
+        this.connection
+            .sendNotification(contextCommandsNotificationType.method, params)
+            .then(() => {})
+            .catch(() => {})
     }
 
     public onCreatePrompt(handler: NotificationHandler<CreatePromptParams>) {

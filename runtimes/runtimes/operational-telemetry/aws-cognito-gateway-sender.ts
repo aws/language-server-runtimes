@@ -67,6 +67,9 @@ export class AwsCognitoApiGatewaySender {
     }
 
     private signRequest(url: URL, body: string) {
+        if (!this.credentials || !this.credentials.AccessKeyId || !this.credentials.SecretKey) {
+            throw new Error('Cognito credentials are not available')
+        }
         const request = new HttpRequest({
             method: 'POST',
             headers: {
@@ -80,9 +83,9 @@ export class AwsCognitoApiGatewaySender {
 
         const signer = new SignatureV4({
             credentials: {
-                accessKeyId: this.credentials!.AccessKeyId!,
-                secretAccessKey: this.credentials!.SecretKey!,
-                sessionToken: this.credentials!.SessionToken!,
+                accessKeyId: this.credentials.AccessKeyId,
+                secretAccessKey: this.credentials.SecretKey,
+                sessionToken: this.credentials.SessionToken,
             },
             region: this.region,
             service: 'execute-api',

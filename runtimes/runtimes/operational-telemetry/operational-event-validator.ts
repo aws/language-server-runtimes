@@ -11,14 +11,18 @@ export class OperationalEventValidator {
 
         const schemaDir = path.resolve(__dirname, 'telemetry-schemas')
 
-        fs.readdirSync(schemaDir).forEach(file => {
+        for (const file of fs.readdirSync(schemaDir)) {
             if (file.endsWith('.json')) {
-                const schema = require(path.resolve(schemaDir, file))
+                const schema = JSON.parse(fs.readFileSync(path.resolve(schemaDir, file), 'utf8'))
                 this.ajv.addSchema(schema, file)
             }
-        })
+        }
 
-        this.validate = this.ajv.getSchema('telemetry-schema.json#/definitions/OperationalEvent')!
+        const validateSchema = this.ajv.getSchema('telemetry-schema.json#/definitions/OperationalEvent')
+        if (!validateSchema) {
+            throw new Error('Schema not found: telemetry-schema.json#/definitions/OperationalEvent')
+        }
+        this.validate = validateSchema
     }
 
     validateEvent(event: Record<string, any>): boolean {

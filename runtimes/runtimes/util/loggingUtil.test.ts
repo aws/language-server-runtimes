@@ -26,16 +26,16 @@ describe('LoggingUtil', () => {
     describe('isValidLogLevel', () => {
         it('should return true for valid log levels', () => {
             const validLevels: LogLevel[] = ['error', 'warn', 'info', 'log', 'debug']
-            validLevels.forEach(level => {
+            for (const level of validLevels) {
                 assert.strictEqual(true, isValidLogLevel(level))
-            })
+            }
         })
 
         it('should return false for invalid log levels', () => {
             const invalidLevels = ['trace', 'verbose', undefined, null]
-            invalidLevels.forEach(level => {
+            for (const level of invalidLevels) {
                 assert.strictEqual(false, isValidLogLevel(level as LogLevel))
-            })
+            }
         })
     })
 
@@ -48,9 +48,9 @@ describe('LoggingUtil', () => {
                 { level1: 'warn', level2: 'error', expected: true },
                 { level1: 'error', level2: 'error', expected: true },
             ]
-            testCases.forEach(({ level1, level2, expected }) => {
+            for (const { level1, level2, expected } of testCases) {
                 assert.strictEqual(expected, isLogLevelEnabled(level1 as LogLevel, level2 as LogLevel))
-            })
+            }
         })
     })
 
