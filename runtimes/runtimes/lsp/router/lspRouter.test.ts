@@ -20,7 +20,7 @@ import { PartialInitializeResult, InitializeParams } from '../../../server-inter
 import { LspServer } from './lspServer'
 import { CredentialsType, Logging } from '../../../server-interface'
 import { Encoding } from '../../encoding'
-import { Q_SERVER_CAPABILITES_CONFIGURATION_SECTION } from './constants'
+import { SERVER_CAPABILITES_CONFIGURATION_SECTION } from './constants'
 
 describe('LspRouter', () => {
     const sandbox = sinon.createSandbox()
@@ -373,7 +373,7 @@ describe('LspRouter', () => {
     })
 
     describe('handleGetConfigurationFromServer', () => {
-        it(`should return the result from initializeResult cache for key: ${Q_SERVER_CAPABILITES_CONFIGURATION_SECTION}`, async () => {
+        it(`should return the result from initializeResult cache for key: ${SERVER_CAPABILITES_CONFIGURATION_SECTION}`, async () => {
             const initHandler1 = () => {
                 return {
                     awsServerCapabilities: {
@@ -424,7 +424,7 @@ describe('LspRouter', () => {
 
             await initializeHandler({} as InitializeParams, {} as CancellationToken)
 
-            const params: GetConfigurationFromServerParams = { section: Q_SERVER_CAPABILITES_CONFIGURATION_SECTION }
+            const params: GetConfigurationFromServerParams = { section: SERVER_CAPABILITES_CONFIGURATION_SECTION }
             const result = await lspRouter.getConfigurationFromServer(params, {} as CancellationToken)
             const expectedServerCapabilities = {
                 configurationProvider: {
