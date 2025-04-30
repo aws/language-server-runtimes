@@ -130,7 +130,7 @@ export type Lsp = {
     publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>
     sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => Promise<void>
     onHover: (handler: RequestHandler<HoverParams, Hover | null | undefined, void>) => void
-    onExecuteCommand: (handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>) => void
+    onExecuteCommand: (handler: RequestHandler<ExecuteCommandParams, any, void>) => void
     onSemanticTokens: (handler: RequestHandler<SemanticTokensParams, SemanticTokens | null, void>) => void
     onSignatureHelp: (handler: RequestHandler<SignatureHelpParams, SignatureHelp | null | undefined, void>) => void
     workspace: {

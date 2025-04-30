@@ -3,8 +3,8 @@ export interface Encoding {
     encode(value: string): string
 }
 
-const HEX_PAD: string = '00'
-const HEX_REGEX: RegExp = /%([0-9A-F]{2})/g
+const HEX_PAD = '00'
+const HEX_REGEX = /%([0-9A-F]{2})/g
 export class WebBase64Encoding implements Encoding {
     constructor(private window: WindowOrWorkerGlobalScope) {}
 
@@ -22,7 +22,7 @@ export class WebBase64Encoding implements Encoding {
 
     encode(value: string): string {
         // to support Unicode chars
-        const converted = encodeURIComponent(value).replace(HEX_REGEX, (_, arg) => {
+        const converted = encodeURIComponent(value).replace(HEX_REGEX, (_, arg: string) => {
             return String.fromCharCode(parseInt(arg, 16))
         })
         return this.window.btoa(converted)

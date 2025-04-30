@@ -113,7 +113,7 @@ export class AwsSpanExporter implements SpanExporter {
         const isValid = this.eventValidator.validateEvent(result)
         if (!isValid) {
             diag.error('Invalid operational event:', result)
-            throw Error(`Invalid operational event: ${result}`)
+            throw Error(`Invalid operational event: ${JSON.stringify(result)}`)
         }
         return result as OperationalEvent
     }

@@ -26,7 +26,7 @@ function setServerCrashTelemetryListeners() {
     const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
 
     // Handles both 'uncaughtException' and 'unhandledRejection'
-    process.on('uncaughtExceptionMonitor', async (err, origin) => {
+    process.on('uncaughtExceptionMonitor', (err, origin) => {
         optel.recordEvent('ErrorEvent', {
             errorOrigin: origin,
             errorType: 'unknownServerCrash',
@@ -44,12 +44,12 @@ export function getTelemetryLspServer(
 ): LspServer {
     const lspServer = new LspServer(lspConnection, encoding, logging)
 
-    lspServer.setInitializeHandler(async (params: InitializeParams): Promise<InitializeResult> => {
-        const optOut = params.initializationOptions?.telemetryOptOut ?? true // telemetry disabled if option not provided
+    lspServer.setInitializeHandler((params: InitializeParams): Promise<InitializeResult> => {
+        const _optOut = params.initializationOptions?.telemetryOptOut ?? true // telemetry disabled if option not provided
 
-        const endpoint = runtime.getConfiguration('TELEMETRY_GATEWAY_ENDPOINT') ?? DEFAULT_TELEMETRY_GATEWAY_ENDPOINT
-        const region = runtime.getConfiguration('TELEMETRY_COGNITO_REGION') ?? DEFAULT_TELEMETRY_COGNITO_REGION
-        const poolId = runtime.getConfiguration('TELEMETRY_COGNITO_POOL_ID') ?? DEFAULT_TELEMETRY_COGNITO_POOL_ID
+        const _endpoint = runtime.getConfiguration('TELEMETRY_GATEWAY_ENDPOINT') ?? DEFAULT_TELEMETRY_GATEWAY_ENDPOINT
+        const _region = runtime.getConfiguration('TELEMETRY_COGNITO_REGION') ?? DEFAULT_TELEMETRY_COGNITO_REGION
+        const _poolId = runtime.getConfiguration('TELEMETRY_COGNITO_POOL_ID') ?? DEFAULT_TELEMETRY_COGNITO_POOL_ID
 
         // const optel = OperationalTelemetryService.getInstance({
         //     serviceName: props.name,
@@ -67,12 +67,12 @@ export function getTelemetryLspServer(
         setServerCrashTelemetryListeners()
         setMemoryUsageTelemetry()
 
-        return {
+        return Promise.resolve({
             capabilities: {},
-        }
+        })
     })
 
-    lspServer.setDidChangeConfigurationHandler(async params => {
+    lspServer.setDidChangeConfigurationHandler(async _params => {
         const optOut = await lspConnection.workspace.getConfiguration({
             section: 'aws.optOutTelemetry',
         })

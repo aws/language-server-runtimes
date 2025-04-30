@@ -397,7 +397,7 @@ export interface ProgrammingLanguage {
     languageName: string
 }
 
-export type InlineChatUserDecision = 'ACCEPT' | 'REJECT' | 'DISMISS' | string
+export type InlineChatUserDecision = string
 
 export interface InlineChatResultParams {
     requestId: string

@@ -7,7 +7,7 @@ import {
     OperationalTelemetry,
     ValueProviders,
 } from './operational-telemetry'
-import { diag, Attributes, DiagLogLevel, trace, metrics } from '@opentelemetry/api'
+import { diag, DiagLogLevel, trace, metrics } from '@opentelemetry/api'
 import { NodeSDK } from '@opentelemetry/sdk-node'
 import { Resource } from '@opentelemetry/resources'
 import { ATTR_SERVICE_NAME, ATTR_SERVICE_VERSION } from '@opentelemetry/semantic-conventions'
@@ -108,7 +108,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         this.telemetryOptOut = telemetryOptOut
 
         if (this.telemetryOptOut) {
-            this.shutdownSdk()
+            void this.shutdownSdk()
         } else {
             this.startupSdk()
         }
@@ -160,7 +160,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
     recordEvent(eventName: EventName, eventAttr: OperationalEventAttributes, scopeName?: string): void {
         const tracer = trace.getTracer(scopeName ?? this.RUNTIMES_SCOPE_NAME)
-        const span = tracer.startSpan(eventName)
+        const span = tracer.startSpan(eventName as string)
         span.setAttribute('event.attributes', JSON.stringify(eventAttr))
         span.end()
     }
