@@ -25,7 +25,7 @@ import {
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
-import { findDuplicates, mergeObjects } from './util'
+import { findDuplicates, isPrimitive, mergeObjects } from './util'
 import { CredentialsType, PartialInitializeResult } from '../../../server-interface'
 
 export class LspRouter {
@@ -125,11 +125,34 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
     }
 
     getConfigurationFromServer = async (params: GetConfigurationFromServerParams, token: CancellationToken) => {
-        return this.routeRequestToFirstCapableServer(
+        let results = await this.routeRequestToAllServers(
             (server, params, token) => server.tryGetServerConfiguration(params, token),
             params,
             token
         )
+        results = results.filter(result => result != undefined)
+        const errors = results.filter(result => result instanceof ResponseError)
+
+        if (errors.length > 0) {
+            errors.forEach(error => {
+                this.lspConnection.console.log(
+                    `Error in getting server configuration for section ${params.section}: ${error.message}`
+                )
+            })
+            return new ResponseError(ErrorCodes.InternalError, 'Error in getting server configuration', errors)
+        }
+
+        if (results.length <= 1) {
+            return results.pop()
+        }
+
+        const result = results.reduceRight((acc, curr) => {
+            if (isPrimitive(acc) && isPrimitive(curr)) {
+                return curr
+            }
+            return mergeObjects(acc, curr)
+        })
+        return result
     }
 
     updateConfiguration = async (params: UpdateConfigurationParams, token: CancellationToken) => {

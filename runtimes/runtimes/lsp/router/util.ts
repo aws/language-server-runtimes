@@ -65,3 +65,13 @@ export function findDuplicates<T>(array: T[]): T[] | undefined {
         })
     return dups.length > 0 ? dups : undefined
 }
+
+export function isPrimitive(value: any): boolean {
+    return (
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean' ||
+        typeof value === 'undefined' ||
+        value === null
+    )
+}

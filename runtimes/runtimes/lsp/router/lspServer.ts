@@ -150,7 +150,7 @@ export class LspServer {
     public tryGetServerConfiguration = async (
         params: GetConfigurationFromServerParams,
         token: CancellationToken
-    ): Promise<[boolean, any | undefined | null]> => {
+    ): Promise<any | undefined | null> => {
         if (
             this.initializeResult?.awsServerCapabilities?.configurationProvider?.sections.some(
                 c => c === params.section
@@ -158,10 +158,9 @@ export class LspServer {
             this.getServerConfigurationHandler
         ) {
             const result = await asPromise(this.getServerConfigurationHandler(params, token))
-            return [true, result]
+            return result
         }
-
-        return [false, undefined]
+        return undefined
     }
 
     public sendDidChangeConfigurationNotification = (params: DidChangeConfigurationParams): void => {

@@ -372,7 +372,7 @@ describe('LspRouter', () => {
     })
 
     describe('handleGetConfigurationFromServer', () => {
-        it('should return the result from the first server that handles the request', async () => {
+        it('should return the aggregated result from all servers', async () => {
             const initHandler1 = () => {
                 return {
                     awsServerCapabilities: {

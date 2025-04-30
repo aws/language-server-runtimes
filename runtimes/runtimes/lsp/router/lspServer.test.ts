@@ -237,9 +237,8 @@ describe('LspServer', () => {
             const expectedResult = { setting: 'value' }
             lspServer.setServerConfigurationHandler(() => expectedResult)
 
-            const [handled, result] = await lspServer.tryGetServerConfiguration(params, mockToken)
+            const result = await lspServer.tryGetServerConfiguration(params, mockToken)
 
-            assert.strictEqual(handled, true)
             assert.deepStrictEqual(result, expectedResult)
         })
 
