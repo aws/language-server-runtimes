@@ -60,7 +60,7 @@
                 },
                 "clientInfo.extension.version": {
                     "type": "string",
-                    "description": "The version of the client extensionas as reported during the LSP initialize request"
+                    "description": "The version of the client extension as reported during the LSP initialize request"
                 }
             }
         },

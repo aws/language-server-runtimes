@@ -1,6 +1,6 @@
 # Operational Telemetry for Language Server Runtimes
 
-The Operational Telemetry Service collects, processes and exports operational telemetry data from language server runtimes. This service integrates with OpenTelemetry to gather various types of operational data. Based on the [telemetry-schemas](./telemetry-schemas/), curretnly it can collect:
+The Operational Telemetry Service collects, processes and exports operational telemetry data from language server runtimes. This service integrates with OpenTelemetry to gather various types of operational data. Based on the [telemetry-schemas](./telemetry-schemas/), currently it can collect:
 * resource usage metrics, 
 * caught/uncaught errors.
 
