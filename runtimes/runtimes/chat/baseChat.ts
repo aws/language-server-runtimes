@@ -43,6 +43,8 @@ import {
     contextCommandsNotificationType,
     CreatePromptParams,
     createPromptNotificationType,
+    InlineChatResultParams,
+    inlineChatResultNotificationType,
     listConversationsRequestType,
     ListConversationsParams,
     ListConversationsResult,
@@ -55,6 +57,13 @@ import {
     TabBarActionParams,
     TabBarActionResult,
     tabBarActionRequestType,
+    chatOptionsUpdateType,
+    ChatOptionsUpdateParams,
+    PromptInputOptionChangeParams,
+    promptInputOptionChangeNotificationType,
+    ButtonClickParams,
+    ButtonClickResult,
+    buttonClickRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -77,6 +86,10 @@ export class BaseChat implements Chat {
 
     public onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
         this.connection.onRequest(quickActionRequestType.method, handler)
+    }
+
+    public onButtonClick(handler: RequestHandler<ButtonClickParams, ButtonClickResult, ButtonClickResult>) {
+        this.connection.onRequest(buttonClickRequestType.method, handler)
     }
 
     public onSendFeedback(handler: NotificationHandler<FeedbackParams>) {
@@ -123,6 +136,10 @@ export class BaseChat implements Chat {
         return this.connection.sendRequest(openTabRequestType.method, params)
     }
 
+    public chatOptionsUpdate(params: ChatOptionsUpdateParams): void {
+        this.connection.sendNotification(chatOptionsUpdateType.method, params)
+    }
+
     public sendChatUpdate(params: ChatUpdateParams) {
         this.connection.sendNotification(chatUpdateNotificationType.method, params)
     }
@@ -139,6 +156,10 @@ export class BaseChat implements Chat {
         this.connection.onNotification(createPromptNotificationType.method, handler)
     }
 
+    public onInlineChatResult(handler: NotificationHandler<InlineChatResultParams>) {
+        this.connection.onNotification(inlineChatResultNotificationType.method, handler)
+    }
+
     public onListConversations(handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) {
         this.connection.onRequest(listConversationsRequestType.method, handler)
     }
@@ -153,5 +174,9 @@ export class BaseChat implements Chat {
 
     public onTabBarAction(handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) {
         this.connection.onRequest(tabBarActionRequestType.method, handler)
+    }
+
+    public onPromptInputOptionChange(handler: NotificationHandler<PromptInputOptionChangeParams>) {
+        this.connection.onNotification(promptInputOptionChangeNotificationType.method, handler)
     }
 }

@@ -1,5 +1,6 @@
 import { Position, Range, TextDocumentIdentifier } from './lsp'
 
+// protocol methods
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
 export const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
 export const QUICK_ACTION_REQUEST_METHOD = 'aws/chat/sendChatQuickAction'
@@ -14,18 +15,25 @@ export const INFO_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/infoLinkClick'
 export const SOURCE_LINK_CLICK_NOTIFICATION_METHOD = 'aws/chat/sourceLinkClick'
 export const FOLLOW_UP_CLICK_NOTIFICATION_METHOD = 'aws/chat/followUpClick'
 export const OPEN_TAB_REQUEST_METHOD = 'aws/chat/openTab'
+export const BUTTON_CLICK_REQUEST_METHOD = 'aws/chat/buttonClick'
 export const CHAT_UPDATE_NOTIFICATION_METHOD = 'aws/chat/sendChatUpdate'
 export const FILE_CLICK_NOTIFICATION_METHOD = 'aws/chat/fileClick'
 export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
 export const TAB_BAR_ACTION_REQUEST_METHOD = 'aws/chat/tabBarAction'
+export const CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD = 'aws/chat/chatOptionsUpdate'
+export const PROMPT_INPUT_OPTION_CHANGE_METHOD = 'aws/chat/promptInputOptionChange'
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
+export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult'
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
 // export
 export const GET_SERIALIZED_CHAT_REQUEST_METHOD = 'aws/chat/getSerializedChat'
+
+// button ids
+export const OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID = 'open-settings-for-ws-index'
 
 export interface ChatItemAction {
     pillText: string
@@ -97,7 +105,13 @@ export interface EncryptedChatParams extends PartialResultParams {
 
 export interface FileDetails {
     description?: string
+    fullPath?: string
     lineRanges?: Array<{ first: number; second: number }>
+    changes?: {
+        added?: number
+        deleted?: number
+        total?: number
+    }
 }
 
 export interface FileList {
@@ -107,8 +121,24 @@ export interface FileList {
     details?: Record<string, FileDetails>
 }
 
+export type Status = 'info' | 'success' | 'warning' | 'error'
+export interface Button {
+    id: string
+    text?: string
+    description?: string
+    icon?: IconType
+    disabled?: boolean
+    keepCardAfterClick?: boolean
+    status?: 'main' | 'primary' | 'clear' | Status
+}
+
 export interface ChatMessage {
-    type?: 'answer' | 'prompt' | 'system-prompt' // will default to 'answer'
+    type?: 'answer' | 'prompt' | 'system-prompt' | 'directive' | 'tool' // will default to 'answer'
+    header?: Omit<ChatMessage, 'header'> & {
+        icon?: IconType
+        status?: { status?: Status; icon?: IconType; text?: string }
+    }
+    buttons?: Button[]
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
@@ -124,9 +154,33 @@ export interface ChatMessage {
     fileList?: FileList
     contextList?: FileList
 }
-// Response for chat prompt request can be empty,
-// if server chooses to handle the request and push updates asynchronously.
-export interface ChatResult extends ChatMessage {}
+
+/**
+ * Represents the result of a chat interaction.
+ * A ChatResult extends ChatMessage and can optionally include additional messages
+ * that provide context, reasoning, or intermediate steps that led to the final response.
+ *
+ * Response for chat prompt request can be empty, if server chooses to handle the request and push updates asynchronously.
+ */
+export interface ChatResult extends ChatMessage {
+    /**
+     * Optional array of supporting messages that provide additional context for the primary message.
+     * These can include:
+     * - Reasoning steps that led to the final answer
+     * - Tool usage and outputs during processing
+     * - Intermediate calculations or decision points
+     * - Status updates about the processing
+     * - Human interactions that influenced the response
+     *
+     * The primary message (this ChatResult itself) should contain the final, complete response,
+     * while additionalMessages provides transparency into how that response was generated.
+     *
+     * UI implementations should typically display the primary message prominently,
+     * with additionalMessages shown as supporting information when relevant.
+     */
+    additionalMessages?: ChatMessage[]
+}
+
 export interface InlineChatResult extends ChatMessage {
     requestId?: string
 }
@@ -190,6 +244,13 @@ export interface ChatOptions {
      * Server signals to Chat Client support of Chat export feature.
      */
     export?: boolean
+
+    /*
+        Server signals to Chat Client support of Chat notifications.
+        Currently used for sending chat notifications for developer profile updates.
+        Can be extended to support other types of notifications.
+    */
+    chatNotifications?: ChatMessage[]
 }
 
 export interface QuickActionParams extends PartialResultParams {
@@ -270,6 +331,17 @@ export interface OpenTabParams extends Partial<TabEventParams> {
 }
 export interface OpenTabResult extends TabEventParams {}
 
+export interface ButtonClickParams {
+    tabId: string
+    messageId: string
+    buttonId: string
+}
+
+export interface ButtonClickResult {
+    success: boolean
+    failureReason?: string
+}
+
 export interface TabState {
     inProgress?: boolean
     cancellable?: boolean
@@ -281,12 +353,22 @@ export interface ChatUpdateParams {
     data?: TabData
 }
 
+/**
+ * Server-initiated chat metadata updates.
+ * Processes changes of developer profiles.
+ */
+export interface ChatOptionsUpdateParams {
+    chatNotifications?: ChatMessage[]
+}
+
 export type FileAction = 'accept-change' | 'reject-change'
 
 export interface FileClickParams {
     tabId: string
     filePath: string
     action?: FileAction
+    messageId?: string
+    fullPath?: string
 }
 
 // context
@@ -311,8 +393,28 @@ export interface CreatePromptParams {
     promptName: string
 }
 
-// history
+export interface ProgrammingLanguage {
+    languageName: string
+}
 
+export type InlineChatUserDecision = 'ACCEPT' | 'REJECT' | 'DISMISS' | string
+
+export interface InlineChatResultParams {
+    requestId: string
+    inputLength?: number
+    selectedLines?: number
+    suggestionAddedChars?: number
+    suggestionAddedLines?: number
+    suggestionDeletedChars?: number
+    suggestionDeletedLines?: number
+    codeIntent?: boolean
+    userDecision?: InlineChatUserDecision
+    responseStartLatency?: number
+    responseEndLatency?: number
+    programmingLanguage?: ProgrammingLanguage
+}
+
+// history
 export type TextBasedFilterOption = {
     type: 'textarea' | 'textinput'
     placeholder?: string
@@ -378,4 +480,10 @@ export interface GetSerializedChatParams extends TabEventParams {
 
 export interface GetSerializedChatResult {
     content: string
+}
+
+export interface PromptInputOptionChangeParams {
+    tabId: string
+    optionsValues: Record<string, string>
+    eventId?: string
 }

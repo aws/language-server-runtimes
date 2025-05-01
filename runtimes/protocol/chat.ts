@@ -46,6 +46,8 @@ import {
     ContextCommandParams,
     CREATE_PROMPT_NOTIFICATION_METHOD,
     CreatePromptParams,
+    INLINE_CHAT_RESULT_NOTIFICATION_METHOD,
+    InlineChatResultParams,
     ListConversationsParams,
     ListConversationsResult,
     LIST_CONVERSATIONS_REQUEST_METHOD,
@@ -58,6 +60,13 @@ import {
     TabBarActionParams,
     TabBarActionResult,
     TAB_BAR_ACTION_REQUEST_METHOD,
+    ChatOptionsUpdateParams,
+    CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD,
+    PromptInputOptionChangeParams,
+    PROMPT_INPUT_OPTION_CHANGE_METHOD,
+    ButtonClickParams,
+    ButtonClickResult,
+    BUTTON_CLICK_REQUEST_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -111,6 +120,12 @@ export const followUpClickNotificationType = new ProtocolNotificationType<Follow
 export const openTabRequestType = new ProtocolRequestType<OpenTabParams, OpenTabResult, never, void, void>(
     OPEN_TAB_REQUEST_METHOD
 )
+export const buttonClickRequestType = new ProtocolRequestType<ButtonClickParams, ButtonClickResult, never, void, void>(
+    BUTTON_CLICK_REQUEST_METHOD
+)
+export const chatOptionsUpdateType = new ProtocolNotificationType<ChatOptionsUpdateParams, void>(
+    CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD
+)
 export const chatUpdateNotificationType = new ProtocolNotificationType<ChatUpdateParams, void>(
     CHAT_UPDATE_NOTIFICATION_METHOD
 )
@@ -124,6 +139,13 @@ export const contextCommandsNotificationType = new ProtocolNotificationType<Cont
 )
 export const createPromptNotificationType = new ProtocolNotificationType<CreatePromptParams, void>(
     CREATE_PROMPT_NOTIFICATION_METHOD
+)
+/**
+ * The inline chat result notification is sent from client to server to notify the action taken by the user
+ * from the suggested response returned by the server.
+ */
+export const inlineChatResultNotificationType = new ProtocolNotificationType<InlineChatResultParams, void>(
+    INLINE_CHAT_RESULT_NOTIFICATION_METHOD
 )
 
 // history
@@ -166,3 +188,8 @@ export const getSerializedChatRequestType = new ProtocolRequestType<
     void,
     void
 >(GET_SERIALIZED_CHAT_REQUEST_METHOD)
+
+export const promptInputOptionChangeNotificationType = new ProtocolNotificationType<
+    PromptInputOptionChangeParams,
+    void
+>(PROMPT_INPUT_OPTION_CHANGE_METHOD)

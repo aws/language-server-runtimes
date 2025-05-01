@@ -9,3 +9,6 @@ updates:
           interval: 'weekly'
       commit-message:
           prefix: 'chore'
+      ignore:
+          - dependency-name: 'jose'
+            versions: ['>=6.0.0']

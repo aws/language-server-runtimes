@@ -169,6 +169,7 @@ The runtime supports chat by default
 | Send chat prompt. Supports streaming chat message content to client. Response is optional - this event can be used to only trigger chat prompt request and then `aws/chat/sendChatUpdate` can be used to send chat updates asyncronously. | `aws/chat/sendChatPrompt`         | `ChatParams`                   | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server          | `ChatResult`    |
 | End conversation                     | `aws/chat/endChat`                | `EndChatParams`                | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server          | `EndChatResult` |
 | Send chat quick action. Response is optional - this event can be used to only trigger chat quick action request and then `aws/chat/sendChatUpdate` can be used to send chat updates asyncronously. | `aws/chat/sendChatQuickAction`    | `QuickActionParams`            | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server          | `ChatResult`    |
+| Send generic button click request to the server. This event can be used to trigger a button click action. Response can be used by client to determine if relevant action executed successfully. | `aws/chat/buttonClick`    | `ButtonClickParams`            | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server          | `ButtonClickResult`    |
 | Send chat UI ready event             | `aws/chat/ready`                  | n/a                            | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
 | Send chat vote event                 | `aws/chat/vote`                   | `VoteParams`                   | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
 | Send chat feedback event             | `aws/chat/feedback`               | `FeedbackParams`               | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
@@ -188,6 +189,9 @@ The runtime supports chat by default
 | Send create prompt event that triggers new prompt creation flow on server. | `aws/chat/createPrompt`          | `CreatePromptParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
 | Send request to list the conversations available in history: all or based on filter if provided. As there can be several filter options used, the filter in the request is a map of filter option ids to corresponding values. Possible filter options are expected to be provided in the previous `listConversations` result before filter can be used. | `aws/chat/listConversations`          | `ListConversationsParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `ListConversationsResult`             |
 | Send conversation or conversation action click event. If no action is provided, the default action is "open". | `aws/chat/conversationClick`          | `ConversationClickParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `ConversationClickResult`             |
+| Send server-initiated chat metadata updates. The interface is designed to be extensible for future chat options, currently focused on notification for developer profile changes. | `aws/chat/chatOptionsUpdate`          | `ChatOptionsUpdateParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client | n/a             |
+| Send prompt input option event changes  | `aws/chat/promptInputOptionChange`          | `PromptInputOptionChangeParams`          | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a             |
+
 
 ```ts
 export interface ChatPrompt {
@@ -295,7 +299,7 @@ export type Agent = {
      */
     addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec, R>(
         spec: S,
-        handler: (input: T) => Promise<R>
+        handler: (input: T, token?: CancellationToken) => Promise<R>
     ) => void
 
     /**
@@ -308,7 +312,7 @@ export type Agent = {
      * @param input The input to the tool
      * @returns The result of the tool execution
      */
-    runTool: (toolName: string, input: any) => Promise<any>
+    runTool: (toolName: string, input: any, token?: CancellationToken) => Promise<any>
 
     /**
      * Get the list of tools in the local tool repository.

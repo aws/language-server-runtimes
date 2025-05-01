@@ -7,6 +7,7 @@ import {
     OpenTabResult,
     GET_SERIALIZED_CHAT_REQUEST_METHOD,
     GetSerializedChatResult,
+    ChatPrompt,
 } from '@aws/language-server-runtimes-types'
 export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
 
@@ -26,6 +27,9 @@ export const AUTH_FOLLOW_UP_CLICKED = 'authFollowUpClicked'
 export const GENERIC_COMMAND = 'genericCommand'
 export const CHAT_OPTIONS = 'chatOptions'
 export const DISCLAIMER_ACKNOWLEDGED = 'disclaimerAcknowledged'
+export const CHAT_PROMPT_OPTION_ACKNOWLEDGED = 'chatPromptOptionAcknowledged'
+export const STOP_CHAT_RESPONSE = 'stopChatResponse'
+export const OPEN_SETTINGS = 'openSettings'
 
 /**
  * A message sent from Chat Client to Extension in response to various actions triggered from Chat UI.
@@ -44,6 +48,9 @@ export type UiMessageCommand =
     | typeof CHAT_OPTIONS
     | typeof COPY_TO_CLIPBOARD
     | typeof DISCLAIMER_ACKNOWLEDGED
+    | typeof CHAT_PROMPT_OPTION_ACKNOWLEDGED
+    | typeof STOP_CHAT_RESPONSE
+    | typeof OPEN_SETTINGS
 
 export type UiMessageParams =
     | InsertToCursorPositionParams
@@ -53,10 +60,15 @@ export type UiMessageParams =
     | SendToPromptParams
     | ChatOptions
     | CopyCodeToClipboardParams
+    | ChatPromptOptionAcknowledgedParams
+    | StopChatResponseParams
+    | OpenSettingsParams
 
 export interface SendToPromptParams {
     selection: string
     triggerType: TriggerType
+    prompt?: ChatPrompt
+    autoSubmit?: boolean
 }
 
 export interface SendToPromptMessage {
@@ -92,6 +104,24 @@ export interface GenericCommandMessage {
     params: GenericCommandParams
 }
 
+export interface ChatPromptOptionAcknowledgedParams {
+    messageId: string
+}
+
+export interface ChatPromptOptionAcknowledgedMessage {
+    command: typeof CHAT_PROMPT_OPTION_ACKNOWLEDGED
+    params: ChatPromptOptionAcknowledgedParams
+}
+
+export interface StopChatResponseParams {
+    tabId: string
+}
+
+export interface StopChatResponseMessage {
+    command: typeof STOP_CHAT_RESPONSE
+    params: StopChatResponseParams
+}
+
 export interface ErrorParams {
     tabId: string
     triggerType?: TriggerType
@@ -125,6 +155,10 @@ export interface CopyCodeToClipboardMessage {
     params: CopyCodeToClipboardParams
 }
 
+export interface OpenSettingsParams {
+    settingKey: string
+}
+
 /**
  * A message sent from Chat Client to Extension in response to request triggered from Extension.
  * As Chat Client uses PostMessage API for transport with integrating Extensions, this is a loose implementation of request-response model.
@@ -151,4 +185,20 @@ export type UiMessageResultParams =
 export interface ErrorResult {
     message: string
     type: 'InvalidRequest' | 'InternalError' | 'UnknownError' | string
+}
+
+/*
+ * A message injected into the client to dynamically add new features, namely the UI.
+ */
+export interface FeatureValue {
+    boolValue?: boolean
+    doubleValue?: number
+    longValue?: number
+    stringValue?: string
+}
+
+export interface FeatureContext {
+    name?: string
+    variation: string
+    value: FeatureValue
 }

@@ -41,6 +41,7 @@ import {
     inlineChatRequestType,
     contextCommandsNotificationType,
     createPromptNotificationType,
+    inlineChatResultNotificationType,
     listConversationsRequestType,
     conversationClickRequestType,
     GetSerializedChatParams,
@@ -50,6 +51,9 @@ import {
     TabBarActionResult,
     getSerializedChatRequestType,
     tabBarActionRequestType,
+    chatOptionsUpdateType,
+    promptInputOptionChangeNotificationType,
+    buttonClickRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -160,15 +164,20 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onInfoLinkClick: handler => lspConnection.onNotification(infoLinkClickNotificationType.method, handler),
         onSourceLinkClick: handler => lspConnection.onNotification(sourceLinkClickNotificationType.method, handler),
         onFollowUpClicked: handler => lspConnection.onNotification(followUpClickNotificationType.method, handler),
+        chatOptionsUpdate: params => lspConnection.sendNotification(chatOptionsUpdateType.method, params),
         openTab: params => lspConnection.sendRequest(openTabRequestType.method, params),
+        onButtonClick: params => lspConnection.onRequest(buttonClickRequestType.method, params),
         sendChatUpdate: params => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
         sendContextCommands: params => lspConnection.sendNotification(contextCommandsNotificationType.method, params),
         onCreatePrompt: handler => lspConnection.onNotification(createPromptNotificationType.method, handler),
+        onInlineChatResult: handler => lspConnection.onNotification(inlineChatResultNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
         getSerializedChat: params => lspConnection.sendRequest(getSerializedChatRequestType.method, params),
         onTabBarAction: handler => lspConnection.onRequest(tabBarActionRequestType.method, handler),
+        onPromptInputOptionChange: handler =>
+            lspConnection.onNotification(promptInputOptionChangeNotificationType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {

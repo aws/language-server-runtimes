@@ -27,6 +27,7 @@ import {
     TextDocument,
     SignatureHelpParams,
     UpdateConfigurationParams,
+    InitializeParams,
 } from '../protocol'
 import { IdentityManagement } from '../server-interface/identity-management'
 import { Service } from 'aws-sdk'
@@ -97,10 +98,44 @@ export class TestFeatures {
         this.agent = stubInterface<Agent>()
     }
 
+    /**
+     * Instantiates the server with `this` (`TestFeatures`) and simulates starting it by
+     * invoking the initialized-notification handler.
+     *
+     * @remarks
+     *
+     * For also triggering the initializer handler, and simulating a full LSP handshake,
+     * use`initialize` instead.
+     */
     async start(server: Server) {
         this.disposables.push(server(this))
         return Promise.resolve(this).then(f => {
-            this.lsp.onInitialized.args[0]?.[0]({})
+            this.doSendInitializedNotification()
+
+            return f
+        })
+    }
+
+    /**
+     * Instantiates the server with `this` (`TestFeatures`) and simulates the LSP handshake
+     * by invoking the initializer handler followed by the initialized-notification handler.
+     *
+     * In case of no prior call to `setClientParams`and no `clientParams` are passed as argument,
+     * the clientParams default to `{}`.
+     *
+     * If `clientParams` are passed, they take precedence over any previously configured params
+     * and override them.
+     */
+    async initialize(server: Server, clientParams?: InitializeParams, token?: CancellationToken) {
+        this.disposables.push(server(this))
+
+        const params = clientParams ?? (this.lsp.getClientInitializeParams() || ({} as InitializeParams))
+        this.setClientParams(params)
+
+        return Promise.resolve(this).then(f => {
+            this.doSendInitializeRequest(params, token || ({} as CancellationToken))
+            this.doSendInitializedNotification()
+
             return f
         })
     }
@@ -213,6 +248,22 @@ export class TestFeatures {
         }
 
         return this
+    }
+
+    doSendInitializeRequest(clientParams: InitializeParams, token: CancellationToken) {
+        this.lsp.addInitializer.args[0]?.[0](clientParams, token)
+    }
+
+    doSendInitializedNotification() {
+        this.lsp.onInitialized.args[0]?.[0]({})
+    }
+
+    setClientParams(clientParams: InitializeParams) {
+        this.lsp.getClientInitializeParams.returns(clientParams)
+    }
+
+    resetClientParams() {
+        this.lsp.getClientInitializeParams.returns(undefined)
     }
 
     dispose() {

@@ -48,6 +48,31 @@ export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
 }
 
 /**
+ * Configuration options for file indexing in local project context.
+ * Controls what files are indexed.
+ */
+export interface WorkspaceIndexConfiguration {
+    /**
+     * Array of file patterns to be be excluded from indexing. Patterns must follow the git ignore convention.
+     */
+    ignoreFilePatterns?: string[]
+
+    /**
+     * List of file extensions that should be included.
+     * Example: ['.ts', '.js', '.json']
+     * Files with extensions not in this list will be ignored.
+     */
+    fileExtensions?: string[]
+}
+
+/**
+ * Represents the global context configuration settings.
+ */
+export interface ContextConfiguration {
+    workspaceIndexConfiguration?: WorkspaceIndexConfiguration
+}
+
+/**
  * Extended Client information, passed from client extension to server at initialization.
  * Use to pass additional information about Client Extension, which connects to Language Server,
  * when information in default LSP request is not enough.
@@ -117,6 +142,10 @@ export interface AWSInitializationOptions {
             showSaveFileDialog?: boolean
         }
     }
+    /**
+     * Represents the global context configuration settings.
+     */
+    contextConfiguration?: ContextConfiguration
     /**
      * Global region configuration option set by the client application.
      * Server implementations can use this value to preconfigure SDKs, API clients, etc. at server process startup.

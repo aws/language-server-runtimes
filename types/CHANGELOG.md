@@ -1,5 +1,96 @@
 # Changelog
 
+## [0.1.26](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.25...language-server-runtimes-types/v0.1.26) (2025-04-25)
+
+
+### Features
+
+* support file snapshot for diffs ([#486](https://github.com/aws/language-server-runtimes/issues/486)) ([9a52fd7](https://github.com/aws/language-server-runtimes/commit/9a52fd7c9558e1cf90641cd6147aa2cec330cb89))
+
+## [0.1.25](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.24...language-server-runtimes-types/v0.1.25) (2025-04-24)
+
+
+### Bug Fixes
+
+* file click outside of workspace crashes whole process ([#481](https://github.com/aws/language-server-runtimes/issues/481)) ([a91623f](https://github.com/aws/language-server-runtimes/commit/a91623feecc4aab8766b13cda1b45a7db62453f3))
+
+## [0.1.24](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.23...language-server-runtimes-types/v0.1.24) (2025-04-22)
+
+
+### Features
+
+* support status in header ([#477](https://github.com/aws/language-server-runtimes/issues/477)) ([a4812d4](https://github.com/aws/language-server-runtimes/commit/a4812d4e12a25bd0cc2abff1ff31a971fdabe59f))
+
+## [0.1.23](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.22...language-server-runtimes-types/v0.1.23) (2025-04-22)
+
+
+### Features
+
+* extended UI and protocol types for openning settings ([#474](https://github.com/aws/language-server-runtimes/issues/474)) ([f622458](https://github.com/aws/language-server-runtimes/commit/f622458baeea7df72e1b3ce91d002faecc745f89))
+
+## [0.1.22](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.21...language-server-runtimes-types/v0.1.22) (2025-04-22)
+
+
+### Bug Fixes
+
+* missing messageId in fileClickParams ([#469](https://github.com/aws/language-server-runtimes/issues/469)) ([4515a29](https://github.com/aws/language-server-runtimes/commit/4515a2960a90c1d89fc488740b80672bbe930e3a))
+
+## [0.1.21](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.20...language-server-runtimes-types/v0.1.21) (2025-04-21)
+
+
+### Features
+
+* add buttonClick event to chat ([#464](https://github.com/aws/language-server-runtimes/issues/464)) ([32b3bb9](https://github.com/aws/language-server-runtimes/commit/32b3bb9cca7bf09d412e87cc9e062ac99d847bd2))
+
+## [0.1.20](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.19...language-server-runtimes-types/v0.1.20) (2025-04-21)
+
+
+### Features
+
+* add additional messages in support of the final response ([bc7522a](https://github.com/aws/language-server-runtimes/commit/bc7522a690520731facf7dee8eccaf6468fc94df))
+
+## [0.1.19](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.18...language-server-runtimes-types/v0.1.19) (2025-04-20)
+
+
+### Bug Fixes
+
+* header icon should be optional ([5bebbe8](https://github.com/aws/language-server-runtimes/commit/5bebbe8106dd536e3cf5701341868cee0e8cb43a))
+
+## [0.1.18](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.17...language-server-runtimes-types/v0.1.18) (2025-04-20)
+
+
+### Bug Fixes
+
+* buttons should be optional ([c630c78](https://github.com/aws/language-server-runtimes/commit/c630c784e0c6d60f8f01e1f1b2bb9982abcc8cc8))
+
+## [0.1.17](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.16...language-server-runtimes-types/v0.1.17) (2025-04-20)
+
+
+### Features
+
+* support additional chat message content to enable tool use ([68319c9](https://github.com/aws/language-server-runtimes/commit/68319c975d29a8ba9b084c9fa780ebff75b286bb))
+
+## [0.1.16](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.15...language-server-runtimes-types/v0.1.16) (2025-04-20)
+
+
+### Features
+
+* **types:** add prompt input option change ([#449](https://github.com/aws/language-server-runtimes/issues/449)) ([dea0fb9](https://github.com/aws/language-server-runtimes/commit/dea0fb99acb3fc3b2231a239b98593bfbbb9292e))
+
+## [0.1.15](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.14...language-server-runtimes-types/v0.1.15) (2025-04-16)
+
+
+### Features
+
+* add LSP extension for sending telemetry for inline chat result action ([#408](https://github.com/aws/language-server-runtimes/issues/408)) ([26c7a0f](https://github.com/aws/language-server-runtimes/commit/26c7a0f43aaf535fcec6d081fd9bee0ecfd2c13f))
+
+## [0.1.14](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.13...language-server-runtimes-types/v0.1.14) (2025-04-16)
+
+
+### Features
+
+* show dev profile protocol changes ([#432](https://github.com/aws/language-server-runtimes/issues/432)) ([730460c](https://github.com/aws/language-server-runtimes/commit/730460cdcc77341c2731b9064ab1eb6297ec4a64))
+
 ## [0.1.13](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.12...language-server-runtimes-types/v0.1.13) (2025-04-14)
 
 

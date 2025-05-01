@@ -1,5 +1,201 @@
 # Changelog
 
+## [0.2.77](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.76...language-server-runtimes/v0.2.77) (2025-04-25)
+
+
+### Features
+
+* **runtimes:** extend TestFeatures with API for simulating LSP init flow ([#483](https://github.com/aws/language-server-runtimes/issues/483)) ([fa41c3d](https://github.com/aws/language-server-runtimes/commit/fa41c3d662cdf5f9cd5c2312f7f11abbda50045f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.25 to ^0.1.26
+
+## [0.2.76](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.75...language-server-runtimes/v0.2.76) (2025-04-24)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.24 to ^0.1.25
+
+## [0.2.75](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.74...language-server-runtimes/v0.2.75) (2025-04-23)
+
+
+### Features
+
+* allow write stream for tool invocations ([07e7c53](https://github.com/aws/language-server-runtimes/commit/07e7c534d715836c99c08451e07805d8bf5cd668))
+
+## [0.2.74](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.73...language-server-runtimes/v0.2.74) (2025-04-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.23 to ^0.1.24
+
+## [0.2.73](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.72...language-server-runtimes/v0.2.73) (2025-04-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.22 to ^0.1.23
+
+## [0.2.72](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.71...language-server-runtimes/v0.2.72) (2025-04-22)
+
+
+### Features
+
+* add cancellation token to agent spec ([#472](https://github.com/aws/language-server-runtimes/issues/472)) ([1e65017](https://github.com/aws/language-server-runtimes/commit/1e650179dc22692ffe2c5399a45731dc520506a4))
+
+## [0.2.71](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.70...language-server-runtimes/v0.2.71) (2025-04-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.21 to ^0.1.22
+
+## [0.2.70](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.69...language-server-runtimes/v0.2.70) (2025-04-22)
+
+
+### Bug Fixes
+
+* route correct request type to button click ([#467](https://github.com/aws/language-server-runtimes/issues/467)) ([d481123](https://github.com/aws/language-server-runtimes/commit/d4811237789514df1420f0842819f9a4de83dc5f))
+
+## [0.2.69](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.68...language-server-runtimes/v0.2.69) (2025-04-21)
+
+
+### Features
+
+* add buttonClick event to chat ([#464](https://github.com/aws/language-server-runtimes/issues/464)) ([32b3bb9](https://github.com/aws/language-server-runtimes/commit/32b3bb9cca7bf09d412e87cc9e062ac99d847bd2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.20 to ^0.1.21
+
+## [0.2.68](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.67...language-server-runtimes/v0.2.68) (2025-04-21)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.19 to ^0.1.20
+
+## [0.2.67](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.66...language-server-runtimes/v0.2.67) (2025-04-20)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.18 to ^0.1.19
+
+## [0.2.66](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.65...language-server-runtimes/v0.2.66) (2025-04-20)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.17 to ^0.1.18
+
+## [0.2.65](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.64...language-server-runtimes/v0.2.65) (2025-04-20)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.16 to ^0.1.17
+
+## [0.2.64](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.63...language-server-runtimes/v0.2.64) (2025-04-20)
+
+
+### Features
+
+* **types:** add prompt input option change ([#449](https://github.com/aws/language-server-runtimes/issues/449)) ([dea0fb9](https://github.com/aws/language-server-runtimes/commit/dea0fb99acb3fc3b2231a239b98593bfbbb9292e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.15 to ^0.1.16
+
+## [0.2.63](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.62...language-server-runtimes/v0.2.63) (2025-04-16)
+
+
+### Features
+
+* add LSP extension for sending telemetry for inline chat result action ([#408](https://github.com/aws/language-server-runtimes/issues/408)) ([26c7a0f](https://github.com/aws/language-server-runtimes/commit/26c7a0f43aaf535fcec6d081fd9bee0ecfd2c13f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.14 to ^0.1.15
+
+## [0.2.62](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.61...language-server-runtimes/v0.2.62) (2025-04-16)
+
+
+### Features
+
+* show dev profile protocol changes ([#432](https://github.com/aws/language-server-runtimes/issues/432)) ([730460c](https://github.com/aws/language-server-runtimes/commit/730460cdcc77341c2731b9064ab1eb6297ec4a64))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.13 to ^0.1.14
+
+## [0.2.61](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.60...language-server-runtimes/v0.2.61) (2025-04-16)
+
+
+### Bug Fixes
+
+* revert the version of jose to 5.9.6 ([#441](https://github.com/aws/language-server-runtimes/issues/441)) ([6ebc326](https://github.com/aws/language-server-runtimes/commit/6ebc326eaf577159ba1bbaace37c24b6a0633226))
+
+## [0.2.60](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.59...language-server-runtimes/v0.2.60) (2025-04-15)
+
+
+### Bug Fixes
+
+* correct global context configuration param type ([#439](https://github.com/aws/language-server-runtimes/issues/439)) ([95c40fc](https://github.com/aws/language-server-runtimes/commit/95c40fca6212cc7d0f0e7c33d44fb0d8322f22f7))
+
+## [0.2.59](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.58...language-server-runtimes/v0.2.59) (2025-04-15)
+
+
+### Features
+
+* add initialization configuration options for file indexing ([#436](https://github.com/aws/language-server-runtimes/issues/436)) ([155546f](https://github.com/aws/language-server-runtimes/commit/155546fe092bad040817abd21816ec5051b897f3))
+
+## [0.2.58](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.57...language-server-runtimes/v0.2.58) (2025-04-14)
+
+
+### Features
+
+* collect telemetry data from standalone runtime ([#392](https://github.com/aws/language-server-runtimes/issues/392)) ([76d6869](https://github.com/aws/language-server-runtimes/commit/76d68699fdb49147427b22574d7d1794c0bc31e6))
+
+
+### Bug Fixes
+
+* agent tools are shared between servers ([01a9f08](https://github.com/aws/language-server-runtimes/commit/01a9f08f5c1f5920f519461fae8a7b8d92578233))
+
 ## [0.2.57](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.56...language-server-runtimes/v0.2.57) (2025-04-14)
 
 

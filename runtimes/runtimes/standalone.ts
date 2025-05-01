@@ -294,6 +294,8 @@ export const standalone = (props: RuntimeProps) => {
 
         const sdkProxyConfigManager = new ProxyConfigManager(telemetry)
 
+        const agent = newAgent()
+
         // Initialize every Server
         const disposables = props.servers.map(s => {
             // Create LSP server representation that holds internal server state
@@ -430,8 +432,6 @@ export const standalone = (props: RuntimeProps) => {
             )
 
             credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
-
-            const agent = newAgent()
 
             return s({
                 chat,
