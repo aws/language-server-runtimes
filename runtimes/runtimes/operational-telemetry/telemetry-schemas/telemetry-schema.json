@@ -1,105 +1,92 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "OperationalTelemetrySchema",
+    "title": "OperationalTelemetrySchemas",
     "type": "object",
-    "required": ["batchTimestamp", "sessionId", "server", "clientInfo", "scopes"],
-    "additionalProperties": false,
-    "properties": {
-        "batchTimestamp": {
-            "type": "number",
-            "description": "Timestamp when the batch of telemetry data was emitted"
+    "oneOf": [
+        {
+            "$ref": "#/definitions/MetricName"
         },
-        "sessionId": {
-            "type": "string",
-            "description": "The session id of the runtime that emitted the telemetry data"
+        {
+            "$ref": "#/definitions/OperationalTelemetryResource"
         },
-        "server": {
-            "type": "object",
-            "description": "Information about the server that emitted the telemetry data",
-            "required": ["name"],
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                }
-            }
-        },
-        "clientInfo": {
-            "type": "object",
-            "description": "Information about the client using the server",
-            "additionalProperties": false,
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "version": {
-                    "type": "string"
-                },
-                "extension": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "properties": {
-                        "name": {
-                            "type": "string"
-                        },
-                        "version": {
-                            "type": "string"
-                        }
-                    }
-                },
-                "clientId": {
-                    "type": "string"
-                }
-            }
-        },
-        "scopes": {
-            "type": "array",
-            "description": "The scopes of the telemetry data",
-            "items": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": ["scopeName", "data"],
-                "properties": {
-                    "scopeName": {
-                        "type": "string"
-                    },
-                    "data": {
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/OperationalEvent"
-                        }
-                    }
-                }
-            }
+        {
+            "$ref": "#/definitions/ErrorEventAttributes"
         }
-    },
+    ],
     "definitions": {
-        "OperationalEvent": {
-            "title": "OperationalEvent",
-            "type": "object",
-            "oneOf": [
-                {
-                    "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageMetric"
-                },
-                {
-                    "$ref": "./error-event-schema.json#/definitions/ErrorEvent"
-                }
-            ]
+        "MetricName": {
+            "title": "MetricName",
+            "type": "string",
+            "enum": ["userCpuUsage", "systemCpuUsage", "heapUsed", "heapTotal", "rss", "memoryUsage"]
         },
-        "OperationalEventAttributes": {
-            "title": "OperationalEventAttributes",
+        "OperationalTelemetryResource": {
+            "title": "OperationalTelemetryResource",
             "type": "object",
-            "oneOf": [
-                {
-                    "$ref": "./resource-usage-metric-schema.json#/definitions/ResourceUsageAttributes"
+            "required": ["operational.telemetry.schema.version", "sessionId", "server.name"],
+            "additionalProperties": false,
+            "properties": {
+                "operational.telemetry.schema.version": {
+                    "type": "string",
+                    "description": "The version of the operational telemetry schema that the telemetry data is compliant with",
+                    "const": "1.0.0"
                 },
-                {
-                    "$ref": "./error-event-schema.json#/definitions/ErrorEventAttributes"
+                "sessionId": {
+                    "type": "string",
+                    "description": "A unique identifier for the runtime session that persists through the lifetime of the language server"
+                },
+                "server.name": {
+                    "type": "string",
+                    "description": "The name of the language server as reported during the LSP initialize request"
+                },
+                "server.version": {
+                    "type": "string",
+                    "description": "The version of the language server as reported during the LSP initialize request"
+                },
+                "clientInfo.name": {
+                    "type": "string",
+                    "description": "The name of the client (IDE/editor) that connects to the server as reported during the LSP initialize request"
+                },
+                "clientInfo.version": {
+                    "type": "string",
+                    "description": "The version of the client as reported during the LSP initialize request"
+                },
+                "clientInfo.clientId": {
+                    "type": "string",
+                    "description": "Unique identifier for the client as reported during the LSP initialize request"
+                },
+                "clientInfo.extension.name": {
+                    "type": "string",
+                    "description": "The name of the client extension as reported during the LSP initialize request"
+                },
+                "clientInfo.extension.version": {
+                    "type": "string",
+                    "description": "The version of the client extension as reported during the LSP initialize request"
                 }
-            ]
+            }
+        },
+        "ErrorEventAttributes": {
+            "title": "ErrorEventAttributes",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["errorName", "errorOrigin", "errorType"],
+            "properties": {
+                "errorName": {
+                    "type": "string"
+                },
+                "errorOrigin": {
+                    "type": "string",
+                    "enum": ["caughtError", "uncaughtException", "unhandledRejection", "other"]
+                },
+                "errorType": {
+                    "type": "string"
+                },
+                "errorCode": {
+                    "type": "string"
+                },
+                "errorMessage": {
+                    "type": "string"
+                }
+            }
         }
     }
 }

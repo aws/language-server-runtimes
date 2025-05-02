@@ -208,7 +208,7 @@ export class Auth {
             this.connection.console.info(
                 `Runtime: Failed to update Connection metadata with error: ${error?.message || 'unknown'}`
             )
-            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).recordEvent('ErrorEvent', {
+            OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).emitEvent({
                 errorOrigin: 'caughtError',
                 errorType: 'connectionMetadata',
                 errorName: error?.name ?? 'unknown',
