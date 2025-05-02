@@ -1,10 +1,11 @@
 import { Position, Range, TextDocumentIdentifier } from './lsp'
 
 // protocol methods
+export const READY_NOTIFICATION_METHOD = 'aws/chat/ready'
+export const RESTORE_CHAT_STATE = 'aws/chat/restoreChatState'
 export const CHAT_REQUEST_METHOD = 'aws/chat/sendChatPrompt'
 export const END_CHAT_REQUEST_METHOD = 'aws/chat/endChat'
 export const QUICK_ACTION_REQUEST_METHOD = 'aws/chat/sendChatQuickAction'
-export const READY_NOTIFICATION_METHOD = 'aws/chat/ready'
 export const FEEDBACK_NOTIFICATION_METHOD = 'aws/chat/feedback'
 export const TAB_ADD_NOTIFICATION_METHOD = 'aws/chat/tabAdd'
 export const TAB_CHANGE_NOTIFICATION_METHOD = 'aws/chat/tabChange'
