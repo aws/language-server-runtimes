@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.78](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.77...language-server-runtimes/v0.2.78) (2025-05-02)
+
+
+### Features
+
+* change getConfigurationFromServer to fetch from all servers and aggregate ([#489](https://github.com/aws/language-server-runtimes/issues/489)) ([5c13d69](https://github.com/aws/language-server-runtimes/commit/5c13d6968683422468982ea1a1d7ac21d1649ae2))
+* delete cognito, update optel sdk, use otlp exporters ([#437](https://github.com/aws/language-server-runtimes/issues/437)) ([446b1b8](https://github.com/aws/language-server-runtimes/commit/446b1b8d47248ac4b64b7711e44b32c7c5e8cd10))
+
 ## [0.2.77](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.76...language-server-runtimes/v0.2.77) (2025-04-25)
 
 
