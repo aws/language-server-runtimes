@@ -27,8 +27,10 @@ import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { findDuplicates, mergeObjects } from './util'
 import { CredentialsType, PartialInitializeResult } from '../../../server-interface'
+import { SERVER_CAPABILITES_CONFIGURATION_SECTION } from './constants'
 
 export class LspRouter {
+    private initializeResult?: InitializeResult
     public clientInitializeParams?: InitializeParams
     public servers: LspServer[] = []
 
@@ -105,6 +107,7 @@ export class LspRouter {
         const result = resultList.reduceRight((acc, curr) => {
             return mergeObjects(acc, curr)
         })
+        this.initializeResult = result
         this.lspConnection.console.info(
             `Runtime: Initializing server ${JSON.stringify(result.serverInfo?.name)} version ${JSON.stringify(result.serverInfo?.version)} with capabilities:
 ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
@@ -125,6 +128,9 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
     }
 
     getConfigurationFromServer = async (params: GetConfigurationFromServerParams, token: CancellationToken) => {
+        if (params.section === SERVER_CAPABILITES_CONFIGURATION_SECTION) {
+            return this.initializeResult?.awsServerCapabilities
+        }
         return this.routeRequestToFirstCapableServer(
             (server, params, token) => server.tryGetServerConfiguration(params, token),
             params,
