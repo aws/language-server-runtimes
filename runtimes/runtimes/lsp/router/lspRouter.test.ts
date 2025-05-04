@@ -20,6 +20,7 @@ import { PartialInitializeResult, InitializeParams } from '../../../server-inter
 import { LspServer } from './lspServer'
 import { CredentialsType, Logging } from '../../../server-interface'
 import { Encoding } from '../../encoding'
+import { SERVER_CAPABILITES_CONFIGURATION_SECTION } from './constants'
 
 describe('LspRouter', () => {
     const sandbox = sinon.createSandbox()
@@ -372,6 +373,82 @@ describe('LspRouter', () => {
     })
 
     describe('handleGetConfigurationFromServer', () => {
+        it(`should return the result from initializeResult cache for key: ${SERVER_CAPABILITES_CONFIGURATION_SECTION}`, async () => {
+            const initHandler1 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: ['log'] },
+                    },
+                }
+            }
+            const initHandler2 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: ['log', 'test'] },
+                        chatOptions: {
+                            quickActions: {
+                                quickActionsCommandGroups: [
+                                    {
+                                        commands: [
+                                            {
+                                                command: '/help',
+                                                description: 'Learn more about Amazon Q',
+                                                icon: 'help',
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        },
+                    },
+                }
+            }
+            const initHandler3 = () => {
+                return {
+                    awsServerCapabilities: {
+                        configurationProvider: { sections: ['test'] },
+                    },
+                }
+            }
+
+            const servers = [
+                newServer({ initializeHandler: initHandler1 }),
+                newServer({ initializeHandler: initHandler2 }),
+                newServer({ initializeHandler: initHandler3 }),
+            ]
+
+            for (const server of servers) {
+                lspRouter.servers.push(server)
+                await server.initialize({} as InitializeParams, {} as CancellationToken)
+            }
+
+            await initializeHandler({} as InitializeParams, {} as CancellationToken)
+
+            const params: GetConfigurationFromServerParams = { section: SERVER_CAPABILITES_CONFIGURATION_SECTION }
+            const result = await lspRouter.getConfigurationFromServer(params, {} as CancellationToken)
+            const expectedServerCapabilities = {
+                configurationProvider: {
+                    sections: ['test', 'log'],
+                },
+                chatOptions: {
+                    quickActions: {
+                        quickActionsCommandGroups: [
+                            {
+                                commands: [
+                                    {
+                                        command: '/help',
+                                        description: 'Learn more about Amazon Q',
+                                        icon: 'help',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+            }
+            assert.deepEqual(result, expectedServerCapabilities)
+        })
+
         it('should return the result from the first server that handles the request', async () => {
             const initHandler1 = () => {
                 return {

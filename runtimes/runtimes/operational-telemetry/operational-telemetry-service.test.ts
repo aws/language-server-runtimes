@@ -14,8 +14,6 @@ describe('OperationalTelemetryService', () => {
             log: () => {},
             warn: () => {},
         } as any,
-        poolId: 'test-pool',
-        region: 'us-west-2',
         endpoint: 'https://test.endpoint',
         telemetryOptOut: true,
     }
