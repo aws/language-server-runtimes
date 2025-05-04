@@ -141,6 +141,17 @@ export interface AWSInitializationOptions {
              */
             showSaveFileDialog?: boolean
         }
+        textDocument?: {
+            /**
+             * Capabilities specific to the `aws/textDocument/inlineCompletionWithReferences` request.
+             */
+            inlineCompletionWithReferences?: {
+                /**
+                 * Whether the client supports inline edit suggestions with the tab-tab-tab workflow.
+                 */
+                inlineEditSupport?: boolean
+            }
+        }
     }
     /**
      * Represents the global context configuration settings.
