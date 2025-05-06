@@ -91,7 +91,7 @@ import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType } from '../protocol/window'
-import { join } from 'path'
+import { joinUnixPaths } from './util/pathUtil'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -131,7 +131,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             exists: _path => Promise.resolve(false),
             getFileSize: _path => Promise.resolve({ size: 0 }),
             getServerDataDirPath: serverName =>
-                join(
+                joinUnixPaths(
                     lspRouter.clientInitializeParams?.initializationOptions?.aws?.clientDataFolder ?? defaultHomeDir,
                     serverName
                 ),
