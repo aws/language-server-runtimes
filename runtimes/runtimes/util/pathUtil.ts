@@ -1,3 +1,8 @@
+/**
+ * Simplified version of path.join that can be safely used on web
+ * @param segments
+ * @returns
+ */
 export function joinUnixPaths(...segments: string[]): string {
     // Filter out empty segments and normalize each segment
     const normalizedSegments = segments.filter(Boolean).map(segment => segment.replace(/^\/+|\/+$/g, ''))
