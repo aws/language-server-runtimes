@@ -70,6 +70,10 @@ export interface WorkspaceIndexConfiguration {
  */
 export interface ContextConfiguration {
     workspaceIndexConfiguration?: WorkspaceIndexConfiguration
+    /**
+     * Identifier for the IDE workspace.
+     */
+    workspaceIdentifier?: string
 }
 
 /**
