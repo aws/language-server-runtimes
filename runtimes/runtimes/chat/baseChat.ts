@@ -70,6 +70,14 @@ import { Chat } from '../../server-interface'
 export class BaseChat implements Chat {
     constructor(protected readonly connection: Connection) {}
 
+    public onReady(handler: NotificationHandler<void>) {
+        this.connection.onNotification(readyNotificationType.method, handler)
+    }
+
+    public onRestoreState(handler: NotificationHandler<any>) {
+        this.connection.onNotification('aws/chat/restoreChatState', handler)
+    }
+
     public onChatPrompt(handler: RequestHandler<ChatParams, ChatResult | null | undefined, ChatResult>) {
         this.connection.onRequest(chatRequestType.method, handler)
     }
@@ -94,10 +102,6 @@ export class BaseChat implements Chat {
 
     public onSendFeedback(handler: NotificationHandler<FeedbackParams>) {
         this.connection.onNotification(feedbackNotificationType.method, handler)
-    }
-
-    public onReady(handler: NotificationHandler<void>) {
-        this.connection.onNotification(readyNotificationType.method, handler)
     }
 
     public onTabAdd(handler: NotificationHandler<TabAddParams>) {
