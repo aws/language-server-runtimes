@@ -71,7 +71,8 @@ export interface WorkspaceIndexConfiguration {
 export interface ContextConfiguration {
     workspaceIndexConfiguration?: WorkspaceIndexConfiguration
     /**
-     * Identifier for the IDE workspace.
+     * A unique identifier for the IDE workspace that remains consistent across IDE window reopenings.
+     * The value should be stable and unique for each workspace, regardless of IDE restarts or system reboots.
      */
     workspaceIdentifier?: string
 }
