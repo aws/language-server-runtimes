@@ -80,5 +80,9 @@ export const newAgent = (): Agent => {
                 }
             }) as T extends { format: 'bedrock' } ? never : Tools
         },
+
+        removeTool: (name: string) => {
+            delete tools[name]
+        },
     }
 }
