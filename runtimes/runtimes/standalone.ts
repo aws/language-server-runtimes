@@ -24,6 +24,11 @@ import {
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
     ShowSaveFileDialogParams,
+    didCopyFileNotificationType,
+    didRemoveFileOrDirNotificationType,
+    didWriteFileNotificationType,
+    didAppendFileNotificationType,
+    didCreateDirectoryNotificationType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -193,14 +198,15 @@ export const standalone = (props: RuntimeProps) => {
                 }
             },
             fs: {
-                copyFile: (src, dest, options?) => {
+                copyFile: async (src, dest, options?) => {
                     if (options?.ensureDir === true) {
                         const destDir = path.dirname(dest)
                         if (!existsSync(destDir)) {
                             mkdirSync(destDir, { recursive: true })
                         }
                     }
-                    return copyFile(src, dest)
+                    await copyFile(src, dest)
+                    lspConnection.sendNotification(didCopyFileNotificationType.method, { oldPath: src, newPath: dest })
                 },
                 exists: path =>
                     access(path)
@@ -218,11 +224,24 @@ export const standalone = (props: RuntimeProps) => {
                 readdir: path => readdir(path, { withFileTypes: true }),
                 readFile: (path, options?) =>
                     readFile(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
-                rm: (dir, options?) => rm(dir, options),
+                rm: async (dir, options?) => {
+                    await rm(dir, options)
+                    lspConnection.sendNotification(didRemoveFileOrDirNotificationType.method, { path: dir })
+                },
                 isFile: path => stat(path).then(({ isFile }) => isFile()),
-                writeFile: (path, data, options?) => writeFile(path, data, options),
-                appendFile: (path, data) => appendFile(path, data),
-                mkdir: (path, options?) => mkdir(path, options),
+                writeFile: async (path, data, options?) => {
+                    await writeFile(path, data, options)
+                    lspConnection.sendNotification(didWriteFileNotificationType.method, { path })
+                },
+                appendFile: async (path, data) => {
+                    await appendFile(path, data)
+                    lspConnection.sendNotification(didAppendFileNotificationType.method, { path })
+                },
+                mkdir: async (path, options?) => {
+                    const result = await mkdir(path, options)
+                    lspConnection.sendNotification(didCreateDirectoryNotificationType.method, { path })
+                    return result
+                },
                 readFileSync: (path, options?) =>
                     readFileSync(path, { encoding: (options?.encoding || 'utf-8') as BufferEncoding }),
             },
