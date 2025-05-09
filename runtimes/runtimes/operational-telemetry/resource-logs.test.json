@@ -1,0 +1,106 @@
+{
+    "resourceLogs": [
+        {
+            "resource": {
+                "attributes": [
+                    {
+                        "key": "server.name",
+                        "value": {
+                            "stringValue": "test-telemetry-service"
+                        }
+                    },
+                    {
+                        "key": "server.version",
+                        "value": {
+                            "stringValue": "1.0.0"
+                        }
+                    },
+                    {
+                        "key": "clientInfo.name",
+                        "value": {
+                            "stringValue": "test-client"
+                        }
+                    },
+                    {
+                        "key": "clientInfo.version",
+                        "value": {
+                            "stringValue": "1.0.0"
+                        }
+                    },
+                    {
+                        "key": "clientInfo.clientId",
+                        "value": {
+                            "stringValue": "test-client-id"
+                        }
+                    },
+                    {
+                        "key": "clientInfo.extension.name",
+                        "value": {
+                            "stringValue": "test-extension"
+                        }
+                    },
+                    {
+                        "key": "clientInfo.extension.version",
+                        "value": {
+                            "stringValue": "1.0.0"
+                        }
+                    },
+                    {
+                        "key": "operational.telemetry.schema.version",
+                        "value": {
+                            "stringValue": "1.0.0"
+                        }
+                    },
+                    {
+                        "key": "telemetry.sdk.version",
+                        "value": {
+                            "stringValue": "2.0.0"
+                        }
+                    },
+                    {
+                        "key": "sessionId",
+                        "value": {
+                            "stringValue": "80fd44e9-55e5-4b80-a08a-4f2bcaf2e1b9"
+                        }
+                    }
+                ],
+                "droppedAttributesCount": 0
+            },
+            "scopeLogs": [
+                {
+                    "scope": {
+                        "name": "language-server-runtimes"
+                    },
+                    "logRecords": [
+                        {
+                            "timeUnixNano": "1746710710801000000",
+                            "observedTimeUnixNano": "1746710710801000000",
+                            "body": {},
+                            "attributes": [
+                                {
+                                    "key": "errorName",
+                                    "value": {
+                                        "stringValue": "TestError"
+                                    }
+                                },
+                                {
+                                    "key": "errorOrigin",
+                                    "value": {
+                                        "stringValue": "caughtError"
+                                    }
+                                },
+                                {
+                                    "key": "errorType",
+                                    "value": {
+                                        "stringValue": "Error"
+                                    }
+                                }
+                            ],
+                            "droppedAttributesCount": 0
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
