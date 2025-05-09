@@ -144,4 +144,10 @@ export type Agent = {
      * @returns The tool repository in the requested output format
      */
     getTools: <T extends GetToolsOptions>(options?: T) => T extends { format: 'bedrock' } ? BedrockTools : Tools
+
+    /**
+     * Remove a tool from the local tool repository.
+     * @param toolName The name of the tool to remove
+     */
+    removeTool: (toolName: string) => void
 }

@@ -115,4 +115,22 @@ describe('Agent Tools', () => {
             SOME_TOOL_SPEC_WITH_EXTENSIONS.inputSchema.someExtension
         )
     })
+
+    it('should allow removing a tool', () => {
+        AGENT.addTool(SOME_TOOL_SPEC, SOME_TOOL_HANDLER)
+        assert.equal(AGENT.getTools().length, 1)
+        AGENT.removeTool(SOME_TOOL_SPEC.name)
+        assert.equal(AGENT.getTools().length, 0)
+    })
+
+    it('removeTool should be safe for unknown tools', () => {
+        AGENT.removeTool('doesNotExist')
+        assert.equal(AGENT.getTools().length, 0)
+    })
+
+    it('should throw when running a removed tool', async () => {
+        AGENT.addTool(SOME_TOOL_SPEC, SOME_TOOL_HANDLER)
+        AGENT.removeTool(SOME_TOOL_SPEC.name)
+        await assert.rejects(() => AGENT.runTool(SOME_TOOL_SPEC.name, { test: 'test' }), /not found/)
+    })
 })
