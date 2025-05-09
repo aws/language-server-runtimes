@@ -7,5 +7,6 @@ package-lock.json
 tsconfig.json
 tsconfig.tsbuildinfo
 *.test.js
+*.test.json
 *.test.d.ts
 *.test.js.map
