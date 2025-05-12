@@ -54,6 +54,8 @@ import {
     chatOptionsUpdateType,
     promptInputOptionChangeNotificationType,
     buttonClickRequestType,
+    listMcpServersRequestType,
+    mcpServerClickRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -174,6 +176,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onInlineChatResult: handler => lspConnection.onNotification(inlineChatResultNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
+        onListMcpServers: handler => lspConnection.onRequest(listMcpServersRequestType.method, handler),
+        onMcpServerClick: handler => lspConnection.onRequest(mcpServerClickRequestType.method, handler),
         getSerializedChat: params => lspConnection.sendRequest(getSerializedChatRequestType.method, params),
         onTabBarAction: handler => lspConnection.onRequest(tabBarActionRequestType.method, handler),
         onPromptInputOptionChange: handler =>

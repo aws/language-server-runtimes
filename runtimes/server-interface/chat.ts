@@ -37,6 +37,10 @@ import {
     PromptInputOptionChangeParams,
     ButtonClickParams,
     ButtonClickResult,
+    ListMcpServersParams,
+    ListMcpServersResult,
+    McpServerClickResult,
+    McpServerClickParams,
 } from '../protocol'
 
 /**
@@ -53,6 +57,8 @@ export type Chat = {
     openTab: (params: OpenTabParams) => Promise<OpenTabResult>
     onButtonClick: (handler: RequestHandler<ButtonClickParams, ButtonClickResult, ButtonClickResult>) => void
     onListConversations: (handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) => void
+    onListMcpServers: (handler: RequestHandler<ListMcpServersParams, ListMcpServersResult, void>) => void
+    onMcpServerClick: (handler: RequestHandler<McpServerClickParams, McpServerClickResult, void>) => void
     onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
     onTabBarAction: (handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) => void
     getSerializedChat: (params: GetSerializedChatParams) => Promise<GetSerializedChatResult>
