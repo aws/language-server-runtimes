@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.27](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.26...language-server-runtimes-types/v0.1.27) (2025-05-12)
+
+
+### Features
+
+* add displayLocation property and inlineEditSupport capability for tab-tab-tab workflow ([#492](https://github.com/aws/language-server-runtimes/issues/492)) ([b7c4718](https://github.com/aws/language-server-runtimes/commit/b7c4718b9bd84e08e72b992da5d699549af9f115))
+* notifications to client about file system operations ([#500](https://github.com/aws/language-server-runtimes/issues/500)) ([a7efcf8](https://github.com/aws/language-server-runtimes/commit/a7efcf8052ec382d3c4cd706059873b0b44fb314))
+
 ## [0.1.26](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.25...language-server-runtimes-types/v0.1.26) (2025-04-25)
 
 
