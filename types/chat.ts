@@ -31,7 +31,7 @@ export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
 //mcpServers
 export const LIST_MCP_SERVERS_REQUEST_METHOD = 'aws/chat/listMcpServers'
-export const MCP_SERVERS_CLICK_REQUEST_METHOD = 'aws/chat/mcpServersClick'
+export const MCP_SERVER_CLICK_REQUEST_METHOD = 'aws/chat/mcpServerClick'
 // export
 export const GET_SERIALIZED_CHAT_REQUEST_METHOD = 'aws/chat/getSerializedChat'
 
