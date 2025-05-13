@@ -13,6 +13,7 @@ import * as certificatesReaders from './certificatesReaders'
 import { Telemetry } from '../../../server-interface'
 import forge from 'node-forge'
 import * as tls from 'node:tls'
+import { X509Certificate } from 'node:crypto'
 
 export const generateCert = (validityDays = 365) => {
     const keys = forge.pki.rsa.generateKeyPair(2048)
@@ -37,6 +38,18 @@ describe('ProxyConfigManager', function () {
     let readLinuxCertificatesStub: sinon.SinonStub
     let readWindowsCertificatesStub: sinon.SinonStub
     let telemetryStub: Telemetry
+    let validTlsRootCertificates: string[]
+
+    function filterExpiredCerts(certs: string[]): string[] {
+        return certs.filter(cert => {
+            const certObj = new X509Certificate(cert)
+            return Date.parse(certObj.validTo) > Date.now()
+        })
+    }
+
+    before(() => {
+        validTlsRootCertificates = filterExpiredCerts([...tls.rootCertificates])
+    })
 
     beforeEach(() => {
         originalEnv = { ...process.env }
@@ -146,7 +159,7 @@ describe('ProxyConfigManager', function () {
             const cert = generateCert()
             const sysCerts = [cert.cert]
             readLinuxCertificatesStub.returns(sysCerts)
-            const expectedCerts = [...tls.rootCertificates, cert.cert]
+            const expectedCerts = [...validTlsRootCertificates, cert.cert]
             const certs = proxyManager.getCertificates()
             assert.deepStrictEqual(certs, expectedCerts)
         })
@@ -161,7 +174,7 @@ describe('ProxyConfigManager', function () {
             })
 
             const certs = proxyManager.getCertificates()
-            assert.deepStrictEqual(certs, [...tls.rootCertificates, cert.cert])
+            assert.deepStrictEqual(certs, [...validTlsRootCertificates, cert.cert])
         })
 
         it('should read NODE_EXTRA_CA_CERTS when set', () => {
@@ -174,7 +187,7 @@ describe('ProxyConfigManager', function () {
             })
 
             const certs = proxyManager.getCertificates()
-            assert.deepStrictEqual(certs, [...tls.rootCertificates, cert.cert])
+            assert.deepStrictEqual(certs, [...validTlsRootCertificates, cert.cert])
         })
 
         it('should combine certificates from all sources when set', () => {
@@ -194,7 +207,7 @@ describe('ProxyConfigManager', function () {
             })
 
             const certs = proxyManager.getCertificates()
-            assert.deepStrictEqual(certs, [...tls.rootCertificates, ...sysCerts, awsCert.cert, nodeCaCert.cert])
+            assert.deepStrictEqual(certs, [...validTlsRootCertificates, ...sysCerts, awsCert.cert, nodeCaCert.cert])
         })
 
         it('should remove invalid certificates', () => {
@@ -217,7 +230,7 @@ describe('ProxyConfigManager', function () {
             })
 
             const certs = proxyManager.getCertificates()
-            const tlsCerts = [...tls.rootCertificates]
+            const tlsCerts = [...validTlsRootCertificates]
             assert.equal(certs.length, 2 + tlsCerts.length)
             assert.deepStrictEqual(certs, [...tlsCerts, validCert1.cert, validCert2.cert])
         })
@@ -250,7 +263,7 @@ describe('ProxyConfigManager', function () {
             assert(readLinuxCertificatesStub.notCalled)
             assert(readMacosCertificatesStub.notCalled)
             assert(readWindowsCertificatesStub.notCalled)
-            assert.deepStrictEqual(certs, [...tls.rootCertificates])
+            assert.deepStrictEqual(certs, validTlsRootCertificates)
         })
     })
 
@@ -275,7 +288,7 @@ describe('ProxyConfigManager', function () {
                     result: 'Succeeded',
                     data: {
                         proxyMode: 'Transparent',
-                        certificatesNumber: 3 + tls.rootCertificates.length,
+                        certificatesNumber: 3 + validTlsRootCertificates.length,
                     },
                 })
             )
@@ -297,7 +310,7 @@ describe('ProxyConfigManager', function () {
                     data: {
                         proxyMode: 'Explicit',
                         proxyUrl: 'https://proxy',
-                        certificatesNumber: 3 + tls.rootCertificates.length,
+                        certificatesNumber: 3 + validTlsRootCertificates.length,
                     },
                 })
             )
