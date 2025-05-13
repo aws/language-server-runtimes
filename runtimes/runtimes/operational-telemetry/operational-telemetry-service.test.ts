@@ -124,7 +124,7 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         telemetryService.registerGaugeProvider('heapUsed', () => 12345, 'byte')
 
         await waitForRequests(1, 5000)
-        assert(receivedRequests.length > 0, 'Should have received at least one request')
+        assert(receivedRequests.length === 1, 'Should have received exactly one request')
         const request = receivedRequests[0]
         assert(request.method === 'POST', 'Request should use POST method')
 
@@ -145,8 +145,7 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         })
 
         await waitForRequests(1, 5000)
-
-        assert(receivedRequests.length > 0, 'Should have received at least one request')
+        assert(receivedRequests.length === 1, 'Should have received exactly one request')
         const request = receivedRequests[0]
         assert(request.method === 'POST', 'Request should use POST method')
         const requestBodyStr = JSON.stringify(request.body)
@@ -166,7 +165,7 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         telemetryService.registerGaugeProvider('rss', () => 54321)
 
         await waitForRequests(1, 5000)
-        assert(receivedRequests.length > 0, 'Should have received at least one request')
+        assert(receivedRequests.length === 1, 'Should have received exactly one request')
         const requestBodyStr = JSON.stringify(receivedRequests[0].body)
         assert(requestBodyStr.includes('heapUsed'), 'Request should include heapUsed metric')
         assert(requestBodyStr.includes('heapTotal'), 'Request should include heapTotal metric')
@@ -204,7 +203,7 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         })
 
         await new Promise(resolve => setTimeout(resolve, 2000))
-        assert.strictEqual(receivedRequests.length, 0, 'Should not receive any requests when opted out')
+        assert(receivedRequests.length === 0, 'Should not receive any requests when opted out')
 
         telemetryService.toggleOptOut(false)
         telemetryService.emitEvent({
@@ -214,7 +213,8 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         })
 
         await waitForRequests(1, 5000)
-        assert(receivedRequests.length > 0, 'Should receive requests after opting in')
+        // @ts-ignore
+        assert(receivedRequests.length === 1, 'Should have received exactly one request after opting in')
         const requestBodyStr = JSON.stringify(receivedRequests[0].body)
         assert(!requestBodyStr.includes('OptOutTest'))
         assert(!requestBodyStr.includes('heapTotal'))

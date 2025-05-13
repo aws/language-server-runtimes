@@ -26,6 +26,8 @@ type OperationalTelemetryConfig = {
 export class OperationalTelemetryService implements OperationalTelemetry {
     private static instance: OperationalTelemetryService
     private readonly RUNTIMES_SCOPE_NAME = 'language-server-runtimes'
+    private readonly FIVE_MINUTES = 300000
+    private readonly FIVE_SECONDS = 5000
     private readonly baseResource: Resource
     private readonly endpoint: string
     private telemetryOptOut: boolean
@@ -43,10 +45,8 @@ export class OperationalTelemetryService implements OperationalTelemetry {
     }
 
     private constructor(config: OperationalTelemetryConfig) {
-        const fiveMinutes = 300000
-        const fiveSeconds = 5000
-        this.exportIntervalMillis = config.exportIntervalMillis ?? fiveMinutes
-        this.scheduledDelayMillis = config.scheduledDelayMillis ?? fiveSeconds
+        this.exportIntervalMillis = config.exportIntervalMillis ?? this.FIVE_MINUTES
+        this.scheduledDelayMillis = config.scheduledDelayMillis ?? this.FIVE_SECONDS
 
         this.lspConsole = config.lspConsole
 
@@ -157,7 +157,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
             if (this.meterProvider) {
                 promises.push(this.meterProvider.shutdown())
             }
-            await Promise.all(promises).then(() => {})
+            await Promise.all(promises)
             logs.disable()
             metrics.disable()
             diag.disable()
