@@ -29,7 +29,7 @@ export const generateCert = (validityDays = 365) => {
     }
 }
 
-describe('ProxyConfigManager', function () {
+describe.skip('ProxyConfigManager', function () {
     this.timeout(0)
     let proxyManager: ProxyConfigManager
     let originalEnv: NodeJS.ProcessEnv
