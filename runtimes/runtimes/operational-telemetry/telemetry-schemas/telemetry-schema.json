@@ -1,18 +1,5 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "title": "OperationalTelemetrySchemas",
-    "type": "object",
-    "oneOf": [
-        {
-            "$ref": "#/definitions/MetricName"
-        },
-        {
-            "$ref": "#/definitions/OperationalTelemetryResource"
-        },
-        {
-            "$ref": "#/definitions/ErrorEventAttributes"
-        }
-    ],
     "definitions": {
         "MetricName": {
             "title": "MetricName",
@@ -22,7 +9,7 @@
         "OperationalTelemetryResource": {
             "title": "OperationalTelemetryResource",
             "type": "object",
-            "required": ["operational.telemetry.schema.version", "sessionId", "server.name"],
+            "required": ["operational.telemetry.schema.version", "sessionId", "server.name", "telemetry.sdk.version"],
             "additionalProperties": false,
             "properties": {
                 "operational.telemetry.schema.version": {
@@ -61,6 +48,10 @@
                 "clientInfo.extension.version": {
                     "type": "string",
                     "description": "The version of the client extension as reported during the LSP initialize request"
+                },
+                "telemetry.sdk.version": {
+                    "type": "string",
+                    "description": "The version string of the OpenTelemetry SDK."
                 }
             }
         },

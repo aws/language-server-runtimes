@@ -6,5 +6,11 @@
         "rootDir": ".",
         "outDir": "./out"
     },
-    "include": ["protocol", "runtimes", "server-interface", "testing", "runtimes/**/*.json"]
+    "include": [
+        "protocol",
+        "runtimes",
+        "server-interface",
+        "testing",
+        "runtimes/operational-telemetry/telemetry-schemas/telemetry-schema.json"
+    ]
 }

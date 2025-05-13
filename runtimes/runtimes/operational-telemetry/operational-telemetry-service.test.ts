@@ -1,120 +1,230 @@
-import sinon from 'sinon'
 import { OperationalTelemetryService } from './operational-telemetry-service'
-import { NodeSDK } from '@opentelemetry/sdk-node'
 import assert from 'assert'
+import http from 'http'
+import { AddressInfo } from 'net'
+import { promisify } from 'util'
+import resourceMetrics from './resource-metrics.test.json'
+import resourceLogs from './resource-logs.test.json'
 
-describe('OperationalTelemetryService', () => {
-    const defaultConfig = {
-        serviceName: 'test-service',
-        serviceVersion: '1.0.0',
-        lspConsole: {
-            debug: () => {},
-            error: () => {},
-            info: () => {},
-            log: () => {},
-            warn: () => {},
-        } as any,
-        endpoint: 'https://test.endpoint',
-        telemetryOptOut: true,
-    }
+describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
+    let server: http.Server
+    let serverUrl: string
+    let receivedRequests: {
+        path: string
+        method: string
+        headers: http.IncomingHttpHeaders
+        body: any
+    }[] = []
 
-    beforeEach(() => {
-        // @ts-ignore
-        OperationalTelemetryService.sdk?.shutdown()
+    const mockServiceName = 'test-telemetry-service'
+    const mockServiceVersion = '1.0.0'
+
+    beforeEach(async () => {
+        receivedRequests = []
+
+        server = http.createServer((req, res) => {
+            let body = ''
+            req.on('data', chunk => {
+                body += chunk.toString()
+            })
+
+            req.on('end', () => {
+                receivedRequests.push({
+                    path: req.url || '',
+                    method: req.method || '',
+                    headers: req.headers,
+                    body: JSON.parse(body),
+                })
+
+                res.writeHead(200, { 'Content-Type': 'application/json' })
+                res.end(JSON.stringify({ status: 'success' }))
+            })
+        })
+
+        await new Promise<void>(resolve => {
+            server.listen(0, () => resolve())
+        })
+
+        const address = server.address() as AddressInfo
+        serverUrl = `http://localhost:${address.port}`
+
         // @ts-ignore
         OperationalTelemetryService.instance = undefined
-
-        sinon.stub(NodeSDK.prototype, 'start').callsFake(() => {})
-        sinon.stub(NodeSDK.prototype, 'shutdown').callsFake(() => new Promise<void>(() => {}))
     })
 
-    afterEach(() => {
-        sinon.restore()
+    afterEach(async () => {
+        const instance = OperationalTelemetryService['instance']
+        if (instance) {
+            // @ts-ignore
+            await instance.shutdownApi()
+        }
+
+        await promisify(server.close.bind(server))()
     })
 
-    describe('constructor', () => {
-        it('should not start SDK when telemetryOptOut is true', () => {
-            const config = { ...defaultConfig, telemetryOptOut: true }
-            OperationalTelemetryService.getInstance(config)
+    function makeMetricsRequestDeterministic(jsonStr: string): string {
+        return jsonStr
+            .replace(/"(startTimeUnixNano|timeUnixNano)":"[0-9]+"/g, '"$1":"1746710710801000000"')
+            .replace(
+                /"key":"sessionId","value":{"stringValue":"[^"]+"/g,
+                '"key":"sessionId","value":{"stringValue":"80fd44e9-55e5-4b80-a08a-4f2bcaf2e1b9"'
+            )
+    }
 
-            sinon.assert.notCalled(NodeSDK.prototype.start as sinon.SinonStub)
-        })
+    function makeLogsRequestDeterministic(jsonStr: string): string {
+        return jsonStr
+            .replace(/"(timeUnixNano|observedTimeUnixNano)":"[0-9]+"/g, '"$1":"1746710710801000000"')
+            .replace(
+                /"key":"sessionId","value":{"stringValue":"[^"]+"}}/g,
+                '"key":"sessionId","value":{"stringValue":"80fd44e9-55e5-4b80-a08a-4f2bcaf2e1b9"}}'
+            )
+    }
 
-        it('should start SDK when telemetryOptOut is false', () => {
-            const config = { ...defaultConfig, telemetryOptOut: false }
-            OperationalTelemetryService.getInstance(config)
+    function getOperationalTelemetryConfig() {
+        return {
+            serviceName: mockServiceName,
+            serviceVersion: mockServiceVersion,
+            lspConsole: {
+                debug: () => {},
+                error: () => {},
+                info: () => {},
+                log: () => {},
+                warn: () => {},
+            } as any,
+            endpoint: serverUrl,
+            telemetryOptOut: false,
+            extendedClientInfo: {
+                name: 'test-client',
+                version: '1.0.0',
+                clientId: 'test-client-id',
+                extension: {
+                    name: 'test-extension',
+                    version: '1.0.0',
+                },
+            },
+            exportIntervalMillis: 500,
+            scheduledDelayMillis: 500,
+        }
+    }
 
-            sinon.assert.calledOnce(NodeSDK.prototype.start as sinon.SinonStub)
-        })
+    async function waitForRequests(count = 1, timeoutMs = 5000): Promise<void> {
+        const startTime = Date.now()
+        while (receivedRequests.length < count) {
+            if (Date.now() - startTime > timeoutMs) {
+                throw new Error(`Timed out waiting for ${count} requests. Received ${receivedRequests.length}`)
+            }
+            await new Promise(resolve => setTimeout(resolve, 100))
+        }
+    }
+
+    it('should send metrics to the configured endpoint', async function () {
+        this.timeout(10000)
+
+        const telemetryService = OperationalTelemetryService.getInstance(getOperationalTelemetryConfig())
+        telemetryService.registerGaugeProvider('heapUsed', () => 12345, 'byte')
+
+        await waitForRequests(1, 5000)
+        assert(receivedRequests.length === 1, 'Should have received exactly one request')
+        const request = receivedRequests[0]
+        assert(request.method === 'POST', 'Request should use POST method')
+
+        const requestBodyStr = JSON.stringify(request.body)
+        const normalizedBody = makeMetricsRequestDeterministic(requestBodyStr)
+        assert.deepStrictEqual(JSON.parse(normalizedBody), resourceMetrics)
     })
 
-    describe('toggleOptOut', () => {
-        it('should do nothing when new value matches current telemetryOptOut state', () => {
-            const config = { ...defaultConfig, telemetryOptOut: false }
-            const optel = OperationalTelemetryService.getInstance(config)
-            ;(NodeSDK.prototype.start as sinon.SinonStub).resetHistory()
-            ;(NodeSDK.prototype.shutdown as sinon.SinonStub).resetHistory()
+    it('should send logs to the configured endpoint', async function () {
+        this.timeout(10000)
 
-            optel.toggleOptOut(false)
+        const telemetryService = OperationalTelemetryService.getInstance(getOperationalTelemetryConfig())
 
-            sinon.assert.notCalled(NodeSDK.prototype.start as sinon.SinonStub)
-            sinon.assert.notCalled(NodeSDK.prototype.shutdown as sinon.SinonStub)
+        telemetryService.emitEvent({
+            errorName: 'TestError',
+            errorOrigin: 'caughtError' as const,
+            errorType: 'Error',
         })
 
-        it('should shutdown SDK when switching from opt-in to opt-out', () => {
-            const config = { ...defaultConfig, telemetryOptOut: false }
-            const optel = OperationalTelemetryService.getInstance(config)
+        await waitForRequests(1, 5000)
+        assert(receivedRequests.length === 1, 'Should have received exactly one request')
+        const request = receivedRequests[0]
+        assert(request.method === 'POST', 'Request should use POST method')
+        const requestBodyStr = JSON.stringify(request.body)
 
-            optel.toggleOptOut(true)
+        const normalizedBody = makeLogsRequestDeterministic(requestBodyStr)
 
-            sinon.assert.calledOnce(NodeSDK.prototype.shutdown as sinon.SinonStub)
-        })
-
-        it('should start SDK when switching from opt-out to opt-in', () => {
-            const config = { ...defaultConfig, telemetryOptOut: true }
-            const optel = OperationalTelemetryService.getInstance(config)
-
-            optel.toggleOptOut(false)
-
-            sinon.assert.calledOnce(NodeSDK.prototype.start as sinon.SinonStub)
-        })
-
-        it('should correctly handle multiple toggles between opt-in and opt-out', () => {
-            // Initial: telemetry enabled
-            const config = { ...defaultConfig, telemetryOptOut: false }
-            const optel = OperationalTelemetryService.getInstance(config)
-
-            sinon.assert.notCalled(NodeSDK.prototype.shutdown as sinon.SinonStub)
-            sinon.assert.calledOnce(NodeSDK.prototype.start as sinon.SinonStub)
-
-            // First toggle: opt-in -> opt-out
-            optel.toggleOptOut(true)
-            sinon.assert.calledOnce(NodeSDK.prototype.shutdown as sinon.SinonStub)
-            sinon.assert.calledOnce(NodeSDK.prototype.start as sinon.SinonStub)
-
-            // Second toggle: opt-out -> opt-in
-            optel.toggleOptOut(false)
-            sinon.assert.calledTwice(NodeSDK.prototype.start as sinon.SinonStub)
-            sinon.assert.calledOnce(NodeSDK.prototype.shutdown as sinon.SinonStub)
-
-            // Third toggle: opt-in -> opt-out
-            optel.toggleOptOut(true)
-            sinon.assert.calledTwice(NodeSDK.prototype.start as sinon.SinonStub)
-            sinon.assert.calledTwice(NodeSDK.prototype.shutdown as sinon.SinonStub)
-
-            // Fourth toggle: opt-out -> opt-in
-            optel.toggleOptOut(false)
-            sinon.assert.calledThrice(NodeSDK.prototype.start as sinon.SinonStub)
-            sinon.assert.calledTwice(NodeSDK.prototype.shutdown as sinon.SinonStub)
-        })
+        assert.deepStrictEqual(JSON.parse(normalizedBody), resourceLogs)
     })
 
-    describe('getInstance', () => {
-        it('should return the same instance when getInstance is called multiple times', () => {
-            const instance1 = OperationalTelemetryService.getInstance(defaultConfig)
-            const instance2 = OperationalTelemetryService.getInstance(defaultConfig)
+    it('should register and send multiple metrics', async function () {
+        this.timeout(10000)
 
-            assert.strictEqual(instance1, instance2)
+        const telemetryService = OperationalTelemetryService.getInstance(getOperationalTelemetryConfig())
+
+        telemetryService.registerGaugeProvider('heapUsed', () => 12345)
+        telemetryService.registerGaugeProvider('heapTotal', () => 67890)
+        telemetryService.registerGaugeProvider('rss', () => 54321)
+
+        await waitForRequests(1, 5000)
+        assert(receivedRequests.length === 1, 'Should have received exactly one request')
+        const requestBodyStr = JSON.stringify(receivedRequests[0].body)
+        assert(requestBodyStr.includes('heapUsed'), 'Request should include heapUsed metric')
+        assert(requestBodyStr.includes('heapTotal'), 'Request should include heapTotal metric')
+        assert(requestBodyStr.includes('rss'), 'Request should include rss metric')
+    })
+
+    it('should not initialize providers when opted out', async function () {
+        OperationalTelemetryService.getInstance({
+            ...getOperationalTelemetryConfig(),
+            telemetryOptOut: true,
         })
+
+        assert(
+            //@ts-ignore
+            OperationalTelemetryService.instance.loggerProvider === null,
+            'Logger provider should not be initialized'
+        )
+        //@ts-ignore
+        assert(OperationalTelemetryService.instance.meterProvider === null, 'Meter provider should not be initialized')
+    })
+
+    it('should not send telemetry when opted out', async function () {
+        this.timeout(10000)
+
+        const telemetryService = OperationalTelemetryService.getInstance({
+            ...getOperationalTelemetryConfig(),
+            telemetryOptOut: true,
+        })
+
+        telemetryService.registerGaugeProvider('heapTotal', () => 12345)
+        telemetryService.emitEvent({
+            errorName: 'OptOutTest',
+            errorOrigin: 'other' as const,
+            errorType: 'Test',
+        })
+
+        await new Promise(resolve => setTimeout(resolve, 2000))
+        assert(receivedRequests.length === 0, 'Should not receive any requests when opted out')
+
+        telemetryService.toggleOptOut(false)
+        telemetryService.emitEvent({
+            errorName: 'OptInTest',
+            errorOrigin: 'other' as const,
+            errorType: 'Test',
+        })
+
+        await waitForRequests(1, 5000)
+        // @ts-ignore
+        assert(receivedRequests.length === 1, 'Should have received exactly one request after opting in')
+        const requestBodyStr = JSON.stringify(receivedRequests[0].body)
+        assert(!requestBodyStr.includes('OptOutTest'))
+        assert(!requestBodyStr.includes('heapTotal'))
+        assert(requestBodyStr.includes('OptInTest'))
+    })
+
+    it('should return the same instance when getInstance is called multiple times', () => {
+        const instance1 = OperationalTelemetryService.getInstance(getOperationalTelemetryConfig())
+        const instance2 = OperationalTelemetryService.getInstance(getOperationalTelemetryConfig())
+
+        assert.strictEqual(instance1, instance2)
     })
 })
