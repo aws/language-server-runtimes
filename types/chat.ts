@@ -462,7 +462,56 @@ export interface ConversationsList {
 
 export interface ListConversationsResult extends ConversationsList {}
 
-export interface ListMcpServersResult extends ConversationsList {}
+export type McpServerStatus = 'INITIALIZING' | 'ENABLED' | 'FAILED' | 'DISABLED'
+
+export interface DetailedListAction {
+    id: string
+    icon?: string
+    text?: string
+    status?: 'clear' | 'warning' | 'error' | 'main'
+    description?: string
+    disabled?: boolean
+    confirmation?: {
+        cancelButtonText: string
+        confirmButtonText: string
+        title: string
+        description: string
+    }
+}
+
+export interface DetailedListItemStatus {
+    icon?: string
+    text?: string
+}
+
+export interface DetailedListItem {
+    title: string
+    icon?: string
+    status?: DetailedListItemStatus
+    iconForegroundStatus?: 'success' | 'error' | 'info' | 'warning'
+    description?: string
+    groupActions?: boolean
+    actions?: DetailedListAction[]
+}
+
+export interface DetailedListGroup {
+    groupName?: string
+    children?: DetailedListItem[]
+}
+
+export interface ListMcpServersResult {
+    selectable?: boolean | 'clickable'
+    header?: {
+        title: string
+        status?: DetailedListItemStatus
+        description?: string
+        actions?: DetailedListAction[]
+    }
+    textDirection?: 'row' | 'column'
+    list: DetailedListGroup[]
+    filterOptions?: FilterOption[]
+    filterActions?: DetailedListAction[]
+}
 
 export type ConversationAction = 'delete' | 'export'
 
@@ -477,7 +526,6 @@ export interface ConversationClickResult extends ConversationClickParams {
 
 export interface McpServerClickParams {
     id: string
-    action?: ConversationAction
 }
 
 export interface McpServerClickResult extends McpServerClickParams {
