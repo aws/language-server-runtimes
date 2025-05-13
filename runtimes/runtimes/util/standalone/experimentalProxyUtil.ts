@@ -147,7 +147,7 @@ export class ProxyConfigManager {
         console.debug(`Total certificates read: ${certificates.length}`)
         const validCerts = this.removeExpiredCertificates(certificates)
 
-        console.debug(`Using certificates: ${certificates.length}`)
+        console.debug(`Using certificates: ${validCerts.length}`)
         return validCerts
     }
 
