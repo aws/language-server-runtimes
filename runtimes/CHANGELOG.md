@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.79](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.78...language-server-runtimes/v0.2.79) (2025-05-12)
+
+
+### Features
+
+* add displayLocation property and inlineEditSupport capability for tab-tab-tab workflow ([#492](https://github.com/aws/language-server-runtimes/issues/492)) ([b7c4718](https://github.com/aws/language-server-runtimes/commit/b7c4718b9bd84e08e72b992da5d699549af9f115))
+* add workspaceIdentifier to AWSInitializationOptions ([#497](https://github.com/aws/language-server-runtimes/issues/497)) ([256c549](https://github.com/aws/language-server-runtimes/commit/256c549df6d446886457dd83ea4b71f31d3bf063))
+* notifications to client about file system operations ([#500](https://github.com/aws/language-server-runtimes/issues/500)) ([a7efcf8](https://github.com/aws/language-server-runtimes/commit/a7efcf8052ec382d3c4cd706059873b0b44fb314))
+
+
+### Bug Fixes
+
+* avoid path import ([5ee633a](https://github.com/aws/language-server-runtimes/commit/5ee633aedcdb5244e9b7b2aa92534ebe07aee761))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.26 to ^0.1.27
+
 ## [0.2.78](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.77...language-server-runtimes/v0.2.78) (2025-05-02)
 
 

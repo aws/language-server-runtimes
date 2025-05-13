@@ -9,6 +9,22 @@ export type InlineCompletionItemWithReferences = InlineCompletionItem & {
      */
     itemId: string
 
+    /**
+     * Flag to indicate this is an edit suggestion rather than a standard inline completion.
+     */
+    isInlineEdit?: boolean
+
+    /**
+     * Specifies where the next edit suggestion should appear for tab-tab-tab workflow navigation.
+     */
+    displayLocation?: {
+        range: {
+            start: { line: number; character: number }
+            end: { line: number; character: number }
+        }
+        label: string
+    }
+
     references?: {
         referenceName?: string
         referenceUrl?: string
