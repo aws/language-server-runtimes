@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.80](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.79...language-server-runtimes/v0.2.80) (2025-05-13)
+
+
+### Features
+
+* support remove tool in Agent ([#501](https://github.com/aws/language-server-runtimes/issues/501)) ([443415e](https://github.com/aws/language-server-runtimes/commit/443415ee15349913eb2e8876cb56bb26c02a9e31))
+
+
+### Bug Fixes
+
+* filter expired certificates in tets ([#506](https://github.com/aws/language-server-runtimes/issues/506)) ([2dbb80f](https://github.com/aws/language-server-runtimes/commit/2dbb80f15f9c770f104d1af9910bd71fa591b38b))
+
 ## [0.2.79](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.78...language-server-runtimes/v0.2.79) (2025-05-12)
 
 
