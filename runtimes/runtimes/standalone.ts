@@ -55,6 +55,7 @@ import {
     SDKClientConstructorV2,
     SDKClientConstructorV3,
     SDKInitializator,
+    MetricEvent,
 } from '../server-interface'
 import { Auth } from './auth'
 import { EncryptedChat } from './chat/encryptedChat'
@@ -89,9 +90,40 @@ if (checkAWSConfigFile()) {
     process.env.AWS_SDK_LOAD_CONFIG = '1'
 }
 
-process.on('uncaughtExceptionMonitor', err => {
-    console.error('Uncaught Exception:', err.message)
-})
+// Set up crash monitoring to emit telemetry before process exits
+function setupCrashMonitoring(telemetryEmitter?: (metric: MetricEvent) => void) {
+    function getTopStackFrames(err: Error): string | undefined {
+        if (!err.stack) {
+            return undefined
+        }
+
+        const stackLines = err.stack.split('\n')
+        const topStackFrames = stackLines.slice(0, 10).join('\n')
+        return topStackFrames
+    }
+
+    process.on('uncaughtExceptionMonitor', (err, origin) => {
+        console.error('Uncaught Exception:', err.message)
+
+        if (telemetryEmitter) {
+            try {
+                telemetryEmitter({
+                    name: 'runtime_processCrash',
+                    result: 'Failed',
+                    data: {
+                        origin: origin,
+                        stack: getTopStackFrames(err),
+                    },
+                    errorData: {
+                        reason: err.toString(),
+                    },
+                })
+            } catch (telemetryError) {
+                console.error('Failed to emit telemetry for uncaught exception:', telemetryError)
+            }
+        }
+    })
+}
 
 /**
  * The runtime for standalone LSP-based servers.
@@ -176,6 +208,9 @@ export const standalone = (props: RuntimeProps) => {
             emitMetric: metric => lspConnection.telemetry.logEvent(metric),
             onClientTelemetry: handler => lspConnection.onNotification(telemetryNotificationType.method, handler),
         }
+
+        // Set up crash monitoring with telemetry
+        setupCrashMonitoring(telemetry.emitMetric)
 
         // Set up the workspace sync to use the LSP Text Document Sync capability
         const workspace: Workspace = {
