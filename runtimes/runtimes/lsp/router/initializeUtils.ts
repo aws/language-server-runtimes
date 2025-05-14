@@ -1,0 +1,32 @@
+import { InitializeParams, WorkspaceFolder } from 'vscode-languageserver-protocol'
+import path from 'path'
+import { URI } from 'vscode-uri'
+import { RemoteConsole } from 'vscode-languageserver'
+
+export function getWorkspaceFoldersFromInit(params?: InitializeParams, console?: RemoteConsole): WorkspaceFolder[] {
+    if (!params) {
+        return []
+    }
+
+    if (params.workspaceFolders && params.workspaceFolders.length > 0) {
+        return params.workspaceFolders
+    }
+    try {
+        const getFolderName = (parsedUri: URI) => path.basename(parsedUri.fsPath) || parsedUri.toString()
+
+        if (params.rootUri) {
+            const parsedUri = URI.parse(params.rootUri)
+            const folderName = getFolderName(parsedUri)
+            return [{ name: folderName, uri: params.rootUri }]
+        }
+        if (params.rootPath) {
+            const parsedUri = URI.parse(params.rootPath)
+            const folderName = getFolderName(parsedUri)
+            return [{ name: folderName, uri: parsedUri.toString() }]
+        }
+        return []
+    } catch (error) {
+        console.log(`Error occurred when determining workspace folders: ${error}`)
+        return []
+    }
+}

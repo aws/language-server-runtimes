@@ -19,6 +19,7 @@ import {
     ErrorCodes,
     UpdateConfigurationParams,
     HandlerResult,
+    DidChangeWorkspaceFoldersParams,
 } from '../../../protocol'
 import { InitializeParams, PartialInitializeResult } from '../../../server-interface/lsp'
 import { CredentialsType, Logging, Notification } from '../../../server-interface'
@@ -43,6 +44,7 @@ export class LspServer {
 
     private notificationRouter?: RouterByServerName<NotificationParams, NotificationFollowupParams>
     private notificationFollowupHandler?: NotificationHandler<NotificationFollowupParams>
+    private didChangeWorkspaceFoldersHandler?: NotificationHandler<DidChangeWorkspaceFoldersParams>
 
     constructor(
         private lspConnection: Connection,
@@ -99,6 +101,12 @@ export class LspServer {
         handler: RequestHandler<GetConfigurationFromServerParams, any, void>
     ): void => {
         this.getServerConfigurationHandler = handler
+    }
+
+    public setDidChangeWorkspaceFoldersHandler = (
+        handler: NotificationHandler<DidChangeWorkspaceFoldersParams>
+    ): void => {
+        this.didChangeWorkspaceFoldersHandler = handler
     }
 
     public initialize = async (
@@ -166,6 +174,10 @@ export class LspServer {
 
     public sendDidChangeConfigurationNotification = (params: DidChangeConfigurationParams): void => {
         this.didChangeConfigurationHandler?.(params)
+    }
+
+    public sendDidChangeWorkspaceFoldersNotification = (params: DidChangeWorkspaceFoldersParams): void => {
+        this.didChangeWorkspaceFoldersHandler?.(params)
     }
 
     public sendUpdateConfigurationRequest = async (

@@ -22,17 +22,22 @@ import {
     UpdateConfigurationParams,
     updateConfigurationRequestType,
     HandlerResult,
+    WorkspaceFolder,
+    DidChangeWorkspaceFoldersParams,
+    WorkspaceFoldersChangeEvent,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
 import { findDuplicates, mergeObjects } from './util'
 import { CredentialsType, PartialInitializeResult } from '../../../server-interface'
 import { SERVER_CAPABILITES_CONFIGURATION_SECTION } from './constants'
+import { getWorkspaceFoldersFromInit } from './initializeUtils'
 
 export class LspRouter {
     private initializeResult?: InitializeResult
     public clientInitializeParams?: InitializeParams
     public servers: LspServer[] = []
+    private workspaceFolders: WorkspaceFolder[] = []
 
     constructor(
         private lspConnection: Connection,
@@ -71,6 +76,12 @@ export class LspRouter {
             this.lspConnection.console.log(
                 `Unknown initialization error\nwith initialization options: ${JSON.stringify(params.initializationOptions)}`
             )
+        }
+
+        this.workspaceFolders = getWorkspaceFoldersFromInit(params, this.lspConnection.console)
+
+        if (this.workspaceFolders.length === 0) {
+            this.lspConnection.console.info('No workspace folders found in initialization parameters')
         }
 
         let responsesList = await Promise.all(this.servers.map(s => s.initialize(params, token)))
@@ -114,6 +125,33 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         )
 
         return result
+    }
+
+    didChangeWorkspaceFolders = (event: WorkspaceFoldersChangeEvent): void => {
+        const supportsWorkspaceFolders = this.clientInitializeParams?.capabilities.workspace?.workspaceFolders === true
+
+        if (!supportsWorkspaceFolders) {
+            this.lspConnection.console.warn(
+                "Client doesn't support sending workspace folder change events. Ignoring workspace folder changes."
+            )
+            return
+        }
+
+        this.workspaceFolders = this.workspaceFolders.filter(
+            folder => !event.removed.some(removed => removed.uri === folder.uri)
+        )
+        this.workspaceFolders.push(...event.added)
+        const params: DidChangeWorkspaceFoldersParams = { event }
+
+        this.routeNotificationToAllServers((server, params) => {
+            if (server.sendDidChangeWorkspaceFoldersNotification) {
+                server.sendDidChangeWorkspaceFoldersNotification(params)
+            }
+        }, params)
+    }
+
+    getAllWorkspaceFolders(): WorkspaceFolder[] {
+        return this.workspaceFolders
     }
 
     executeCommand = async (
@@ -177,6 +215,11 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         if (workspaceCapabilities?.didChangeConfiguration?.dynamicRegistration) {
             // Ask the client to notify the server on configuration changes
             this.lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
+        }
+
+        // Register for workspace folder changes only if supported
+        if (workspaceCapabilities?.workspaceFolders === true) {
+            this.lspConnection.workspace.onDidChangeWorkspaceFolders(this.didChangeWorkspaceFolders)
         }
 
         this.routeNotificationToAllServers((server, params) => server.sendInitializedNotification(params), params)

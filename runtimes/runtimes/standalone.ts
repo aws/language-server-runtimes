@@ -186,8 +186,8 @@ export const standalone = (props: RuntimeProps) => {
                 const fileUrl = new URL(uri)
                 const normalizedFileUri = fileUrl.pathname || ''
 
-                const folders = lspRouter.clientInitializeParams!.workspaceFolders
-                if (!folders) return undefined
+                const folders = lspRouter.getAllWorkspaceFolders()
+                if (!folders || folders.length === 0) return undefined
 
                 for (const folder of folders) {
                     const folderUrl = new URL(folder.uri)
@@ -196,6 +196,9 @@ export const standalone = (props: RuntimeProps) => {
                         return folder
                     }
                 }
+            },
+            getAllWorkspaceFolders: () => {
+                return lspRouter.getAllWorkspaceFolders()
             },
             fs: {
                 copyFile: async (src, dest, options?) => {
@@ -341,8 +344,7 @@ export const standalone = (props: RuntimeProps) => {
                 workspace: {
                     applyWorkspaceEdit: params => lspConnection.workspace.applyEdit(params),
                     getConfiguration: section => lspConnection.workspace.getConfiguration(section),
-                    onDidChangeWorkspaceFolders: handler =>
-                        lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.method, handler),
+                    onDidChangeWorkspaceFolders: lspServer.setDidChangeWorkspaceFoldersHandler,
                     onDidCreateFiles: params => lspConnection.workspace.onDidCreateFiles(params),
                     onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
                     onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),

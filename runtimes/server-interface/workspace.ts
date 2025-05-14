@@ -19,6 +19,7 @@ export type Workspace = {
     getTextDocument: (uri: string) => Promise<TextDocument | undefined>
     getAllTextDocuments: () => Promise<TextDocument[]>
     getWorkspaceFolder: (uri: string) => WorkspaceFolder | null | undefined
+    getAllWorkspaceFolders: () => WorkspaceFolder[]
     fs: {
         /**
          * Copies a file from src to dest. Dest is overwritten if it already exists.

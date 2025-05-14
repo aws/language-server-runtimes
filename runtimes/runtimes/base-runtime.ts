@@ -124,8 +124,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     const workspace: Workspace = {
         getTextDocument: async uri => documents.get(uri),
         getAllTextDocuments: async () => documents.all(),
-        getWorkspaceFolder: _uri =>
-            lspRouter.clientInitializeParams!.workspaceFolders && lspRouter.clientInitializeParams!.workspaceFolders[0],
+        getWorkspaceFolder: _uri => lspRouter.getAllWorkspaceFolders() && lspRouter.getAllWorkspaceFolders()[0],
+        getAllWorkspaceFolders: () => lspRouter.getAllWorkspaceFolders(),
         fs: {
             copyFile: (_src, _dest, _options?) => Promise.resolve(),
             exists: _path => Promise.resolve(false),
