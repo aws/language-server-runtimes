@@ -78,7 +78,7 @@ export class LspRouter {
             )
         }
 
-        this.workspaceFolders = getWorkspaceFoldersFromInit(params, this.lspConnection.console)
+        this.workspaceFolders = getWorkspaceFoldersFromInit(this.lspConnection.console, params)
 
         if (this.workspaceFolders.length === 0) {
             this.lspConnection.console.info('No workspace folders found in initialization parameters')

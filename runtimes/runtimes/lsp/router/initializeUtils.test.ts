@@ -34,7 +34,7 @@ describe('initializeUtils', () => {
                 { name: 'folder2', uri: 'file:///path/to/folder2' },
             ]
             const params = createParams({ workspaceFolders })
-            const result = getWorkspaceFoldersFromInit(params, consoleStub)
+            const result = getWorkspaceFoldersFromInit(consoleStub, params)
 
             assert.deepStrictEqual(result, workspaceFolders)
         })
@@ -48,12 +48,12 @@ describe('initializeUtils', () => {
             invalidWorkspaceFolderCases.forEach(([name, input]) => {
                 it(`should return root uri for ${name}`, () => {
                     const params = createParams(input)
-                    const result = getWorkspaceFoldersFromInit(params, consoleStub)
+                    const result = getWorkspaceFoldersFromInit(consoleStub, params)
                     assert.deepStrictEqual(result, [sampleWorkspaceFolder])
                 })
             })
             const params = createParams({ rootUri: sampleWorkspaceUri })
-            const result = getWorkspaceFoldersFromInit(params, consoleStub)
+            const result = getWorkspaceFoldersFromInit(consoleStub, params)
 
             assert.deepStrictEqual(result, [sampleWorkspaceFolder])
         })
@@ -61,7 +61,7 @@ describe('initializeUtils', () => {
         it('should create workspace folder from rootPath when neither workspaceFolders nor rootUri is provided', () => {
             const rootPath = '/path/to/folder'
             const params = createParams({ rootPath: rootPath })
-            const result = getWorkspaceFoldersFromInit(params, consoleStub)
+            const result = getWorkspaceFoldersFromInit(consoleStub, params)
 
             assert.deepStrictEqual(result, [sampleWorkspaceFolder])
         })
@@ -69,7 +69,7 @@ describe('initializeUtils', () => {
         it('should use uri as folder name when URI basename is empty', () => {
             const rootUri = 'file:///'
             const params = createParams({ rootUri })
-            const result = getWorkspaceFoldersFromInit(params, consoleStub)
+            const result = getWorkspaceFoldersFromInit(consoleStub, params)
 
             assert.deepStrictEqual(result, [{ name: rootUri, uri: rootUri }])
         })
@@ -79,7 +79,7 @@ describe('initializeUtils', () => {
             const pathUri = URI.parse(rootPath).toString()
             const params = createParams({ rootPath })
 
-            const result = getWorkspaceFoldersFromInit(params, consoleStub)
+            const result = getWorkspaceFoldersFromInit(consoleStub, params)
 
             const expectedName = path.basename(URI.parse(pathUri).fsPath)
             assert.deepStrictEqual(result, [{ name: expectedName, uri: pathUri }])
@@ -91,7 +91,7 @@ describe('initializeUtils', () => {
             const folderName = path.basename(decodedPath)
 
             const params = createParams({ rootUri })
-            const result = getWorkspaceFoldersFromInit(params, consoleStub)
+            const result = getWorkspaceFoldersFromInit(consoleStub, params)
 
             assert.deepStrictEqual(result, [{ name: folderName, uri: rootUri }])
             assert.equal('special project', result[0].name)
@@ -107,7 +107,7 @@ describe('initializeUtils', () => {
 
             emptyArrayCases.forEach(([name, input]) => {
                 it(`should return empty array for ${name}`, () => {
-                    const result = getWorkspaceFoldersFromInit(input, consoleStub)
+                    const result = getWorkspaceFoldersFromInit(consoleStub, input)
                     assert.equal(result.length, 0)
                 })
             })

@@ -3,7 +3,7 @@ import path from 'path'
 import { URI } from 'vscode-uri'
 import { RemoteConsole } from 'vscode-languageserver'
 
-export function getWorkspaceFoldersFromInit(params?: InitializeParams, console?: RemoteConsole): WorkspaceFolder[] {
+export function getWorkspaceFoldersFromInit(console: RemoteConsole, params?: InitializeParams): WorkspaceFolder[] {
     if (!params) {
         return []
     }
