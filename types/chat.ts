@@ -29,6 +29,9 @@ export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
+//mcpServers
+export const LIST_MCP_SERVERS_REQUEST_METHOD = 'aws/chat/listMcpServers'
+export const MCP_SERVER_CLICK_REQUEST_METHOD = 'aws/chat/mcpServerClick'
 // export
 export const GET_SERIALIZED_CHAT_REQUEST_METHOD = 'aws/chat/getSerializedChat'
 
@@ -234,6 +237,8 @@ export interface ChatOptions {
      * Chat QuickActions, supported by Server. Chat Client renders and sets up actions handler for registered QuickAction in UI.
      */
     quickActions?: QuickActions
+
+    mcpServers?: boolean
 
     /**
      * Server signals to Chat Client support of conversation history.
@@ -445,6 +450,10 @@ export interface ListConversationsParams {
     filter?: Record<string, FilterValue>
 }
 
+export interface ListMcpServersParams {
+    filter?: Record<string, FilterValue>
+}
+
 export interface ConversationsList {
     header?: { title: string }
     filterOptions?: FilterOption[]
@@ -452,6 +461,28 @@ export interface ConversationsList {
 }
 
 export interface ListConversationsResult extends ConversationsList {}
+
+export type McpServerStatus = 'INITIALIZING' | 'ENABLED' | 'FAILED' | 'DISABLED'
+
+export interface DetailedListItem {
+    title: string
+    description?: string
+    groupActions?: boolean
+}
+
+export interface DetailedListGroup {
+    groupName?: string
+    children?: DetailedListItem[]
+}
+
+export interface ListMcpServersResult {
+    header?: {
+        title: string
+        description?: string
+    }
+    list: DetailedListGroup[]
+    filterOptions?: FilterOption[]
+}
 
 export type ConversationAction = 'delete' | 'export'
 
@@ -461,6 +492,14 @@ export interface ConversationClickParams {
 }
 
 export interface ConversationClickResult extends ConversationClickParams {
+    success: boolean
+}
+
+export interface McpServerClickParams {
+    id: string
+}
+
+export interface McpServerClickResult extends McpServerClickParams {
     success: boolean
 }
 

@@ -64,6 +64,12 @@ import {
     ButtonClickParams,
     ButtonClickResult,
     buttonClickRequestType,
+    ListMcpServersParams,
+    ListMcpServersResult,
+    listMcpServersRequestType,
+    McpServerClickParams,
+    McpServerClickResult,
+    mcpServerClickRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -166,6 +172,14 @@ export class BaseChat implements Chat {
 
     public onConversationClick(handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) {
         this.connection.onRequest(conversationClickRequestType.method, handler)
+    }
+
+    public onListMcpServers(handler: RequestHandler<ListMcpServersParams, ListMcpServersResult, void>) {
+        this.connection.onRequest(listMcpServersRequestType.method, handler)
+    }
+
+    public onMcpServerClick(handler: RequestHandler<McpServerClickParams, McpServerClickResult, void>) {
+        this.connection.onRequest(mcpServerClickRequestType.method, handler)
     }
 
     public getSerializedChat(params: GetSerializedChatParams): Promise<GetSerializedChatResult> {

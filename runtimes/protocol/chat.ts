@@ -67,6 +67,12 @@ import {
     ButtonClickParams,
     ButtonClickResult,
     BUTTON_CLICK_REQUEST_METHOD,
+    ListMcpServersParams,
+    ListMcpServersResult,
+    LIST_MCP_SERVERS_REQUEST_METHOD,
+    McpServerClickParams,
+    McpServerClickResult,
+    MCP_SERVER_CLICK_REQUEST_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -163,6 +169,23 @@ export const conversationClickRequestType = new AutoParameterStructuresProtocolR
     void,
     void
 >(CONVERSATION_CLICK_REQUEST_METHOD)
+
+// mcp servers
+export const listMcpServersRequestType = new AutoParameterStructuresProtocolRequestType<
+    ListMcpServersParams,
+    ListMcpServersResult,
+    never,
+    void,
+    void
+>(LIST_MCP_SERVERS_REQUEST_METHOD)
+
+export const mcpServerClickRequestType = new AutoParameterStructuresProtocolRequestType<
+    McpServerClickParams,
+    McpServerClickResult,
+    never,
+    void,
+    void
+>(MCP_SERVER_CLICK_REQUEST_METHOD)
 
 /**
  * The tab bar action request is sent from client to server to execute action from Chat tab bar UI.
