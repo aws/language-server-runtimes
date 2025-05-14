@@ -464,11 +464,6 @@ export interface ListConversationsResult extends ConversationsList {}
 
 export type McpServerStatus = 'INITIALIZING' | 'ENABLED' | 'FAILED' | 'DISABLED'
 
-export interface DetailedListItemStatus {
-    icon?: string
-    text?: string
-}
-
 export interface DetailedListItem {
     title: string
     description?: string
@@ -483,7 +478,6 @@ export interface DetailedListGroup {
 export interface ListMcpServersResult {
     header?: {
         title: string
-        status?: DetailedListItemStatus
         description?: string
     }
     list: DetailedListGroup[]
