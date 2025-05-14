@@ -103,19 +103,16 @@ function setupCrashMonitoring(telemetryEmitter?: (metric: MetricEvent) => void) 
     }
 
     process.on('uncaughtExceptionMonitor', (err, origin) => {
-        console.error('Uncaught Exception:', err.message)
+        console.error('Uncaught Exception:', err.message, getTopStackFrames(err))
 
         if (telemetryEmitter) {
             try {
                 telemetryEmitter({
                     name: 'runtime_processCrash',
                     result: 'Failed',
-                    data: {
-                        origin: origin,
-                        stack: getTopStackFrames(err),
-                    },
                     errorData: {
                         reason: err.toString(),
+                        errorCode: origin,
                     },
                 })
             } catch (telemetryError) {
