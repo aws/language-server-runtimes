@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.81](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.80...language-server-runtimes/v0.2.81) (2025-05-14)
+
+
+### Features
+
+* adding new params for mcp servers buttons ([#502](https://github.com/aws/language-server-runtimes/issues/502)) ([73fd208](https://github.com/aws/language-server-runtimes/commit/73fd20806f94d7134f6a24f39353c6b53f991e91))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.27 to ^0.1.28
+
 ## [0.2.80](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.79...language-server-runtimes/v0.2.80) (2025-05-13)
 
 
