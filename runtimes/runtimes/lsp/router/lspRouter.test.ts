@@ -48,6 +48,8 @@ describe('LspRouter', () => {
         const onExecuteommandSpy = sandbox.spy(lspConnection, 'onExecuteCommand')
         lspConnection.telemetry.logEvent = sandbox.stub()
         lspConnection.console.log = sandbox.stub()
+        lspConnection.console.info = sandbox.stub()
+        lspConnection.console.warn = sandbox.stub()
 
         lspRouter = new LspRouter(lspConnection, 'AWS LSP Standalone', '1.0.0')
 
@@ -72,6 +74,43 @@ describe('LspRouter', () => {
             const initParam = {} as InitializeParams
             initializeHandler(initParam, {} as CancellationToken)
             assert(lspRouter.clientInitializeParams === initParam)
+        })
+        it('should store workspaceFolders in a field when workspaceFolders specified', () => {
+            const workspaceFolders = [{ name: 'test', uri: 'file:///test' }]
+            const initParam = {
+                workspaceFolders: workspaceFolders,
+            } as InitializeParams
+
+            initializeHandler(initParam, {} as CancellationToken)
+
+            assert.deepStrictEqual(lspRouter.getAllWorkspaceFolders(), workspaceFolders)
+        })
+
+        it('should store workspaceFolders in a field when rootUri specified', () => {
+            const expectedWorkspace = [{ name: 'test', uri: 'file:///test' }]
+            const initParam = {
+                rootUri: 'file:///test',
+            } as InitializeParams
+
+            initializeHandler(initParam, {} as CancellationToken)
+
+            assert.deepStrictEqual(lspRouter.getAllWorkspaceFolders(), expectedWorkspace)
+        })
+
+        it('should only log when no workspace folders are found', () => {
+            const initParam = {
+                processId: null,
+                rootUri: null,
+                capabilities: {},
+                workspaceFolders: [],
+            } as InitializeParams
+
+            initializeHandler(initParam, {} as CancellationToken)
+
+            sinon.assert.calledWith(
+                lspConnection.console.info as sinon.SinonStub,
+                'No workspace folders found in initialization parameters'
+            )
         })
 
         it('should log telemetry event when aws config is missing in InitializeParams', async () => {
@@ -599,6 +638,66 @@ describe('LspRouter', () => {
         })
     })
 
+    describe('didChangeWorkspaceFolders', () => {
+        it('should warn and return when client does not support workspace folders', () => {
+            lspRouter.clientInitializeParams = {
+                capabilities: {
+                    workspace: {
+                        workspaceFolders: false,
+                    },
+                },
+            } as InitializeParams
+
+            const event = {
+                added: [{ name: 'added', uri: 'file:///added' }],
+                removed: [],
+            }
+
+            lspRouter.didChangeWorkspaceFolders(event)
+
+            sinon.assert.calledWith(
+                lspConnection.console.warn as sinon.SinonStub,
+                "Client doesn't support sending workspace folder change events. Ignoring workspace folder changes."
+            )
+        })
+
+        it('should update workspace folders and route notification to servers', () => {
+            const initialFolders = [
+                { name: 'initial', uri: 'file:///initial' },
+                { name: 'toRemove', uri: 'file:///toRemove' },
+            ]
+            lspRouter['workspaceFolders'] = initialFolders
+
+            lspRouter.clientInitializeParams = {
+                capabilities: {
+                    workspace: {
+                        workspaceFolders: true,
+                    },
+                },
+            } as InitializeParams
+
+            const didChangeWorkspaceFoldersSpy = sandbox.spy()
+            const server = newServer({
+                didChangeWorkspaceFoldersHandler: didChangeWorkspaceFoldersSpy,
+            })
+            lspRouter.servers = [server]
+
+            const event = {
+                added: [{ name: 'added', uri: 'file:///added' }],
+                removed: [{ name: 'toRemove', uri: 'file:///toRemove' }],
+            }
+
+            lspRouter.didChangeWorkspaceFolders(event)
+
+            const expectedFolders = [
+                { name: 'initial', uri: 'file:///initial' },
+                { name: 'added', uri: 'file:///added' },
+            ]
+            assert.deepStrictEqual(lspRouter.getAllWorkspaceFolders(), expectedFolders)
+            assert(didChangeWorkspaceFoldersSpy.calledWith({ event }))
+        })
+    })
+
     describe('notifications', () => {
         const initHandler = () => {
             return {
@@ -716,6 +815,7 @@ describe('LspRouter', () => {
         initializedHandler,
         updateConfigurationHandler,
         credentialsDeleteHandler,
+        didChangeWorkspaceFoldersHandler,
     }: {
         lspConnection?: Connection
         didChangeConfigurationHandler?: any
@@ -725,6 +825,7 @@ describe('LspRouter', () => {
         initializedHandler?: any
         updateConfigurationHandler?: any
         credentialsDeleteHandler?: any
+        didChangeWorkspaceFoldersHandler?: any
     }) {
         const server = new LspServer(lspConnection || stubLspConnection(), encoding, logging)
         server.setDidChangeConfigurationHandler(didChangeConfigurationHandler)
@@ -734,6 +835,7 @@ describe('LspRouter', () => {
         server.setInitializedHandler(initializedHandler)
         server.setUpdateConfigurationHandler(updateConfigurationHandler)
         server.setCredentialsDeleteHandler(credentialsDeleteHandler)
+        server.setDidChangeWorkspaceFoldersHandler(didChangeWorkspaceFoldersHandler)
         return server
     }
 })

@@ -156,16 +156,17 @@ describe('standalone', () => {
             describe('getWorkspaceFolder', () => {
                 it('should return undefined when no workspace folders are configured', () => {
                     const fileUri = pathToFileURL('/sample/files').href
-                    lspRouterStub.clientInitializeParams!.workspaceFolders = undefined
-
                     const result = features.workspace.getWorkspaceFolder(fileUri)
 
                     assert.strictEqual(result, undefined)
                 })
 
-                it('should return undefined when workspace folders is empty', () => {
+                it('should return undefined when workspace folders are empty', () => {
                     const fileUri = pathToFileURL('/sample/files').href
-                    lspRouterStub.clientInitializeParams!.workspaceFolders = []
+                    lspRouterStub.getAllWorkspaceFolders = sinon.stub().returns([]) as sinon.SinonStub<
+                        [],
+                        vscodeLanguageServer.WorkspaceFolder[]
+                    >
 
                     const result = features.workspace.getWorkspaceFolder(fileUri)
 
@@ -186,11 +187,32 @@ describe('standalone', () => {
                         uri: pathToFileURL(folder.uri).href,
                     }))
                     // @ts-ignore
-                    lspRouterStub.clientInitializeParams!.workspaceFolders = workspaceFolders
+                    lspRouterStub.getAllWorkspaceFolders = sinon.stub().returns(workspaceFolders)
 
                     const result = features.workspace.getWorkspaceFolder(fileUri)
 
                     assert.strictEqual(result, workspaceFolders[3])
+                })
+            })
+
+            describe('getAllWorkspaceFolders', () => {
+                it('should return workspace folders when configured', () => {
+                    let workspaceFolders = [
+                        { name: 'folder1', uri: '/folder/workspace' },
+                        { name: 'name', uri: '/tmp/tmp' },
+                        { name: 'name1', uri: '/sample/workspace/folder' },
+                        { name: 'workspace', uri: '/sample/workspace' },
+                        { name: 'name2', uri: '/sample' },
+                    ]
+                    workspaceFolders = workspaceFolders.map(folder => ({
+                        name: folder.name,
+                        uri: pathToFileURL(folder.uri).href,
+                    }))
+                    // @ts-ignore
+                    lspRouterStub.getAllWorkspaceFolders = sinon.stub().returns(workspaceFolders)
+                    const result = features.workspace.getAllWorkspaceFolders()
+
+                    assert.strictEqual(result, workspaceFolders)
                 })
             })
         })

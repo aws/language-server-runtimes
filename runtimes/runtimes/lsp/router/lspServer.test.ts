@@ -2,6 +2,7 @@ import { LspServer } from './lspServer'
 import {
     CancellationToken,
     DidChangeConfigurationParams,
+    DidChangeWorkspaceFoldersParams,
     ExecuteCommandParams,
     GetConfigurationFromServerParams,
     NotificationFollowupParams,
@@ -201,6 +202,20 @@ describe('LspServer', () => {
                 // @ts-ignore
                 lspServer['notificationRouter']?.send
             )
+        })
+    })
+
+    describe('workspace', () => {
+        it('should handle workspace folder changes', () => {
+            const workspaceHandler = sandbox.stub()
+            const params: DidChangeWorkspaceFoldersParams = {
+                event: { added: [], removed: [] },
+            }
+            lspServer.setDidChangeWorkspaceFoldersHandler(workspaceHandler)
+            lspServer.sendDidChangeWorkspaceFoldersNotification(params)
+
+            assert(workspaceHandler.calledOnce)
+            assert(workspaceHandler.calledWith(params))
         })
     })
 
