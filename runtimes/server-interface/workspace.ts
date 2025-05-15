@@ -18,7 +18,9 @@ interface Dirent {
 export type Workspace = {
     getTextDocument: (uri: string) => Promise<TextDocument | undefined>
     getAllTextDocuments: () => Promise<TextDocument[]>
+    /** Gets workspace folder associated with the given file uri */
     getWorkspaceFolder: (uri: string) => WorkspaceFolder | null | undefined
+    /** Gets all workspace folders */
     getAllWorkspaceFolders: () => WorkspaceFolder[]
     fs: {
         /**

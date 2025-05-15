@@ -26,7 +26,7 @@ export function getWorkspaceFoldersFromInit(console: RemoteConsole, params?: Ini
         }
         return []
     } catch (error) {
-        console.log(`Error occurred when determining workspace folders: ${error}`)
+        console.error(`Error occurred when determining workspace folders: ${error}`)
         return []
     }
 }
