@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.82](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.81...language-server-runtimes/v0.2.82) (2025-05-15)
+
+
+### Features
+
+* emit telemetry event to lsp client on standalone process crash ([432a68a](https://github.com/aws/language-server-runtimes/commit/432a68a3f46768dfbdc8e5233ff4b825cbaa1b92))
+* support using rootUri for workspaceFolders and handle workspaceChangeEvent ([#509](https://github.com/aws/language-server-runtimes/issues/509)) ([fa9892e](https://github.com/aws/language-server-runtimes/commit/fa9892ed7d4d4ff09f0801fdbff07bc1d725ef85))
+
+
+### Bug Fixes
+
+* update shape of process crash telemetry event ([0ccd083](https://github.com/aws/language-server-runtimes/commit/0ccd0837775101668aa6d32e31b6b33cbd010c11))
+
 ## [0.2.81](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.80...language-server-runtimes/v0.2.81) (2025-05-14)
 
 
