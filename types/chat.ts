@@ -421,8 +421,14 @@ export interface InlineChatResultParams {
 
 // history
 export type TextBasedFilterOption = {
-    type: 'textarea' | 'textinput'
+    type: 'textarea' | 'textinput' | 'select' | 'numericinput' | 'radiogroup'
     placeholder?: string
+    title?: string
+    description?: string
+    options?: Array<{
+        value: string
+        label: string
+    }>
     icon?: IconType
 }
 export type FilterValue = string
@@ -468,11 +474,14 @@ export interface DetailedListItem {
     title: string
     description?: string
     groupActions?: boolean
+    children?: DetailedListGroup[]
 }
 
 export interface DetailedListGroup {
     groupName?: string
     children?: DetailedListItem[]
+    actions?: Action[]
+    icon?: IconType
 }
 
 export interface ListMcpServersResult {
@@ -500,7 +509,21 @@ export interface McpServerClickParams {
 }
 
 export interface McpServerClickResult extends McpServerClickParams {
-    success: boolean
+    filterOptions?: FilterOption[] | null
+    filterActions?: Button[]
+    list?: DetailedListGroup[]
+    header?: {
+        title?: string
+        icon?: IconType
+        status?: {
+            icon?: IconType
+            title?: string
+            description?: string
+            status?: Status
+        }
+        description?: string
+        actions?: Action[]
+    }
 }
 
 export type TabBarAction = 'export'
