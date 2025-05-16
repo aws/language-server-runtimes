@@ -25,6 +25,10 @@ import {
     WorkspaceFolder,
     DidChangeWorkspaceFoldersParams,
     WorkspaceFoldersChangeEvent,
+    CreateFilesParams,
+    DeleteFilesParams,
+    RenameFilesParams,
+    DidSaveTextDocumentParams,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
@@ -51,6 +55,10 @@ export class LspRouter {
         lspConnection.onRequest(getConfigurationFromServerRequestType, this.getConfigurationFromServer)
         lspConnection.onNotification(notificationFollowupRequestType, this.onNotificationFollowup)
         lspConnection.onRequest(updateConfigurationRequestType, this.updateConfiguration)
+        lspConnection.workspace.onDidCreateFiles(this.didCreateFiles)
+        lspConnection.workspace.onDidDeleteFiles(this.didDeleteFiles)
+        lspConnection.workspace.onDidRenameFiles(this.didRenameFiles)
+        lspConnection.onDidSaveTextDocument(this.didSaveTextDocument)
     }
 
     initialize = async (
@@ -227,6 +235,25 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
 
     onNotificationFollowup = (params: NotificationFollowupParams): void => {
         this.routeNotificationToAllServers((server, params) => server.sendNotificationFollowup(params), params)
+    }
+
+    didCreateFiles = (params: CreateFilesParams): void => {
+        this.routeNotificationToAllServers((server, params) => server.sendDidCreateFilesNotification(params), params)
+    }
+
+    didDeleteFiles = (params: DeleteFilesParams): void => {
+        this.routeNotificationToAllServers((server, params) => server.sendDidDeleteFilesNotification(params), params)
+    }
+
+    didRenameFiles = (params: RenameFilesParams): void => {
+        this.routeNotificationToAllServers((server, params) => server.sendDidRenameFilesNotification(params), params)
+    }
+
+    didSaveTextDocument = (params: DidSaveTextDocumentParams): void => {
+        this.routeNotificationToAllServers(
+            (server, params) => server.sendDidSaveTextDocumentNotification(params),
+            params
+        )
     }
 
     private async routeRequestToFirstCapableServer<P, R>(

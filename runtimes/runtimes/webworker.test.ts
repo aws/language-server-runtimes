@@ -21,6 +21,7 @@ describe('webworker', () => {
         stubConnection = stubInterface<vscodeLanguageServer.Connection>()
         stubConnection.console = stubInterface<vscodeLanguageServer.RemoteConsole>()
         stubConnection.telemetry = stubInterface<vscodeLanguageServer.Telemetry>()
+        stubConnection.workspace = stubInterface<vscodeLanguageServer.RemoteWorkspace>()
         ;(global as any).self = sinon.stub()
         ;({ webworker } = proxyquire('./webworker', {
             'vscode-languageserver/browser': {

@@ -5,7 +5,6 @@
 
 import { TextDocuments } from 'vscode-languageserver'
 import {
-    DidChangeWorkspaceFoldersNotification,
     ProgressToken,
     ProgressType,
     PublishDiagnosticsNotification,
@@ -370,16 +369,16 @@ export const standalone = (props: RuntimeProps) => {
                 onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
                 onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
                 onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
-                onDidSaveTextDocument: handler => documentsObserver.callbacks.onDidSaveTextDocument(handler),
+                onDidSaveTextDocument: lspServer.setDidSaveTextDocumentHandler,
                 onExecuteCommand: lspServer.setExecuteCommandHandler,
                 onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
                 workspace: {
                     applyWorkspaceEdit: params => lspConnection.workspace.applyEdit(params),
                     getConfiguration: section => lspConnection.workspace.getConfiguration(section),
                     onDidChangeWorkspaceFolders: lspServer.setDidChangeWorkspaceFoldersHandler,
-                    onDidCreateFiles: params => lspConnection.workspace.onDidCreateFiles(params),
-                    onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
-                    onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
+                    onDidCreateFiles: lspServer.setDidCreateFilesHandler,
+                    onDidDeleteFiles: lspServer.setDidDeleteFilesHandler,
+                    onDidRenameFiles: lspServer.setDidRenameFilesHandler,
                     onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
                     selectWorkspaceItem: params =>
                         lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),

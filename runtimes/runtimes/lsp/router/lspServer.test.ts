@@ -9,6 +9,10 @@ import {
     NotificationParams,
     ResponseError,
     UpdateConfigurationParams,
+    CreateFilesParams,
+    DeleteFilesParams,
+    RenameFilesParams,
+    DidSaveTextDocumentParams,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { InitializeParams, PartialInitializeResult } from '../../../server-interface/lsp'
@@ -205,6 +209,20 @@ describe('LspServer', () => {
         })
     })
 
+    describe(`didSave`, () => {
+        it('should handle text document save events', () => {
+            const saveTextDocumentHandler = sandbox.stub()
+            const params: DidSaveTextDocumentParams = {
+                textDocument: { uri: 'file:///test/file.txt' },
+            }
+            lspServer.setDidSaveTextDocumentHandler(saveTextDocumentHandler)
+            lspServer.sendDidSaveTextDocumentNotification(params)
+
+            assert(saveTextDocumentHandler.calledOnce)
+            assert(saveTextDocumentHandler.calledWith(params))
+        })
+    })
+
     describe('workspace', () => {
         it('should handle workspace folder changes', () => {
             const workspaceHandler = sandbox.stub()
@@ -216,6 +234,47 @@ describe('LspServer', () => {
 
             assert(workspaceHandler.calledOnce)
             assert(workspaceHandler.calledWith(params))
+        })
+
+        it('should handle file creation events', () => {
+            const createFilesHandler = sandbox.stub()
+            const params: CreateFilesParams = {
+                files: [{ uri: 'file:///test/file.txt' }],
+            }
+            lspServer.setDidCreateFilesHandler(createFilesHandler)
+            lspServer.sendDidCreateFilesNotification(params)
+
+            assert(createFilesHandler.calledOnce)
+            assert(createFilesHandler.calledWith(params))
+        })
+
+        it('should handle file deletion events', () => {
+            const deleteFilesHandler = sandbox.stub()
+            const params: DeleteFilesParams = {
+                files: [{ uri: 'file:///test/file.txt' }],
+            }
+            lspServer.setDidDeleteFilesHandler(deleteFilesHandler)
+            lspServer.sendDidDeleteFilesNotification(params)
+
+            assert(deleteFilesHandler.calledOnce)
+            assert(deleteFilesHandler.calledWith(params))
+        })
+
+        it('should handle file rename events', () => {
+            const renameFilesHandler = sandbox.stub()
+            const params: RenameFilesParams = {
+                files: [
+                    {
+                        oldUri: 'file:///test/oldfile.txt',
+                        newUri: 'file:///test/newfile.txt',
+                    },
+                ],
+            }
+            lspServer.setDidRenameFilesHandler(renameFilesHandler)
+            lspServer.sendDidRenameFilesNotification(params)
+
+            assert(renameFilesHandler.calledOnce)
+            assert(renameFilesHandler.calledWith(params))
         })
     })
 
