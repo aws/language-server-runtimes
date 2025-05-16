@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.83](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.82...language-server-runtimes/v0.2.83) (2025-05-16)
+
+
+### Features
+
+* add routing to didCreateFiles, didDeleteFiles, didRenameFiles & didSaveTextDocument ([#512](https://github.com/aws/language-server-runtimes/issues/512)) ([c4c2bc4](https://github.com/aws/language-server-runtimes/commit/c4c2bc48af9f7c432af97d318bc5f580ccf76067))
+
 ## [0.2.82](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.81...language-server-runtimes/v0.2.82) (2025-05-15)
 
 
