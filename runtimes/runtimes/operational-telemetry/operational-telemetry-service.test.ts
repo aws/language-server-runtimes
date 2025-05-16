@@ -52,7 +52,8 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         OperationalTelemetryService.instance = undefined
     })
 
-    afterEach(async () => {
+    afterEach(async function () {
+        this.timeout(10000)
         const instance = OperationalTelemetryService['instance']
         if (instance) {
             // @ts-ignore

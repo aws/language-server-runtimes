@@ -20,6 +20,10 @@ import {
     UpdateConfigurationParams,
     HandlerResult,
     DidChangeWorkspaceFoldersParams,
+    CreateFilesParams,
+    DeleteFilesParams,
+    RenameFilesParams,
+    DidSaveTextDocumentParams,
 } from '../../../protocol'
 import { InitializeParams, PartialInitializeResult } from '../../../server-interface/lsp'
 import { CredentialsType, Logging, Notification } from '../../../server-interface'
@@ -45,6 +49,10 @@ export class LspServer {
     private notificationRouter?: RouterByServerName<NotificationParams, NotificationFollowupParams>
     private notificationFollowupHandler?: NotificationHandler<NotificationFollowupParams>
     private didChangeWorkspaceFoldersHandler?: NotificationHandler<DidChangeWorkspaceFoldersParams>
+    private didCreateFilesHandler?: NotificationHandler<CreateFilesParams>
+    private didDeleteFilesHandler?: NotificationHandler<DeleteFilesParams>
+    private didRenameFilesHandler?: NotificationHandler<RenameFilesParams>
+    private didSaveTextDocumentHandler?: NotificationHandler<DidSaveTextDocumentParams>
 
     constructor(
         private lspConnection: Connection,
@@ -107,6 +115,22 @@ export class LspServer {
         handler: NotificationHandler<DidChangeWorkspaceFoldersParams>
     ): void => {
         this.didChangeWorkspaceFoldersHandler = handler
+    }
+
+    public setDidCreateFilesHandler = (handler: NotificationHandler<CreateFilesParams>): void => {
+        this.didCreateFilesHandler = handler
+    }
+
+    public setDidDeleteFilesHandler = (handler: NotificationHandler<DeleteFilesParams>): void => {
+        this.didDeleteFilesHandler = handler
+    }
+
+    public setDidRenameFilesHandler = (handler: NotificationHandler<RenameFilesParams>): void => {
+        this.didRenameFilesHandler = handler
+    }
+
+    public setDidSaveTextDocumentHandler = (handler: NotificationHandler<DidSaveTextDocumentParams>): void => {
+        this.didSaveTextDocumentHandler = handler
     }
 
     public initialize = async (
@@ -178,6 +202,22 @@ export class LspServer {
 
     public sendDidChangeWorkspaceFoldersNotification = (params: DidChangeWorkspaceFoldersParams): void => {
         this.didChangeWorkspaceFoldersHandler?.(params)
+    }
+
+    public sendDidCreateFilesNotification = (params: CreateFilesParams): void => {
+        this.didCreateFilesHandler?.(params)
+    }
+
+    public sendDidDeleteFilesNotification = (params: DeleteFilesParams): void => {
+        this.didDeleteFilesHandler?.(params)
+    }
+
+    public sendDidRenameFilesNotification = (params: RenameFilesParams): void => {
+        this.didRenameFilesHandler?.(params)
+    }
+
+    public sendDidSaveTextDocumentNotification = (params: DidSaveTextDocumentParams): void => {
+        this.didSaveTextDocumentHandler?.(params)
     }
 
     public sendUpdateConfigurationRequest = async (
