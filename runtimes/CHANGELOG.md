@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.2.83](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.82...language-server-runtimes/v0.2.83) (2025-05-19)
+
+
+### Features
+
+* add routing to didCreateFiles, didDeleteFiles, didRenameFiles & didSaveTextDocument ([#512](https://github.com/aws/language-server-runtimes/issues/512)) ([c4c2bc4](https://github.com/aws/language-server-runtimes/commit/c4c2bc48af9f7c432af97d318bc5f580ccf76067))
+
+
+### Bug Fixes
+
+* **runtimes:** add PII filtering for process crash error reporting ([4ee967d](https://github.com/aws/language-server-runtimes/commit/4ee967db29d26a5aa12e0d5263fb69c2773209d5))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.28 to ^0.1.29
+
 ## [0.2.82](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.81...language-server-runtimes/v0.2.82) (2025-05-15)
 
 
