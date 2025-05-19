@@ -420,13 +420,28 @@ export interface InlineChatResultParams {
 }
 
 // history
-export type TextBasedFilterOption = {
-    type: 'textarea' | 'textinput'
+export interface FilterOptionBase {
     placeholder?: string
+    title?: string
+    description?: string
     icon?: IconType
 }
+
+export type TextBasedFilterOption = FilterOptionBase & {
+    type: 'textarea' | 'textinput' | 'numericinput'
+}
+
+export type OptionBasedFilterOption = FilterOptionBase & {
+    type: 'select' | 'radiogroup'
+    options: Array<{
+        value: string
+        label: string
+    }>
+}
+
+export type BaseFilterOption = TextBasedFilterOption | OptionBasedFilterOption
 export type FilterValue = string
-export type FilterOption = { id: string } & TextBasedFilterOption
+export type FilterOption = { id: string } & BaseFilterOption
 export interface Action {
     id: string
     icon?: IconType
@@ -468,11 +483,14 @@ export interface DetailedListItem {
     title: string
     description?: string
     groupActions?: boolean
+    children?: DetailedListGroup[]
 }
 
 export interface DetailedListGroup {
     groupName?: string
     children?: DetailedListItem[]
+    actions?: Action[]
+    icon?: IconType
 }
 
 export interface ListMcpServersResult {
@@ -497,10 +515,26 @@ export interface ConversationClickResult extends ConversationClickParams {
 
 export interface McpServerClickParams {
     id: string
+    title?: string
+    optionsValues?: Record<string, string>
 }
 
 export interface McpServerClickResult extends McpServerClickParams {
-    success: boolean
+    filterOptions?: FilterOption[] | null
+    filterActions?: Button[]
+    list?: DetailedListGroup[]
+    header?: {
+        title?: string
+        icon?: IconType
+        status?: {
+            icon?: IconType
+            title?: string
+            description?: string
+            status?: Status
+        }
+        description?: string
+        actions?: Action[]
+    }
 }
 
 export type TabBarAction = 'export'
