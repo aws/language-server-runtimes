@@ -83,6 +83,7 @@ import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType } from '../protocol/window'
+import { getTelemetryReasonDesc } from './util/shared'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -110,8 +111,10 @@ function setupCrashMonitoring(telemetryEmitter?: (metric: MetricEvent) => void) 
                     name: 'runtime_processCrash',
                     result: 'Failed',
                     errorData: {
-                        reason: err.toString(),
-                        errorCode: origin,
+                        reason: origin,
+                    },
+                    data: {
+                        reasonDesc: getTelemetryReasonDesc(err),
                     },
                 })
             } catch (telemetryError) {
