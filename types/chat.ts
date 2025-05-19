@@ -420,24 +420,23 @@ export interface InlineChatResultParams {
 }
 
 // history
-export type TextBasedFilterOption = {
-    type: 'textarea' | 'textinput' | 'numericinput'
+export interface FilterOptionBase {
     placeholder?: string
     title?: string
     description?: string
     icon?: IconType
 }
 
-export type OptionBasedFilterOption = {
+export type TextBasedFilterOption = FilterOptionBase & {
+    type: 'textarea' | 'textinput' | 'numericinput'
+}
+
+export type OptionBasedFilterOption = FilterOptionBase & {
     type: 'select' | 'radiogroup'
-    placeholder?: string
-    title?: string
-    description?: string
     options: Array<{
         value: string
         label: string
     }>
-    icon?: IconType
 }
 
 export type BaseFilterOption = TextBasedFilterOption | OptionBasedFilterOption
