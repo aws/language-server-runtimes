@@ -421,18 +421,28 @@ export interface InlineChatResultParams {
 
 // history
 export type TextBasedFilterOption = {
-    type: 'textarea' | 'textinput' | 'select' | 'numericinput' | 'radiogroup'
+    type: 'textarea' | 'textinput' | 'numericinput'
     placeholder?: string
     title?: string
     description?: string
-    options?: Array<{
+    icon?: IconType
+}
+
+export type OptionBasedFilterOption = {
+    type: 'select' | 'radiogroup'
+    placeholder?: string
+    title?: string
+    description?: string
+    options: Array<{
         value: string
         label: string
     }>
     icon?: IconType
 }
+
+export type BaseFilterOption = TextBasedFilterOption | OptionBasedFilterOption
 export type FilterValue = string
-export type FilterOption = { id: string } & TextBasedFilterOption
+export type FilterOption = { id: string } & BaseFilterOption
 export interface Action {
     id: string
     icon?: IconType
@@ -506,6 +516,8 @@ export interface ConversationClickResult extends ConversationClickParams {
 
 export interface McpServerClickParams {
     id: string
+    title?: string
+    optionsValues?: Record<string, string>
 }
 
 export interface McpServerClickResult extends McpServerClickParams {
