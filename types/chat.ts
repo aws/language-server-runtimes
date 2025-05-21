@@ -152,7 +152,7 @@ export interface ChatMessage {
     summary?: {
         content?: ChatMessage
         collapsedContent?: ChatMessage[]
-    } | null
+    }
     followUp?: {
         text?: string
         options?: ChatItemAction[]
