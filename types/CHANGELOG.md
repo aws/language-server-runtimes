@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.30](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.29...language-server-runtimes-types/v0.1.30) (2025-05-21)
+
+
+### Bug Fixes
+
+* adding summary to ChatMessage ([#521](https://github.com/aws/language-server-runtimes/issues/521)) ([6c18c44](https://github.com/aws/language-server-runtimes/commit/6c18c4437ac4c90c818abcb22e0d7e7b2bdb187c))
+
 ## [0.1.29](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.28...language-server-runtimes-types/v0.1.29) (2025-05-19)
 
 
