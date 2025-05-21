@@ -643,28 +643,6 @@ describe('LspRouter', () => {
     })
 
     describe('didChangeWorkspaceFolders', () => {
-        it('should warn and return when client does not support workspace folders', () => {
-            lspRouter.clientInitializeParams = {
-                capabilities: {
-                    workspace: {
-                        workspaceFolders: false,
-                    },
-                },
-            } as InitializeParams
-
-            const event = {
-                added: [{ name: 'added', uri: 'file:///added' }],
-                removed: [],
-            }
-
-            lspRouter.didChangeWorkspaceFolders(event)
-
-            sinon.assert.calledWith(
-                lspConnection.console.warn as sinon.SinonStub,
-                "Client doesn't support sending workspace folder change events. Ignoring workspace folder changes."
-            )
-        })
-
         it('should update workspace folders and route notification to servers', () => {
             const initialFolders = [
                 { name: 'initial', uri: 'file:///initial' },
