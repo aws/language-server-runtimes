@@ -146,7 +146,7 @@ export type Lsp = {
             handler: RequestHandler<SelectWorkspaceItemParams, SelectWorkspaceItemResult | undefined | null, void>
         ) => void
         openFileDiff: (params: OpenFileDiffParams) => void
-        saveWorkspaceDocument: (params: SaveWorkspaceDocumentParams) => Promise<boolean>
+        saveWorkspaceDocument: (params: SaveWorkspaceDocumentParams) => Promise<void>
     }
     window: {
         showMessage: (params: ShowMessageParams) => Promise<void>

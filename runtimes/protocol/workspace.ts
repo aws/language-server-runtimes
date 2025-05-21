@@ -55,7 +55,7 @@ export interface SaveWorkspaceDocumentParams {
 
 export const saveWorkspaceDocumentRequestType = new ProtocolRequestType<
     SaveWorkspaceDocumentParams,
-    boolean,
+    null,
     never,
     ResponseError,
     void
