@@ -149,6 +149,10 @@ export interface ChatMessage {
         title?: string
         content: SourceLink[]
     }
+    summary?: {
+        content?: ChatMessage
+        collapsedContent?: ChatMessage[]
+    }
     followUp?: {
         text?: string
         options?: ChatItemAction[]
