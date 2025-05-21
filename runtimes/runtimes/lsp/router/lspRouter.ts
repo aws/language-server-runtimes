@@ -136,15 +136,6 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
     }
 
     didChangeWorkspaceFolders = (event: WorkspaceFoldersChangeEvent): void => {
-        const supportsWorkspaceFolders = this.clientInitializeParams?.capabilities.workspace?.workspaceFolders === true
-
-        if (!supportsWorkspaceFolders) {
-            this.lspConnection.console.warn(
-                "Client doesn't support sending workspace folder change events. Ignoring workspace folder changes."
-            )
-            return
-        }
-
         this.workspaceFolders = this.workspaceFolders.filter(
             folder => !event.removed.some(removed => removed.uri === folder.uri)
         )
