@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.29](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.28...language-server-runtimes-types/v0.1.29) (2025-05-19)
+
+
+### Bug Fixes
+
+* adding mcp interfaces ([#514](https://github.com/aws/language-server-runtimes/issues/514)) ([ed961cc](https://github.com/aws/language-server-runtimes/commit/ed961ccf87180e97d2b5d1945ae31d03f84fc2a8))
+
 ## [0.1.28](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.27...language-server-runtimes-types/v0.1.28) (2025-05-14)
 
 

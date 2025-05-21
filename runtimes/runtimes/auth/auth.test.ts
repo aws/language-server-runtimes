@@ -15,7 +15,7 @@ import { Auth, BUILDER_ID_START_URL } from './auth'
 import { InitializeParams, InitializeResult, ParameterStructures, UpdateCredentialsParams } from '../../protocol'
 import { IamCredentials, BearerCredentials, CredentialsType, CredentialsProvider } from '../../server-interface'
 import { LspRouter } from '../lsp/router/lspRouter'
-import { NotificationHandler } from 'vscode-languageserver-protocol'
+import { DidSaveTextDocumentParams, NotificationHandler } from 'vscode-languageserver-protocol'
 
 export const credentialsProtocolMethodNames = {
     iamCredentialsUpdate: 'aws/credentials/iam/update',
@@ -79,6 +79,12 @@ const serverLspConnectionMock = {
             console.warn(str)
         },
     },
+    workspace: {
+        onDidCreateFiles: (handler: any) => {},
+        onDidDeleteFiles: (handler: any) => {},
+        onDidRenameFiles: (handler: any) => {},
+    },
+    onDidSaveTextDocument: (handler: NotificationHandler<DidSaveTextDocumentParams>) => {},
     onDidChangeConfiguration: (handler: NotificationHandler<DidChangeConfigurationParams>) => {},
     onExecuteCommand: (handler: ServerRequestHandler<ExecuteCommandParams, any, never, void>) => {},
     onInitialize: (handler: ServerRequestHandler<InitializeParams, InitializeResult, never, InitializeError>) => {},

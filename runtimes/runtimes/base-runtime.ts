@@ -44,11 +44,6 @@ import {
     inlineChatResultNotificationType,
     listConversationsRequestType,
     conversationClickRequestType,
-    GetSerializedChatParams,
-    GetSerializedChatResult,
-    RequestHandler,
-    TabBarActionParams,
-    TabBarActionResult,
     getSerializedChatRequestType,
     tabBarActionRequestType,
     chatOptionsUpdateType,
@@ -126,8 +121,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     const workspace: Workspace = {
         getTextDocument: async uri => documents.get(uri),
         getAllTextDocuments: async () => documents.all(),
-        getWorkspaceFolder: _uri =>
-            lspRouter.clientInitializeParams!.workspaceFolders && lspRouter.clientInitializeParams!.workspaceFolders[0],
+        getWorkspaceFolder: _uri => lspRouter.getAllWorkspaceFolders() && lspRouter.getAllWorkspaceFolders()[0],
+        getAllWorkspaceFolders: () => lspRouter.getAllWorkspaceFolders(),
         fs: {
             copyFile: (_src, _dest, _options?) => Promise.resolve(),
             exists: _path => Promise.resolve(false),
@@ -230,7 +225,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
             onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
             onDidCloseTextDocument: handler => lspConnection.onDidCloseTextDocument(handler),
-            onDidSaveTextDocument: handler => lspConnection.onDidSaveTextDocument(handler),
+            onDidSaveTextDocument: lspServer.setDidSaveTextDocumentHandler,
             onExecuteCommand: lspServer.setExecuteCommandHandler,
             onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
             workspace: {
@@ -238,9 +233,9 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 getConfiguration: section => lspConnection.workspace.getConfiguration(section),
                 onDidChangeWorkspaceFolders: handler =>
                     lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.method, handler),
-                onDidCreateFiles: params => lspConnection.workspace.onDidCreateFiles(params),
-                onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
-                onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
+                onDidCreateFiles: lspServer.setDidCreateFilesHandler,
+                onDidDeleteFiles: lspServer.setDidDeleteFilesHandler,
+                onDidRenameFiles: lspServer.setDidRenameFilesHandler,
                 onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
                 selectWorkspaceItem: params => lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
                 openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),

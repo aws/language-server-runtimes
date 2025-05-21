@@ -11,6 +11,10 @@ import {
     RequestHandler,
     ResponseError,
     TextDocumentSyncKind,
+    CreateFilesParams,
+    DeleteFilesParams,
+    RenameFilesParams,
+    DidSaveTextDocumentParams,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspRouter } from './lspRouter'
@@ -48,6 +52,8 @@ describe('LspRouter', () => {
         const onExecuteommandSpy = sandbox.spy(lspConnection, 'onExecuteCommand')
         lspConnection.telemetry.logEvent = sandbox.stub()
         lspConnection.console.log = sandbox.stub()
+        lspConnection.console.info = sandbox.stub()
+        lspConnection.console.warn = sandbox.stub()
 
         lspRouter = new LspRouter(lspConnection, 'AWS LSP Standalone', '1.0.0')
 
@@ -72,6 +78,43 @@ describe('LspRouter', () => {
             const initParam = {} as InitializeParams
             initializeHandler(initParam, {} as CancellationToken)
             assert(lspRouter.clientInitializeParams === initParam)
+        })
+        it('should store workspaceFolders in a field when workspaceFolders specified', () => {
+            const workspaceFolders = [{ name: 'test', uri: 'file:///test' }]
+            const initParam = {
+                workspaceFolders: workspaceFolders,
+            } as InitializeParams
+
+            initializeHandler(initParam, {} as CancellationToken)
+
+            assert.deepStrictEqual(lspRouter.getAllWorkspaceFolders(), workspaceFolders)
+        })
+
+        it('should store workspaceFolders in a field when rootUri specified', () => {
+            const expectedWorkspace = [{ name: 'test', uri: 'file:///test' }]
+            const initParam = {
+                rootUri: 'file:///test',
+            } as InitializeParams
+
+            initializeHandler(initParam, {} as CancellationToken)
+
+            assert.deepStrictEqual(lspRouter.getAllWorkspaceFolders(), expectedWorkspace)
+        })
+
+        it('should only log when no workspace folders are found', () => {
+            const initParam = {
+                processId: null,
+                rootUri: null,
+                capabilities: {},
+                workspaceFolders: [],
+            } as InitializeParams
+
+            initializeHandler(initParam, {} as CancellationToken)
+
+            sinon.assert.calledWith(
+                lspConnection.console.info as sinon.SinonStub,
+                'No workspace folders found in initialization parameters'
+            )
         })
 
         it('should log telemetry event when aws config is missing in InitializeParams', async () => {
@@ -599,6 +642,236 @@ describe('LspRouter', () => {
         })
     })
 
+    describe('didChangeWorkspaceFolders', () => {
+        it('should warn and return when client does not support workspace folders', () => {
+            lspRouter.clientInitializeParams = {
+                capabilities: {
+                    workspace: {
+                        workspaceFolders: false,
+                    },
+                },
+            } as InitializeParams
+
+            const event = {
+                added: [{ name: 'added', uri: 'file:///added' }],
+                removed: [],
+            }
+
+            lspRouter.didChangeWorkspaceFolders(event)
+
+            sinon.assert.calledWith(
+                lspConnection.console.warn as sinon.SinonStub,
+                "Client doesn't support sending workspace folder change events. Ignoring workspace folder changes."
+            )
+        })
+
+        it('should update workspace folders and route notification to servers', () => {
+            const initialFolders = [
+                { name: 'initial', uri: 'file:///initial' },
+                { name: 'toRemove', uri: 'file:///toRemove' },
+            ]
+            lspRouter['workspaceFolders'] = initialFolders
+
+            lspRouter.clientInitializeParams = {
+                capabilities: {
+                    workspace: {
+                        workspaceFolders: true,
+                    },
+                },
+            } as InitializeParams
+
+            const didChangeWorkspaceFoldersSpy = sandbox.spy()
+            const server = newServer({
+                didChangeWorkspaceFoldersHandler: didChangeWorkspaceFoldersSpy,
+            })
+            lspRouter.servers = [server]
+
+            const event = {
+                added: [{ name: 'added', uri: 'file:///added' }],
+                removed: [{ name: 'toRemove', uri: 'file:///toRemove' }],
+            }
+
+            lspRouter.didChangeWorkspaceFolders(event)
+
+            const expectedFolders = [
+                { name: 'initial', uri: 'file:///initial' },
+                { name: 'added', uri: 'file:///added' },
+            ]
+            assert.deepStrictEqual(lspRouter.getAllWorkspaceFolders(), expectedFolders)
+            assert(didChangeWorkspaceFoldersSpy.calledWith({ event }))
+        })
+    })
+
+    describe('didCreateFiles', () => {
+        it('should route didCreateFiles notifications to single server', () => {
+            const didCreateFilesSpy = sandbox.spy()
+            const server = newServer({
+                didCreateFilesHandler: didCreateFilesSpy,
+            })
+            lspRouter.servers = [server]
+
+            const params: CreateFilesParams = {
+                files: [{ uri: 'file:///test/file.txt' }],
+            }
+
+            lspRouter.didCreateFiles(params)
+
+            assert(didCreateFilesSpy.calledWith(params))
+        })
+
+        it('should route didCreateFiles notifications to multiple servers', () => {
+            const spy1 = sandbox.spy()
+            const spy2 = sandbox.spy()
+            const spy3 = sandbox.spy()
+
+            const server1 = newServer({ didCreateFilesHandler: spy1 })
+            const server2 = newServer({ didCreateFilesHandler: spy2 })
+            const server3 = newServer({ didCreateFilesHandler: spy3 })
+
+            lspRouter.servers = [server1, server2, server3]
+
+            const params: CreateFilesParams = {
+                files: [{ uri: 'file:///test/file.txt' }],
+            }
+
+            lspRouter.didCreateFiles(params)
+
+            assert(spy1.calledWith(params))
+            assert(spy2.calledWith(params))
+            assert(spy3.calledWith(params))
+        })
+    })
+
+    describe('didDeleteFiles', () => {
+        it('should route didDeleteFiles notifications to single server', () => {
+            const didDeleteFilesSpy = sandbox.spy()
+            const server = newServer({
+                didDeleteFilesHandler: didDeleteFilesSpy,
+            })
+            lspRouter.servers = [server]
+
+            const params: DeleteFilesParams = {
+                files: [{ uri: 'file:///test/file.txt' }],
+            }
+
+            lspRouter.didDeleteFiles(params)
+
+            assert(didDeleteFilesSpy.calledWith(params))
+        })
+
+        it('should route didDeleteFiles notifications to multiple servers', () => {
+            const spy1 = sandbox.spy()
+            const spy2 = sandbox.spy()
+            const spy3 = sandbox.spy()
+
+            const server1 = newServer({ didDeleteFilesHandler: spy1 })
+            const server2 = newServer({ didDeleteFilesHandler: spy2 })
+            const server3 = newServer({ didDeleteFilesHandler: spy3 })
+
+            lspRouter.servers = [server1, server2, server3]
+
+            const params: DeleteFilesParams = {
+                files: [{ uri: 'file:///test/file.txt' }],
+            }
+
+            lspRouter.didDeleteFiles(params)
+
+            assert(spy1.calledWith(params))
+            assert(spy2.calledWith(params))
+            assert(spy3.calledWith(params))
+        })
+    })
+
+    describe('didRenameFiles', () => {
+        it('should route didRenameFiles notifications to single server', () => {
+            const didRenameFilesSpy = sandbox.spy()
+            const server = newServer({
+                didRenameFilesHandler: didRenameFilesSpy,
+            })
+            lspRouter.servers = [server]
+
+            const params: RenameFilesParams = {
+                files: [
+                    {
+                        oldUri: 'file:///test/oldfile.txt',
+                        newUri: 'file:///test/newfile.txt',
+                    },
+                ],
+            }
+
+            lspRouter.didRenameFiles(params)
+
+            assert(didRenameFilesSpy.calledWith(params))
+        })
+
+        it('should route didRenameFiles notifications to multiple servers', () => {
+            const spy1 = sandbox.spy()
+            const spy2 = sandbox.spy()
+            const spy3 = sandbox.spy()
+
+            const server1 = newServer({ didRenameFilesHandler: spy1 })
+            const server2 = newServer({ didRenameFilesHandler: spy2 })
+            const server3 = newServer({ didRenameFilesHandler: spy3 })
+
+            lspRouter.servers = [server1, server2, server3]
+
+            const params: RenameFilesParams = {
+                files: [
+                    {
+                        oldUri: 'file:///test/oldfile.txt',
+                        newUri: 'file:///test/newfile.txt',
+                    },
+                ],
+            }
+
+            lspRouter.didRenameFiles(params)
+
+            assert(spy1.calledWith(params))
+            assert(spy2.calledWith(params))
+            assert(spy3.calledWith(params))
+        })
+    })
+
+    describe('didSaveTextDocument', () => {
+        it('should route didSaveTextDocument notifications to single server', () => {
+            const didSaveTextDocumentSpy = sandbox.spy()
+            const server = newServer({
+                didSaveTextDocumentHandler: didSaveTextDocumentSpy,
+            })
+            lspRouter.servers = [server]
+
+            const params: DidSaveTextDocumentParams = {
+                textDocument: { uri: 'file:///test/file.txt' },
+            }
+
+            lspRouter.didSaveTextDocument(params)
+
+            assert(didSaveTextDocumentSpy.calledWith(params))
+        })
+
+        it('should route didSaveTextDocument notifications to multiple servers', () => {
+            const spy1 = sandbox.spy()
+            const spy2 = sandbox.spy()
+            const spy3 = sandbox.spy()
+
+            const server1 = newServer({ didSaveTextDocumentHandler: spy1 })
+            const server2 = newServer({ didSaveTextDocumentHandler: spy2 })
+            const server3 = newServer({ didSaveTextDocumentHandler: spy3 })
+
+            lspRouter.servers = [server1, server2, server3]
+
+            const params: DidSaveTextDocumentParams = {
+                textDocument: { uri: 'file:///test/file.txt' },
+            }
+
+            lspRouter.didSaveTextDocument(params)
+
+            assert(spy1.calledWith(params))
+            assert(spy2.calledWith(params))
+            assert(spy3.calledWith(params))
+        })
+    })
+
     describe('notifications', () => {
         const initHandler = () => {
             return {
@@ -697,6 +970,12 @@ describe('LspRouter', () => {
             telemetry: {
                 logEvent: (message: any) => {},
             },
+            workspace: {
+                onDidCreateFiles: (handler: any) => {},
+                onDidDeleteFiles: (handler: any) => {},
+                onDidRenameFiles: (handler: any) => {},
+            },
+            onDidSaveTextDocument: (handler: any) => {},
             onInitialize: (handler: any) => {},
             onInitialized: (handler: any) => {},
             onExecuteCommand: (handler: any) => {},
@@ -716,6 +995,11 @@ describe('LspRouter', () => {
         initializedHandler,
         updateConfigurationHandler,
         credentialsDeleteHandler,
+        didChangeWorkspaceFoldersHandler,
+        didCreateFilesHandler,
+        didDeleteFilesHandler,
+        didRenameFilesHandler,
+        didSaveTextDocumentHandler,
     }: {
         lspConnection?: Connection
         didChangeConfigurationHandler?: any
@@ -725,6 +1009,11 @@ describe('LspRouter', () => {
         initializedHandler?: any
         updateConfigurationHandler?: any
         credentialsDeleteHandler?: any
+        didChangeWorkspaceFoldersHandler?: any
+        didCreateFilesHandler?: any
+        didDeleteFilesHandler?: any
+        didRenameFilesHandler?: any
+        didSaveTextDocumentHandler?: any
     }) {
         const server = new LspServer(lspConnection || stubLspConnection(), encoding, logging)
         server.setDidChangeConfigurationHandler(didChangeConfigurationHandler)
@@ -734,6 +1023,11 @@ describe('LspRouter', () => {
         server.setInitializedHandler(initializedHandler)
         server.setUpdateConfigurationHandler(updateConfigurationHandler)
         server.setCredentialsDeleteHandler(credentialsDeleteHandler)
+        server.setDidChangeWorkspaceFoldersHandler(didChangeWorkspaceFoldersHandler)
+        server.setDidCreateFilesHandler(didCreateFilesHandler)
+        server.setDidDeleteFilesHandler(didDeleteFilesHandler)
+        server.setDidRenameFilesHandler(didRenameFilesHandler)
+        server.setDidSaveTextDocumentHandler(didSaveTextDocumentHandler)
         return server
     }
 })

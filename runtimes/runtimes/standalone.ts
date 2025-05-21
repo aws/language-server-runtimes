@@ -5,7 +5,6 @@
 
 import { TextDocuments } from 'vscode-languageserver'
 import {
-    DidChangeWorkspaceFoldersNotification,
     ProgressToken,
     ProgressType,
     PublishDiagnosticsNotification,
@@ -84,6 +83,7 @@ import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType } from '../protocol/window'
+import { getTelemetryReasonDesc } from './util/shared'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -111,8 +111,10 @@ function setupCrashMonitoring(telemetryEmitter?: (metric: MetricEvent) => void) 
                     name: 'runtime_processCrash',
                     result: 'Failed',
                     errorData: {
-                        reason: err.toString(),
-                        errorCode: origin,
+                        reason: origin,
+                    },
+                    data: {
+                        reasonDesc: getTelemetryReasonDesc(err),
                     },
                 })
             } catch (telemetryError) {
@@ -218,8 +220,8 @@ export const standalone = (props: RuntimeProps) => {
                 const fileUrl = new URL(uri)
                 const normalizedFileUri = fileUrl.pathname || ''
 
-                const folders = lspRouter.clientInitializeParams!.workspaceFolders
-                if (!folders) return undefined
+                const folders = lspRouter.getAllWorkspaceFolders()
+                if (!folders || folders.length === 0) return undefined
 
                 for (const folder of folders) {
                     const folderUrl = new URL(folder.uri)
@@ -228,6 +230,9 @@ export const standalone = (props: RuntimeProps) => {
                         return folder
                     }
                 }
+            },
+            getAllWorkspaceFolders: () => {
+                return lspRouter.getAllWorkspaceFolders()
             },
             fs: {
                 copyFile: async (src, dest, options?) => {
@@ -367,17 +372,16 @@ export const standalone = (props: RuntimeProps) => {
                 onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
                 onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
                 onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
-                onDidSaveTextDocument: handler => documentsObserver.callbacks.onDidSaveTextDocument(handler),
+                onDidSaveTextDocument: lspServer.setDidSaveTextDocumentHandler,
                 onExecuteCommand: lspServer.setExecuteCommandHandler,
                 onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
                 workspace: {
                     applyWorkspaceEdit: params => lspConnection.workspace.applyEdit(params),
                     getConfiguration: section => lspConnection.workspace.getConfiguration(section),
-                    onDidChangeWorkspaceFolders: handler =>
-                        lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.method, handler),
-                    onDidCreateFiles: params => lspConnection.workspace.onDidCreateFiles(params),
-                    onDidDeleteFiles: params => lspConnection.workspace.onDidDeleteFiles(params),
-                    onDidRenameFiles: params => lspConnection.workspace.onDidRenameFiles(params),
+                    onDidChangeWorkspaceFolders: lspServer.setDidChangeWorkspaceFoldersHandler,
+                    onDidCreateFiles: lspServer.setDidCreateFilesHandler,
+                    onDidDeleteFiles: lspServer.setDidDeleteFilesHandler,
+                    onDidRenameFiles: lspServer.setDidRenameFilesHandler,
                     onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
                     selectWorkspaceItem: params =>
                         lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),

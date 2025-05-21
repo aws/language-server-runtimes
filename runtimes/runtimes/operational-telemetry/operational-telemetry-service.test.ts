@@ -52,7 +52,8 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         OperationalTelemetryService.instance = undefined
     })
 
-    afterEach(async () => {
+    afterEach(async function () {
+        this.timeout(10000)
         const instance = OperationalTelemetryService['instance']
         if (instance) {
             // @ts-ignore
@@ -62,21 +63,16 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         await promisify(server.close.bind(server))()
     })
 
-    function makeMetricsRequestDeterministic(jsonStr: string): string {
+    function makeRequestDeterministic(jsonStr: string): string {
         return jsonStr
-            .replace(/"(startTimeUnixNano|timeUnixNano)":"[0-9]+"/g, '"$1":"1746710710801000000"')
-            .replace(
-                /"key":"sessionId","value":{"stringValue":"[^"]+"/g,
-                '"key":"sessionId","value":{"stringValue":"80fd44e9-55e5-4b80-a08a-4f2bcaf2e1b9"'
-            )
-    }
-
-    function makeLogsRequestDeterministic(jsonStr: string): string {
-        return jsonStr
-            .replace(/"(timeUnixNano|observedTimeUnixNano)":"[0-9]+"/g, '"$1":"1746710710801000000"')
+            .replace(/"(startTimeUnixNano|timeUnixNano|observedTimeUnixNano)":"[0-9]+"/g, '"$1":"1746710710801000000"')
             .replace(
                 /"key":"sessionId","value":{"stringValue":"[^"]+"}}/g,
                 '"key":"sessionId","value":{"stringValue":"80fd44e9-55e5-4b80-a08a-4f2bcaf2e1b9"}}'
+            )
+            .replace(
+                /"key":"telemetry.sdk.version","value":{"stringValue":"[^"]+"/g,
+                '"key":"telemetry.sdk.version","value":{"stringValue":"2.0.0"' // Changes with the version of the sdk in package.json
             )
     }
 
@@ -129,7 +125,7 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         assert(request.method === 'POST', 'Request should use POST method')
 
         const requestBodyStr = JSON.stringify(request.body)
-        const normalizedBody = makeMetricsRequestDeterministic(requestBodyStr)
+        const normalizedBody = makeRequestDeterministic(requestBodyStr)
         assert.deepStrictEqual(JSON.parse(normalizedBody), resourceMetrics)
     })
 
@@ -150,7 +146,7 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         assert(request.method === 'POST', 'Request should use POST method')
         const requestBodyStr = JSON.stringify(request.body)
 
-        const normalizedBody = makeLogsRequestDeterministic(requestBodyStr)
+        const normalizedBody = makeRequestDeterministic(requestBodyStr)
 
         assert.deepStrictEqual(JSON.parse(normalizedBody), resourceLogs)
     })
