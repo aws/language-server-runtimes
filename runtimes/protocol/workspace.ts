@@ -10,9 +10,11 @@ import {
     OpenFileDiffParams,
     ProtocolNotificationType,
     ProtocolRequestType,
+    ResponseError,
     SELECT_WORKSPACE_ITEM_REQUEST_METHOD,
     SelectWorkspaceItemParams,
     SelectWorkspaceItemResult,
+    URI,
 } from './lsp'
 
 export const selectWorkspaceItemRequestType = new ProtocolRequestType<
@@ -46,3 +48,15 @@ export const didAppendFileNotificationType = new ProtocolNotificationType<FilePa
 export const didCreateDirectoryNotificationType = new ProtocolNotificationType<FileParams, void>(
     DID_CREATE_DIRECTORY_NOTIFICATION_METHOD
 )
+
+export interface SaveWorkspaceDocumentParams {
+    uri: string
+}
+
+export const saveWorkspaceDocumentRequestType = new ProtocolRequestType<
+    SaveWorkspaceDocumentParams,
+    boolean,
+    never,
+    ResponseError,
+    void
+>('aws/saveWorkspaceDocument')

@@ -51,6 +51,7 @@ import {
     buttonClickRequestType,
     listMcpServersRequestType,
     mcpServerClickRequestType,
+    saveWorkspaceDocumentRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -239,6 +240,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
                 selectWorkspaceItem: params => lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
                 openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
+                saveWorkspaceDocument: params =>
+                    lspConnection.sendRequest(saveWorkspaceDocumentRequestType.method, params),
             },
             window: {
                 showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
