@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.31](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.30...language-server-runtimes-types/v0.1.31) (2025-05-22)
+
+
+### Bug Fixes
+
+* support nested mcm server click param option ([#523](https://github.com/aws/language-server-runtimes/issues/523)) ([35c7d64](https://github.com/aws/language-server-runtimes/commit/35c7d64f24d1b2a280a29d07c17d2afbfb7dd97d))
+
 ## [0.1.30](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.29...language-server-runtimes-types/v0.1.30) (2025-05-21)
 
 
