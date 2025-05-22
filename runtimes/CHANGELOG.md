@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.86](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.85...language-server-runtimes/v0.2.86) (2025-05-22)
+
+
+### Bug Fixes
+
+* remove the supports workspace check for didChangeWorkspaceFolder event ([#522](https://github.com/aws/language-server-runtimes/issues/522)) ([f5977cc](https://github.com/aws/language-server-runtimes/commit/f5977cc52bfd5048da48ed0e67e3bebcd302f7b4))
+
 ## [0.2.85](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.84...language-server-runtimes/v0.2.85) (2025-05-22)
 
 
