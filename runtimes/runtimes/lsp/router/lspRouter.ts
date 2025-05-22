@@ -29,6 +29,7 @@ import {
     DeleteFilesParams,
     RenameFilesParams,
     DidSaveTextDocumentParams,
+    DidChangeWorkspaceFoldersNotification,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
@@ -58,6 +59,10 @@ export class LspRouter {
         lspConnection.workspace.onDidCreateFiles(this.didCreateFiles)
         lspConnection.workspace.onDidDeleteFiles(this.didDeleteFiles)
         lspConnection.workspace.onDidRenameFiles(this.didRenameFiles)
+        // Note: Using raw notification instead of workspace.OnDidWorkspaceChange to avoid downstream VSCode language server errors when workspaceFolders is undefined(clients like VS)
+        lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.type, params => {
+            this.didChangeWorkspaceFolders(params.event)
+        })
         lspConnection.onDidSaveTextDocument(this.didSaveTextDocument)
     }
 
@@ -136,15 +141,6 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
     }
 
     didChangeWorkspaceFolders = (event: WorkspaceFoldersChangeEvent): void => {
-        const supportsWorkspaceFolders = this.clientInitializeParams?.capabilities.workspace?.workspaceFolders === true
-
-        if (!supportsWorkspaceFolders) {
-            this.lspConnection.console.warn(
-                "Client doesn't support sending workspace folder change events. Ignoring workspace folder changes."
-            )
-            return
-        }
-
         this.workspaceFolders = this.workspaceFolders.filter(
             folder => !event.removed.some(removed => removed.uri === folder.uri)
         )
@@ -224,12 +220,6 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
             // Ask the client to notify the server on configuration changes
             this.lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
         }
-
-        // Register for workspace folder changes only if supported
-        if (workspaceCapabilities?.workspaceFolders === true) {
-            this.lspConnection.workspace.onDidChangeWorkspaceFolders(this.didChangeWorkspaceFolders)
-        }
-
         this.routeNotificationToAllServers((server, params) => server.sendInitializedNotification(params), params)
     }
 

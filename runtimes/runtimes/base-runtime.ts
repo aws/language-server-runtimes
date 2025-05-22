@@ -231,8 +231,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             workspace: {
                 applyWorkspaceEdit: params => lspConnection.workspace.applyEdit(params),
                 getConfiguration: section => lspConnection.workspace.getConfiguration(section),
-                onDidChangeWorkspaceFolders: handler =>
-                    lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.method, handler),
+                onDidChangeWorkspaceFolders: lspServer.setDidChangeWorkspaceFoldersHandler,
                 onDidCreateFiles: lspServer.setDidCreateFilesHandler,
                 onDidDeleteFiles: lspServer.setDidDeleteFilesHandler,
                 onDidRenameFiles: lspServer.setDidRenameFilesHandler,
