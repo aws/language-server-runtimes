@@ -59,6 +59,7 @@ export class LspRouter {
         lspConnection.workspace.onDidCreateFiles(this.didCreateFiles)
         lspConnection.workspace.onDidDeleteFiles(this.didDeleteFiles)
         lspConnection.workspace.onDidRenameFiles(this.didRenameFiles)
+        // Note: Using raw notification instead of workspace.OnDidWorkspaceChange to avoid downstream VSCode language server errors when workspaceFolders is undefined(clients like VS)
         lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.type, params => {
             this.didChangeWorkspaceFolders(params.event)
         })
