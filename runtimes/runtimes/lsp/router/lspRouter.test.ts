@@ -952,6 +952,7 @@ describe('LspRouter', () => {
                 onDidCreateFiles: (handler: any) => {},
                 onDidDeleteFiles: (handler: any) => {},
                 onDidRenameFiles: (handler: any) => {},
+                onDidChangeWorkspaceFolders: (handler: any) => {},
             },
             onDidSaveTextDocument: (handler: any) => {},
             onInitialize: (handler: any) => {},

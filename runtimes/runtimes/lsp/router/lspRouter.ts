@@ -29,6 +29,7 @@ import {
     DeleteFilesParams,
     RenameFilesParams,
     DidSaveTextDocumentParams,
+    DidChangeWorkspaceFoldersNotification,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
 import { LspServer } from './lspServer'
@@ -58,6 +59,9 @@ export class LspRouter {
         lspConnection.workspace.onDidCreateFiles(this.didCreateFiles)
         lspConnection.workspace.onDidDeleteFiles(this.didDeleteFiles)
         lspConnection.workspace.onDidRenameFiles(this.didRenameFiles)
+        lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.type, params => {
+            this.didChangeWorkspaceFolders(params.event)
+        })
         lspConnection.onDidSaveTextDocument(this.didSaveTextDocument)
     }
 
@@ -215,12 +219,6 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
             // Ask the client to notify the server on configuration changes
             this.lspConnection.client.register(DidChangeConfigurationNotification.type, undefined)
         }
-
-        // Register for workspace folder changes only if supported
-        if (workspaceCapabilities?.workspaceFolders === true) {
-            this.lspConnection.workspace.onDidChangeWorkspaceFolders(this.didChangeWorkspaceFolders)
-        }
-
         this.routeNotificationToAllServers((server, params) => server.sendInitializedNotification(params), params)
     }
 
