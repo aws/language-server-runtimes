@@ -28,6 +28,7 @@ import {
     didWriteFileNotificationType,
     didAppendFileNotificationType,
     didCreateDirectoryNotificationType,
+    saveWorkspaceDocumentRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -386,6 +387,8 @@ export const standalone = (props: RuntimeProps) => {
                     selectWorkspaceItem: params =>
                         lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
                     openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
+                    saveWorkspaceDocument: params =>
+                        lspConnection.sendRequest(saveWorkspaceDocumentRequestType.method, params),
                 },
                 window: {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
