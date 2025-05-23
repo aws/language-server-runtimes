@@ -368,6 +368,7 @@ export interface ChatUpdateParams {
  */
 export interface ChatOptionsUpdateParams {
     chatNotifications?: ChatMessage[]
+    modelId?: string
 }
 
 export type FileAction = 'accept-change' | 'reject-change'
