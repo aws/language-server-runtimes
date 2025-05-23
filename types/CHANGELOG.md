@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.32](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.31...language-server-runtimes-types/v0.1.32) (2025-05-23)
+
+
+### Features
+
+* add modelId to chatOptionsUpdateParams ([#530](https://github.com/aws/language-server-runtimes/issues/530)) ([77d6f56](https://github.com/aws/language-server-runtimes/commit/77d6f562b7b5b8f78c3f76a8bd06cede97638209))
+
+
+### Reverts
+
+* support nested mcm server click param option ([#523](https://github.com/aws/language-server-runtimes/issues/523)) ([#528](https://github.com/aws/language-server-runtimes/issues/528)) ([b1d4d17](https://github.com/aws/language-server-runtimes/commit/b1d4d173a7d0278d591834251e406da9d4178169))
+
 ## [0.1.31](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.30...language-server-runtimes-types/v0.1.31) (2025-05-22)
 
 
