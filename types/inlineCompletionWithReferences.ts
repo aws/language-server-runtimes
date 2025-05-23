@@ -85,4 +85,13 @@ export interface LogInlineCompletionSessionResultsParams {
      * Length of additional characters inputed by user from when the trigger happens to when the user decision was made
      */
     typeaheadLength?: number
+    /**
+     * The number of new characters of code that will be added by the suggestion if accepted, excluding any characters
+     * from the beginning of the suggestion that the user had typed in after the trigger.
+     */
+    addedCharacterCount?: number
+    /**
+     * The number of characters of existing code that will be removed by the suggestion if accepted.
+     */
+    deletedCharacterCount?: number
 }
