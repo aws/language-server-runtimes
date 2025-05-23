@@ -517,16 +517,10 @@ export interface ConversationClickResult extends ConversationClickParams {
     success: boolean
 }
 
-interface OptionValueItem {
-    [key: string]: string
-}
-
-type OptionValueType = string | OptionValueItem[]
-
 export interface McpServerClickParams {
     id: string
     title?: string
-    optionsValues?: Record<string, OptionValueType>
+    optionsValues?: Record<string, string>
 }
 
 export interface McpServerClickResult extends McpServerClickParams {
