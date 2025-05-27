@@ -83,6 +83,7 @@ const serverLspConnectionMock = {
         onDidCreateFiles: (handler: any) => {},
         onDidDeleteFiles: (handler: any) => {},
         onDidRenameFiles: (handler: any) => {},
+        onDidChangeWorkspaceFolders: (handler: any) => {},
     },
     onDidSaveTextDocument: (handler: NotificationHandler<DidSaveTextDocumentParams>) => {},
     onDidChangeConfiguration: (handler: NotificationHandler<DidChangeConfigurationParams>) => {},

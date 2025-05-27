@@ -1,5 +1,44 @@
 # Changelog
 
+## [0.2.87](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.86...language-server-runtimes/v0.2.87) (2025-05-23)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.31 to ^0.1.32
+
+## [0.2.86](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.85...language-server-runtimes/v0.2.86) (2025-05-22)
+
+
+### Bug Fixes
+
+* remove the supports workspace check for didChangeWorkspaceFolder event ([#522](https://github.com/aws/language-server-runtimes/issues/522)) ([f5977cc](https://github.com/aws/language-server-runtimes/commit/f5977cc52bfd5048da48ed0e67e3bebcd302f7b4))
+
+## [0.2.85](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.84...language-server-runtimes/v0.2.85) (2025-05-22)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.30 to ^0.1.31
+
+## [0.2.84](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.83...language-server-runtimes/v0.2.84) (2025-05-21)
+
+
+### Bug Fixes
+
+* make test independent of sdk version ([#519](https://github.com/aws/language-server-runtimes/issues/519)) ([112feba](https://github.com/aws/language-server-runtimes/commit/112feba70219a98a12f13727d67c540205fa9c9f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.29 to ^0.1.30
+
 ## [0.2.83](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.82...language-server-runtimes/v0.2.83) (2025-05-19)
 
 
