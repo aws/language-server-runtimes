@@ -501,6 +501,11 @@ export interface ListMcpServersResult {
     header?: {
         title: string
         description?: string
+        status?: {
+            icon?: IconType
+            title?: string
+            status?: Status
+        }
     }
     list: DetailedListGroup[]
     filterOptions?: FilterOption[]
