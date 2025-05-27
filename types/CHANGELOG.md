@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.33](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.32...language-server-runtimes-types/v0.1.33) (2025-05-27)
+
+
+### Bug Fixes
+
+* adding status field to ListMcpServersResult ([#533](https://github.com/aws/language-server-runtimes/issues/533)) ([24d5a40](https://github.com/aws/language-server-runtimes/commit/24d5a408b60e2ffb2a34d2e9cc21b1a342b0e924))
+
 ## [0.1.32](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.31...language-server-runtimes-types/v0.1.32) (2025-05-23)
 
 
