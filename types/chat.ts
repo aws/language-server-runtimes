@@ -364,10 +364,16 @@ export interface ChatUpdateParams {
 
 /**
  * Server-initiated chat metadata updates.
- * Processes changes of developer profiles.
  */
 export interface ChatOptionsUpdateParams {
+    /**
+     * Processes changes of developer profiles.
+     */
     chatNotifications?: ChatMessage[]
+    /**
+     * The last selected modelId for the conversation. This is used to allow the server to
+     * programmatically update the selected model for persistance across sessions.
+     */
     modelId?: string
 }
 
