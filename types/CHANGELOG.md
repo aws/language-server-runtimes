@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.35](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.34...language-server-runtimes-types/v0.1.35) (2025-05-30)
+
+
+### Features
+
+* add tabId to ChatOptionsUpdateParams ([#540](https://github.com/aws/language-server-runtimes/issues/540)) ([a0b7940](https://github.com/aws/language-server-runtimes/commit/a0b7940644407646705586e2330f4b12c0896ab6))
+
 ## [0.1.34](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.33...language-server-runtimes-types/v0.1.34) (2025-05-30)
 
 
