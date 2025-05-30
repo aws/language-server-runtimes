@@ -7,8 +7,9 @@ import { RuntimeProps } from '../runtime'
 import { InitializeParams, InitializeResult } from '../../protocol'
 import { Runtime } from '../../server-interface'
 import { totalmem } from 'os'
+import { OperationalTelemetryService } from '../operational-telemetry/operational-telemetry-service'
 
-const DEFAULT_TELEMETRY_GATEWAY_ENDPOINT = ''
+const DEFAULT_TELEMETRY_ENDPOINT = 'https://telemetry.aws-language-servers.us-east-1.amazonaws.com'
 
 function setMemoryUsageTelemetry() {
     const optel = OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES)
@@ -45,18 +46,18 @@ export function getTelemetryLspServer(
     lspServer.setInitializeHandler(async (params: InitializeParams): Promise<InitializeResult> => {
         const optOut = params.initializationOptions?.telemetryOptOut ?? true // telemetry disabled if option not provided
 
-        const endpoint = runtime.getConfiguration('TELEMETRY_GATEWAY_ENDPOINT') ?? DEFAULT_TELEMETRY_GATEWAY_ENDPOINT
+        const endpoint = runtime.getConfiguration('TELEMETRY_GATEWAY_ENDPOINT') ?? DEFAULT_TELEMETRY_ENDPOINT
 
-        // const optel = OperationalTelemetryService.getInstance({
-        //     serviceName: props.name,
-        //     serviceVersion: props.version,
-        //     extendedClientInfo: params.initializationOptions?.aws?.clientInfo,
-        //     lspConsole: lspConnection.console,
-        //     endpoint: endpoint,
-        //     telemetryOptOut: optOut,
-        // })
+        const optel = OperationalTelemetryService.getInstance({
+            serviceName: props.name,
+            serviceVersion: props.version,
+            extendedClientInfo: params.initializationOptions?.aws?.clientInfo,
+            lspConsole: lspConnection.console,
+            endpoint: endpoint,
+            telemetryOptOut: optOut,
+        })
 
-        // OperationalTelemetryProvider.setTelemetryInstance(optel)
+        OperationalTelemetryProvider.setTelemetryInstance(optel)
 
         setServerCrashTelemetryListeners()
         setMemoryUsageTelemetry()

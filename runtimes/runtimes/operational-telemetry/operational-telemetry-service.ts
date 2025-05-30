@@ -27,7 +27,6 @@ export class OperationalTelemetryService implements OperationalTelemetry {
     private static instance: OperationalTelemetryService
     private readonly RUNTIMES_SCOPE_NAME = 'language-server-runtimes'
     private readonly FIVE_MINUTES = 300000
-    private readonly FIVE_SECONDS = 5000
     private readonly baseResource: Resource
     private readonly endpoint: string
     private telemetryOptOut: boolean
@@ -46,7 +45,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
 
     private constructor(config: OperationalTelemetryConfig) {
         this.exportIntervalMillis = config.exportIntervalMillis ?? this.FIVE_MINUTES
-        this.scheduledDelayMillis = config.scheduledDelayMillis ?? this.FIVE_SECONDS
+        this.scheduledDelayMillis = config.scheduledDelayMillis ?? this.FIVE_MINUTES
 
         this.lspConsole = config.lspConsole
 
