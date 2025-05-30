@@ -366,6 +366,7 @@ export interface ChatUpdateParams {
  * Server-initiated chat metadata updates.
  */
 export interface ChatOptionsUpdateParams {
+    tabId: string
     /**
      * Processes changes of developer profiles.
      */
