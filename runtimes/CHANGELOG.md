@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.2.89](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.88...language-server-runtimes/v0.2.89) (2025-05-30)
+
+
+### Features
+
+* enable operational telemetry ([#539](https://github.com/aws/language-server-runtimes/issues/539)) ([f49206f](https://github.com/aws/language-server-runtimes/commit/f49206f8c6e10c4a408c96359adb6165122273f6))
+
+
+### Bug Fixes
+
+* add aws-sdk to dependencies ([#535](https://github.com/aws/language-server-runtimes/issues/535)) ([d8890a6](https://github.com/aws/language-server-runtimes/commit/d8890a6b6add4a4485e40ad7bc2de41f32045d14))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.33 to ^0.1.34
+
 ## [0.2.88](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.87...language-server-runtimes/v0.2.88) (2025-05-27)
 
 

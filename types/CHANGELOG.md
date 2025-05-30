@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.34](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.33...language-server-runtimes-types/v0.1.34) (2025-05-30)
+
+
+### Features
+
+* adding additional fields to LogInlineCompletionSessionResultsParams ([#537](https://github.com/aws/language-server-runtimes/issues/537)) ([edc1ada](https://github.com/aws/language-server-runtimes/commit/edc1ada2fd9bd238c38d52d7fb5e9ec8a6616bf8))
+
 ## [0.1.33](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.32...language-server-runtimes-types/v0.1.33) (2025-05-27)
 
 
