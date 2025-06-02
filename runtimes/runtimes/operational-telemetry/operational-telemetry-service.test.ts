@@ -80,7 +80,7 @@ describe('OperationalTelemetryService with OpenTelemetry SDK', () => {
         return {
             serviceName: mockServiceName,
             serviceVersion: mockServiceVersion,
-            lspConsole: {
+            logging: {
                 debug: () => {},
                 error: () => {},
                 info: () => {},

@@ -3,9 +3,8 @@ import { OperationalEventAttributes, OperationalTelemetry } from './operational-
 import { diag, DiagLogLevel, metrics } from '@opentelemetry/api'
 import { Resource, resourceFromAttributes } from '@opentelemetry/resources'
 import { randomUUID } from 'crypto'
-import { RemoteConsole } from 'vscode-languageserver'
 import { logs } from '@opentelemetry/api-logs'
-import { ExtendedClientInfo } from '../../server-interface'
+import { ExtendedClientInfo, Logging } from '../../server-interface'
 import { OperationalTelemetryResource, MetricName } from './types/generated/telemetry'
 import { OTLPMetricExporter } from '@opentelemetry/exporter-metrics-otlp-http'
 import { OTLPLogExporter } from '@opentelemetry/exporter-logs-otlp-http'
@@ -16,7 +15,7 @@ type OperationalTelemetryConfig = {
     serviceName: string
     serviceVersion?: string
     extendedClientInfo?: ExtendedClientInfo
-    lspConsole: RemoteConsole
+    logging: Logging
     endpoint: string
     telemetryOptOut: boolean
     exportIntervalMillis?: number
@@ -34,7 +33,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
     private readonly scheduledDelayMillis: number
     private loggerProvider: LoggerProvider | null = null
     private meterProvider: MeterProvider | null = null
-    private readonly lspConsole: RemoteConsole
+    private readonly logging: Logging
 
     static getInstance(config: OperationalTelemetryConfig): OperationalTelemetryService {
         if (!OperationalTelemetryService.instance) {
@@ -47,7 +46,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         this.exportIntervalMillis = config.exportIntervalMillis ?? this.FIVE_MINUTES
         this.scheduledDelayMillis = config.scheduledDelayMillis ?? this.FIVE_MINUTES
 
-        this.lspConsole = config.lspConsole
+        this.logging = config.logging
 
         const operationalTelemetryResource: OperationalTelemetryResource = {
             'server.name': config.serviceName,
@@ -135,11 +134,11 @@ export class OperationalTelemetryService implements OperationalTelemetry {
     private startApi() {
         diag.setLogger(
             {
-                debug: message => this.lspConsole.debug(message),
-                error: message => this.lspConsole.error(message),
-                info: message => this.lspConsole.info(message),
-                verbose: message => this.lspConsole.log(message),
-                warn: message => this.lspConsole.warn(message),
+                debug: message => this.logging.debug(message),
+                error: message => this.logging.error(message),
+                info: message => this.logging.info(message),
+                verbose: message => this.logging.log(message),
+                warn: message => this.logging.warn(message),
             },
             DiagLogLevel.ALL
         )
