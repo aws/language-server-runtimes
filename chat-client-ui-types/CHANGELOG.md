@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.1.42](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.41...chat-client-ui-types/v0.1.42) (2025-06-02)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.35 to ^0.1.36
+
 ## [0.1.41](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.40...chat-client-ui-types/v0.1.41) (2025-05-30)
 
 

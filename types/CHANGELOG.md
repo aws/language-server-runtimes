@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.36](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.35...language-server-runtimes-types/v0.1.36) (2025-06-02)
+
+
+### Features
+
+* adding isInlineEdit to LogInlineCompletionSessionResultsParams ([7cdb1af](https://github.com/aws/language-server-runtimes/commit/7cdb1afc8d3582d92a9336b60bc17d78fcb66592))
+
 ## [0.1.35](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.34...language-server-runtimes-types/v0.1.35) (2025-05-30)
 
 
