@@ -110,4 +110,8 @@ export interface LogInlineCompletionSessionResultsParams {
      * The number of characters of existing code that will be removed by the suggestion if accepted.
      */
     deletedCharacterCount?: number
+    /**
+     * Flag to indicate this is an edit suggestion rather than a standard inline completion.
+     */
+    isInlineEdit?: boolean
 }
