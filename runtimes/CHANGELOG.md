@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.91](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.90...language-server-runtimes/v0.2.91) (2025-06-02)
+
+
+### Bug Fixes
+
+* use logging instead of lspConsole ([#545](https://github.com/aws/language-server-runtimes/issues/545)) ([bcd5ef9](https://github.com/aws/language-server-runtimes/commit/bcd5ef90addf15b9c83ca24b9af68919bfeb6c48))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.35 to ^0.1.36
+
 ## [0.2.90](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.89...language-server-runtimes/v0.2.90) (2025-05-30)
 
 
