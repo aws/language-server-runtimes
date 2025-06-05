@@ -241,8 +241,6 @@ export interface QuickActions {
 export interface TabData {
     placeholderText?: string
     messages: ChatMessage[]
-    promptTopBarContextItems?: ContextCommandGroup[]
-    showRules?: boolean
 }
 
 /**
@@ -430,7 +428,7 @@ export interface PinnedContextParams extends ContextCommandParams {
 
 export interface CreatePromptParams {
     promptName: string
-    rule?: boolean
+    isRule?: boolean
 }
 
 export interface ProgrammingLanguage {
@@ -517,6 +515,13 @@ export interface ListRulesResult {
 
 export interface RulesFolder {
     folderName?: string
+    /**
+     * Represents the active state of the folder:
+     * - true: all rules in the folder are active
+     * - false: all rules in the folder are inactive
+     * - 'indeterminate': rules inside the folder have mixed active states (some active, some inactive),
+     *   similar to a parent checkbox in a nested checkbox list having an indeterminate state
+     */
     active: boolean | 'indeterminate'
     rules: Rule[]
 }
