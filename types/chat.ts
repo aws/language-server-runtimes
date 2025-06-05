@@ -28,12 +28,12 @@ export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
 export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult'
 
 // pinned context
-export const PINNED_CONTEXT_ADD_NOTIFICATION_METHOD = 'aws/chat/pinnedContextAdd' // client to server
-export const PINNED_CONTEXT_REMOVE_NOTIFICATION_METHOD = 'aws/chat/pinnedContextRemove' // client to server
-export const RULE_CLICK_REQUEST_METHOD = 'aws/chat/ruleClick' // client to server
+export const PINNED_CONTEXT_ADD_NOTIFICATION_METHOD = 'aws/chat/pinnedContextAdd'
+export const PINNED_CONTEXT_REMOVE_NOTIFICATION_METHOD = 'aws/chat/pinnedContextRemove'
+export const RULE_CLICK_REQUEST_METHOD = 'aws/chat/ruleClick'
 
-export const PINNED_CONTEXT_NOTIFICATION_METHOD = 'aws/chat/sendPinnedContext' // server to client
-export const LIST_RULES_REQUEST_METHOD = 'aws/chat/listRules' // server to client
+export const PINNED_CONTEXT_NOTIFICATION_METHOD = 'aws/chat/sendPinnedContext'
+export const LIST_RULES_REQUEST_METHOD = 'aws/chat/listRules'
 
 //active tab
 export const ACTIVE_EDITOR_CHANGED_NOTIFICATION_METHOD = 'aws/chat/activeEditorChanged'
