@@ -553,7 +553,6 @@ export interface ListConversationsResult extends ConversationsList {}
 export type McpServerStatus = 'INITIALIZING' | 'ENABLED' | 'FAILED' | 'DISABLED'
 
 export interface DetailedListItem {
-    id?: string
     title: string
     description?: string
     groupActions?: boolean
