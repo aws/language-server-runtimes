@@ -26,6 +26,18 @@ export const PROMPT_INPUT_OPTION_CHANGE_METHOD = 'aws/chat/promptInputOptionChan
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
 export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult'
+
+// pinned context
+export const PINNED_CONTEXT_ADD_NOTIFICATION_METHOD = 'aws/chat/pinnedContextAdd' // client to server
+export const PINNED_CONTEXT_REMOVE_NOTIFICATION_METHOD = 'aws/chat/pinnedContextRemove' // client to server
+export const RULE_CLICK_REQUEST_METHOD = 'aws/chat/ruleClick' // client to server
+
+export const PINNED_CONTEXT_NOTIFICATION_METHOD = 'aws/chat/sendPinnedContext' // server to client
+export const LIST_RULES_REQUEST_METHOD = 'aws/chat/listRules' // server to client
+
+//active tab
+export const ACTIVE_EDITOR_CHANGED_NOTIFICATION_METHOD = 'aws/chat/activeEditorChanged'
+
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
@@ -229,6 +241,8 @@ export interface QuickActions {
 export interface TabData {
     placeholderText?: string
     messages: ChatMessage[]
+    promptTopBarContextItems?: ContextCommandGroup[]
+    showRules?: boolean
 }
 
 /**
@@ -289,7 +303,9 @@ export interface TabEventParams {
     tabId: string
 }
 
-export interface TabAddParams extends TabEventParams {}
+export interface TabAddParams extends TabEventParams {
+    restoredTab?: boolean
+}
 
 export interface TabChangeParams extends TabEventParams {}
 
@@ -406,8 +422,15 @@ export interface ContextCommandParams {
     contextCommandGroups: ContextCommandGroup[]
 }
 
+export interface PinnedContextParams extends ContextCommandParams {
+    tabId: string
+    textDocument?: TextDocumentIdentifier
+    showRules?: boolean
+}
+
 export interface CreatePromptParams {
     promptName: string
+    rule?: boolean
 }
 
 export interface ProgrammingLanguage {
@@ -481,6 +504,44 @@ export interface ListMcpServersParams {
     filter?: Record<string, FilterValue>
 }
 
+export interface ListRulesParams {
+    tabId: string
+}
+
+export interface ListRulesResult {
+    tabId: string
+    header?: { title: string }
+    filterOptions?: FilterOption[]
+    rules: RulesFolder[]
+}
+
+export interface RulesFolder {
+    folderName?: string
+    active: boolean | 'indeterminate'
+    rules: Rule[]
+}
+
+export interface Rule {
+    active: boolean
+    name: string
+    id: string
+}
+
+export interface RuleClickParams {
+    tabId: string
+    type: 'folder' | 'rule'
+    id: string
+}
+
+export interface RuleClickResult extends RuleClickParams {
+    success: boolean
+}
+
+export interface ActiveEditorChangedParams {
+    cursorState?: CursorState[]
+    textDocument?: TextDocumentIdentifier
+}
+
 export interface ConversationsList {
     header?: { title: string }
     filterOptions?: FilterOption[]
@@ -492,6 +553,7 @@ export interface ListConversationsResult extends ConversationsList {}
 export type McpServerStatus = 'INITIALIZING' | 'ENABLED' | 'FAILED' | 'DISABLED'
 
 export interface DetailedListItem {
+    id?: string
     title: string
     description?: string
     groupActions?: boolean
