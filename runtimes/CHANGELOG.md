@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.92](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.91...language-server-runtimes/v0.2.92) (2025-06-06)
+
+
+### Bug Fixes
+
+* syntax errors on some Mac builds and flaky Darwin test ([#550](https://github.com/aws/language-server-runtimes/issues/550)) ([687ec5a](https://github.com/aws/language-server-runtimes/commit/687ec5a8d50129e29e517802cf60f101b66b8d6f))
+
 ## [0.2.91](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.90...language-server-runtimes/v0.2.91) (2025-06-02)
 
 
