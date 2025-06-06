@@ -21,7 +21,8 @@
     "author": "Amazon Web Services",
     "license": "Apache-2.0",
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=18.0.0",
+        "npm": ">=7.0.0 <11.0.0"
     },
     "scripts": {
         "clean": "ts-node ./script/clean.ts",
