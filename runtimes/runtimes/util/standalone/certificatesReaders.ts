@@ -4,7 +4,7 @@
  */
 
 import { readdirSync, readFileSync } from 'node:fs'
-import path from 'node:path'
+import * as path from 'node:path'
 import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
 
 const UNIX_CERT_FILES = [
