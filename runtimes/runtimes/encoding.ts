@@ -14,7 +14,7 @@ export class WebBase64Encoding implements Encoding {
         return decodeURIComponent(
             Array.from(decoded)
                 .map(char => {
-                    return '%' + (HEX_PAD + char.charCodeAt(0).toString(16)).slice(-2)
+                    return '%' + (HEX_PAD + (char as string).charCodeAt(0).toString(16)).slice(-2)
                 })
                 .join('')
         )

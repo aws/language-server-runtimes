@@ -1,5 +1,5 @@
 import { InitializeParams, WorkspaceFolder } from 'vscode-languageserver-protocol'
-import path from 'path'
+import * as path from 'path'
 import { URI } from 'vscode-uri'
 import { RemoteConsole } from 'vscode-languageserver'
 
