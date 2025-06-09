@@ -128,15 +128,15 @@ describe('Auth', () => {
         const auth = new Auth(serverLspConnectionMock, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-        assert(!credentialsProvider.hasCredentials('iam'))
+        assert(!credentialsProvider.hasCredentials())
         await authHandlers.iamUpdateHandler(updateRequest)
 
-        assert(credentialsProvider.hasCredentials('iam'))
-        assert.deepEqual(credentialsProvider.getCredentials('iam'), iamCredentials)
+        assert(credentialsProvider.hasCredentials() && credentialsProvider.getCredentialsType() === 'iam')
+        assert.deepEqual(credentialsProvider.getCredentials(), iamCredentials)
 
         authHandlers.iamDeleteHandler()
-        assert(!credentialsProvider.hasCredentials('iam'))
-        assert(credentialsProvider.getCredentials('iam') === undefined)
+        assert(!credentialsProvider.hasCredentials())
+        assert(credentialsProvider.getCredentials() === undefined)
     })
 
     it('Handles Set Bearer credentials request when parameters sent by position', async () => {
@@ -147,7 +147,7 @@ describe('Auth', () => {
         const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-        assert(!credentialsProvider.hasCredentials('bearer'))
+        assert(!credentialsProvider.hasCredentials())
 
         // @ts-ignore
         await clientConnection.sendRequest(
@@ -156,8 +156,8 @@ describe('Auth', () => {
             updateRequest
         )
 
-        assert(credentialsProvider.hasCredentials('bearer'))
-        assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
+        assert(credentialsProvider.hasCredentials() && credentialsProvider.getCredentialsType() === 'bearer')
+        assert.deepEqual(credentialsProvider.getCredentials(), bearerCredentials)
     })
 
     it('Handles Set Bearer credentials request', async () => {
@@ -168,12 +168,12 @@ describe('Auth', () => {
         const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-        assert(!credentialsProvider.hasCredentials('bearer'))
+        assert(!credentialsProvider.hasCredentials())
 
         await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
 
-        assert(credentialsProvider.hasCredentials('bearer'))
-        assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
+        assert(credentialsProvider.hasCredentials() && credentialsProvider.getCredentialsType() === 'bearer')
+        assert.deepEqual(credentialsProvider.getCredentials(), bearerCredentials)
     })
 
     it('Updates connection metadata on receiving Set Bearer credentials request with metadata', async () => {
@@ -238,7 +238,7 @@ describe('Auth', () => {
         await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
 
         assert.deepEqual(credentialsProvider.getConnectionMetadata(), undefined)
-        assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
+        assert.deepEqual(credentialsProvider.getCredentials(), bearerCredentials)
     })
 
     it('Handles Bearer credentials delete request', done => {
@@ -249,11 +249,11 @@ describe('Auth', () => {
         const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-        assert(!credentialsProvider.hasCredentials('bearer'))
+        assert(!credentialsProvider.hasCredentials())
 
         serverConnection.onNotification(credentialsProtocolMethodNames.bearerCredentialsDelete, () => {
-            assert(!credentialsProvider.hasCredentials('bearer'))
-            assert(credentialsProvider.getCredentials('bearer') === undefined)
+            assert(!credentialsProvider.hasCredentials())
+            assert(credentialsProvider.getCredentials() === undefined)
             done()
         })
         clientConnection.sendNotification(credentialsProtocolMethodNames.bearerCredentialsDelete, updateRequest)
@@ -272,7 +272,7 @@ describe('Auth', () => {
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         await assert.rejects(authHandlers.iamUpdateHandler(updateIamRequest), /Invalid IAM credentials/)
-        assert(!credentialsProvider.getCredentials('iam'))
+        assert(!credentialsProvider.getCredentials())
     })
 
     it('Rejects when bearer credentials are invalid', async () => {
@@ -287,7 +287,7 @@ describe('Auth', () => {
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
         await assert.rejects(authHandlers.bearerUpdateHandler(updateBearerRequest), /Invalid bearer credentials/)
-        assert(!credentialsProvider.getCredentials('bearer'))
+        assert(!credentialsProvider.getCredentials())
     })
 
     describe('Credentials provider', () => {
@@ -301,12 +301,12 @@ describe('Auth', () => {
 
             await authHandlers.iamUpdateHandler(updateIamRequest)
 
-            let creds: any = credentialsProvider.getCredentials('iam')
+            let creds: any = credentialsProvider.getCredentials()
             const initialAccessKey = creds.accessKeyId
 
             assert.throws(() => (creds.accessKeyId = 'anotherKey'), /Cannot assign to read only property/)
             creds = {}
-            assert((credentialsProvider.getCredentials('iam') as IamCredentials).accessKeyId === initialAccessKey)
+            assert((credentialsProvider.getCredentials() as IamCredentials).accessKeyId === initialAccessKey)
         })
 
         it('Prevents modifying Bearer credentials object', async () => {
@@ -320,25 +320,20 @@ describe('Auth', () => {
 
             await authHandlers.bearerUpdateHandler(updateBearerRequest)
 
-            let creds: any = credentialsProvider.getCredentials('bearer')
+            let creds: any = credentialsProvider.getCredentials()
             const initialToken = creds.token
             assert.throws(() => (creds.token = 'anotherToken'), /Cannot assign to read only property/)
             creds = {}
-            assert((credentialsProvider.getCredentials('bearer') as BearerCredentials).token === initialToken)
+            assert((credentialsProvider.getCredentials() as BearerCredentials).token === initialToken)
         })
 
         it('Throws on unsupported type', async () => {
             const auth = new Auth(serverLspConnectionMock, lspRouter)
             const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
 
-            assert.throws(
-                () => credentialsProvider.hasCredentials('unsupported_type' as CredentialsType),
-                /Unsupported credentials type/
-            )
-            assert.throws(
-                () => credentialsProvider.getCredentials('unsupported_type' as CredentialsType),
-                /Unsupported credentials type/
-            )
+            // TODO: Add test for Unsupported credentials
+            assert.throws(() => credentialsProvider.hasCredentials(), /Unsupported credentials type/)
+            assert.throws(() => credentialsProvider.getCredentials(), /Unsupported credentials type/)
         })
 
         it('getConnectionType return builderId', async () => {
@@ -411,7 +406,7 @@ describe('Auth', () => {
 
             await assert.rejects(authHandlers.iamUpdateHandler(updateIamRequest), /No encryption key/)
 
-            assert(!credentialsProvider.getCredentials('iam'))
+            assert(!credentialsProvider.getCredentials())
         })
 
         it('Handles encrypted IAM credentials', async () => {
@@ -429,7 +424,7 @@ describe('Auth', () => {
                 encrypted: true,
             }
             await authHandlers.iamUpdateHandler(updateIamRequest)
-            assert.deepEqual(credentialsProvider.getCredentials('iam'), iamCredentials)
+            assert.deepEqual(credentialsProvider.getCredentials(), iamCredentials)
         })
 
         it('Handles encrypted bearer credentials', async () => {
@@ -447,7 +442,7 @@ describe('Auth', () => {
                 encrypted: true,
             }
             await authHandlers.bearerUpdateHandler(updateBearerRequest)
-            assert.deepEqual(credentialsProvider.getCredentials('bearer'), bearerCredentials)
+            assert.deepEqual(credentialsProvider.getCredentials(), bearerCredentials)
         })
 
         it('Rejects if encryption algorithm is not direct A256GCM', async () => {
@@ -468,7 +463,7 @@ describe('Auth', () => {
                 authHandlers.bearerUpdateHandler(updateBearerRequest),
                 /Header Parameter value not allowed/
             )
-            assert(!credentialsProvider.getCredentials('bearer'))
+            assert(!credentialsProvider.getCredentials())
         })
 
         it('Verifies JWT claims', async () => {
@@ -491,7 +486,7 @@ describe('Auth', () => {
                 authHandlers.bearerUpdateHandler(updateBearerRequest),
                 /"exp" claim timestamp check failed/
             )
-            assert(!credentialsProvider.getCredentials('bearer'))
+            assert(!credentialsProvider.getCredentials())
         })
     })
 })
