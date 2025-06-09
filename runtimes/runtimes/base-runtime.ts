@@ -51,6 +51,12 @@ import {
     buttonClickRequestType,
     listMcpServersRequestType,
     mcpServerClickRequestType,
+    ruleClickRequestType,
+    listRulesRequestType,
+    pinnedContextNotificationType,
+    activeEditorChangedNotificationType,
+    onPinnedContextAddNotificationType,
+    onPinnedContextRemoveNotificationType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -167,9 +173,16 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         sendChatUpdate: params => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
         sendContextCommands: params => lspConnection.sendNotification(contextCommandsNotificationType.method, params),
+        sendPinnedContext: params => lspConnection.sendNotification(pinnedContextNotificationType.method, params),
+        onPinnedContextAdd: params => lspConnection.sendNotification(onPinnedContextAddNotificationType.method, params),
+        onPinnedContextRemove: params =>
+            lspConnection.sendNotification(onPinnedContextRemoveNotificationType.method, params),
+        onActiveEditorChanged: handler =>
+            lspConnection.onNotification(activeEditorChangedNotificationType.method, handler),
         onCreatePrompt: handler => lspConnection.onNotification(createPromptNotificationType.method, handler),
         onInlineChatResult: handler => lspConnection.onNotification(inlineChatResultNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
+        onListRules: handler => lspConnection.onRequest(listRulesRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
         onListMcpServers: handler => lspConnection.onRequest(listMcpServersRequestType.method, handler),
         onMcpServerClick: handler => lspConnection.onRequest(mcpServerClickRequestType.method, handler),
@@ -177,6 +190,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onTabBarAction: handler => lspConnection.onRequest(tabBarActionRequestType.method, handler),
         onPromptInputOptionChange: handler =>
             lspConnection.onNotification(promptInputOptionChangeNotificationType.method, handler),
+        onRuleClick: handler => lspConnection.onRequest(ruleClickRequestType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
