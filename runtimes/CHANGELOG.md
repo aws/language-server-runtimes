@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.95](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.94...language-server-runtimes/v0.2.95) (2025-06-10)
+
+
+### Bug Fixes
+
+* align proxy detection with Node.js CLI behavior in Windows ([#562](https://github.com/aws/language-server-runtimes/issues/562)) ([90aa4d3](https://github.com/aws/language-server-runtimes/commit/90aa4d357123813caf17e94b0c1780d09eec4d5f))
+
 ## [0.2.94](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.93...language-server-runtimes/v0.2.94) (2025-06-10)
 
 
