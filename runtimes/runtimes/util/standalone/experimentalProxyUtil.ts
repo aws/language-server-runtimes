@@ -89,10 +89,9 @@ export class ProxyConfigManager {
                 })();
             `
 
-            const raw = execFileSync(process.execPath, [], {
-                input: snippet,
+            const raw = execFileSync(process.execPath, ['-e', snippet], {
                 encoding: 'utf8',
-                stdio: ['pipe', 'pipe', 'inherit'],
+                stdio: ['ignore', 'pipe', 'inherit'],
             })
 
             console.debug(`os-proxy-config output: ${raw}`)
