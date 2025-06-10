@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.94](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.93...language-server-runtimes/v0.2.94) (2025-06-10)
+
+
+### Bug Fixes
+
+* resolve Windows issue with system proxy detection ([#560](https://github.com/aws/language-server-runtimes/issues/560)) ([e59a220](https://github.com/aws/language-server-runtimes/commit/e59a2202c6c8f7a15b38c36c4eebeedfc56b70d3))
+
 ## [0.2.93](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.92...language-server-runtimes/v0.2.93) (2025-06-10)
 
 
