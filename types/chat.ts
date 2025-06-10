@@ -26,18 +26,6 @@ export const PROMPT_INPUT_OPTION_CHANGE_METHOD = 'aws/chat/promptInputOptionChan
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
 export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult'
-
-// pinned context
-export const PINNED_CONTEXT_ADD_NOTIFICATION_METHOD = 'aws/chat/pinnedContextAdd'
-export const PINNED_CONTEXT_REMOVE_NOTIFICATION_METHOD = 'aws/chat/pinnedContextRemove'
-export const RULE_CLICK_REQUEST_METHOD = 'aws/chat/ruleClick'
-
-export const PINNED_CONTEXT_NOTIFICATION_METHOD = 'aws/chat/sendPinnedContext'
-export const LIST_RULES_REQUEST_METHOD = 'aws/chat/listRules'
-
-//active tab
-export const ACTIVE_EDITOR_CHANGED_NOTIFICATION_METHOD = 'aws/chat/activeEditorChanged'
-
 // history
 export const LIST_CONVERSATIONS_REQUEST_METHOD = 'aws/chat/listConversations'
 export const CONVERSATION_CLICK_REQUEST_METHOD = 'aws/chat/conversationClick'
@@ -301,9 +289,7 @@ export interface TabEventParams {
     tabId: string
 }
 
-export interface TabAddParams extends TabEventParams {
-    restoredTab?: boolean
-}
+export interface TabAddParams extends TabEventParams {}
 
 export interface TabChangeParams extends TabEventParams {}
 
@@ -420,15 +406,8 @@ export interface ContextCommandParams {
     contextCommandGroups: ContextCommandGroup[]
 }
 
-export interface PinnedContextParams extends ContextCommandParams {
-    tabId: string
-    textDocument?: TextDocumentIdentifier
-    showRules?: boolean
-}
-
 export interface CreatePromptParams {
     promptName: string
-    isRule?: boolean
 }
 
 export interface ProgrammingLanguage {
@@ -500,51 +479,6 @@ export interface ListConversationsParams {
 
 export interface ListMcpServersParams {
     filter?: Record<string, FilterValue>
-}
-
-export interface ListRulesParams {
-    tabId: string
-}
-
-export interface ListRulesResult {
-    tabId: string
-    header?: { title: string }
-    filterOptions?: FilterOption[]
-    rules: RulesFolder[]
-}
-
-export interface RulesFolder {
-    folderName?: string
-    /**
-     * Represents the active state of the folder:
-     * - true: all rules in the folder are active
-     * - false: all rules in the folder are inactive
-     * - 'indeterminate': rules inside the folder have mixed active states (some active, some inactive),
-     *   similar to a parent checkbox in a nested checkbox list having an indeterminate state
-     */
-    active: boolean | 'indeterminate'
-    rules: Rule[]
-}
-
-export interface Rule {
-    active: boolean
-    name: string
-    id: string
-}
-
-export interface RuleClickParams {
-    tabId: string
-    type: 'folder' | 'rule'
-    id: string
-}
-
-export interface RuleClickResult extends RuleClickParams {
-    success: boolean
-}
-
-export interface ActiveEditorChangedParams {
-    cursorState?: CursorState[]
-    textDocument?: TextDocumentIdentifier
 }
 
 export interface ConversationsList {
