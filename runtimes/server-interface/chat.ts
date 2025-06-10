@@ -41,12 +41,6 @@ import {
     ListMcpServersResult,
     McpServerClickResult,
     McpServerClickParams,
-    RuleClickParams,
-    ListRulesParams,
-    ListRulesResult,
-    RuleClickResult,
-    PinnedContextParams,
-    ActiveEditorChangedParams,
 } from '../protocol'
 
 /**
@@ -68,9 +62,6 @@ export type Chat = {
     onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
     onTabBarAction: (handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) => void
     getSerializedChat: (params: GetSerializedChatParams) => Promise<GetSerializedChatResult>
-    onListRules: (handler: RequestHandler<ListRulesParams, ListRulesResult, void>) => void
-    onRuleClick: (handler: RequestHandler<RuleClickParams, RuleClickResult, void>) => void
-
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
@@ -86,10 +77,6 @@ export type Chat = {
     onFileClicked: (handler: NotificationHandler<FileClickParams>) => void
     chatOptionsUpdate: (params: ChatOptionsUpdateParams) => void
     sendContextCommands: (params: ContextCommandParams) => void
-    sendPinnedContext: (params: PinnedContextParams) => void
-    onPinnedContextAdd: (handler: NotificationHandler<PinnedContextParams>) => void
-    onPinnedContextRemove: (handler: NotificationHandler<PinnedContextParams>) => void
-    onActiveEditorChanged: (handler: NotificationHandler<ActiveEditorChangedParams>) => void
     onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
     onInlineChatResult: (handler: NotificationHandler<InlineChatResultParams>) => void
     onPromptInputOptionChange: (handler: NotificationHandler<PromptInputOptionChangeParams>) => void

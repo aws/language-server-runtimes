@@ -47,7 +47,6 @@ import {
     CREATE_PROMPT_NOTIFICATION_METHOD,
     CreatePromptParams,
     INLINE_CHAT_RESULT_NOTIFICATION_METHOD,
-    PINNED_CONTEXT_NOTIFICATION_METHOD,
     InlineChatResultParams,
     ListConversationsParams,
     ListConversationsResult,
@@ -74,17 +73,6 @@ import {
     McpServerClickParams,
     McpServerClickResult,
     MCP_SERVER_CLICK_REQUEST_METHOD,
-    ListRulesParams,
-    RuleClickParams,
-    RULE_CLICK_REQUEST_METHOD,
-    LIST_RULES_REQUEST_METHOD,
-    ListRulesResult,
-    RuleClickResult,
-    PinnedContextParams,
-    PINNED_CONTEXT_ADD_NOTIFICATION_METHOD,
-    PINNED_CONTEXT_REMOVE_NOTIFICATION_METHOD,
-    ActiveEditorChangedParams,
-    ACTIVE_EDITOR_CHANGED_NOTIFICATION_METHOD,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -166,36 +154,6 @@ export const inlineChatResultNotificationType = new ProtocolNotificationType<Inl
     INLINE_CHAT_RESULT_NOTIFICATION_METHOD
 )
 
-// pinned context
-export const pinnedContextNotificationType = new ProtocolNotificationType<PinnedContextParams, void>(
-    PINNED_CONTEXT_NOTIFICATION_METHOD
-)
-export const onPinnedContextAddNotificationType = new ProtocolNotificationType<PinnedContextParams, void>(
-    PINNED_CONTEXT_ADD_NOTIFICATION_METHOD
-)
-export const onPinnedContextRemoveNotificationType = new ProtocolNotificationType<PinnedContextParams, void>(
-    PINNED_CONTEXT_REMOVE_NOTIFICATION_METHOD
-)
-export const activeEditorChangedNotificationType = new ProtocolNotificationType<ActiveEditorChangedParams, void>(
-    ACTIVE_EDITOR_CHANGED_NOTIFICATION_METHOD
-)
-
-// rules
-export const listRulesRequestType = new AutoParameterStructuresProtocolRequestType<
-    ListRulesParams,
-    ListRulesResult,
-    never,
-    void,
-    void
->(LIST_RULES_REQUEST_METHOD)
-
-export const ruleClickRequestType = new AutoParameterStructuresProtocolRequestType<
-    RuleClickParams,
-    RuleClickResult,
-    never,
-    void,
-    void
->(RULE_CLICK_REQUEST_METHOD)
 // history
 export const listConversationsRequestType = new AutoParameterStructuresProtocolRequestType<
     ListConversationsParams,
