@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.2.92](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.91...language-server-runtimes/v0.2.92) (2025-06-10)
+
+
+### Features
+
+* add support for pinned context and rules ([#548](https://github.com/aws/language-server-runtimes/issues/548)) ([6606dcc](https://github.com/aws/language-server-runtimes/commit/6606dcc0a908eff03fbeaadba6dbfda900472d2f))
+
+
+### Bug Fixes
+
+* syntax errors on some Mac builds and flaky Darwin test ([#550](https://github.com/aws/language-server-runtimes/issues/550)) ([687ec5a](https://github.com/aws/language-server-runtimes/commit/687ec5a8d50129e29e517802cf60f101b66b8d6f))
+
+
+### Reverts
+
+* add support for pinned context and rules ([#548](https://github.com/aws/language-server-runtimes/issues/548))" ([#558](https://github.com/aws/language-server-runtimes/issues/558)) ([ce49c30](https://github.com/aws/language-server-runtimes/commit/ce49c301cfae32fcdf396d2fb85d9f6edb8016b2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.36 to ^0.1.37
+
 ## [0.2.91](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.90...language-server-runtimes/v0.2.91) (2025-06-02)
 
 
