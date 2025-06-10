@@ -13,6 +13,8 @@ import { NodeHttpHandler } from '@smithy/node-http-handler'
 import { readMacosCertificates, readLinuxCertificates, readWindowsCertificates } from './certificatesReaders'
 import { Telemetry } from '../../../server-interface'
 import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
+import { execSync } from 'node:child_process'
+import { pathToFileURL } from 'node:url'
 
 export class ProxyConfigManager {
     /**
@@ -55,7 +57,7 @@ export class ProxyConfigManager {
         return this.cachedV3Config
     }
 
-    getProxyUrl(): string | undefined {
+    getProxyUrlFromEnv(): string | undefined {
         for (const envVar of this.PROXY_ENV_VARS) {
             const proxyUrl = process.env[envVar]
             if (proxyUrl) {
@@ -67,6 +69,39 @@ export class ProxyConfigManager {
             }
         }
         return undefined
+    }
+
+    private static getSystemProxySync(): string | undefined {
+        try {
+            const resolved = require.resolve('os-proxy-config')
+            const resolvedUrl = pathToFileURL(resolved).href
+
+            const snippet = `
+                (async () => {
+                    try {
+                        const mod = await import(${JSON.stringify(resolvedUrl)});
+                        const r   = await mod.getSystemProxy();
+                        console.log(JSON.stringify(r ?? {}));
+                    } catch (e) {
+                        console.error(e?.message ?? e);
+                        console.log("{}");
+                    }
+                })();
+            `
+
+            const raw = execSync(process.execPath, {
+                input: snippet,
+                encoding: 'utf8',
+                stdio: ['pipe', 'pipe', 'inherit'],
+            })
+
+            console.debug(`os-proxy-config output: ${raw}`)
+            const { proxyUrl } = JSON.parse(raw.trim() || '{}')
+            return proxyUrl && /^https?:\/\//.test(proxyUrl) ? proxyUrl : undefined
+        } catch (err) {
+            console.warn('os‑proxy‑config shim failed:', (err as Error).message)
+            return undefined
+        }
     }
 
     readCertificateFile(path: string): string | undefined {
@@ -167,37 +202,22 @@ export class ProxyConfigManager {
             maxSockets: 10, // Maximum number of sockets to allow per host
         }
 
-        const proxyUrl = this.getProxyUrl()
-
-        // Proxy agent for explicit proxy
-        if (proxyUrl) {
-            console.log(`Using HTTP proxy at ${proxyUrl}`)
-            this.telemetry.emitMetric({
-                name: 'runtime_httpProxyConfiguration',
-                result: 'Succeeded',
-                data: {
-                    proxyMode: 'Explicit',
-                    proxyUrl: proxyUrl,
-                    certificatesNumber: certs.length,
-                },
-            })
-
-            return new HttpsProxyAgent({
-                ...agentOptions,
-                proxy: proxyUrl,
-                cert: certs,
-            })
+        // First check environment variables
+        const envProxyUrl = this.getProxyUrlFromEnv()
+        if (envProxyUrl) {
+            this.emitProxyMetric('Explicit', certs.length, envProxyUrl)
+            return new HttpsProxyAgent({ ...agentOptions, proxy: envProxyUrl })
         }
 
-        // Proxy agent for transparent proxy network setup
-        this.telemetry.emitMetric({
-            name: 'runtime_httpProxyConfiguration',
-            result: 'Succeeded',
-            data: {
-                proxyMode: 'Transparent',
-                certificatesNumber: certs.length,
-            },
-        })
+        // Fall back to OS auto‑detect (HTTP or HTTPS only)
+        const sysProxyUrl = ProxyConfigManager.getSystemProxySync()
+        if (sysProxyUrl) {
+            this.emitProxyMetric('AutoDetect', certs.length, sysProxyUrl)
+            return new HttpsProxyAgent({ ...agentOptions, proxy: sysProxyUrl })
+        }
+
+        // Proxy agent for NoProxy network setup
+        this.emitProxyMetric('NoProxy', certs.length)
         return new HttpsAgent(agentOptions)
     }
 
@@ -235,5 +255,34 @@ export class ProxyConfigManager {
         }
 
         return validCerts
+    }
+
+    /**
+    Helper that sends a single, well‑structured metric about how we configured
+    outbound HTTP(s) traffic for the runtime.
+    *
+    @param mode  How we got the proxy:
+                'Explicit'   – user env‑vars
+                'AutoDetect' – os‑proxy-config result
+                'NoProxy'– no proxy at all
+    @param certs Number of CA certs injected into the Agent
+    @param proxyUrl   The proxy URL (if any) – omitted for Transparent / Failure
+    @param ok    Whether the operation succeeded (true | false)
+    */
+    private emitProxyMetric(
+        mode: 'Explicit' | 'AutoDetect' | 'NoProxy',
+        certs: number,
+        proxyUrl?: string,
+        ok: boolean = true
+    ): void {
+        this.telemetry.emitMetric({
+            name: 'runtime_httpProxyConfiguration',
+            result: ok ? 'Succeeded' : 'Failed',
+            data: {
+                proxyMode: mode,
+                certificatesNumber: certs,
+                ...(proxyUrl && { proxyUrl }),
+            },
+        })
     }
 }

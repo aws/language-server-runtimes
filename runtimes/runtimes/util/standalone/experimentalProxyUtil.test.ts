@@ -96,9 +96,9 @@ describe('ProxyConfigManager', function () {
         assert.strictEqual(getAgentSpy.firstCall.returnValue, getAgentSpy.secondCall.returnValue)
     })
 
-    describe('getProxyUrl', () => {
+    describe('getProxyUrlFromEnv', () => {
         it('should return undefined when no proxy environment variables are set', () => {
-            const proxyUrl = proxyManager.getProxyUrl()
+            const proxyUrl = proxyManager.getProxyUrlFromEnv()
             assert.strictEqual(proxyUrl, undefined)
         })
 
@@ -108,7 +108,7 @@ describe('ProxyConfigManager', function () {
             process.env.HTTP_PROXY = 'http://proxy3.example.com'
             process.env.http_proxy = 'http://proxy4.example.com'
 
-            const proxyUrl = proxyManager.getProxyUrl()
+            const proxyUrl = proxyManager.getProxyUrlFromEnv()
             assert.strictEqual(proxyUrl, 'https://proxy1.example.com')
         })
 
@@ -117,7 +117,7 @@ describe('ProxyConfigManager', function () {
             process.env.HTTP_PROXY = 'http://proxy3.example.com'
             process.env.http_proxy = 'http://proxy4.example.com'
 
-            const proxyUrl = proxyManager.getProxyUrl()
+            const proxyUrl = proxyManager.getProxyUrlFromEnv()
             assert.strictEqual(proxyUrl, 'https://proxy2.example.com')
         })
 
@@ -125,14 +125,14 @@ describe('ProxyConfigManager', function () {
             process.env.HTTP_PROXY = 'http://proxy3.example.com'
             process.env.http_proxy = 'http://proxy4.example.com'
 
-            const proxyUrl = proxyManager.getProxyUrl()
+            const proxyUrl = proxyManager.getProxyUrlFromEnv()
             assert.strictEqual(proxyUrl, 'http://proxy3.example.com')
         })
 
         it('should use http_proxy when it is the only proxy set', () => {
             process.env.http_proxy = 'http://proxy4.example.com'
 
-            const proxyUrl = proxyManager.getProxyUrl()
+            const proxyUrl = proxyManager.getProxyUrlFromEnv()
             assert.strictEqual(proxyUrl, 'http://proxy4.example.com')
         })
 
@@ -140,7 +140,7 @@ describe('ProxyConfigManager', function () {
             process.env.HTTPS_PROXY = 'invalid-url'
             process.env.HTTP_PROXY = 'http://valid.example.com'
 
-            const proxyUrl = proxyManager.getProxyUrl()
+            const proxyUrl = proxyManager.getProxyUrlFromEnv()
             assert.strictEqual(proxyUrl, 'http://valid.example.com')
         })
     })
@@ -274,7 +274,7 @@ describe('ProxyConfigManager', function () {
             readLinuxCertificatesStub.returns(sysCerts)
         })
 
-        it('should create HttpsAgent when no proxy set (transparent proxy)', () => {
+        it('should create HttpsAgent when no proxy set', () => {
             const agent = proxyManager.createSecureAgent()
 
             assert(agent instanceof HttpsAgent)
@@ -287,7 +287,7 @@ describe('ProxyConfigManager', function () {
                     name: 'runtime_httpProxyConfiguration',
                     result: 'Succeeded',
                     data: {
-                        proxyMode: 'Transparent',
+                        proxyMode: 'NoProxy',
                         certificatesNumber: 3 + validTlsRootCertificates.length,
                     },
                 })
