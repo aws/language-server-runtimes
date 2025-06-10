@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.93](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.92...language-server-runtimes/v0.2.93) (2025-06-10)
+
+
+### Features
+
+* **runtimes:** add auto-discovery for OS proxy settings ([#553](https://github.com/aws/language-server-runtimes/issues/553)) ([d3e961a](https://github.com/aws/language-server-runtimes/commit/d3e961abccd0421a6937f8b60708b81cac310aa4))
+
 ## [0.2.92](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.91...language-server-runtimes/v0.2.92) (2025-06-10)
 
 
