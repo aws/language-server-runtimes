@@ -13,8 +13,8 @@ import { NodeHttpHandler } from '@smithy/node-http-handler'
 import { readMacosCertificates, readLinuxCertificates, readWindowsCertificates } from './certificatesReaders'
 import { Telemetry } from '../../../server-interface'
 import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
-import { execSync } from 'node:child_process'
 import { pathToFileURL } from 'node:url'
+import { execFileSync } from 'node:child_process'
 
 export class ProxyConfigManager {
     /**
@@ -89,7 +89,7 @@ export class ProxyConfigManager {
                 })();
             `
 
-            const raw = execSync(process.execPath, {
+            const raw = execFileSync(process.execPath, [], {
                 input: snippet,
                 encoding: 'utf8',
                 stdio: ['pipe', 'pipe', 'inherit'],
