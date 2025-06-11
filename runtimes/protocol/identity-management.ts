@@ -89,7 +89,6 @@ export type ListProfilesParams = {
 export interface ListProfilesResult {
     profiles: Profile[]
     ssoSessions: SsoSession[]
-    iamSessions: IamSession[]
 }
 
 // Potential error codes: E_UNKNOWN | E_TIMEOUT | E_RUNTIME_NOT_SUPPORTED | E_CANNOT_READ_SHARED_CONFIG
@@ -274,7 +273,7 @@ export const invalidateSsoTokenRequestType = new ProtocolRequestType<
 
 // invalidateStsCredential
 export interface InvalidateStsCredentialParams {
-    stsCredential: CredentialId
+    stsCredentialId: CredentialId
 }
 
 export interface InvalidateStsCredentialResult {
