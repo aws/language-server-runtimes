@@ -73,6 +73,9 @@ import {
     McpServerClickParams,
     McpServerClickResult,
     MCP_SERVER_CLICK_REQUEST_METHOD,
+    OPEN_FILE_DIALOG_METHOD,
+    OpenFileDialogParams,
+    OpenFileDialogResult,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -82,6 +85,13 @@ export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
     void,
     void
 >(CHAT_REQUEST_METHOD)
+export const openFileDialogRequestType = new AutoParameterStructuresProtocolRequestType<
+    OpenFileDialogParams,
+    OpenFileDialogResult | string,
+    OpenFileDialogResult | string,
+    void,
+    void
+>(OPEN_FILE_DIALOG_METHOD)
 export const inlineChatRequestType = new AutoParameterStructuresProtocolRequestType<
     InlineChatParams | EncryptedChatParams,
     InlineChatResult | string,
