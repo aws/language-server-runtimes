@@ -2,7 +2,7 @@
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
-
+import 'os-proxy-config'
 import { readFileSync } from 'node:fs'
 import * as tls from 'node:tls'
 import { Agent as HttpsAgent } from 'node:https'
@@ -15,6 +15,7 @@ import { Telemetry } from '../../../server-interface'
 import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
 import { pathToFileURL } from 'node:url'
 import { execFileSync } from 'node:child_process'
+import { createRequire } from 'module'
 
 export class ProxyConfigManager {
     /**
@@ -73,7 +74,9 @@ export class ProxyConfigManager {
 
     private static getSystemProxySync(): string | undefined {
         try {
-            const resolved = require.resolve('os-proxy-config')
+            console.debug('Running os-proxy-config')
+            const nativeRequire = createRequire(__filename)
+            const resolved = nativeRequire.resolve('os-proxy-config')
             const resolvedUrl = pathToFileURL(resolved).href
 
             const snippet = `
