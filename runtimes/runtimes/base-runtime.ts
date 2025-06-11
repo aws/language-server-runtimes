@@ -33,6 +33,7 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
+    ShowOpenDialogRequestType,
     openTabRequestType,
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
@@ -57,6 +58,7 @@ import {
     activeEditorChangedNotificationType,
     onPinnedContextAddNotificationType,
     onPinnedContextRemoveNotificationType,
+    openFileDialogRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -190,6 +192,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onTabBarAction: handler => lspConnection.onRequest(tabBarActionRequestType.method, handler),
         onPromptInputOptionChange: handler =>
             lspConnection.onNotification(promptInputOptionChangeNotificationType.method, handler),
+        onOpenFileDialog: handler => lspConnection.onRequest(openFileDialogRequestType.method, handler),
         onRuleClick: handler => lspConnection.onRequest(ruleClickRequestType.method, handler),
     }
 
@@ -258,6 +261,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 showMessageRequest: params => lspConnection.sendRequest(ShowMessageRequest.method, params),
                 showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
                 showSaveFileDialog: params => lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
+                showOpenDialog: params => lspConnection.sendRequest(ShowOpenDialogRequestType.method, params),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {

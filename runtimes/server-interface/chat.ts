@@ -41,6 +41,8 @@ import {
     ListMcpServersResult,
     McpServerClickResult,
     McpServerClickParams,
+    OpenFileDialogParams,
+    OpenFileDialogResult,
     RuleClickParams,
     ListRulesParams,
     ListRulesResult,
@@ -70,7 +72,9 @@ export type Chat = {
     getSerializedChat: (params: GetSerializedChatParams) => Promise<GetSerializedChatResult>
     onListRules: (handler: RequestHandler<ListRulesParams, ListRulesResult, void>) => void
     onRuleClick: (handler: RequestHandler<RuleClickParams, RuleClickResult, void>) => void
-
+    onOpenFileDialog: (
+        handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult | undefined | null, OpenFileDialogResult>
+    ) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
