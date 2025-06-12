@@ -57,7 +57,7 @@ export class Auth {
         this.credentialsProvider = {
             getCredentials: (): Credentials | undefined => {
                 if (this.currentCredentials === undefined) {
-                    throw new Error(`Credentials undefined`)
+                    return undefined
                 } else {
                     return this.currentCredentials
                 }
@@ -69,7 +69,7 @@ export class Auth {
 
             getCredentialsType: (): CredentialsType | undefined => {
                 if (this.currentCredentials === undefined) {
-                    throw new Error(`Credentials undefined`)
+                    return undefined
                 } else if (isIamCredentials(this.currentCredentials)) {
                     return 'iam'
                 } else {
