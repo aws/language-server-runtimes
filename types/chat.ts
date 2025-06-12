@@ -244,6 +244,8 @@ export interface ChatOptions {
 
     mcpServers?: boolean
 
+    modelSelection?: boolean
+
     /**
      * Server signals to Chat Client support of conversation history.
      */
