@@ -244,6 +244,9 @@ export interface ChatOptions {
 
     mcpServers?: boolean
 
+    /**
+     * Server signals to Chat Client support of model selection.
+     */
     modelSelection?: boolean
 
     /**
