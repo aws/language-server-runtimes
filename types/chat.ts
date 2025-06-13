@@ -439,12 +439,16 @@ export interface CreatePromptParams {
 
 export interface OpenFileDialogParams {
     tabId: string
-    type: 'image' | ''
+    fileType: 'image' | ''
+    insertPosition: number
 }
 
 export interface OpenFileDialogResult {
     tabId: string
+    fileType: 'image' | ''
     filePaths: string[]
+    errorMessage?: string
+    insertPosition: number
 }
 
 export interface ProgrammingLanguage {

@@ -73,7 +73,7 @@ export type Chat = {
     onListRules: (handler: RequestHandler<ListRulesParams, ListRulesResult, void>) => void
     onRuleClick: (handler: RequestHandler<RuleClickParams, RuleClickResult, void>) => void
     onOpenFileDialog: (
-        handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult | undefined | null, OpenFileDialogResult>
+        handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult, OpenFileDialogResult>
     ) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void

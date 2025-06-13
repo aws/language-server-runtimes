@@ -95,9 +95,7 @@ export class BaseChat implements Chat {
         this.connection.onRequest(chatRequestType.method, handler)
     }
 
-    public onOpenFileDialog(
-        handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult | null | undefined, OpenFileDialogResult>
-    ) {
+    public onOpenFileDialog(handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult, OpenFileDialogResult>) {
         this.connection.onRequest(openFileDialogRequestType.method, handler)
     }
 
