@@ -48,14 +48,15 @@ export class AwsResponseError extends ResponseError<AwsResponseErrorData> {
 }
 
 // listProfiles
-export type ProfileKind = 'Unknown' | 'SsoTokenProfile'
+export type ProfileKind = 'Unknown' | 'SsoTokenProfile' | 'IamCredentialProfile'
 
 export const ProfileKind = {
     SsoTokenProfile: 'SsoTokenProfile',
+    IamCredentialProfile: 'IamCredentialProfile',
     Unknown: 'Unknown',
 } as const
 
-// Profile and SsoSession use 'settings' property as namescope for their settings to avoid future
+// Profile and Session use 'settings' property as namescope for their settings to avoid future
 // name conflicts with 'kinds', 'name', and future properties as well as making some setting
 // iteration operations easier.
 
@@ -65,6 +66,9 @@ export interface Profile {
     settings?: {
         region?: string
         sso_session?: string
+        aws_access_key_id?: string
+        aws_secret_access_key?: string
+        aws_session_token?: string
     }
 }
 
@@ -75,11 +79,6 @@ export interface SsoSession {
         sso_region?: string
         sso_registration_scopes?: string[]
     }
-}
-
-export interface IamSession {
-    name: string
-    credentials: IamCredentials
 }
 
 export type ListProfilesParams = {
@@ -118,7 +117,6 @@ export const updateProfileOptionsDefaults = {
 export interface UpdateProfileParams {
     profile: Profile
     ssoSession?: SsoSession
-    iamSession?: IamSession
     options?: UpdateProfileOptions
 }
 
@@ -225,33 +223,29 @@ export const getSsoTokenRequestType = new ProtocolRequestType<
     void
 >('aws/identity/getSsoToken')
 
-// getStsCredential
-export interface StsCredentials {
-    id: CredentialId
-    credentials: IamCredentials
-}
-
-export interface GetStsCredentialOptions {
+// getIamCredential
+export interface GetIamCredentialOptions {
     loginOnInvalidToken?: boolean
 }
 
-export interface GetStsCredentialParams {
-    clientName: string
-    options: GetStsCredentialOptions
+export interface GetIamCredentialParams {
+    profileName: string
+    options: GetIamCredentialOptions
 }
 
-export interface GetStsCredentialResult {
-    stsCredential: StsCredentials
+export interface GetIamCredentialResult {
+    id: CredentialId
+    credentials: IamCredentials
     updateCredentialsParams: UpdateCredentialsParams
 }
 
-export const getStsCredentialRequestType = new ProtocolRequestType<
-    GetStsCredentialParams,
-    GetStsCredentialResult,
+export const getIamCredentialRequestType = new ProtocolRequestType<
+    GetIamCredentialParams,
+    GetIamCredentialResult,
     never,
     AwsResponseError,
     void
->('aws/identity/getStsCredential')
+>('aws/identity/getIamCredential')
 
 // invalidateSsoToken
 export interface InvalidateSsoTokenParams {
@@ -272,21 +266,21 @@ export const invalidateSsoTokenRequestType = new ProtocolRequestType<
 >('aws/identity/invalidateSsoToken')
 
 // invalidateStsCredential
-export interface InvalidateStsCredentialParams {
-    stsCredentialId: CredentialId
-}
+// export interface InvalidateStsCredentialParams {
+//     stsCredentialId: CredentialId
+// }
 
-export interface InvalidateStsCredentialResult {
-    // Intentionally left blank
-}
+// export interface InvalidateStsCredentialResult {
+//     // Intentionally left blank
+// }
 
-export const invalidateStsCredentialRequestType = new ProtocolRequestType<
-    InvalidateStsCredentialParams,
-    InvalidateStsCredentialResult,
-    never,
-    AwsResponseError,
-    void
->('aws/identity/invalidateStsCredential')
+// export const invalidateStsCredentialRequestType = new ProtocolRequestType<
+//     InvalidateStsCredentialParams,
+//     InvalidateStsCredentialResult,
+//     never,
+//     AwsResponseError,
+//     void
+// >('aws/identity/invalidateStsCredential')
 
 // ssoTokenChanged
 export type Expired = 'Expired'
@@ -304,15 +298,15 @@ export interface SsoTokenChangedParams {
     ssoTokenId: CredentialId
 }
 
-export interface StsCredentialChangedParams {
-    kind: CredentialChangedKind
-    stsCredentialId: CredentialId
-}
-
 export const ssoTokenChangedRequestType = new ProtocolNotificationType<SsoTokenChangedParams, void>(
     'aws/identity/ssoTokenChanged'
 )
 
-export const stsCredentialChangedRequestType = new ProtocolNotificationType<StsCredentialChangedParams, void>(
-    'aws/identity/stsCredentialChanged'
-)
+// export interface StsCredentialChangedParams {
+//     kind: CredentialChangedKind
+//     stsCredentialId: CredentialId
+// }
+
+// export const stsCredentialChangedRequestType = new ProtocolNotificationType<StsCredentialChangedParams, void>(
+//     'aws/identity/stsCredentialChanged'
+// )

@@ -1,5 +1,7 @@
 import {
     AwsResponseError,
+    GetIamCredentialParams,
+    GetIamCredentialResult,
     GetSsoTokenParams,
     GetSsoTokenResult,
     InvalidateSsoTokenParams,
@@ -25,6 +27,10 @@ export type IdentityManagement = {
 
     onGetSsoToken: (
         handler: RequestHandler<GetSsoTokenParams, GetSsoTokenResult | undefined | null, AwsResponseError>
+    ) => void
+
+    onGetIamCredential: (
+        handler: RequestHandler<GetIamCredentialParams, GetIamCredentialResult | undefined | null, AwsResponseError>
     ) => void
 
     onInvalidateSsoToken: (

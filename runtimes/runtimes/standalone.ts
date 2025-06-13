@@ -28,6 +28,9 @@ import {
     didWriteFileNotificationType,
     didAppendFileNotificationType,
     didCreateDirectoryNotificationType,
+    getIamCredentialRequestType,
+    GetIamCredentialParams,
+    IamCredentials,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -311,6 +314,39 @@ export const standalone = (props: RuntimeProps) => {
                                     { data: result.updateCredentialsParams.data },
                                     encryptionKey
                                 )
+                                result.updateCredentialsParams.encrypted = true
+                            }
+                        }
+
+                        return result
+                    }
+                ),
+            onGetIamCredential: handler =>
+                lspConnection.onRequest(
+                    getIamCredentialRequestType,
+                    async (params: GetIamCredentialParams, token: CancellationToken) => {
+                        const result = await handler(params, token)
+
+                        // Encrypt the IAM credential before sending to client
+                        if (result && !(result instanceof Error) && encryptionKey) {
+                            const credentials: IamCredentials = {
+                                accessKeyId: await encryptObjectWithKey(result.credentials.accessKeyId, encryptionKey),
+                                secretAccessKey: await encryptObjectWithKey(
+                                    result.credentials.secretAccessKey,
+                                    encryptionKey
+                                ),
+                                ...(result.credentials.sessionToken
+                                    ? {
+                                          sessionToken: await encryptObjectWithKey(
+                                              result.credentials.sessionToken,
+                                              encryptionKey
+                                          ),
+                                      }
+                                    : {}),
+                            }
+                            result.credentials = credentials
+                            if (!result.updateCredentialsParams.encrypted) {
+                                result.updateCredentialsParams.data = credentials
                                 result.updateCredentialsParams.encrypted = true
                             }
                         }
