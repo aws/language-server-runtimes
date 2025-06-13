@@ -41,6 +41,8 @@ import {
     ListMcpServersResult,
     McpServerClickResult,
     McpServerClickParams,
+    OpenFileDialogParams,
+    OpenFileDialogResult,
 } from '../protocol'
 
 /**
@@ -62,6 +64,9 @@ export type Chat = {
     onConversationClick: (handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) => void
     onTabBarAction: (handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) => void
     getSerializedChat: (params: GetSerializedChatParams) => Promise<GetSerializedChatResult>
+    onOpenFileDialog: (
+        handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult, OpenFileDialogResult>
+    ) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
