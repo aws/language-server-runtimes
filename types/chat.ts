@@ -360,10 +360,10 @@ export interface ChatUpdateParams {
     tabId: string
     state?: TabState
     data?: TabData
-    /** 
+    /**
      * Special parameter that triggers an error card display when the model is unavailable.
      */
-    modelUnavailable?: boolean;
+    modelUnavailable?: boolean
 }
 
 /**
