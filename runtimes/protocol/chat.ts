@@ -87,8 +87,8 @@ export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
 >(CHAT_REQUEST_METHOD)
 export const openFileDialogRequestType = new AutoParameterStructuresProtocolRequestType<
     OpenFileDialogParams,
-    OpenFileDialogResult | string,
-    OpenFileDialogResult | string,
+    OpenFileDialogResult,
+    OpenFileDialogResult,
     void,
     void
 >(OPEN_FILE_DIALOG_METHOD)

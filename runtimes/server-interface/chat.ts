@@ -65,7 +65,7 @@ export type Chat = {
     onTabBarAction: (handler: RequestHandler<TabBarActionParams, TabBarActionResult, void>) => void
     getSerializedChat: (params: GetSerializedChatParams) => Promise<GetSerializedChatResult>
     onOpenFileDialog: (
-        handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult | undefined | null, OpenFileDialogResult>
+        handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult, OpenFileDialogResult>
     ) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
