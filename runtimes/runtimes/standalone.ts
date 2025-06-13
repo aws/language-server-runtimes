@@ -51,6 +51,7 @@ import {
     getSsoTokenRequestType,
     IdentityManagement,
     invalidateSsoTokenRequestType,
+    invalidateIamCredentialRequestType,
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
@@ -355,6 +356,7 @@ export const standalone = (props: RuntimeProps) => {
                     }
                 ),
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+            onInvalidateIamCredential: handler => lspConnection.onRequest(invalidateIamCredentialRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
         }
 

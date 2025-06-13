@@ -265,6 +265,23 @@ export const invalidateSsoTokenRequestType = new ProtocolRequestType<
     void
 >('aws/identity/invalidateSsoToken')
 
+export interface InvalidateIamCredentialParams {
+    iamCredentialsId: CredentialId
+}
+
+export interface InvalidateIamCredentialResult {
+    // Intentionally left blank
+}
+
+// Pontential error codes: E_UNKNOWN | E_TIMEOUT | E_CANNOT_READ_SSO_CACHE | E_CANNOT_WRITE_SSO_CACHE | E_INVALID_TOKEN
+export const invalidateIamCredentialRequestType = new ProtocolRequestType<
+    InvalidateIamCredentialParams,
+    InvalidateIamCredentialResult,
+    never,
+    AwsResponseError,
+    void
+>('aws/identity/invalidateIamToken')
+
 // invalidateStsCredential
 // export interface InvalidateStsCredentialParams {
 //     stsCredentialId: CredentialId

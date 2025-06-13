@@ -76,6 +76,7 @@ import { LspServer } from './lsp/router/lspServer'
 import {
     getIamCredentialRequestType,
     getSsoTokenRequestType,
+    invalidateIamCredentialRequestType,
     invalidateSsoTokenRequestType,
     listProfilesRequestType,
     ssoTokenChangedRequestType,
@@ -186,6 +187,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
         onGetIamCredential: handler => lspConnection.onRequest(getIamCredentialRequestType, handler),
         onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+        onInvalidateIamCredential: handler => lspConnection.onRequest(invalidateIamCredentialRequestType, handler),
         sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
     }
 
