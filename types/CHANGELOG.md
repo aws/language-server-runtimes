@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.38](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.37...language-server-runtimes-types/v0.1.38) (2025-06-12)
+
+
+### Features
+
+* **types:** adding modelSelection flag in ChatOptions for server to … ([#566](https://github.com/aws/language-server-runtimes/issues/566)) ([e2a3f69](https://github.com/aws/language-server-runtimes/commit/e2a3f696943d6582a5a162cc3c06e9f7dade7238))
+
 ## [0.1.37](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.36...language-server-runtimes-types/v0.1.37) (2025-06-10)
 
 
