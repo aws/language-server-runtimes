@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.39](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.38...language-server-runtimes-types/v0.1.39) (2025-06-16)
+
+
+### Reverts
+
+* revert add support for pinned context and rules ([ea7d98f](https://github.com/aws/language-server-runtimes/commit/ea7d98fe3f9037670b9c5e5b7f19721a8b056b5e))
+
 ## [0.1.38](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.37...language-server-runtimes-types/v0.1.38) (2025-06-12)
 
 
