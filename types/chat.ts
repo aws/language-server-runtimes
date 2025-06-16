@@ -245,6 +245,11 @@ export interface ChatOptions {
     mcpServers?: boolean
 
     /**
+     * Server signals to Chat Client support of model selection.
+     */
+    modelSelection?: boolean
+
+    /**
      * Server signals to Chat Client support of conversation history.
      */
     history?: boolean

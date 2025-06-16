@@ -1,5 +1,73 @@
 # Changelog
 
+## [0.2.96](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.95...language-server-runtimes/v0.2.96) (2025-06-12)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.37 to ^0.1.38
+
+## [0.2.95](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.94...language-server-runtimes/v0.2.95) (2025-06-10)
+
+
+### Bug Fixes
+
+* align proxy detection with Node.js CLI behavior in Windows ([#562](https://github.com/aws/language-server-runtimes/issues/562)) ([90aa4d3](https://github.com/aws/language-server-runtimes/commit/90aa4d357123813caf17e94b0c1780d09eec4d5f))
+
+## [0.2.94](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.93...language-server-runtimes/v0.2.94) (2025-06-10)
+
+
+### Bug Fixes
+
+* resolve Windows issue with system proxy detection ([#560](https://github.com/aws/language-server-runtimes/issues/560)) ([e59a220](https://github.com/aws/language-server-runtimes/commit/e59a2202c6c8f7a15b38c36c4eebeedfc56b70d3))
+
+## [0.2.93](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.92...language-server-runtimes/v0.2.93) (2025-06-10)
+
+
+### Features
+
+* **runtimes:** add auto-discovery for OS proxy settings ([#553](https://github.com/aws/language-server-runtimes/issues/553)) ([d3e961a](https://github.com/aws/language-server-runtimes/commit/d3e961abccd0421a6937f8b60708b81cac310aa4))
+
+## [0.2.92](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.91...language-server-runtimes/v0.2.92) (2025-06-10)
+
+
+### Features
+
+* add support for pinned context and rules ([#548](https://github.com/aws/language-server-runtimes/issues/548)) ([6606dcc](https://github.com/aws/language-server-runtimes/commit/6606dcc0a908eff03fbeaadba6dbfda900472d2f))
+
+
+### Bug Fixes
+
+* syntax errors on some Mac builds and flaky Darwin test ([#550](https://github.com/aws/language-server-runtimes/issues/550)) ([687ec5a](https://github.com/aws/language-server-runtimes/commit/687ec5a8d50129e29e517802cf60f101b66b8d6f))
+
+
+### Reverts
+
+* add support for pinned context and rules ([#548](https://github.com/aws/language-server-runtimes/issues/548))" ([#558](https://github.com/aws/language-server-runtimes/issues/558)) ([ce49c30](https://github.com/aws/language-server-runtimes/commit/ce49c301cfae32fcdf396d2fb85d9f6edb8016b2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.36 to ^0.1.37
+
+## [0.2.91](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.90...language-server-runtimes/v0.2.91) (2025-06-02)
+
+
+### Bug Fixes
+
+* use logging instead of lspConsole ([#545](https://github.com/aws/language-server-runtimes/issues/545)) ([bcd5ef9](https://github.com/aws/language-server-runtimes/commit/bcd5ef90addf15b9c83ca24b9af68919bfeb6c48))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.35 to ^0.1.36
+
 ## [0.2.90](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.89...language-server-runtimes/v0.2.90) (2025-05-30)
 
 

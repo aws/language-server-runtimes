@@ -1,5 +1,31 @@
 # Changelog
 
+## [0.1.38](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.37...language-server-runtimes-types/v0.1.38) (2025-06-12)
+
+
+### Features
+
+* **types:** adding modelSelection flag in ChatOptions for server to … ([#566](https://github.com/aws/language-server-runtimes/issues/566)) ([e2a3f69](https://github.com/aws/language-server-runtimes/commit/e2a3f696943d6582a5a162cc3c06e9f7dade7238))
+
+## [0.1.37](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.36...language-server-runtimes-types/v0.1.37) (2025-06-10)
+
+
+### Features
+
+* add support for pinned context and rules ([#548](https://github.com/aws/language-server-runtimes/issues/548)) ([6606dcc](https://github.com/aws/language-server-runtimes/commit/6606dcc0a908eff03fbeaadba6dbfda900472d2f))
+
+
+### Reverts
+
+* add support for pinned context and rules ([#548](https://github.com/aws/language-server-runtimes/issues/548))" ([#558](https://github.com/aws/language-server-runtimes/issues/558)) ([ce49c30](https://github.com/aws/language-server-runtimes/commit/ce49c301cfae32fcdf396d2fb85d9f6edb8016b2))
+
+## [0.1.36](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.35...language-server-runtimes-types/v0.1.36) (2025-06-02)
+
+
+### Features
+
+* adding isInlineEdit to LogInlineCompletionSessionResultsParams ([7cdb1af](https://github.com/aws/language-server-runtimes/commit/7cdb1afc8d3582d92a9336b60bc17d78fcb66592))
+
 ## [0.1.35](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.34...language-server-runtimes-types/v0.1.35) (2025-05-30)
 
 

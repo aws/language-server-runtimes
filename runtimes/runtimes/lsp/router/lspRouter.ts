@@ -257,6 +257,7 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
                 return result
             }
         }
+        return undefined
     }
 
     private async routeNotificationToAllServers<P>(action: (server: LspServer, params: P) => void, params: P) {
