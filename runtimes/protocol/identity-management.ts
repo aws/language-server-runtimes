@@ -124,6 +124,14 @@ export interface UpdateProfileResult {
     // Intentionally left blank
 }
 
+export interface DeleteProfileParams {
+    profileName: string
+}
+
+export interface DeleteProfileResult {
+    // Intentionally left blank
+}
+
 // Potential error codes: E_UNKNOWN | E_TIMEOUT | E_RUNTIME_NOT_SUPPORTED | E_CANNOT_READ_SHARED_CONFIG
 //   E_CANNOT_WRITE_SHARED_CONFIG | E_CANNOT_CREATE_PROFILE | E_CANNOT_OVERWRITE_PROFILE | E_CANNOT_CREATE_SSO_SESSION
 //   E_CANNOT_OVERWRITE_SSO_SESSION | E_INVALID_PROFILE | E_INVALID_SSO_SESSION
@@ -134,6 +142,14 @@ export const updateProfileRequestType = new ProtocolRequestType<
     AwsResponseError,
     void
 >('aws/identity/updateProfile')
+
+export const deleteProfileRequestType = new ProtocolRequestType<
+    DeleteProfileParams,
+    DeleteProfileResult,
+    never,
+    AwsResponseError,
+    void
+>('aws/identity/deleteProfile')
 
 // getSsoToken
 export type CredentialId = string // Opaque identifier
@@ -280,7 +296,7 @@ export const invalidateIamCredentialRequestType = new ProtocolRequestType<
     never,
     AwsResponseError,
     void
->('aws/identity/invalidateIamToken')
+>('aws/identity/invalidateIamCredential')
 
 // invalidateStsCredential
 // export interface InvalidateStsCredentialParams {

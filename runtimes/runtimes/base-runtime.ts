@@ -51,6 +51,7 @@ import {
     buttonClickRequestType,
     listMcpServersRequestType,
     mcpServerClickRequestType,
+    RequestHandler,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -74,6 +75,10 @@ import { observe } from './lsp'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import {
+    AwsResponseError,
+    DeleteProfileParams,
+    deleteProfileRequestType,
+    DeleteProfileResult,
     getIamCredentialRequestType,
     getSsoTokenRequestType,
     invalidateIamCredentialRequestType,
@@ -184,6 +189,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
     const identityManagement: IdentityManagement = {
         onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
         onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
+        onDeleteProfile: handler => lspConnection.onRequest(deleteProfileRequestType, handler),
         onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
         onGetIamCredential: handler => lspConnection.onRequest(getIamCredentialRequestType, handler),
         onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
