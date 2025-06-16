@@ -40,7 +40,7 @@ export class EncryptedChat extends BaseChat {
         this.keyBuffer = Buffer.from(key, 'base64')
     }
 
-    public onChatPrompt(handler: RequestHandler<ChatParams, ChatResult | null | undefined, ChatResult>) {
+    public override onChatPrompt(handler: RequestHandler<ChatParams, ChatResult | null | undefined, ChatResult>) {
         this.registerEncryptedRequestHandler<
             EncryptedChatParams,
             ChatParams,
@@ -49,7 +49,9 @@ export class EncryptedChat extends BaseChat {
         >(chatRequestType, handler)
     }
 
-    public onInlineChatPrompt(handler: RequestHandler<InlineChatParams, ChatResult | null | undefined, ChatResult>) {
+    public override onInlineChatPrompt(
+        handler: RequestHandler<InlineChatParams, ChatResult | null | undefined, ChatResult>
+    ) {
         this.registerEncryptedRequestHandler<
             EncryptedChatParams,
             InlineChatParams,
@@ -58,7 +60,7 @@ export class EncryptedChat extends BaseChat {
         >(inlineChatRequestType, handler)
     }
 
-    public onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
+    public override onQuickAction(handler: RequestHandler<QuickActionParams, QuickActionResult, void>) {
         this.registerEncryptedRequestHandler<EncryptedQuickActionParams, QuickActionParams, QuickActionResult, void>(
             quickActionRequestType,
             handler
