@@ -331,7 +331,7 @@ export const standalone = (props: RuntimeProps) => {
 
                         // Encrypt the IAM credential before sending to client
                         if (result && !(result instanceof Error) && encryptionKey) {
-                            const credentials: IamCredentials = {
+                            result.credentials = {
                                 accessKeyId: await encryptObjectWithKey(result.credentials.accessKeyId, encryptionKey),
                                 secretAccessKey: await encryptObjectWithKey(
                                     result.credentials.secretAccessKey,
@@ -346,9 +346,11 @@ export const standalone = (props: RuntimeProps) => {
                                       }
                                     : {}),
                             }
-                            result.credentials = credentials
                             if (!result.updateCredentialsParams.encrypted) {
-                                result.updateCredentialsParams.data = credentials
+                                result.updateCredentialsParams.data = await encryptObjectWithKey(
+                                    { data: result.updateCredentialsParams.data },
+                                    encryptionKey
+                                )
                                 result.updateCredentialsParams.encrypted = true
                             }
                         }
