@@ -451,6 +451,13 @@ export interface OpenFileDialogResult {
     insertPosition: number
 }
 
+export interface DropFilesParams {
+    tabId: string
+    files: FileList
+    insertPosition: number
+    errorMessage?: string
+}
+
 export interface ProgrammingLanguage {
     languageName: string
 }

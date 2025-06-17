@@ -9,6 +9,7 @@ import {
     GetSerializedChatResult,
     ChatPrompt,
     OpenFileDialogParams,
+    DropFilesParams,
 } from '@aws/language-server-runtimes-types'
 export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
 
@@ -32,6 +33,7 @@ export const CHAT_PROMPT_OPTION_ACKNOWLEDGED = 'chatPromptOptionAcknowledged'
 export const STOP_CHAT_RESPONSE = 'stopChatResponse'
 export const OPEN_SETTINGS = 'openSettings'
 export const OPEN_FILE_DIALOG = 'openFileDialog'
+export const FILES_DROPPED = 'filesDropped'
 /**
  * A message sent from Chat Client to Extension in response to various actions triggered from Chat UI.
  */
@@ -53,6 +55,7 @@ export type UiMessageCommand =
     | typeof STOP_CHAT_RESPONSE
     | typeof OPEN_SETTINGS
     | typeof OPEN_FILE_DIALOG
+    | typeof FILES_DROPPED
 
 export type UiMessageParams =
     | InsertToCursorPositionParams
@@ -66,6 +69,7 @@ export type UiMessageParams =
     | StopChatResponseParams
     | OpenSettingsParams
     | OpenFileDialogParams
+    | DropFilesParams
 
 export interface SendToPromptParams {
     selection: string
@@ -160,6 +164,12 @@ export interface CopyCodeToClipboardMessage {
 
 export interface OpenSettingsParams {
     settingKey: string
+}
+
+export interface FilesDroppedParams {
+    tabId: string
+    insertPosition: number
+    files: string[]
 }
 
 /**
