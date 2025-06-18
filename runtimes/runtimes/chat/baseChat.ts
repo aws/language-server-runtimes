@@ -82,6 +82,9 @@ import {
     activeEditorChangedNotificationType,
     onPinnedContextAddNotificationType,
     onPinnedContextRemoveNotificationType,
+    OpenFileDialogParams,
+    OpenFileDialogResult,
+    openFileDialogRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -90,6 +93,10 @@ export class BaseChat implements Chat {
 
     public onChatPrompt(handler: RequestHandler<ChatParams, ChatResult | null | undefined, ChatResult>) {
         this.connection.onRequest(chatRequestType.method, handler)
+    }
+
+    public onOpenFileDialog(handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult, OpenFileDialogResult>) {
+        this.connection.onRequest(openFileDialogRequestType.method, handler)
     }
 
     public onInlineChatPrompt(

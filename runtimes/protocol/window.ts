@@ -3,6 +3,9 @@ import {
     SHOW_SAVE_FILE_DIALOG_REQUEST_METHOD,
     ShowSaveFileDialogParams,
     ShowSaveFileDialogResult,
+    ShowOpenDialogResult,
+    ShowOpenDialogParams,
+    SHOW_OPEN_FILE_DIALOG_REQUEST_METHOD,
 } from './lsp'
 
 /**
@@ -16,3 +19,11 @@ export const ShowSaveFileDialogRequestType = new ProtocolRequestType<
     void,
     void
 >(SHOW_SAVE_FILE_DIALOG_REQUEST_METHOD)
+
+export const ShowOpenDialogRequestType = new ProtocolRequestType<
+    ShowOpenDialogParams,
+    ShowOpenDialogResult,
+    never,
+    void,
+    void
+>(SHOW_OPEN_FILE_DIALOG_REQUEST_METHOD)

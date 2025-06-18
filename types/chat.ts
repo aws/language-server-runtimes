@@ -22,6 +22,7 @@ export const INLINE_CHAT_REQUEST_METHOD = 'aws/chat/sendInlineChatPrompt'
 export const TAB_BAR_ACTION_REQUEST_METHOD = 'aws/chat/tabBarAction'
 export const CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD = 'aws/chat/chatOptionsUpdate'
 export const PROMPT_INPUT_OPTION_CHANGE_METHOD = 'aws/chat/promptInputOptionChange'
+export const OPEN_FILE_DIALOG_METHOD = 'aws/chat/openFileDialog'
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
@@ -417,7 +418,7 @@ export interface ContextCommandGroup {
 export interface ContextCommand extends QuickActionCommand {
     id?: string
     route?: string[]
-    label?: 'file' | 'folder' | 'code'
+    label?: 'file' | 'folder' | 'code' | 'image'
     children?: ContextCommandGroup[]
 }
 
@@ -434,6 +435,27 @@ export interface PinnedContextParams extends ContextCommandParams {
 export interface CreatePromptParams {
     promptName: string
     isRule?: boolean
+}
+
+export interface OpenFileDialogParams {
+    tabId: string
+    fileType: 'image' | ''
+    insertPosition: number
+}
+
+export interface OpenFileDialogResult {
+    tabId: string
+    fileType: 'image' | ''
+    filePaths: string[]
+    errorMessage?: string
+    insertPosition: number
+}
+
+export interface DropFilesParams {
+    tabId: string
+    files: FileList
+    insertPosition: number
+    errorMessage?: string
 }
 
 export interface ProgrammingLanguage {

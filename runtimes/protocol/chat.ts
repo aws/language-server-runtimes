@@ -85,6 +85,9 @@ import {
     PINNED_CONTEXT_REMOVE_NOTIFICATION_METHOD,
     ActiveEditorChangedParams,
     ACTIVE_EDITOR_CHANGED_NOTIFICATION_METHOD,
+    OPEN_FILE_DIALOG_METHOD,
+    OpenFileDialogParams,
+    OpenFileDialogResult,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -94,6 +97,13 @@ export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
     void,
     void
 >(CHAT_REQUEST_METHOD)
+export const openFileDialogRequestType = new AutoParameterStructuresProtocolRequestType<
+    OpenFileDialogParams,
+    OpenFileDialogResult,
+    OpenFileDialogResult,
+    void,
+    void
+>(OPEN_FILE_DIALOG_METHOD)
 export const inlineChatRequestType = new AutoParameterStructuresProtocolRequestType<
     InlineChatParams | EncryptedChatParams,
     InlineChatResult | string,
