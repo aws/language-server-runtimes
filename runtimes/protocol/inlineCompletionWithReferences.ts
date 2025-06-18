@@ -3,11 +3,11 @@ import {
     InlineCompletionItemWithReferences,
     LogInlineCompletionSessionResultsParams,
     InlineCompletionRegistrationOptions,
-    ProtocolNotificationType,
-    ProtocolRequestType,
     InlineCompletionParams,
     PartialResultParams,
 } from './lsp'
+
+import { ProtocolNotificationType, ProtocolRequestType } from 'vscode-languageserver-protocol'
 
 export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams
 
