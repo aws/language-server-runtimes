@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.40](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.39...language-server-runtimes-types/v0.1.40) (2025-06-18)
+
+
+### Features
+
+* **types:** add protocol for open file dialog for import image as context ([#564](https://github.com/aws/language-server-runtimes/issues/564)) ([8c9cac7](https://github.com/aws/language-server-runtimes/commit/8c9cac765137ca9f3ab08d6a79e6edac768f2c04))
+
 ## [0.1.39](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.38...language-server-runtimes-types/v0.1.39) (2025-06-16)
 
 
