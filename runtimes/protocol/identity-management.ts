@@ -319,15 +319,15 @@ export const invalidateIamCredentialRequestType = new ProtocolRequestType<
 export type Expired = 'Expired'
 export type Refreshed = 'Refreshed'
 
-export type CredentialChangedKind = Refreshed | Expired
+export type SsoTokenChangedKind = Refreshed | Expired
 
-export const CredentialChangedKind = {
+export const SsoTokenChangedKind = {
     Expired: 'Expired',
     Refreshed: 'Refreshed',
 } as const
 
 export interface SsoTokenChangedParams {
-    kind: CredentialChangedKind
+    kind: SsoTokenChangedKind
     ssoTokenId: CredentialId
 }
 
@@ -335,8 +335,16 @@ export const ssoTokenChangedRequestType = new ProtocolNotificationType<SsoTokenC
     'aws/identity/ssoTokenChanged'
 )
 
+// stsCredentialChanged
+// export type StsCredentialChangedKind = Refreshed | Expired
+
+// export const StsCredentialChangedKind = {
+//     Expired: 'Expired',
+//     Refreshed: 'Refreshed',
+// } as const
+
 // export interface StsCredentialChangedParams {
-//     kind: CredentialChangedKind
+//     kind: StsCredentialChangedKind
 //     stsCredentialId: CredentialId
 // }
 
