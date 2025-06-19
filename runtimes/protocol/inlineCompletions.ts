@@ -2,9 +2,10 @@ import {
     InlineCompletionItem,
     InlineCompletionList,
     InlineCompletionParams,
-    ProtocolRequestType,
     InlineCompletionRegistrationOptions,
 } from './lsp'
+
+import { ProtocolRequestType } from 'vscode-languageserver-protocol'
 
 /**
  * inlineCompletionRequestType defines the custom method that the language client
