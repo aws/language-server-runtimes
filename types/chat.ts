@@ -440,7 +440,7 @@ export interface CreatePromptParams {
 export interface OpenFileDialogParams {
     tabId: string
     fileType: 'image' | ''
-    insertPosition: number
+    insertPosition?: number
 }
 
 export interface OpenFileDialogResult {
@@ -448,7 +448,7 @@ export interface OpenFileDialogResult {
     fileType: 'image' | ''
     filePaths: string[]
     errorMessage?: string
-    insertPosition: number
+    insertPosition?: number
 }
 
 export interface DropFilesParams {
