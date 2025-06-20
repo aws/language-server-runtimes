@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.41](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.40...language-server-runtimes-types/v0.1.41) (2025-06-20)
+
+
+### Features
+
+* **types:** make the insertPosition optional in OpenFileDialogParams and OpenFileDialogResult ([#576](https://github.com/aws/language-server-runtimes/issues/576)) ([9fb6013](https://github.com/aws/language-server-runtimes/commit/9fb6013a8ac0fd6a8e6aaca742901424f9550422))
+
 ## [0.1.40](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.39...language-server-runtimes-types/v0.1.40) (2025-06-18)
 
 
