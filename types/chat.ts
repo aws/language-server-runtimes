@@ -420,6 +420,7 @@ export interface ContextCommand extends QuickActionCommand {
     route?: string[]
     label?: 'file' | 'folder' | 'code' | 'image'
     children?: ContextCommandGroup[]
+    content?: Uint8Array
 }
 
 export interface ContextCommandParams {
@@ -440,7 +441,7 @@ export interface CreatePromptParams {
 export interface OpenFileDialogParams {
     tabId: string
     fileType: 'image' | ''
-    insertPosition: number
+    insertPosition?: number
 }
 
 export interface OpenFileDialogResult {
@@ -448,7 +449,7 @@ export interface OpenFileDialogResult {
     fileType: 'image' | ''
     filePaths: string[]
     errorMessage?: string
-    insertPosition: number
+    insertPosition?: number
 }
 
 export interface DropFilesParams {
