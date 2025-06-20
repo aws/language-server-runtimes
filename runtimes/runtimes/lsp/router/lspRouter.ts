@@ -29,6 +29,9 @@ import {
     DeleteFilesParams,
     RenameFilesParams,
     DidSaveTextDocumentParams,
+    DidOpenTextDocumentParams,
+    DidChangeTextDocumentParams,
+    DidCloseTextDocumentParams,
     DidChangeWorkspaceFoldersNotification,
 } from '../../../protocol'
 import { Connection } from 'vscode-languageserver/node'
@@ -63,6 +66,9 @@ export class LspRouter {
         lspConnection.onNotification(DidChangeWorkspaceFoldersNotification.type, params => {
             this.didChangeWorkspaceFolders(params.event)
         })
+        lspConnection.onDidOpenTextDocument(this.didOpenTextDocument)
+        lspConnection.onDidChangeTextDocument(this.didChangeTextDocument)
+        lspConnection.onDidCloseTextDocument(this.didCloseTextDocument)
         lspConnection.onDidSaveTextDocument(this.didSaveTextDocument)
     }
 
@@ -237,6 +243,27 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
 
     didRenameFiles = (params: RenameFilesParams): void => {
         this.routeNotificationToAllServers((server, params) => server.sendDidRenameFilesNotification(params), params)
+    }
+
+    didOpenTextDocument = (params: DidOpenTextDocumentParams): void => {
+        this.routeNotificationToAllServers(
+            (server, params) => server.sendDidOpenTextDocumentNotification(params),
+            params
+        )
+    }
+
+    didChangeTextDocument = (params: DidChangeTextDocumentParams): void => {
+        this.routeNotificationToAllServers(
+            (server, params) => server.sendDidChangeTextDocumentNotification(params),
+            params
+        )
+    }
+
+    didCloseTextDocument = (params: DidCloseTextDocumentParams): void => {
+        this.routeNotificationToAllServers(
+            (server, params) => server.sendDidCloseTextDocumentNotification(params),
+            params
+        )
     }
 
     didSaveTextDocument = (params: DidSaveTextDocumentParams): void => {
