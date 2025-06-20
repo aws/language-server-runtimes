@@ -420,6 +420,7 @@ export interface ContextCommand extends QuickActionCommand {
     route?: string[]
     label?: 'file' | 'folder' | 'code' | 'image'
     children?: ContextCommandGroup[]
+    content?: Uint8Array
 }
 
 export interface ContextCommandParams {
