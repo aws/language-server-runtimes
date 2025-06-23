@@ -14,6 +14,7 @@ type Tool<T, R> = {
     name: string
     description: string
     inputSchema: ObjectSchema
+    validationError: any
     validate: (input: T, token?: CancellationToken) => boolean
     invoke: (input: T, token?: CancellationToken, updates?: WritableStream) => Promise<R>
 }
@@ -27,12 +28,18 @@ export const newAgent = (): Agent => {
             spec: S,
             handler: (input: T, token?: CancellationToken) => Promise<any>
         ) => {
+            let validationError: any = null
             const validator = ajv.compile(spec.inputSchema)
             const tool = {
                 validate: (input: InferSchema<S['inputSchema']>) => {
-                    return validator(input)
+                    const isValid = validator(input)
+                    validationError = validator.errors
+                    return isValid
                 },
                 invoke: handler,
+                get validationError() {
+                    return validationError
+                },
                 name: spec.name,
                 description: spec.description,
                 inputSchema: spec.inputSchema,
@@ -48,7 +55,12 @@ export const newAgent = (): Agent => {
             }
 
             if (!tool.validate(input, token)) {
-                throw new Error(`Input for tool ${toolName} is invalid`)
+                const errorDetails =
+                    (tool.validationError || [])
+                        .map((err: any) => `${err.instancePath?.replace(/^\//, '') || 'root'}: ${err.message}`)
+                        .join('\n') || `\nReceived: ${input}`
+
+                throw new Error(`${toolName} tool input validation failed: ${errorDetails}`)
             }
 
             return tool.invoke(input, token, updates)

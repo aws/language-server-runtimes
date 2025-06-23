@@ -34,6 +34,32 @@ describe('Agent Tools', () => {
     } as const
     const SOME_TOOL_HANDLER = async (_: { test: string }) => true
 
+    const TOOL_SPEC_WITH_ARRAY_TYPE = {
+        name: 'fsReplace',
+        description: 'test',
+        inputSchema: {
+            type: 'object',
+            properties: {
+                diffs: {
+                    type: 'array',
+                    items: {
+                        type: 'object',
+                        properties: {
+                            oldStr: {
+                                type: 'string',
+                            },
+                            newStr: {
+                                type: 'string',
+                            },
+                        },
+                    },
+                },
+            },
+            required: ['diffs'],
+        },
+    } as const
+    const DIFFS_TOOL_HANDLER = async (_: { diffs: [] }) => true
+
     beforeEach(() => {
         AGENT = newAgent()
     })
@@ -59,11 +85,30 @@ describe('Agent Tools', () => {
         }, Error)
     })
 
-    it('should throw if the tool input does not validate', async () => {
+    it('should throw specific message if the tool input does not validate', async () => {
+        AGENT.addTool(TOOL_SPEC_WITH_ARRAY_TYPE, DIFFS_TOOL_HANDLER)
+        await assert.rejects(
+            async () => {
+                await AGENT.runTool(TOOL_SPEC_WITH_ARRAY_TYPE.name, {
+                    diffs: '[{"oldStr": "toReplace"}, {"newStr": "newContet"}]',
+                })
+            },
+            (error: Error) => {
+                assert.ok(error.message === 'fsReplace tool input validation failed: diffs: must be array')
+                return true
+            }
+        )
+
         AGENT.addTool(SOME_TOOL_SPEC, SOME_TOOL_HANDLER)
-        assert.rejects(async () => {
-            await AGENT.runTool(SOME_TOOL_SPEC.name, { test: 1 })
-        }, Error)
+        await assert.rejects(
+            async () => {
+                await AGENT.runTool(SOME_TOOL_SPEC.name, { test: 1 })
+            },
+            (error: Error) => {
+                assert.ok(error.message === 'test tool input validation failed: test: must be string')
+                return true
+            }
+        )
     })
 
     it('should execute the named tool if multiple are available', async () => {
