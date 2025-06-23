@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.99](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.98...language-server-runtimes/v0.2.99) (2025-06-20)
+
+
+### Bug Fixes
+
+* **runtimes:** fix protocol/lsp circular dependency ([#573](https://github.com/aws/language-server-runtimes/issues/573)) ([2231db0](https://github.com/aws/language-server-runtimes/commit/2231db070e0429adc11cf872a7f7046ffdc8207d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.40 to ^0.1.41
+
 ## [0.2.98](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.97...language-server-runtimes/v0.2.98) (2025-06-18)
 
 
