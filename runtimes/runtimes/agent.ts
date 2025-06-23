@@ -1,4 +1,4 @@
-import Ajv from 'ajv'
+import Ajv, { ErrorObject, ValidateFunction } from 'ajv'
 import {
     Agent,
     BedrockTools,
@@ -14,8 +14,7 @@ type Tool<T, R> = {
     name: string
     description: string
     inputSchema: ObjectSchema
-    validationError: any
-    validate: (input: T, token?: CancellationToken) => boolean
+    validate: (input: T, token?: CancellationToken) => boolean | ValidateFunction<unknown>['errors']
     invoke: (input: T, token?: CancellationToken, updates?: WritableStream) => Promise<R>
 }
 
@@ -28,18 +27,13 @@ export const newAgent = (): Agent => {
             spec: S,
             handler: (input: T, token?: CancellationToken) => Promise<any>
         ) => {
-            let validationError: any = null
             const validator = ajv.compile(spec.inputSchema)
             const tool = {
                 validate: (input: InferSchema<S['inputSchema']>) => {
                     const isValid = validator(input)
-                    validationError = validator.errors
-                    return isValid
+                    return validator.errors ?? isValid
                 },
                 invoke: handler,
-                get validationError() {
-                    return validationError
-                },
                 name: spec.name,
                 description: spec.description,
                 inputSchema: spec.inputSchema,
@@ -54,10 +48,11 @@ export const newAgent = (): Agent => {
                 throw new Error(`Tool ${toolName} not found`)
             }
 
-            if (!tool.validate(input, token)) {
+            const validateResult = tool.validate(input, token)
+            if (validateResult !== true) {
                 const errorDetails =
-                    (tool.validationError || [])
-                        .map((err: any) => `${err.instancePath?.replace(/^\//, '') || 'root'}: ${err.message}`)
+                    ((validateResult as ValidateFunction['errors']) || [])
+                        .map((err: ErrorObject) => `${err.instancePath || 'root'}: ${err.message}`)
                         .join('\n') || `\nReceived: ${input}`
 
                 throw new Error(`${toolName} tool input validation failed: ${errorDetails}`)

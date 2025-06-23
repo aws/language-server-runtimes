@@ -94,7 +94,7 @@ describe('Agent Tools', () => {
                 })
             },
             (error: Error) => {
-                assert.ok(error.message === 'fsReplace tool input validation failed: diffs: must be array')
+                assert.ok(error.message === 'fsReplace tool input validation failed: /diffs: must be array')
                 return true
             }
         )
@@ -105,7 +105,7 @@ describe('Agent Tools', () => {
                 await AGENT.runTool(SOME_TOOL_SPEC.name, { test: 1 })
             },
             (error: Error) => {
-                assert.ok(error.message === 'test tool input validation failed: test: must be string')
+                assert.ok(error.message === 'test tool input validation failed: /test: must be string')
                 return true
             }
         )
