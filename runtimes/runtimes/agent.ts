@@ -1,4 +1,4 @@
-import Ajv from 'ajv'
+import Ajv, { ErrorObject, ValidateFunction } from 'ajv'
 import {
     Agent,
     BedrockTools,
@@ -14,7 +14,7 @@ type Tool<T, R> = {
     name: string
     description: string
     inputSchema: ObjectSchema
-    validate: (input: T, token?: CancellationToken) => boolean
+    validate: (input: T, token?: CancellationToken) => boolean | ValidateFunction<unknown>['errors']
     invoke: (input: T, token?: CancellationToken, updates?: WritableStream) => Promise<R>
 }
 
@@ -30,7 +30,8 @@ export const newAgent = (): Agent => {
             const validator = ajv.compile(spec.inputSchema)
             const tool = {
                 validate: (input: InferSchema<S['inputSchema']>) => {
-                    return validator(input)
+                    const isValid = validator(input)
+                    return validator.errors ?? isValid
                 },
                 invoke: handler,
                 name: spec.name,
@@ -47,8 +48,14 @@ export const newAgent = (): Agent => {
                 throw new Error(`Tool ${toolName} not found`)
             }
 
-            if (!tool.validate(input, token)) {
-                throw new Error(`Input for tool ${toolName} is invalid`)
+            const validateResult = tool.validate(input, token)
+            if (validateResult !== true) {
+                const errorDetails =
+                    ((validateResult as ValidateFunction['errors']) || [])
+                        .map((err: ErrorObject) => `${err.instancePath || 'root'}: ${err.message}`)
+                        .join('\n') || `\nReceived: ${input}`
+
+                throw new Error(`${toolName} tool input validation failed: ${errorDetails}`)
             }
 
             return tool.invoke(input, token, updates)
