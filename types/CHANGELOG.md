@@ -1,5 +1,33 @@
 # Changelog
 
+## [0.1.41](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.40...language-server-runtimes-types/v0.1.41) (2025-06-20)
+
+
+### Features
+
+* **types:** make the insertPosition optional in OpenFileDialogParams and OpenFileDialogResult ([#576](https://github.com/aws/language-server-runtimes/issues/576)) ([9fb6013](https://github.com/aws/language-server-runtimes/commit/9fb6013a8ac0fd6a8e6aaca742901424f9550422))
+
+## [0.1.40](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.39...language-server-runtimes-types/v0.1.40) (2025-06-18)
+
+
+### Features
+
+* **types:** add protocol for open file dialog for import image as context ([#564](https://github.com/aws/language-server-runtimes/issues/564)) ([8c9cac7](https://github.com/aws/language-server-runtimes/commit/8c9cac765137ca9f3ab08d6a79e6edac768f2c04))
+
+## [0.1.39](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.38...language-server-runtimes-types/v0.1.39) (2025-06-16)
+
+
+### Reverts
+
+* revert add support for pinned context and rules ([ea7d98f](https://github.com/aws/language-server-runtimes/commit/ea7d98fe3f9037670b9c5e5b7f19721a8b056b5e))
+
+## [0.1.38](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.37...language-server-runtimes-types/v0.1.38) (2025-06-12)
+
+
+### Features
+
+* **types:** adding modelSelection flag in ChatOptions for server to … ([#566](https://github.com/aws/language-server-runtimes/issues/566)) ([e2a3f69](https://github.com/aws/language-server-runtimes/commit/e2a3f696943d6582a5a162cc3c06e9f7dade7238))
+
 ## [0.1.37](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.36...language-server-runtimes-types/v0.1.37) (2025-06-10)
 
 

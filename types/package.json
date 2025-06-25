@@ -1,6 +1,6 @@
 {
     "name": "@aws/language-server-runtimes-types",
-    "version": "0.1.37",
+    "version": "0.1.41",
     "description": "Type definitions in Language Servers and Runtimes for AWS",
     "main": "out/index.js",
     "scripts": {

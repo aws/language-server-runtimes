@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.1.47](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.46...chat-client-ui-types/v0.1.47) (2025-06-20)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.40 to ^0.1.41
+
+## [0.1.46](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.45...chat-client-ui-types/v0.1.46) (2025-06-18)
+
+
+### Features
+
+* **types:** add protocol for open file dialog for import image as context ([#564](https://github.com/aws/language-server-runtimes/issues/564)) ([8c9cac7](https://github.com/aws/language-server-runtimes/commit/8c9cac765137ca9f3ab08d6a79e6edac768f2c04))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.39 to ^0.1.40
+
+## [0.1.45](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.44...chat-client-ui-types/v0.1.45) (2025-06-16)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.38 to ^0.1.39
+
+## [0.1.44](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.43...chat-client-ui-types/v0.1.44) (2025-06-12)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.37 to ^0.1.38
+
 ## [0.1.43](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.42...chat-client-ui-types/v0.1.43) (2025-06-10)
 
 
