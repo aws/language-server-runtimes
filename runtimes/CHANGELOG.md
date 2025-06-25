@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.100](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.99...language-server-runtimes/v0.2.100) (2025-06-25)
+
+
+### Bug Fixes
+
+* add methods to fetch builtIn and builtInWrite tools ([#581](https://github.com/aws/language-server-runtimes/issues/581)) ([aa914a7](https://github.com/aws/language-server-runtimes/commit/aa914a74821e36104635865c4f0dff2973d6ced4))
+* improve tool input validation logic to return specific error message ([#578](https://github.com/aws/language-server-runtimes/issues/578)) ([5923cf8](https://github.com/aws/language-server-runtimes/commit/5923cf8e711877ede03ecc761085f11b6ab66d4b))
+
 ## [0.2.99](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.98...language-server-runtimes/v0.2.99) (2025-06-20)
 
 
