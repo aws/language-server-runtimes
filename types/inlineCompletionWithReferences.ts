@@ -76,6 +76,28 @@ export interface InlineCompletionStates {
     discarded: boolean
 }
 
+export interface IdeDiagnostic {
+    /**
+     * The range at which the message applies.
+     */
+    range?: {
+        start: { line: number; character: number }
+        end: { line: number; character: number }
+    }
+    /**
+     * A human-readable string describing the source of the diagnostic
+     */
+    source?: string
+    /**
+     * Diagnostic Error type
+     */
+    severity?: string
+    /**
+     * Type of the diagnostic
+     */
+    ideDiagnosticType: string
+}
+
 export interface LogInlineCompletionSessionResultsParams {
     /**
      * Session Id attached to get completion items response.
@@ -114,4 +136,8 @@ export interface LogInlineCompletionSessionResultsParams {
      * Flag to indicate this is an edit suggestion rather than a standard inline completion.
      */
     isInlineEdit?: boolean
+
+    addedDiagnostics?: IdeDiagnostic[]
+
+    removedDiagnostics?: IdeDiagnostic[]
 }
