@@ -1,4 +1,4 @@
-import { Agent } from '../server-interface'
+import { Agent, ToolClassification } from '../server-interface'
 import { newAgent } from './agent'
 import * as assert from 'assert'
 
@@ -177,5 +177,31 @@ describe('Agent Tools', () => {
         AGENT.addTool(SOME_TOOL_SPEC, SOME_TOOL_HANDLER)
         AGENT.removeTool(SOME_TOOL_SPEC.name)
         await assert.rejects(() => AGENT.runTool(SOME_TOOL_SPEC.name, { test: 'test' }), /not found/)
+    })
+
+    it('should track built-in tools', () => {
+        AGENT.addTool(SOME_TOOL_SPEC, SOME_TOOL_HANDLER, ToolClassification.BuiltIn)
+        AGENT.addTool({ ...SOME_TOOL_SPEC, name: 'regular' }, SOME_TOOL_HANDLER)
+
+        const builtInTools = AGENT.getBuiltInToolNames()
+        assert.equal(builtInTools.length, 1)
+        assert.equal(builtInTools[0], SOME_TOOL_SPEC.name)
+    })
+
+    it('should track built-in write tools', () => {
+        AGENT.addTool(SOME_TOOL_SPEC, SOME_TOOL_HANDLER, ToolClassification.BuiltInCanWrite)
+        AGENT.addTool({ ...SOME_TOOL_SPEC, name: 'readOnly' }, SOME_TOOL_HANDLER, ToolClassification.BuiltIn)
+
+        const builtInTools = AGENT.getBuiltInToolNames()
+        const builtInWriteTools = AGENT.getBuiltInWriteToolNames()
+
+        assert.equal(builtInTools.length, 2)
+        assert.equal(builtInWriteTools.length, 1)
+        assert.equal(builtInWriteTools[0], SOME_TOOL_SPEC.name)
+    })
+
+    it('should return empty arrays for built-in tools when none are added', () => {
+        assert.equal(AGENT.getBuiltInToolNames().length, 0)
+        assert.equal(AGENT.getBuiltInWriteToolNames().length, 0)
     })
 })

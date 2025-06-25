@@ -6,6 +6,7 @@ import {
     GetToolsOptions,
     InferSchema,
     ObjectSchema,
+    ToolClassification,
     Tools,
     ToolSpec,
 } from '../server-interface'
@@ -21,11 +22,14 @@ type Tool<T, R> = {
 export const newAgent = (): Agent => {
     const tools: Record<string, Tool<any, any>> = {}
     const ajv = new Ajv({ strictSchema: false })
+    const builtInToolNames: string[] = []
+    const builtInWriteToolNames: string[] = []
 
     return {
         addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec>(
             spec: S,
-            handler: (input: T, token?: CancellationToken) => Promise<any>
+            handler: (input: T, token?: CancellationToken) => Promise<any>,
+            toolClassification?: ToolClassification
         ) => {
             const validator = ajv.compile(spec.inputSchema)
             const tool = {
@@ -40,6 +44,15 @@ export const newAgent = (): Agent => {
             }
 
             tools[spec.name] = tool
+            if (
+                toolClassification === ToolClassification.BuiltIn ||
+                toolClassification === ToolClassification.BuiltInCanWrite
+            ) {
+                builtInToolNames.push(spec.name)
+                if (toolClassification === ToolClassification.BuiltInCanWrite) {
+                    builtInWriteToolNames.push(spec.name)
+                }
+            }
         },
 
         runTool: async (toolName: string, input: any, token?: CancellationToken, updates?: WritableStream) => {
@@ -90,6 +103,14 @@ export const newAgent = (): Agent => {
 
         removeTool: (name: string) => {
             delete tools[name]
+        },
+
+        getBuiltInToolNames: () => {
+            return builtInToolNames
+        },
+
+        getBuiltInWriteToolNames: () => {
+            return builtInWriteToolNames
         },
     }
 }
