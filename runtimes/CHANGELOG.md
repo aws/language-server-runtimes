@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.101](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.100...language-server-runtimes/v0.2.101) (2025-06-26)
+
+
+### Bug Fixes
+
+* remove duplicate uri of workspace paths sent by VS ([#585](https://github.com/aws/language-server-runtimes/issues/585)) ([aed6187](https://github.com/aws/language-server-runtimes/commit/aed61874f7698ec5d094945da70dac5d5471112a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.41 to ^0.1.42
+
 ## [0.2.100](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.99...language-server-runtimes/v0.2.100) (2025-06-25)
 
 
