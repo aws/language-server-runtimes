@@ -136,8 +136,12 @@ export interface LogInlineCompletionSessionResultsParams {
      * Flag to indicate this is an edit suggestion rather than a standard inline completion.
      */
     isInlineEdit?: boolean
-
+    /**
+     * List of diagnostic added after inline completion completion acceptence.
+     */
     addedDiagnostics?: IdeDiagnostic[]
-
+    /**
+     * List of diagnostic removed after inline completion completion acceptence.
+     */
     removedDiagnostics?: IdeDiagnostic[]
 }
