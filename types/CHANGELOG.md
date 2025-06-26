@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.42](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.41...language-server-runtimes-types/v0.1.42) (2025-06-26)
+
+
+### Features
+
+* add ideDiagnostic type ([#586](https://github.com/aws/language-server-runtimes/issues/586)) ([eedb5e6](https://github.com/aws/language-server-runtimes/commit/eedb5e6360b6393b75e14a697eb8db235b8fa226))
+
 ## [0.1.41](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.40...language-server-runtimes-types/v0.1.41) (2025-06-20)
 
 
