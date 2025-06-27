@@ -184,7 +184,11 @@ export const standalone = (props: RuntimeProps) => {
                     },
                     error => {
                         console.error(error)
-                        process.exit(10)
+                        // arbitrary 5 second timeout to ensure console.error flushes before process exit
+                        // note: webpacked version may output exclusively to stdout, not stderr.
+                        setTimeout(() => {
+                            process.exit(10)
+                        }, 5000)
                     }
                 )
                 .catch((error: Error) => {
