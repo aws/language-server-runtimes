@@ -64,8 +64,6 @@ import { EncryptedChat } from './chat/encryptedChat'
 import { handleVersionArgument } from './versioning'
 import { RuntimeProps } from './runtime'
 
-import { observe } from './lsp'
-
 import { mkdirSync, existsSync, readFileSync } from 'fs'
 import { access, readdir, readFile, rm, stat, copyFile, writeFile, appendFile, mkdir } from 'fs/promises'
 import * as os from 'os'
@@ -159,7 +157,6 @@ export const standalone = (props: RuntimeProps) => {
     handleVersionArgument(props.version)
 
     const lspConnection = createConnection(ProposedFeatures.all)
-    const documentsObserver = observe(lspConnection)
     // Create router that will be routing LSP events from the client to server(s)
     const lspRouter = new LspRouter(lspConnection, props.name, props.version)
 
@@ -371,9 +368,9 @@ export const standalone = (props: RuntimeProps) => {
                 onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
                 didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
                 onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
-                onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
-                onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
-                onDidCloseTextDocument: handler => documentsObserver.callbacks.onDidCloseTextDocument(handler),
+                onDidOpenTextDocument: lspServer.setDidOpenTextDocumentHandler,
+                onDidChangeTextDocument: lspServer.setDidChangeTextDocumentHandler,
+                onDidCloseTextDocument: lspServer.setDidCloseTextDocumentHandler,
                 onDidSaveTextDocument: lspServer.setDidSaveTextDocumentHandler,
                 onExecuteCommand: lspServer.setExecuteCommandHandler,
                 onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
@@ -512,8 +509,7 @@ export const standalone = (props: RuntimeProps) => {
             disposables.forEach(d => d())
         })
 
-        // Initialize the documents listener and start the LSP connection
-        documents.listen(documentsObserver.callbacks)
+        // Start the LSP connection
         lspConnection.listen()
     }
 }

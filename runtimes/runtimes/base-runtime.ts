@@ -5,7 +5,6 @@
 
 import { TextDocuments } from 'vscode-languageserver'
 import {
-    DidChangeWorkspaceFoldersNotification,
     ProgressToken,
     ProgressType,
     PublishDiagnosticsNotification,
@@ -78,7 +77,6 @@ import { Auth } from './auth'
 
 import { RuntimeProps } from './runtime'
 
-import { observe } from './lsp'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import {
@@ -112,7 +110,6 @@ declare const self: WindowOrWorkerGlobalScope
 export const baseRuntime = (connections: { reader: MessageReader; writer: MessageWriter }) => (props: RuntimeProps) => {
     const lspConnection = createConnection(connections.reader, connections.writer)
 
-    const documentsObserver = observe(lspConnection)
     const documents = new TextDocuments(TextDocument)
 
     // Create router that will be routing LSP events from the client to server(s)
@@ -239,9 +236,9 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
             didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
             onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
-            onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
-            onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
-            onDidCloseTextDocument: handler => lspConnection.onDidCloseTextDocument(handler),
+            onDidOpenTextDocument: lspServer.setDidOpenTextDocumentHandler,
+            onDidChangeTextDocument: lspServer.setDidChangeTextDocumentHandler,
+            onDidCloseTextDocument: lspServer.setDidCloseTextDocumentHandler,
             onDidSaveTextDocument: lspServer.setDidSaveTextDocumentHandler,
             onExecuteCommand: lspServer.setExecuteCommandHandler,
             onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
@@ -317,7 +314,6 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         disposables.forEach(d => d())
     })
 
-    // Initialize the documents listener and start the LSP connection
-    documents.listen(documentsObserver.callbacks)
+    // Start the LSP connection
     lspConnection.listen()
 }
