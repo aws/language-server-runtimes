@@ -3,13 +3,7 @@
     "info": {
         "title": "ChatItemAction API",
         "version": "1.0.0",
-        "description": "API definition for ChatItemAction interface",
-        "x-constants": [
-        {
-            "name": "OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID",
-            "value": "open-settings-for-ws-index"
-        }
-    ]
+        "description": "API definition for ChatItemAction interface"
     },
     "paths": {},
     "components": {
@@ -26,7 +20,7 @@
                     },
                     "prompt": {
                         "type": "string",
-                        "description": "This is a test of the documentation. How much documentation can I add? What else can I put here?"
+                        "description": "Optional prompt text for the action"
                     },
                     "disabled": {
                         "type": "boolean",
@@ -166,29 +160,35 @@
                 "description": "Type of code selection"
             },
             "PositionCursor": {
-  "type": "object",
-  "properties": {
-    "position": {
-      "type": "Position"
-    }
-  },
-  "required": ["position"]
-},
-"RangeCursor": {
-  "type": "object",
-  "properties": {
-    "range": {
-      "type": "Range"
-    }
-  },
-  "required": ["range"]
-},
-"CursorState": {
-  "oneOf": [
-    { "$ref": "#/components/schemas/PositionCursor" },
-    { "$ref": "#/components/schemas/RangeCursor" }
-  ]
-}
+                "type": "object",
+                "required": ["position"],
+                "properties": {
+                    "position": {
+                        "type": "Position"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "RangeCursor": {
+                "type": "object",
+                "required": ["range"],
+                "properties": {
+                    "range": {
+                        "type": "Range"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CursorState": {
+                "oneOf": [
+                    {
+                        "$ref": "#/components/schemas/PositionCursor"
+                    },
+                    {
+                        "$ref": "#/components/schemas/RangeCursor"
+                    }
+                ]
+            }
         }
     }
 }
