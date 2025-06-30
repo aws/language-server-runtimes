@@ -678,6 +678,31 @@ describe('LspRouter', () => {
             assert.deepStrictEqual(lspRouter.getAllWorkspaceFolders(), expectedFolders)
             assert(didChangeWorkspaceFoldersSpy.calledWith({ event }))
         })
+
+        it('should filter out duplicate workspace folder URIs when adding', () => {
+            const initialFolders = [
+                { name: 'existing', uri: 'file:///existing' },
+                { name: 'another', uri: 'file:///another' },
+            ]
+            lspRouter['workspaceFolders'] = initialFolders
+
+            const event = {
+                added: [
+                    { name: 'new', uri: 'file:///new' },
+                    { name: 'duplicate', uri: 'file:///existing' }, // duplicate URI
+                ],
+                removed: [],
+            }
+
+            lspRouter.didChangeWorkspaceFolders(event)
+
+            const expectedFolders = [
+                { name: 'existing', uri: 'file:///existing' },
+                { name: 'another', uri: 'file:///another' },
+                { name: 'new', uri: 'file:///new' },
+            ]
+            assert.deepStrictEqual(lspRouter.getAllWorkspaceFolders(), expectedFolders)
+        })
     })
 
     describe('didCreateFiles', () => {

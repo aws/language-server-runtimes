@@ -32,6 +32,8 @@ import {
     GetIamCredentialParams,
     IamCredentials,
     deleteProfileRequestType,
+    ShowOpenDialogParams,
+    ShowOpenDialogRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -435,6 +437,8 @@ export const standalone = (props: RuntimeProps) => {
                     showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
                     showSaveFileDialog: (params: ShowSaveFileDialogParams) =>
                         lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
+                    showOpenDialog: (params: ShowOpenDialogParams) =>
+                        lspConnection.sendRequest(ShowOpenDialogRequestType.method, params),
                 },
                 publishDiagnostics: params =>
                     lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),

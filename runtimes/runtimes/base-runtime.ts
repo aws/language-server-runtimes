@@ -33,6 +33,7 @@ import {
     ShowMessageNotification,
     ShowMessageRequest,
     ShowDocumentRequest,
+    ShowOpenDialogRequestType,
     openTabRequestType,
     openFileDiffNotificationType,
     selectWorkspaceItemRequestType,
@@ -51,7 +52,13 @@ import {
     buttonClickRequestType,
     listMcpServersRequestType,
     mcpServerClickRequestType,
-    RequestHandler,
+    ruleClickRequestType,
+    listRulesRequestType,
+    pinnedContextNotificationType,
+    activeEditorChangedNotificationType,
+    onPinnedContextAddNotificationType,
+    onPinnedContextRemoveNotificationType,
+    openFileDialogRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -174,9 +181,16 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         sendChatUpdate: params => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
         sendContextCommands: params => lspConnection.sendNotification(contextCommandsNotificationType.method, params),
+        sendPinnedContext: params => lspConnection.sendNotification(pinnedContextNotificationType.method, params),
+        onPinnedContextAdd: params => lspConnection.sendNotification(onPinnedContextAddNotificationType.method, params),
+        onPinnedContextRemove: params =>
+            lspConnection.sendNotification(onPinnedContextRemoveNotificationType.method, params),
+        onActiveEditorChanged: handler =>
+            lspConnection.onNotification(activeEditorChangedNotificationType.method, handler),
         onCreatePrompt: handler => lspConnection.onNotification(createPromptNotificationType.method, handler),
         onInlineChatResult: handler => lspConnection.onNotification(inlineChatResultNotificationType.method, handler),
         onListConversations: handler => lspConnection.onRequest(listConversationsRequestType.method, handler),
+        onListRules: handler => lspConnection.onRequest(listRulesRequestType.method, handler),
         onConversationClick: handler => lspConnection.onRequest(conversationClickRequestType.method, handler),
         onListMcpServers: handler => lspConnection.onRequest(listMcpServersRequestType.method, handler),
         onMcpServerClick: handler => lspConnection.onRequest(mcpServerClickRequestType.method, handler),
@@ -184,6 +198,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onTabBarAction: handler => lspConnection.onRequest(tabBarActionRequestType.method, handler),
         onPromptInputOptionChange: handler =>
             lspConnection.onNotification(promptInputOptionChangeNotificationType.method, handler),
+        onOpenFileDialog: handler => lspConnection.onRequest(openFileDialogRequestType.method, handler),
+        onRuleClick: handler => lspConnection.onRequest(ruleClickRequestType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
@@ -254,6 +270,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 showMessageRequest: params => lspConnection.sendRequest(ShowMessageRequest.method, params),
                 showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
                 showSaveFileDialog: params => lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
+                showOpenDialog: params => lspConnection.sendRequest(ShowOpenDialogRequestType.method, params),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {

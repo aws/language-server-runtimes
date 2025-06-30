@@ -1,4 +1,4 @@
-import Ajv from 'ajv'
+import Ajv, { ErrorObject, ValidateFunction } from 'ajv'
 import {
     Agent,
     BedrockTools,
@@ -6,6 +6,7 @@ import {
     GetToolsOptions,
     InferSchema,
     ObjectSchema,
+    ToolClassification,
     Tools,
     ToolSpec,
 } from '../server-interface'
@@ -14,23 +15,27 @@ type Tool<T, R> = {
     name: string
     description: string
     inputSchema: ObjectSchema
-    validate: (input: T, token?: CancellationToken) => boolean
+    validate: (input: T, token?: CancellationToken) => boolean | ValidateFunction<unknown>['errors']
     invoke: (input: T, token?: CancellationToken, updates?: WritableStream) => Promise<R>
 }
 
 export const newAgent = (): Agent => {
     const tools: Record<string, Tool<any, any>> = {}
     const ajv = new Ajv({ strictSchema: false })
+    const builtInToolNames: string[] = []
+    const builtInWriteToolNames: string[] = []
 
     return {
         addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec>(
             spec: S,
-            handler: (input: T, token?: CancellationToken) => Promise<any>
+            handler: (input: T, token?: CancellationToken) => Promise<any>,
+            toolClassification?: ToolClassification
         ) => {
             const validator = ajv.compile(spec.inputSchema)
             const tool = {
                 validate: (input: InferSchema<S['inputSchema']>) => {
-                    return validator(input)
+                    const isValid = validator(input)
+                    return validator.errors ?? isValid
                 },
                 invoke: handler,
                 name: spec.name,
@@ -39,6 +44,15 @@ export const newAgent = (): Agent => {
             }
 
             tools[spec.name] = tool
+            if (
+                toolClassification === ToolClassification.BuiltIn ||
+                toolClassification === ToolClassification.BuiltInCanWrite
+            ) {
+                builtInToolNames.push(spec.name)
+                if (toolClassification === ToolClassification.BuiltInCanWrite) {
+                    builtInWriteToolNames.push(spec.name)
+                }
+            }
         },
 
         runTool: async (toolName: string, input: any, token?: CancellationToken, updates?: WritableStream) => {
@@ -47,8 +61,14 @@ export const newAgent = (): Agent => {
                 throw new Error(`Tool ${toolName} not found`)
             }
 
-            if (!tool.validate(input, token)) {
-                throw new Error(`Input for tool ${toolName} is invalid`)
+            const validateResult = tool.validate(input, token)
+            if (validateResult !== true) {
+                const errorDetails =
+                    ((validateResult as ValidateFunction['errors']) || [])
+                        .map((err: ErrorObject) => `${err.instancePath || 'root'}: ${err.message}`)
+                        .join('\n') || `\nReceived: ${input}`
+
+                throw new Error(`${toolName} tool input validation failed: ${errorDetails}`)
             }
 
             return tool.invoke(input, token, updates)
@@ -83,6 +103,14 @@ export const newAgent = (): Agent => {
 
         removeTool: (name: string) => {
             delete tools[name]
+        },
+
+        getBuiltInToolNames: () => {
+            return builtInToolNames
+        },
+
+        getBuiltInWriteToolNames: () => {
+            return builtInWriteToolNames
         },
     }
 }

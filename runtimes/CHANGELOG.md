@@ -1,5 +1,69 @@
 # Changelog
 
+## [0.2.101](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.100...language-server-runtimes/v0.2.101) (2025-06-26)
+
+
+### Bug Fixes
+
+* remove duplicate uri of workspace paths sent by VS ([#585](https://github.com/aws/language-server-runtimes/issues/585)) ([aed6187](https://github.com/aws/language-server-runtimes/commit/aed61874f7698ec5d094945da70dac5d5471112a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.41 to ^0.1.42
+
+## [0.2.100](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.99...language-server-runtimes/v0.2.100) (2025-06-25)
+
+
+### Bug Fixes
+
+* add methods to fetch builtIn and builtInWrite tools ([#581](https://github.com/aws/language-server-runtimes/issues/581)) ([aa914a7](https://github.com/aws/language-server-runtimes/commit/aa914a74821e36104635865c4f0dff2973d6ced4))
+* improve tool input validation logic to return specific error message ([#578](https://github.com/aws/language-server-runtimes/issues/578)) ([5923cf8](https://github.com/aws/language-server-runtimes/commit/5923cf8e711877ede03ecc761085f11b6ab66d4b))
+
+## [0.2.99](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.98...language-server-runtimes/v0.2.99) (2025-06-20)
+
+
+### Bug Fixes
+
+* **runtimes:** fix protocol/lsp circular dependency ([#573](https://github.com/aws/language-server-runtimes/issues/573)) ([2231db0](https://github.com/aws/language-server-runtimes/commit/2231db070e0429adc11cf872a7f7046ffdc8207d))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.40 to ^0.1.41
+
+## [0.2.98](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.97...language-server-runtimes/v0.2.98) (2025-06-18)
+
+
+### Features
+
+* **types:** add protocol for open file dialog for import image as context ([#564](https://github.com/aws/language-server-runtimes/issues/564)) ([8c9cac7](https://github.com/aws/language-server-runtimes/commit/8c9cac765137ca9f3ab08d6a79e6edac768f2c04))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.39 to ^0.1.40
+
+## [0.2.97](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.96...language-server-runtimes/v0.2.97) (2025-06-16)
+
+
+### Reverts
+
+* revert add support for pinned context and rules ([ea7d98f](https://github.com/aws/language-server-runtimes/commit/ea7d98fe3f9037670b9c5e5b7f19721a8b056b5e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.38 to ^0.1.39
+
 ## [0.2.96](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.95...language-server-runtimes/v0.2.96) (2025-06-12)
 
 

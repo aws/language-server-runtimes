@@ -70,6 +70,21 @@ import {
     McpServerClickParams,
     McpServerClickResult,
     mcpServerClickRequestType,
+    RuleClickParams,
+    ruleClickRequestType,
+    ListRulesParams,
+    ListRulesResult,
+    listRulesRequestType,
+    RuleClickResult,
+    PinnedContextParams,
+    pinnedContextNotificationType,
+    ActiveEditorChangedParams,
+    activeEditorChangedNotificationType,
+    onPinnedContextAddNotificationType,
+    onPinnedContextRemoveNotificationType,
+    OpenFileDialogParams,
+    OpenFileDialogResult,
+    openFileDialogRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -78,6 +93,10 @@ export class BaseChat implements Chat {
 
     public onChatPrompt(handler: RequestHandler<ChatParams, ChatResult | null | undefined, ChatResult>) {
         this.connection.onRequest(chatRequestType.method, handler)
+    }
+
+    public onOpenFileDialog(handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult, OpenFileDialogResult>) {
+        this.connection.onRequest(openFileDialogRequestType.method, handler)
     }
 
     public onInlineChatPrompt(
@@ -158,6 +177,22 @@ export class BaseChat implements Chat {
         this.connection.sendNotification(contextCommandsNotificationType.method, params)
     }
 
+    public sendPinnedContext(params: PinnedContextParams) {
+        this.connection.sendNotification(pinnedContextNotificationType.method, params)
+    }
+
+    public onPinnedContextAdd(handler: NotificationHandler<PinnedContextParams>) {
+        this.connection.onNotification(onPinnedContextAddNotificationType.method, handler)
+    }
+
+    public onPinnedContextRemove(handler: NotificationHandler<PinnedContextParams>) {
+        this.connection.onNotification(onPinnedContextRemoveNotificationType.method, handler)
+    }
+
+    public onActiveEditorChanged(handler: NotificationHandler<ActiveEditorChangedParams>) {
+        this.connection.onNotification(activeEditorChangedNotificationType.method, handler)
+    }
+
     public onCreatePrompt(handler: NotificationHandler<CreatePromptParams>) {
         this.connection.onNotification(createPromptNotificationType.method, handler)
     }
@@ -168,6 +203,10 @@ export class BaseChat implements Chat {
 
     public onListConversations(handler: RequestHandler<ListConversationsParams, ListConversationsResult, void>) {
         this.connection.onRequest(listConversationsRequestType.method, handler)
+    }
+
+    public onListRules(handler: RequestHandler<ListRulesParams, ListRulesResult, void>) {
+        this.connection.onRequest(listRulesRequestType.method, handler)
     }
 
     public onConversationClick(handler: RequestHandler<ConversationClickParams, ConversationClickResult, void>) {
@@ -192,5 +231,9 @@ export class BaseChat implements Chat {
 
     public onPromptInputOptionChange(handler: NotificationHandler<PromptInputOptionChangeParams>) {
         this.connection.onNotification(promptInputOptionChangeNotificationType.method, handler)
+    }
+
+    public onRuleClick(handler: RequestHandler<RuleClickParams, RuleClickResult, void>) {
+        this.connection.onRequest(ruleClickRequestType.method, handler)
     }
 }

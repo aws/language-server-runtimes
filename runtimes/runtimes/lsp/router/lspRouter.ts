@@ -144,7 +144,9 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
         this.workspaceFolders = this.workspaceFolders.filter(
             folder => !event.removed.some(removed => removed.uri === folder.uri)
         )
-        this.workspaceFolders.push(...event.added)
+        this.workspaceFolders.push(
+            ...event.added.filter(added => !this.workspaceFolders.some(existing => existing.uri === added.uri))
+        )
         const params: DidChangeWorkspaceFoldersParams = { event }
 
         this.routeNotificationToAllServers((server, params) => {

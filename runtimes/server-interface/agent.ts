@@ -112,6 +112,12 @@ export type BedrockTools = {
     toolSpecification: Omit<ToolSpec, 'inputSchema'> & { inputSchema: { json: ToolSpec['inputSchema'] } }
 }[]
 
+export enum ToolClassification {
+    BuiltIn = 'builtIn',
+    BuiltInCanWrite = 'builtInCanWrite',
+    MCP = 'mcp',
+}
+
 export type Agent = {
     /**
      * Add a tool to the local tool repository. Tools with the same name will be overwritten.
@@ -123,7 +129,8 @@ export type Agent = {
      */
     addTool: <T extends InferSchema<S['inputSchema']>, S extends ToolSpec, R>(
         spec: S,
-        handler: (input: T, token?: CancellationToken, updates?: WritableStream) => Promise<R>
+        handler: (input: T, token?: CancellationToken, updates?: WritableStream) => Promise<R>,
+        toolClassification?: ToolClassification
     ) => void
 
     /**
@@ -150,4 +157,16 @@ export type Agent = {
      * @param toolName The name of the tool to remove
      */
     removeTool: (toolName: string) => void
+
+    /**
+     * Get the list of built-in tool names in the local tool repository.
+     * @returns The list of built-in tool names
+     */
+    getBuiltInToolNames: () => string[]
+
+    /**
+     * Get the list of built-in write tool names in the local tool repository.
+     * @returns The list of built-in write tool names
+     */
+    getBuiltInWriteToolNames: () => string[]
 }
