@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+  "spaces": 2,
+  "generator-cli": {
+    "version": "7.14.0",
+    "generators": {
+      "typescript-fetch": {
+        "generatorName": "typescript-fetch",
+        "output": "#{cwd}/generated",
+        "inputSpec": "#{cwd}/schema/chatTypes.json",
+        "templateDir": "#{cwd}/custom-templates",
+        "additionalProperties": {
+          "supportsES6": true,
+          "modelPropertyNaming": "original",
+          "enumPropertyNaming": "original",
+          "npmName": "@json-schema-openapi/generated",
+          "npmVersion": "1.0.0",
+          "withInterfaces": true,
+          "nullSafeAdditionalProps": true,
+          "withoutRuntimeChecks": true,
+          "stringEnums": true,
+          "disallowAdditionalPropertiesIfNotPresent": false,
+          "useSingleRequestParameter": true
+        }
+      }
+    }
+  }
+}
