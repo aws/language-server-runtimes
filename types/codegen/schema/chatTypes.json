@@ -1,0 +1,194 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "ChatItemAction API",
+        "version": "1.0.0",
+        "description": "API definition for ChatItemAction interface",
+        "x-constants": [
+        {
+            "name": "OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID",
+            "value": "open-settings-for-ws-index"
+        }
+    ]
+    },
+    "paths": {},
+    "components": {
+        "schemas": {
+            "ChatItemAction": {
+                "type": "object",
+                "required": [
+                    "pillText"
+                ],
+                "properties": {
+                    "pillText": {
+                        "type": "string",
+                        "description": "The text to display in the pill"
+                    },
+                    "prompt": {
+                        "type": "string",
+                        "description": "This is a test of the documentation. How much documentation can I add? What else can I put here?"
+                    },
+                    "disabled": {
+                        "type": "boolean",
+                        "description": "Whether the action is disabled"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Optional description of the action"
+                    },
+                    "type": {
+                        "type": "string",
+                        "description": "Optional type of the action"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "SourceLink": {
+                "type": "object",
+                "required": [
+                    "title",
+                    "url"
+                ],
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the source link"
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "The URL of the source link"
+                    },
+                    "body": {
+                        "type": "string",
+                        "description": "Optional body text for the source link"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ContentSpan": {
+                "type": "object",
+                "required": [
+                    "start",
+                    "end"
+                ],
+                "properties": {
+                    "start": {
+                        "type": "number",
+                        "description": "Start position of the content span"
+                    },
+                    "end": {
+                        "type": "number",
+                        "description": "End position of the content span"
+                    }
+                },
+                "description": "Content span information"
+            },
+            "ReferenceTrackerInformation": {
+                "type": "object",
+                "required": [
+                    "information"
+                ],
+                "properties": {
+                    "licenseName": {
+                        "type": "string",
+                        "description": "Optional name of the license"
+                    },
+                    "repository": {
+                        "type": "string",
+                        "description": "Optional repository information"
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "Optional URL reference"
+                    },
+                    "recommendationContentSpan": {
+                        "$ref": "#/components/schemas/ContentSpan",
+                        "description": "Optional content span information"
+                    },
+                    "information": {
+                        "type": "string",
+                        "description": "Required information about the reference"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "ChatPrompt": {
+                "type": "object",
+                "properties": {
+                    "prompt": {
+                        "type": "string",
+                        "description": "Optional prompt text"
+                    },
+                    "escapedPrompt": {
+                        "type": "string",
+                        "description": "Optional escaped prompt text"
+                    },
+                    "command": {
+                        "type": "string",
+                        "description": "Optional command"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "FeedbackPayload": {
+                "type": "object",
+                "required": [
+                    "messageId",
+                    "tabId",
+                    "selectedOption"
+                ],
+                "properties": {
+                    "messageId": {
+                        "type": "string",
+                        "description": "ID of the message"
+                    },
+                    "tabId": {
+                        "type": "string",
+                        "description": "ID of the tab"
+                    },
+                    "selectedOption": {
+                        "type": "string",
+                        "description": "Selected feedback option"
+                    },
+                    "comment": {
+                        "type": "string",
+                        "description": "Optional comment"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "CodeSelectionType": {
+                "type": "string",
+                "enum": [
+                    "selection",
+                    "block"
+                ],
+                "description": "Type of code selection"
+            },
+            "PositionCursor": {
+  "type": "object",
+  "properties": {
+    "position": {
+      "type": "Position"
+    }
+  },
+  "required": ["position"]
+},
+"RangeCursor": {
+  "type": "object",
+  "properties": {
+    "range": {
+      "type": "Range"
+    }
+  },
+  "required": ["range"]
+},
+"CursorState": {
+  "oneOf": [
+    { "$ref": "#/components/schemas/PositionCursor" },
+    { "$ref": "#/components/schemas/RangeCursor" }
+  ]
+}
+        }
+    }
+}
