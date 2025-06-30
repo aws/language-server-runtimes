@@ -9,6 +9,14 @@
         "output": "#{cwd}/generated",
         "inputSpec": "#{cwd}/schema/chatTypes.json",
         "templateDir": "#{cwd}/custom-templates",
+        "typeMappings": {
+          "Position": "Position",
+          "Range": "Range"
+        },
+        "importMappings": {
+          "Position": "../../lsp",
+          "Range": "../../lsp"
+        },
         "additionalProperties": {
           "supportsES6": true,
           "modelPropertyNaming": "original",
