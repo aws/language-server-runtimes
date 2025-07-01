@@ -69,6 +69,7 @@ export interface Profile {
         aws_access_key_id?: string
         aws_secret_access_key?: string
         aws_session_token?: string
+        role_arn?: string
     }
 }
 
@@ -241,6 +242,7 @@ export const getSsoTokenRequestType = new ProtocolRequestType<
 
 // getIamCredential
 export interface GetIamCredentialOptions {
+    generateSts?: boolean
     loginOnInvalidToken?: boolean
 }
 

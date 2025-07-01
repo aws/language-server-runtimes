@@ -31,10 +31,17 @@ export function isBearerCredentials(credentials: Credentials): credentials is Be
     return (credentials as BearerCredentials)?.token !== undefined
 }
 
+export function hasStsProperties(credentials: IamCredentials): boolean {
+    return credentials.sessionToken !== undefined && credentials.expiration !== undefined
+}
+
+export function isExpired(credentials: IamCredentials): boolean {
+    if (!credentials.expiration) return false
+    return Date.now() >= credentials.expiration.getTime()
+}
+
 export class Auth {
     private currentCredentials: IamCredentials | BearerCredentials | undefined
-    // private iamCredentials: IamCredentials | undefined
-    // private bearerCredentials: BearerCredentials | undefined
     private credentialsProvider: CredentialsProvider
     private connectionMetadata: ConnectionMetadata | undefined
 
