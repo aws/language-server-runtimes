@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.2.102](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.101...language-server-runtimes/v0.2.102) (2025-07-01)
+
+
+### Features
+
+* add listAvailableModels request method ([#593](https://github.com/aws/language-server-runtimes/issues/593)) ([0d9d557](https://github.com/aws/language-server-runtimes/commit/0d9d55751bd977e82ded0906d31dbfd8bf027893))
+
+
+### Bug Fixes
+
+* avoid duplicate url with forward slash in the end ([#592](https://github.com/aws/language-server-runtimes/issues/592)) ([ac2eb62](https://github.com/aws/language-server-runtimes/commit/ac2eb62d3d3ad50a2f8092a5649db087e784fa81))
+* onDidSaveTextDocument routing ([#590](https://github.com/aws/language-server-runtimes/issues/590)) ([3660267](https://github.com/aws/language-server-runtimes/commit/36602670b42d4db2ff33e565819dba411b5256de))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.42 to ^0.1.43
+
 ## [0.2.101](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.100...language-server-runtimes/v0.2.101) (2025-06-26)
 
 
