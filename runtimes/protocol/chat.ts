@@ -88,6 +88,9 @@ import {
     OPEN_FILE_DIALOG_METHOD,
     OpenFileDialogParams,
     OpenFileDialogResult,
+    LIST_AVAILABLE_MODELS_REQUEST_METHOD,
+    ListAvailableModelsResult,
+    ListAvailableModelsParams,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -268,3 +271,11 @@ export const promptInputOptionChangeNotificationType = new ProtocolNotificationT
     PromptInputOptionChangeParams,
     void
 >(PROMPT_INPUT_OPTION_CHANGE_METHOD)
+
+export const listAvailableModelsRequestType = new ProtocolRequestType<
+    ListAvailableModelsParams,
+    ListAvailableModelsResult,
+    never,
+    void,
+    void
+>(LIST_AVAILABLE_MODELS_REQUEST_METHOD)
