@@ -13,8 +13,6 @@ import {
     SsoTokenChangedParams,
     UpdateProfileParams,
     UpdateProfileResult,
-    DeleteProfileParams,
-    DeleteProfileResult,
 } from '../protocol/identity-management'
 import { RequestHandler } from '../protocol'
 
@@ -35,10 +33,6 @@ export type IdentityManagement = {
 
     onGetIamCredential: (
         handler: RequestHandler<GetIamCredentialParams, GetIamCredentialResult | undefined | null, AwsResponseError>
-    ) => void
-
-    onDeleteProfile: (
-        handler: RequestHandler<DeleteProfileParams, DeleteProfileResult | undefined | null, AwsResponseError>
     ) => void
 
     onInvalidateSsoToken: (

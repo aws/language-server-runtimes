@@ -31,7 +31,6 @@ import {
     getIamCredentialRequestType,
     GetIamCredentialParams,
     IamCredentials,
-    deleteProfileRequestType,
     ShowOpenDialogParams,
     ShowOpenDialogRequestType,
 } from '../protocol'
@@ -360,7 +359,6 @@ export const standalone = (props: RuntimeProps) => {
                         return result
                     }
                 ),
-            onDeleteProfile: handler => lspConnection.onRequest(deleteProfileRequestType, handler),
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
             onInvalidateIamCredential: handler => lspConnection.onRequest(invalidateIamCredentialRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
