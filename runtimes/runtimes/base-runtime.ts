@@ -271,6 +271,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             },
             onHover: handler => lspConnection.onHover(handler),
             onSignatureHelp: handler => lspConnection.onSignatureHelp(handler),
+            onCodeAction: handler => lspConnection.onCodeAction(handler),
+            onCodeActionResolve: handler => lspConnection.onCodeActionResolve(handler),
             extensions: {
                 onGetConfigurationFromServer: lspServer.setServerConfigurationHandler,
                 onInlineCompletionWithReferences: handler =>
