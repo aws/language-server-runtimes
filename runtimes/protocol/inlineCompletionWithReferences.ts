@@ -9,7 +9,10 @@ import {
 
 import { ProtocolNotificationType, ProtocolRequestType } from 'vscode-languageserver-protocol'
 
-export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams
+export type InlineCompletionWithReferencesParams = InlineCompletionParams &
+    PartialResultParams & {
+        nextToken?: string
+    }
 
 export const inlineCompletionWithReferencesRequestType = new ProtocolRequestType<
     InlineCompletionWithReferencesParams,
