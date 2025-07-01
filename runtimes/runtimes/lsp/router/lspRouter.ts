@@ -145,7 +145,12 @@ ${JSON.stringify({ ...result.capabilities, ...result.awsServerCapabilities })}`
             folder => !event.removed.some(removed => removed.uri === folder.uri)
         )
         this.workspaceFolders.push(
-            ...event.added.filter(added => !this.workspaceFolders.some(existing => existing.uri === added.uri))
+            ...event.added.filter(
+                added =>
+                    !this.workspaceFolders.some(
+                        existing => existing.uri.replace(/\/$/, '') === added.uri.replace(/\/$/, '')
+                    )
+            )
         )
         const params: DidChangeWorkspaceFoldersParams = { event }
 
