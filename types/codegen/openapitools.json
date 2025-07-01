@@ -11,11 +11,13 @@
         "templateDir": "#{cwd}/custom-templates",
         "typeMappings": {
           "Position": "Position",
-          "Range": "Range"
+          "Range": "Range",
+          "TextDocumentIdentifier": "TextDocumentIdentifier"
         },
         "importMappings": {
           "Position": "../../lsp",
-          "Range": "../../lsp"
+          "Range": "../../lsp",
+          "TextDocumentIdentifier": "../../lsp"
         },
         "additionalProperties": {
           "supportsES6": true,
@@ -29,7 +31,8 @@
           "stringEnums": true,
           "disallowAdditionalPropertiesIfNotPresent": false,
           "useSingleRequestParameter": true
-        }
+        },
+        "openapi-normalizer": "REF_AS_PARENT_IN_ALLOF=true"
       }
     }
   }
