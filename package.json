@@ -75,8 +75,5 @@
         "bracketSpacing": true,
         "arrowParens": "avoid",
         "endOfLine": "lf"
-    },
-    "dependencies": {
-        "@aws-sdk/client-sts": "^3.835.0"
     }
 }
