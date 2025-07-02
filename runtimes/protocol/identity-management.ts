@@ -233,12 +233,10 @@ export const getSsoTokenRequestType = new ProtocolRequestType<
 
 // getIamCredential
 export interface GetIamCredentialOptions {
-    assumeRole?: boolean
     generateOnInvalidStsCredential?: boolean
 }
 
 export const getIamCredentialOptionsDefaults = {
-    assumeRole: false,
     generateOnInvalidStsCredential: true,
 } satisfies GetIamCredentialOptions
 
