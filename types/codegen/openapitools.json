@@ -1,39 +1,40 @@
 {
-  "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
-  "spaces": 2,
-  "generator-cli": {
-    "version": "7.14.0",
-    "generators": {
-      "typescript-fetch": {
-        "generatorName": "typescript-fetch",
-        "output": "#{cwd}/generated",
-        "inputSpec": "#{cwd}/schema/chatTypes.json",
-        "templateDir": "#{cwd}/custom-templates",
-        "typeMappings": {
-          "Position": "Position",
-          "Range": "Range",
-          "TextDocumentIdentifier": "TextDocumentIdentifier"
-        },
-        "importMappings": {
-          "Position": "../../lsp",
-          "Range": "../../lsp",
-          "TextDocumentIdentifier": "../../lsp"
-        },
-        "additionalProperties": {
-          "supportsES6": true,
-          "modelPropertyNaming": "original",
-          "enumPropertyNaming": "original",
-          "npmName": "@json-schema-openapi/generated",
-          "npmVersion": "1.0.0",
-          "withInterfaces": true,
-          "nullSafeAdditionalProps": true,
-          "withoutRuntimeChecks": true,
-          "stringEnums": true,
-          "disallowAdditionalPropertiesIfNotPresent": false,
-          "useSingleRequestParameter": true
-        },
-        "openapi-normalizer": "REF_AS_PARENT_IN_ALLOF=true"
-      }
+    "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+    "spaces": 2,
+    "generator-cli": {
+        "version": "7.14.0",
+        "generators": {
+            "typescript-fetch": {
+                "generatorName": "typescript-fetch",
+                "output": "#{cwd}/generated",
+                "inputSpec": "#{cwd}/schema/chatTypes.json",
+                "templateDir": "#{cwd}/custom-templates",
+                "typeMappings": {
+                    "Position": "Position",
+                    "Range": "Range",
+                    "TextDocumentIdentifier": "TextDocumentIdentifier"
+                },
+                "importMappings": {
+                    "Position": "../../lsp",
+                    "Range": "../../lsp",
+                    "TextDocumentIdentifier": "../../lsp"
+                },
+                "additionalProperties": {
+                    "supportsES6": true,
+                    "modelPropertyNaming": "original",
+                    "enumPropertyNaming": "original",
+                    "npmName": "@json-schema-openapi/generated",
+                    "npmVersion": "1.0.0",
+                    "withInterfaces": true,
+                    "nullSafeAdditionalProps": false,
+                    "withoutRuntimeChecks": true,
+                    "stringEnums": true,
+                    "disallowAdditionalPropertiesIfNotPresent": false,
+                    "useSingleRequestParameter": true,
+                    "hasImports": true
+                },
+                "openapi-normalizer": "REF_AS_PARENT_IN_ALLOF=true"
+            }
+        }
     }
-  }
 }
