@@ -1,27 +1,27 @@
 {
-  "name": "json-schema-openapi-converter",
-  "version": "0.1.0",
-  "description": "Convert TypeScript interfaces to JSON Schema and generate TypeScript using OpenAPI Generator",
-  "main": "src/validate-generated.ts",
-  "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "generate": "openapi-generator-cli generate",
-    "generate:direct": "openapi-generator-cli generate -g typescript-fetch -i schema/chatTypes.json -o generated -t custom-templates --additional-properties=supportsES6=true,modelPropertyNaming=original,enumPropertyNaming=original,npmName=@json-schema-openapi/generated,npmVersion=1.0.0,withInterfaces=true,nullSafeAdditionalProps=true,withoutRuntimeChecks=true,stringEnums=true,disallowAdditionalPropertiesIfNotPresent=false,useSingleRequestParameter=true",
-    "validate": "ts-node src/validate-generated.ts"
-  },
-  "keywords": [
-    "openapi",
-    "json-schema",
-    "typescript",
-    "generator"
-  ],
-  "author": "",
-  "license": "MIT",
-  "devDependencies": {
-    "@openapitools/openapi-generator-cli": "^2.21.0",
-    "@types/node": "^24.0.4",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
-  }
+    "name": "json-schema-openapi-converter",
+    "version": "0.1.0",
+    "description": "Convert TypeScript interfaces to JSON Schema and generate TypeScript using OpenAPI Generator",
+    "main": "src/validate-generated.ts",
+    "scripts": {
+        "build": "tsc",
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "generate": "openapi-generator-cli generate && node post-generate.js",
+        "generate:direct": "openapi-generator-cli generate -g typescript-fetch -i schema/chatTypes.json -o generated -t custom-templates --additional-properties=supportsES6=true,modelPropertyNaming=original,enumPropertyNaming=original,npmName=@json-schema-openapi/generated,npmVersion=1.0.0,withInterfaces=true,nullSafeAdditionalProps=true,withoutRuntimeChecks=true,stringEnums=true,disallowAdditionalPropertiesIfNotPresent=false,useSingleRequestParameter=true && node post-generate.js",
+        "validate": "ts-node src/validate-generated.ts"
+    },
+    "keywords": [
+        "openapi",
+        "json-schema",
+        "typescript",
+        "generator"
+    ],
+    "author": "",
+    "license": "MIT",
+    "devDependencies": {
+        "@openapitools/openapi-generator-cli": "^2.21.0",
+        "@types/node": "^24.0.4",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    }
 }
