@@ -23,7 +23,7 @@
                     "supportsES6": true,
                     "modelPropertyNaming": "original",
                     "enumPropertyNaming": "original",
-                    "npmName": "@json-schema-openapi/generated",
+                    "npmName": "@aws/language-server-runtimes-generated-types",
                     "npmVersion": "1.0.0",
                     "withInterfaces": true,
                     "nullSafeAdditionalProps": false,
