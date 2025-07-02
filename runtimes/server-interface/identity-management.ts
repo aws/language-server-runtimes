@@ -6,11 +6,12 @@ import {
     GetSsoTokenResult,
     InvalidateSsoTokenParams,
     InvalidateSsoTokenResult,
-    InvalidateIamCredentialParams,
-    InvalidateIamCredentialResult,
+    InvalidateStsCredentialParams,
+    InvalidateStsCredentialResult,
     ListProfilesParams,
     ListProfilesResult,
     SsoTokenChangedParams,
+    // StsCredentialChangedParams,
     UpdateProfileParams,
     UpdateProfileResult,
 } from '../protocol/identity-management'
@@ -39,13 +40,15 @@ export type IdentityManagement = {
         handler: RequestHandler<InvalidateSsoTokenParams, InvalidateSsoTokenResult | undefined | null, AwsResponseError>
     ) => void
 
-    onInvalidateIamCredential: (
+    onInvalidateStsCredential: (
         handler: RequestHandler<
-            InvalidateIamCredentialParams,
-            InvalidateIamCredentialResult | undefined | null,
+            InvalidateStsCredentialParams,
+            InvalidateStsCredentialResult | undefined | null,
             AwsResponseError
         >
     ) => void
 
     sendSsoTokenChanged: (params: SsoTokenChangedParams) => void
+
+    // sendStsCredentialChanged: (params: StsCredentialChangedParams) => void
 }

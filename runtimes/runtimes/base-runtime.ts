@@ -85,7 +85,7 @@ import {
     AwsResponseError,
     getIamCredentialRequestType,
     getSsoTokenRequestType,
-    invalidateIamCredentialRequestType,
+    invalidateStsCredentialRequestType,
     invalidateSsoTokenRequestType,
     listProfilesRequestType,
     ssoTokenChangedRequestType,
@@ -205,8 +205,9 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
         onGetIamCredential: handler => lspConnection.onRequest(getIamCredentialRequestType, handler),
         onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
-        onInvalidateIamCredential: handler => lspConnection.onRequest(invalidateIamCredentialRequestType, handler),
+        onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
         sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+        // sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
     }
 
     // Set up auth without encryption

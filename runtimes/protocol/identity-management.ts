@@ -277,39 +277,22 @@ export const invalidateSsoTokenRequestType = new ProtocolRequestType<
     void
 >('aws/identity/invalidateSsoToken')
 
-export interface InvalidateIamCredentialParams {
-    iamCredentialsId: CredentialId
+// invalidateStsCredential
+export interface InvalidateStsCredentialParams {
+    profileName: string
 }
 
-export interface InvalidateIamCredentialResult {
+export interface InvalidateStsCredentialResult {
     // Intentionally left blank
 }
 
-// Pontential error codes: E_UNKNOWN | E_TIMEOUT | E_CANNOT_READ_SSO_CACHE | E_CANNOT_WRITE_SSO_CACHE | E_INVALID_TOKEN
-export const invalidateIamCredentialRequestType = new ProtocolRequestType<
-    InvalidateIamCredentialParams,
-    InvalidateIamCredentialResult,
+export const invalidateStsCredentialRequestType = new ProtocolRequestType<
+    InvalidateStsCredentialParams,
+    InvalidateStsCredentialResult,
     never,
     AwsResponseError,
     void
->('aws/identity/invalidateIamCredential')
-
-// invalidateStsCredential
-// export interface InvalidateStsCredentialParams {
-//     stsCredentialId: CredentialId
-// }
-
-// export interface InvalidateStsCredentialResult {
-//     // Intentionally left blank
-// }
-
-// export const invalidateStsCredentialRequestType = new ProtocolRequestType<
-//     InvalidateStsCredentialParams,
-//     InvalidateStsCredentialResult,
-//     never,
-//     AwsResponseError,
-//     void
-// >('aws/identity/invalidateStsCredential')
+>('aws/identity/invalidateStsCredential')
 
 // ssoTokenChanged
 export type Expired = 'Expired'
@@ -331,7 +314,7 @@ export const ssoTokenChangedRequestType = new ProtocolNotificationType<SsoTokenC
     'aws/identity/ssoTokenChanged'
 )
 
-// stsCredentialChanged
+// // stsCredentialChanged
 // export type StsCredentialChangedKind = Refreshed | Expired
 
 // export const StsCredentialChangedKind = {
