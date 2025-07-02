@@ -30,6 +30,7 @@ export const AwsErrorCodes = {
     E_INVALID_SSO_CLIENT: 'E_INVALID_SSO_CLIENT',
     E_INVALID_SSO_SESSION: 'E_INVALID_SSO_SESSION',
     E_INVALID_SSO_TOKEN: 'E_INVALID_SSO_TOKEN',
+    E_INVALID_STS_CREDENTIAL: 'E_INVALID_STS_CREDENTIAL',
     E_PROFILE_NOT_FOUND: 'E_PROFILE_NOT_FOUND',
     E_RUNTIME_NOT_SUPPORTED: 'E_RUNTIME_NOT_SUPPORTED',
     E_SSO_SESSION_NOT_FOUND: 'E_SSO_SESSION_NOT_FOUND',
@@ -232,11 +233,13 @@ export const getSsoTokenRequestType = new ProtocolRequestType<
 
 // getIamCredential
 export interface GetIamCredentialOptions {
-    loginOnInvalidStsCredential?: boolean
+    assumeRole?: boolean
+    generateOnInvalidStsCredential?: boolean
 }
 
 export const getIamCredentialOptionsDefaults = {
-    loginOnInvalidStsCredential: true,
+    assumeRole: false,
+    generateOnInvalidStsCredential: true,
 } satisfies GetIamCredentialOptions
 
 export interface GetIamCredentialParams {
