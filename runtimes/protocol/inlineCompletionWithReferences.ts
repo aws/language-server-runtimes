@@ -7,9 +7,9 @@ import {
     PartialResultParams,
 } from './lsp'
 
-import { ProtocolNotificationType, ProtocolRequestType } from 'vscode-languageserver-protocol'
+import { ProtocolNotificationType, ProtocolRequestType, WorkDoneProgressParams } from 'vscode-languageserver-protocol'
 
-export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams
+export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams & WorkDoneProgressParams
 
 export const inlineCompletionWithReferencesRequestType = new ProtocolRequestType<
     InlineCompletionWithReferencesParams,
