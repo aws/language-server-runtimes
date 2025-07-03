@@ -11,7 +11,7 @@ import {
     ListProfilesParams,
     ListProfilesResult,
     SsoTokenChangedParams,
-    // StsCredentialChangedParams,
+    StsCredentialChangedParams,
     UpdateProfileParams,
     UpdateProfileResult,
 } from '../protocol/identity-management'
@@ -50,5 +50,5 @@ export type IdentityManagement = {
 
     sendSsoTokenChanged: (params: SsoTokenChangedParams) => void
 
-    // sendStsCredentialChanged: (params: StsCredentialChangedParams) => void
+    sendStsCredentialChanged: (params: StsCredentialChangedParams) => void
 }

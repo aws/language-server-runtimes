@@ -33,7 +33,7 @@ import {
     IamCredentials,
     ShowOpenDialogParams,
     ShowOpenDialogRequestType,
-    // stsCredentialChangedRequestType,
+    stsCredentialChangedRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -363,7 +363,7 @@ export const standalone = (props: RuntimeProps) => {
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
             onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
-            // sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
+            sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
         }
 
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()

@@ -90,6 +90,7 @@ import {
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
+    stsCredentialChangedRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
 import { WebBase64Encoding } from './encoding'
@@ -207,7 +208,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
         onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
         sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
-        // sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
+        sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
     }
 
     // Set up auth without encryption
