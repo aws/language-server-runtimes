@@ -28,8 +28,12 @@ import {
     didWriteFileNotificationType,
     didAppendFileNotificationType,
     didCreateDirectoryNotificationType,
+    getIamCredentialRequestType,
+    GetIamCredentialParams,
+    IamCredentials,
     ShowOpenDialogParams,
     ShowOpenDialogRequestType,
+    stsCredentialChangedRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -50,6 +54,7 @@ import {
     getSsoTokenRequestType,
     IdentityManagement,
     invalidateSsoTokenRequestType,
+    invalidateStsCredentialRequestType,
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
@@ -320,8 +325,45 @@ export const standalone = (props: RuntimeProps) => {
                         return result
                     }
                 ),
+            onGetIamCredential: handler =>
+                lspConnection.onRequest(
+                    getIamCredentialRequestType,
+                    async (params: GetIamCredentialParams, token: CancellationToken) => {
+                        const result = await handler(params, token)
+
+                        // Encrypt the IAM credential before sending to client
+                        if (result && !(result instanceof Error) && encryptionKey) {
+                            result.credentials = {
+                                accessKeyId: await encryptObjectWithKey(result.credentials.accessKeyId, encryptionKey),
+                                secretAccessKey: await encryptObjectWithKey(
+                                    result.credentials.secretAccessKey,
+                                    encryptionKey
+                                ),
+                                ...(result.credentials.sessionToken
+                                    ? {
+                                          sessionToken: await encryptObjectWithKey(
+                                              result.credentials.sessionToken,
+                                              encryptionKey
+                                          ),
+                                      }
+                                    : {}),
+                            }
+                            if (!result.updateCredentialsParams.encrypted) {
+                                result.updateCredentialsParams.data = await encryptObjectWithKey(
+                                    { data: result.updateCredentialsParams.data },
+                                    encryptionKey
+                                )
+                                result.updateCredentialsParams.encrypted = true
+                            }
+                        }
+
+                        return result
+                    }
+                ),
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+            onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+            sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
         }
 
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
