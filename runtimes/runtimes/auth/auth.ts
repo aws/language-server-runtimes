@@ -22,18 +22,26 @@ import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-t
 
 export const BUILDER_ID_START_URL = 'https://view.awsapps.com/start'
 
-export function isIamCredentials(credentials: Credentials): credentials is IamCredentials {
+export function isIamCredentials(credentials?: Credentials): credentials is IamCredentials {
     const iamCredentials = credentials as IamCredentials
     return iamCredentials?.accessKeyId !== undefined && iamCredentials?.secretAccessKey !== undefined
 }
 
-export function isBearerCredentials(credentials: Credentials): credentials is BearerCredentials {
+export function isBearerCredentials(credentials?: Credentials): credentials is BearerCredentials {
     return (credentials as BearerCredentials)?.token !== undefined
 }
 
+export function hasStsProperties(credentials: IamCredentials): boolean {
+    return credentials.sessionToken !== undefined && credentials.expiration !== undefined
+}
+
+export function isExpired(credentials: IamCredentials): boolean {
+    if (!credentials.expiration) return false
+    return Date.now() >= credentials.expiration.getTime()
+}
+
 export class Auth {
-    private iamCredentials: IamCredentials | undefined
-    private bearerCredentials: BearerCredentials | undefined
+    private currentCredentials: IamCredentials | BearerCredentials | undefined
     private credentialsProvider: CredentialsProvider
     private connectionMetadata: ConnectionMetadata | undefined
 
@@ -54,24 +62,43 @@ export class Auth {
         }
         this.lspRouter = lspRouter
         this.credentialsProvider = {
-            getCredentials: (type: CredentialsType): Credentials | undefined => {
-                if (type === 'iam') {
-                    return this.iamCredentials
-                }
-                if (type === 'bearer') {
-                    return this.bearerCredentials
+            getCredentials: (type?: CredentialsType): Credentials | undefined => {
+                if (!type || type === 'iam' || type === 'bearer') {
+                    if (
+                        (type === 'iam' && !isIamCredentials(this.currentCredentials)) ||
+                        (type === 'bearer' && !isBearerCredentials(this.currentCredentials))
+                    ) {
+                        return undefined
+                    }
+                    return this.currentCredentials
                 }
                 throw new Error(`Unsupported credentials type: ${type}`)
             },
 
-            hasCredentials: (type: CredentialsType): boolean => {
-                if (type === 'iam') {
-                    return this.iamCredentials !== undefined
-                }
-                if (type === 'bearer') {
-                    return this.bearerCredentials !== undefined
+            hasCredentials: (type?: CredentialsType): boolean => {
+                if (!type || type === 'iam' || type === 'bearer') {
+                    // If the requested and actual credentials types are different, return false
+                    if (
+                        (type === 'iam' && !isIamCredentials(this.currentCredentials)) ||
+                        (type === 'bearer' && !isBearerCredentials(this.currentCredentials))
+                    ) {
+                        return false
+                    }
+                    return this.currentCredentials !== undefined
                 }
                 throw new Error(`Unsupported credentials type: ${type}`)
+            },
+
+            getCredentialsType: (): CredentialsType | undefined => {
+                if (this.currentCredentials === undefined) {
+                    return undefined
+                } else if (isIamCredentials(this.currentCredentials)) {
+                    return 'iam'
+                } else if (isBearerCredentials(this.currentCredentials)) {
+                    return 'bearer'
+                } else {
+                    throw new Error(`Unexpected credentials type`)
+                }
             },
 
             getConnectionMetadata: () => {
@@ -114,15 +141,19 @@ export class Auth {
                 this.setCredentials(iamCredentials)
                 this.connection.console.info('Runtime: Successfully saved IAM credentials')
             } else {
-                this.iamCredentials = undefined
+                this.currentCredentials = undefined
                 throw new Error('Invalid IAM credentials')
             }
         })
 
         this.connection.onNotification(iamCredentialsDeleteNotificationType, () => {
-            this.iamCredentials = undefined
-            this.lspRouter.onCredentialsDeletion('iam')
-            this.connection.console.info('Runtime: Deleted IAM credentials')
+            if (this.currentCredentials !== undefined && isIamCredentials(this.currentCredentials)) {
+                this.currentCredentials = undefined
+                this.lspRouter.onCredentialsDeletion('iam')
+                this.connection.console.info('Runtime: Deleted IAM credentials')
+            } else {
+                throw new Error('Attempt to delete IAM credentials when it does not exist')
+            }
         })
     }
 
@@ -139,16 +170,20 @@ export class Auth {
                 await this.handleBearerCredentialsMetadata(request.metadata)
                 this.connection.console.info('Runtime: Successfully saved bearer credentials')
             } else {
-                this.bearerCredentials = undefined
+                this.currentCredentials = undefined
                 throw new Error('Invalid bearer credentials')
             }
         })
 
         this.connection.onNotification(bearerCredentialsDeleteNotificationType, () => {
-            this.bearerCredentials = undefined
-            this.connectionMetadata = undefined
-            this.lspRouter.onCredentialsDeletion('bearer')
-            this.connection.console.info('Runtime: Deleted bearer credentials')
+            if (this.currentCredentials !== undefined && isBearerCredentials(this.currentCredentials)) {
+                this.currentCredentials = undefined
+                this.connectionMetadata = undefined
+                this.lspRouter.onCredentialsDeletion('bearer')
+                this.connection.console.info('Runtime: Deleted bearer credentials')
+            } else {
+                throw new Error('Attempt to delete Bearer credentials when it does not exist')
+            }
         })
     }
 
@@ -166,12 +201,12 @@ export class Auth {
     private setCredentials(creds: Credentials) {
         if (this.areValidCredentials(creds)) {
             if (isIamCredentials(creds)) {
-                this.iamCredentials = creds as IamCredentials
+                this.currentCredentials = creds as IamCredentials
                 // Prevent modifying credentials by implementors
-                Object.freeze(this.iamCredentials)
+                Object.freeze(this.currentCredentials)
             } else {
-                this.bearerCredentials = creds as BearerCredentials
-                Object.freeze(this.bearerCredentials)
+                this.currentCredentials = creds as BearerCredentials
+                Object.freeze(this.currentCredentials)
             }
         }
     }
