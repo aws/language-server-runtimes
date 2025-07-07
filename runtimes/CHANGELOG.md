@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.103](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.102...language-server-runtimes/v0.2.103) (2025-07-07)
+
+
+### Bug Fixes
+
+* refactor auto-discovery for OS proxy settings ([#595](https://github.com/aws/language-server-runtimes/issues/595)) ([0e68235](https://github.com/aws/language-server-runtimes/commit/0e682359479e8f099447adac3105658b7a0f8b50))
+
 ## [0.2.102](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.101...language-server-runtimes/v0.2.102) (2025-07-01)
 
 
