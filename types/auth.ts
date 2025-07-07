@@ -2,7 +2,6 @@ export type IamCredentials = {
     readonly accessKeyId: string
     readonly secretAccessKey: string
     readonly sessionToken?: string
-    readonly expiration?: Date
 }
 
 export type BearerCredentials = {
