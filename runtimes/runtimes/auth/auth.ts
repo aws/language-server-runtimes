@@ -22,12 +22,12 @@ import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../operational-t
 
 export const BUILDER_ID_START_URL = 'https://view.awsapps.com/start'
 
-export function isIamCredentials(credentials: Credentials): credentials is IamCredentials {
+export function isIamCredentials(credentials?: Credentials): credentials is IamCredentials {
     const iamCredentials = credentials as IamCredentials
     return iamCredentials?.accessKeyId !== undefined && iamCredentials?.secretAccessKey !== undefined
 }
 
-export function isBearerCredentials(credentials: Credentials): credentials is BearerCredentials {
+export function isBearerCredentials(credentials?: Credentials): credentials is BearerCredentials {
     return (credentials as BearerCredentials)?.token !== undefined
 }
 
@@ -62,15 +62,24 @@ export class Auth {
         }
         this.lspRouter = lspRouter
         this.credentialsProvider = {
-            getCredentials: (): Credentials | undefined => {
-                if (this.currentCredentials === undefined) {
-                    return undefined
-                } else {
-                    return this.currentCredentials
+            getCredentials: (type?: CredentialsType): Credentials | undefined => {
+                if (
+                    (type === 'iam' && !isIamCredentials(this.currentCredentials)) ||
+                    (type === 'bearer' && !isBearerCredentials(this.currentCredentials))
+                ) {
+                    throw new Error(`Current credentials do not match the type: ${type}`)
                 }
+                return this.currentCredentials
             },
 
-            hasCredentials: (): boolean => {
+            hasCredentials: (type?: CredentialsType): boolean => {
+                // If the requested and actual credentials types are different, return false
+                if (
+                    (type === 'iam' && !isIamCredentials(this.currentCredentials)) ||
+                    (type === 'bearer' && !isBearerCredentials(this.currentCredentials))
+                ) {
+                    return false
+                }
                 return this.currentCredentials !== undefined
             },
 
