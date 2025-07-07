@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.43](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.42...language-server-runtimes-types/v0.1.43) (2025-07-01)
+
+
+### Features
+
+* add listAvailableModels request method ([#593](https://github.com/aws/language-server-runtimes/issues/593)) ([0d9d557](https://github.com/aws/language-server-runtimes/commit/0d9d55751bd977e82ded0906d31dbfd8bf027893))
+
 ## [0.1.42](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.41...language-server-runtimes-types/v0.1.42) (2025-06-26)
 
 

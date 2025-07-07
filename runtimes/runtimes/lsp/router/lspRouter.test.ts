@@ -690,6 +690,7 @@ describe('LspRouter', () => {
                 added: [
                     { name: 'new', uri: 'file:///new' },
                     { name: 'duplicate', uri: 'file:///existing' }, // duplicate URI
+                    { name: 'duplicate', uri: 'file:///existing/' }, // duplicate URI with /
                 ],
                 removed: [],
             }

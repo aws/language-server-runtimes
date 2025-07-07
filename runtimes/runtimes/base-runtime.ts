@@ -59,6 +59,7 @@ import {
     onPinnedContextAddNotificationType,
     onPinnedContextRemoveNotificationType,
     openFileDialogRequestType,
+    listAvailableModelsRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -198,6 +199,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             lspConnection.onNotification(promptInputOptionChangeNotificationType.method, handler),
         onOpenFileDialog: handler => lspConnection.onRequest(openFileDialogRequestType.method, handler),
         onRuleClick: handler => lspConnection.onRequest(ruleClickRequestType.method, handler),
+        onListAvailableModels: handler => lspConnection.onRequest(listAvailableModelsRequestType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
@@ -249,7 +251,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
             onDidChangeTextDocument: handler => documentsObserver.callbacks.onDidChangeTextDocument(handler),
             onDidCloseTextDocument: handler => lspConnection.onDidCloseTextDocument(handler),
-            onDidSaveTextDocument: lspServer.setDidSaveTextDocumentHandler,
+            onDidSaveTextDocument: handler => documentsObserver.callbacks.onDidSaveTextDocument(handler),
             onExecuteCommand: lspServer.setExecuteCommandHandler,
             onSemanticTokens: handler => lspConnection.onRequest(SemanticTokensRequest.type, handler),
             workspace: {

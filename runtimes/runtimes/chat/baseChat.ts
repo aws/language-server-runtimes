@@ -85,6 +85,9 @@ import {
     OpenFileDialogParams,
     OpenFileDialogResult,
     openFileDialogRequestType,
+    ListAvailableModelsParams,
+    ListAvailableModelsResult,
+    listAvailableModelsRequestType,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -235,5 +238,9 @@ export class BaseChat implements Chat {
 
     public onRuleClick(handler: RequestHandler<RuleClickParams, RuleClickResult, void>) {
         this.connection.onRequest(ruleClickRequestType.method, handler)
+    }
+
+    public onListAvailableModels(handler: RequestHandler<ListAvailableModelsParams, ListAvailableModelsResult, void>) {
+        this.connection.onRequest(listAvailableModelsRequestType.method, handler)
     }
 }

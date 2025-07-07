@@ -49,6 +49,8 @@ import {
     RuleClickResult,
     PinnedContextParams,
     ActiveEditorChangedParams,
+    ListAvailableModelsParams,
+    ListAvailableModelsResult,
 } from '../protocol'
 
 /**
@@ -75,6 +77,7 @@ export type Chat = {
     onOpenFileDialog: (
         handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult, OpenFileDialogResult>
     ) => void
+    onListAvailableModels: (handler: RequestHandler<ListAvailableModelsParams, ListAvailableModelsResult, void>) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void
