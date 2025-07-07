@@ -83,7 +83,6 @@ import { observe } from './lsp'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import {
-    AwsResponseError,
     getIamCredentialRequestType,
     getSsoTokenRequestType,
     invalidateStsCredentialRequestType,
