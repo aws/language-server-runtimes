@@ -63,24 +63,30 @@ export class Auth {
         this.lspRouter = lspRouter
         this.credentialsProvider = {
             getCredentials: (type?: CredentialsType): Credentials | undefined => {
-                if (
-                    (type === 'iam' && !isIamCredentials(this.currentCredentials)) ||
-                    (type === 'bearer' && !isBearerCredentials(this.currentCredentials))
-                ) {
-                    throw new Error(`Current credentials do not match the type: ${type}`)
+                if (!type || type === 'iam' || type === 'bearer') {
+                    if (
+                        (type === 'iam' && !isIamCredentials(this.currentCredentials)) ||
+                        (type === 'bearer' && !isBearerCredentials(this.currentCredentials))
+                    ) {
+                        return undefined
+                    }
+                    return this.currentCredentials
                 }
-                return this.currentCredentials
+                throw new Error(`Unsupported credentials type: ${type}`)
             },
 
             hasCredentials: (type?: CredentialsType): boolean => {
-                // If the requested and actual credentials types are different, return false
-                if (
-                    (type === 'iam' && !isIamCredentials(this.currentCredentials)) ||
-                    (type === 'bearer' && !isBearerCredentials(this.currentCredentials))
-                ) {
-                    return false
+                if (!type || type === 'iam' || type === 'bearer') {
+                    // If the requested and actual credentials types are different, return false
+                    if (
+                        (type === 'iam' && !isIamCredentials(this.currentCredentials)) ||
+                        (type === 'bearer' && !isBearerCredentials(this.currentCredentials))
+                    ) {
+                        return false
+                    }
+                    return this.currentCredentials !== undefined
                 }
-                return this.currentCredentials !== undefined
+                throw new Error(`Unsupported credentials type: ${type}`)
             },
 
             getCredentialsType: (): CredentialsType | undefined => {
@@ -88,8 +94,10 @@ export class Auth {
                     return undefined
                 } else if (isIamCredentials(this.currentCredentials)) {
                     return 'iam'
-                } else {
+                } else if (isBearerCredentials(this.currentCredentials)) {
                     return 'bearer'
+                } else {
+                    throw new Error(`Unexpected credentials type`)
                 }
             },
 
