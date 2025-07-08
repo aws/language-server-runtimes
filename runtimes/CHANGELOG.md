@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.104](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.103...language-server-runtimes/v0.2.104) (2025-07-08)
+
+
+### Bug Fixes
+
+* **runtimes:** timeout for exiting to emit logs ([#602](https://github.com/aws/language-server-runtimes/issues/602)) ([0a062a3](https://github.com/aws/language-server-runtimes/commit/0a062a38854213ebe8ed388dc42c37ec65682473))
+
 ## [0.2.103](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.102...language-server-runtimes/v0.2.103) (2025-07-07)
 
 
