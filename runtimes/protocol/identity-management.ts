@@ -77,6 +77,7 @@ export interface Profile {
         aws_secret_access_key?: string
         aws_session_token?: string
         role_arn?: string
+        credential_process?: string
     }
 }
 
