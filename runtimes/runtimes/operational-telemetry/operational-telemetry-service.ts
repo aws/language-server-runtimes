@@ -74,7 +74,9 @@ export class OperationalTelemetryService implements OperationalTelemetry {
         process.on('uncaughtException', async () => {
             // Telemetry signals are force flushed to their exporters on shutdown.
             await this.shutdownApi()
-            process.exitCode = 5
+            setTimeout(() => {
+                process.exit(1)
+            }, 2000)
         })
 
         process.on('beforeExit', async () => {
