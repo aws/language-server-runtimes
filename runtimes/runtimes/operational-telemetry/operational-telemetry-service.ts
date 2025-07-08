@@ -75,7 +75,7 @@ export class OperationalTelemetryService implements OperationalTelemetry {
             // Telemetry signals are force flushed to their exporters on shutdown.
             await this.shutdownApi()
             setTimeout(() => {
-                process.exit(1)
+                process.exit(5)
             }, 2000)
         })
 
