@@ -54,12 +54,11 @@ export class AwsResponseError extends ResponseError<AwsResponseErrorData> {
 }
 
 // listProfiles
-export type ProfileKind = 'Unknown' | 'SsoTokenProfile' | 'IamCredentialProfile' | 'EmptyProfile'
+export type ProfileKind = 'Unknown' | 'SsoTokenProfile' | 'IamCredentialProfile'
 
 export const ProfileKind = {
     SsoTokenProfile: 'SsoTokenProfile',
     IamCredentialProfile: 'IamCredentialProfile',
-    EmptyProfile: 'EmptyProfile',
     Unknown: 'Unknown',
 } as const
 
