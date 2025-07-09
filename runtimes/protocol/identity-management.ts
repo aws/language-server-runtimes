@@ -77,6 +77,7 @@ export interface Profile {
         aws_session_token?: string
         role_arn?: string
         credential_process?: string
+        mfa_serial?: string
     }
 }
 
@@ -242,6 +243,7 @@ export const getIamCredentialOptionsDefaults = {
 
 export interface GetIamCredentialParams {
     profileName: string
+    mfaCode?: string
     options?: GetIamCredentialOptions
 }
 
