@@ -54,16 +54,15 @@ export class AwsResponseError extends ResponseError<AwsResponseErrorData> {
 }
 
 // listProfiles
-export type ProfileKind = 'Unknown' | 'SsoTokenProfile' | 'IamCredentialProfile' | 'EmptyProfile'
+export type ProfileKind = 'Unknown' | 'SsoTokenProfile' | 'IamCredentialProfile'
 
 export const ProfileKind = {
     SsoTokenProfile: 'SsoTokenProfile',
     IamCredentialProfile: 'IamCredentialProfile',
-    EmptyProfile: 'EmptyProfile',
     Unknown: 'Unknown',
 } as const
 
-// Profile and SsoSession use 'settings' property as namescope for their settings to avoid future
+// Profile and Session use 'settings' property as namescope for their settings to avoid future
 // name conflicts with 'kinds', 'name', and future properties as well as making some setting
 // iteration operations easier.
 
@@ -77,6 +76,7 @@ export interface Profile {
         aws_secret_access_key?: string
         aws_session_token?: string
         role_arn?: string
+        credential_process?: string
     }
 }
 
