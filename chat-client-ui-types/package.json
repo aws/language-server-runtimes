@@ -18,6 +18,7 @@
     "author": "Amazon Web Services",
     "license": "Apache-2.0",
     "dependencies": {
-        "@aws/language-server-runtimes-types": "^0.1.56"
+        "@aws/language-server-runtimes-types": "^0.1.56",
+        "@local/language-server-runtimes-generated-types": "file:/Users/conorstw/Desktop/language-server-runtimes/types/codegen/generated"
     }
 }

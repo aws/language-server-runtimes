@@ -11,6 +11,7 @@
     ],
     "workspaces": [
         "types",
+        "types/codegen/generated",
         "runtimes",
         "chat-client-ui-types"
     ],
@@ -36,7 +37,8 @@
         "test": "npm run test --workspaces --if-present",
         "preversion": "npm run test",
         "version": "npm run compile && git add -A .",
-        "watch": "tsc --build --watch"
+        "watch": "tsc --build --watch",
+        "gen-comp": "cd ./types/codegen/ && npm run generate && cd ./generated && npm run build && cd ../../../ && npm run compile"
     },
     "devDependencies": {
         "@commitlint/cli": "^19.8.1",
