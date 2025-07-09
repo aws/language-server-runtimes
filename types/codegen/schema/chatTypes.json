@@ -27,8 +27,7 @@
                     "type": {
                         "type": "string"
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "SourceLink": {
                 "type": "object",
@@ -46,8 +45,7 @@
                         "type": "string",
                         "description": "Optional body text for the source link"
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ContentSpan": {
                 "type": "object",
@@ -83,8 +81,7 @@
                     "information": {
                         "type": "string"
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ChatPrompt": {
                 "type": "object",
@@ -101,8 +98,7 @@
                         "type": "string",
                         "description": "Optional command"
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "FeedbackPayload": {
                 "type": "object",
@@ -124,8 +120,7 @@
                         "type": "string",
                         "description": "Optional comment"
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "CodeSelectionType": {
                 "type": "string",
@@ -134,13 +129,12 @@
             },
             "PositionCursor": {
                 "type": "object",
-                "required": ["position"],
+                "required": ["position", "TEST"],
                 "properties": {
                     "position": {
                         "type": "Position"
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "RangeCursor": {
                 "type": "object",
@@ -149,8 +143,7 @@
                     "range": {
                         "type": "Range"
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "CursorState": {
                 "oneOf": [
@@ -168,9 +161,8 @@
             "PartialResultParams": {
                 "type": "object",
                 "properties": {
-                    "token": { "$ref": "#/components/schemas/PartialResultToken" }
-                },
-                "additionalProperties": false
+                    "partialResultToken": { "$ref": "#/components/schemas/PartialResultToken" }
+                }
             },
             "ChatParams": {
                 "allOf": [
@@ -191,8 +183,7 @@
                                 "items": { "$ref": "#/components/schemas/QuickActionCommand" },
                                 "description": "Context of the current chat message to be handled by the servers. Context can be added through QuickActionCommand triggered by `@`."
                             }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -209,8 +200,7 @@
                                 "items": { "$ref": "#/components/schemas/CursorState" }
                             },
                             "textDocument": { "type": "TextDocumentIdentifier" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -222,8 +212,7 @@
                         "required": ["message"],
                         "properties": {
                             "message": { "type": "string" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -240,8 +229,7 @@
                             "properties": {
                                 "first": { "type": "number" },
                                 "second": { "type": "number" }
-                            },
-                            "additionalProperties": false
+                            }
                         }
                     },
                     "changes": {
@@ -250,11 +238,9 @@
                             "added": { "type": "number" },
                             "deleted": { "type": "number" },
                             "total": { "type": "number" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "FileList": {
                 "type": "object",
@@ -272,8 +258,7 @@
                         "type": "object",
                         "additionalProperties": { "$ref": "#/components/schemas/FileDetails" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "Status": {
                 "type": "string",
@@ -308,8 +293,7 @@
                     "disabled": { "type": "boolean" },
                     "keepCardAfterClick": { "type": "boolean" },
                     "status": { "$ref": "#/components/schemas/ButtonStatus" }
-                },
-                "additionalProperties": false
+                }
             },
             "ChatMessage": {
                 "type": "object",
@@ -342,8 +326,7 @@
                                         "items": { "$ref": "#/components/schemas/SourceLink" }
                                     }
                                 },
-                                "required": ["content"],
-                                "additionalProperties": false
+                                "required": ["content"]
                             },
                             "summary": {
                                 "type": "object",
@@ -353,8 +336,7 @@
                                         "type": "array",
                                         "items": { "$ref": "#/components/schemas/ChatMessage" }
                                     }
-                                },
-                                "additionalProperties": false
+                                }
                             },
                             "followUp": {
                                 "type": "object",
@@ -364,8 +346,7 @@
                                         "type": "array",
                                         "items": { "$ref": "#/components/schemas/ChatItemAction" }
                                     }
-                                },
-                                "additionalProperties": false
+                                }
                             },
                             "codeReference": {
                                 "type": "array",
@@ -380,11 +361,9 @@
                                     "status": { "$ref": "#/components/schemas/Status" },
                                     "icon": { "$ref": "#/components/schemas/IconType" },
                                     "text": { "type": "string" }
-                                },
-                                "additionalProperties": false
+                                }
                             }
-                        },
-                        "additionalProperties": false
+                        }
                     },
                     "buttons": {
                         "type": "array",
@@ -402,8 +381,7 @@
                                 "items": { "$ref": "#/components/schemas/SourceLink" }
                             }
                         },
-                        "required": ["content"],
-                        "additionalProperties": false
+                        "required": ["content"]
                     },
                     "summary": {
                         "type": "object",
@@ -413,8 +391,7 @@
                                 "type": "array",
                                 "items": { "$ref": "#/components/schemas/ChatMessage" }
                             }
-                        },
-                        "additionalProperties": false
+                        }
                     },
                     "followUp": {
                         "type": "object",
@@ -424,8 +401,7 @@
                                 "type": "array",
                                 "items": { "$ref": "#/components/schemas/ChatItemAction" }
                             }
-                        },
-                        "additionalProperties": false
+                        }
                     },
                     "codeReference": {
                         "type": "array",
@@ -433,8 +409,7 @@
                     },
                     "fileList": { "$ref": "#/components/schemas/FileList" },
                     "contextList": { "$ref": "#/components/schemas/FileList" }
-                },
-                "additionalProperties": false
+                }
             },
             "ChatResult": {
                 "description": "Represents the result of a chat interaction. A ChatResult extends ChatMessage and can optionally include additional messages that provide context, reasoning, or intermediate steps that led to the final response. Response for chat prompt request can be empty, if server chooses to handle the request and push updates asynchronously.",
@@ -448,8 +423,7 @@
                                 "items": { "$ref": "#/components/schemas/ChatMessage" },
                                 "description": "Optional array of supporting messages that provide additional context for the primary message. These can include: - Reasoning steps that led to the final answer - Tool usage and outputs during processing - Intermediate calculations or decision points - Status updates about the processing - Human interactions that influenced the response. The primary message (this ChatResult itself) should contain the final, complete response, while additionalMessages provides transparency into how that response was generated. UI implementations should typically display the primary message prominently, with additionalMessages shown as supporting information when relevant."
                             }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -460,8 +434,7 @@
                         "type": "object",
                         "properties": {
                             "requestId": { "type": "string" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -470,8 +443,7 @@
                 "required": ["tabId"],
                 "properties": {
                     "tabId": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "QuickActionCommand": {
                 "type": "object",
@@ -482,8 +454,7 @@
                     "description": { "type": "string" },
                     "placeholder": { "type": "string" },
                     "icon": { "$ref": "#/components/schemas/IconType" }
-                },
-                "additionalProperties": false
+                }
             },
             "QuickActionCommandGroup": {
                 "type": "object",
@@ -495,8 +466,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/QuickActionCommand" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "QuickActions": {
                 "type": "object",
@@ -508,8 +478,7 @@
                         "items": { "$ref": "#/components/schemas/QuickActionCommandGroup" },
                         "description": "The chat quick actions groups and commands to be executed on server."
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "TabData": {
                 "type": "object",
@@ -520,8 +489,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/ChatMessage" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ChatOptions": {
                 "type": "object",
@@ -536,8 +504,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/ChatMessage" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "QuickActionParams": {
                 "allOf": [
@@ -554,8 +521,7 @@
                                 "items": { "$ref": "#/components/schemas/CursorState" }
                             },
                             "textDocument": { "type": "TextDocumentIdentifier" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -567,8 +533,7 @@
                         "required": ["message"],
                         "properties": {
                             "message": { "type": "string" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -583,24 +548,21 @@
                     "tabId": { "type": "string" },
                     "feedbackPayload": { "$ref": "#/components/schemas/FeedbackPayload" },
                     "eventId": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "TabEventParams": {
                 "type": "object",
                 "required": ["tabId"],
                 "properties": {
                     "tabId": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "TabAddParams": {
                 "type": "object",
                 "allOf": [{ "$ref": "#/components/schemas/TabEventParams" }],
                 "properties": {
                     "restoredTab": { "type": "boolean" }
-                },
-                "additionalProperties": false
+                }
             },
             "TabChangeParams": {
                 "allOf": [{ "$ref": "#/components/schemas/TabEventParams" }]
@@ -625,8 +587,7 @@
                     "eventId": { "type": "string" },
                     "codeBlockIndex": { "type": "number" },
                     "totalCodeBlocks": { "type": "number" }
-                },
-                "additionalProperties": false
+                }
             },
             "InfoLinkClickParams": {
                 "type": "object",
@@ -635,8 +596,7 @@
                     "tabId": { "type": "string" },
                     "link": { "type": "string" },
                     "eventId": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "LinkClickParams": {
                 "allOf": [
@@ -646,8 +606,7 @@
                         "required": ["messageId"],
                         "properties": {
                             "messageId": { "type": "string" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -659,8 +618,7 @@
                         "required": ["messageId"],
                         "properties": {
                             "messageId": { "type": "string" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -671,8 +629,7 @@
                     "tabId": { "type": "string" },
                     "messageId": { "type": "string" },
                     "followUp": { "$ref": "#/components/schemas/ChatItemAction" }
-                },
-                "additionalProperties": false
+                }
             },
             "OpenTabParams": {
                 "type": "object",
@@ -684,11 +641,9 @@
                         "properties": {
                             "state": { "$ref": "#/components/schemas/TabState" },
                             "data": { "$ref": "#/components/schemas/TabData" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "OpenTabResult": {
                 "allOf": [{ "$ref": "#/components/schemas/TabEventParams" }]
@@ -700,8 +655,7 @@
                     "tabId": { "type": "string" },
                     "messageId": { "type": "string" },
                     "buttonId": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "ButtonClickResult": {
                 "type": "object",
@@ -709,16 +663,14 @@
                 "properties": {
                     "success": { "type": "boolean" },
                     "failureReason": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "TabState": {
                 "type": "object",
                 "properties": {
                     "inProgress": { "type": "boolean" },
                     "cancellable": { "type": "boolean" }
-                },
-                "additionalProperties": false
+                }
             },
             "ChatUpdateParams": {
                 "type": "object",
@@ -727,8 +679,7 @@
                     "tabId": { "type": "string" },
                     "state": { "$ref": "#/components/schemas/TabState" },
                     "data": { "$ref": "#/components/schemas/TabData" }
-                },
-                "additionalProperties": false
+                }
             },
             "ChatOptionsUpdateParams": {
                 "type": "object",
@@ -745,8 +696,7 @@
                         "type": "string",
                         "description": "The last selected modelId for the conversation. This is used to allow the server to programmatically update the selected model for persistance across sessions."
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "FileAction": {
                 "type": "string",
@@ -761,8 +711,7 @@
                     "action": { "$ref": "#/components/schemas/FileAction" },
                     "messageId": { "type": "string" },
                     "fullPath": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "ContextCommandGroup": {
                 "type": "object",
@@ -773,8 +722,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/ContextCommand" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ContextCommand": {
                 "allOf": [
@@ -796,11 +744,9 @@
                                 "items": { "$ref": "#/components/schemas/ContextCommandGroup" }
                             },
                             "content": {
-                                "type": "string",
-                                "format": "byte"
+                                "type": "Uint8Array"
                             }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -812,8 +758,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/ContextCommandGroup" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "PinnedContextParams": {
                 "allOf": [
@@ -825,8 +770,7 @@
                             "tabId": { "type": "string" },
                             "textDocument": { "type": "TextDocumentIdentifier" },
                             "showRules": { "type": "boolean" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -836,8 +780,7 @@
                 "properties": {
                     "promptName": { "type": "string" },
                     "isRule": { "type": "boolean" }
-                },
-                "additionalProperties": false
+                }
             },
             "OpenFileDialogParams": {
                 "type": "object",
@@ -846,8 +789,7 @@
                     "tabId": { "type": "string" },
                     "fileType": { "$ref": "#/components/schemas/FileDialogType" },
                     "insertPosition": { "type": "number" }
-                },
-                "additionalProperties": false
+                }
             },
             "OpenFileDialogResult": {
                 "type": "object",
@@ -861,8 +803,7 @@
                     },
                     "errorMessage": { "type": "string" },
                     "insertPosition": { "type": "number" }
-                },
-                "additionalProperties": false
+                }
             },
             "DropFilesParams": {
                 "type": "object",
@@ -872,16 +813,14 @@
                     "files": { "$ref": "#/components/schemas/FileList" },
                     "insertPosition": { "type": "number" },
                     "errorMessage": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "ProgrammingLanguage": {
                 "type": "object",
                 "required": ["languageName"],
                 "properties": {
                     "languageName": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "InlineChatUserDecision": {
                 "type": "string",
@@ -904,7 +843,11 @@
                 "enum": ["folder", "rule"]
             },
             "RuleActiveState": {
-                "oneOf": [{ "type": "boolean" }, { "type": "string", "enum": ["indeterminate"] }]
+                "oneOf": [{ "type": "boolean" }, { "$ref": "#/components/schemas/RuleActiveStateString" }]
+            },
+            "RuleActiveStateString": {
+                "type": "string",
+                "enum": ["indeterminate"]
             },
             "InlineChatResultParams": {
                 "type": "object",
@@ -922,8 +865,7 @@
                     "responseStartLatency": { "type": "number" },
                     "responseEndLatency": { "type": "number" },
                     "programmingLanguage": { "$ref": "#/components/schemas/ProgrammingLanguage" }
-                },
-                "additionalProperties": false
+                }
             },
 
             "FilterValue": {
@@ -948,8 +890,7 @@
                         "$ref": "#/components/schemas/IconType"
                     }
                 },
-                "required": ["id"],
-                "additionalProperties": false
+                "required": ["id"]
             },
             "SelectOption": {
                 "type": "object",
@@ -1010,8 +951,7 @@
                     "id": { "type": "string" },
                     "icon": { "$ref": "#/components/schemas/IconType" },
                     "text": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "ConversationItem": {
                 "type": "object",
@@ -1024,8 +964,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/Action" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ConversationItemGroup": {
                 "type": "object",
@@ -1036,8 +975,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/ConversationItem" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ListConversationsParams": {
                 "type": "object",
@@ -1046,8 +984,7 @@
                         "type": "object",
                         "additionalProperties": { "$ref": "#/components/schemas/FilterValue" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ListMcpServersParams": {
                 "type": "object",
@@ -1056,16 +993,14 @@
                         "type": "object",
                         "additionalProperties": { "$ref": "#/components/schemas/FilterValue" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ListRulesParams": {
                 "type": "object",
                 "required": ["tabId"],
                 "properties": {
                     "tabId": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "ListRulesResult": {
                 "type": "object",
@@ -1077,8 +1012,7 @@
                         "required": ["title"],
                         "properties": {
                             "title": { "type": "string" }
-                        },
-                        "additionalProperties": false
+                        }
                     },
                     "filterOptions": {
                         "type": "array",
@@ -1088,8 +1022,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/RulesFolder" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "RulesFolder": {
                 "type": "object",
@@ -1104,8 +1037,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/Rule" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "Rule": {
                 "type": "object",
@@ -1114,8 +1046,7 @@
                     "active": { "type": "boolean" },
                     "name": { "type": "string" },
                     "id": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "RuleClickParams": {
                 "type": "object",
@@ -1124,8 +1055,7 @@
                     "tabId": { "type": "string" },
                     "type": { "$ref": "#/components/schemas/RuleType" },
                     "id": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "RuleClickResult": {
                 "allOf": [
@@ -1135,8 +1065,7 @@
                         "required": ["success"],
                         "properties": {
                             "success": { "type": "boolean" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -1148,8 +1077,7 @@
                         "items": { "$ref": "#/components/schemas/CursorState" }
                     },
                     "textDocument": { "type": "TextDocumentIdentifier" }
-                },
-                "additionalProperties": false
+                }
             },
             "ConversationsList": {
                 "type": "object",
@@ -1160,8 +1088,7 @@
                         "required": ["title"],
                         "properties": {
                             "title": { "type": "string" }
-                        },
-                        "additionalProperties": false
+                        }
                     },
                     "filterOptions": {
                         "type": "array",
@@ -1171,16 +1098,14 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/ConversationItemGroup" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ListConversationsResult": {
                 "allOf": [
                     { "$ref": "#/components/schemas/ConversationsList" },
                     {
                         "type": "object",
-                        "properties": {},
-                        "additionalProperties": false
+                        "properties": {}
                     }
                 ]
             },
@@ -1199,8 +1124,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/DetailedListGroup" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "DetailedListGroup": {
                 "type": "object",
@@ -1215,8 +1139,7 @@
                         "items": { "$ref": "#/components/schemas/Action" }
                     },
                     "icon": { "$ref": "#/components/schemas/IconType" }
-                },
-                "additionalProperties": false
+                }
             },
             "ListMcpServersResultHeaderStatus": {
                 "type": "object",
@@ -1224,8 +1147,7 @@
                     "icon": { "$ref": "#/components/schemas/IconType" },
                     "title": { "type": "string" },
                     "status": { "$ref": "#/components/schemas/Status" }
-                },
-                "additionalProperties": false
+                }
             },
             "ListMcpServersResultHeader": {
                 "type": "object",
@@ -1233,8 +1155,7 @@
                     "title": { "type": "string" },
                     "description": { "type": "string" },
                     "status": { "$ref": "#/components/schemas/ListMcpServersResultHeaderStatus" }
-                },
-                "additionalProperties": false
+                }
             },
             "ListMcpServersResult": {
                 "type": "object",
@@ -1249,8 +1170,7 @@
                         "type": "array",
                         "items": { "$ref": "#/components/schemas/FilterOption" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "ConversationAction": {
                 "type": "string",
@@ -1262,8 +1182,7 @@
                 "properties": {
                     "id": { "type": "string" },
                     "action": { "$ref": "#/components/schemas/ConversationAction" }
-                },
-                "additionalProperties": false
+                }
             },
             "ConversationClickResult": {
                 "allOf": [
@@ -1273,8 +1192,7 @@
                         "required": ["success"],
                         "properties": {
                             "success": { "type": "boolean" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -1288,8 +1206,7 @@
                         "type": "object",
                         "additionalProperties": { "type": "string" }
                     }
-                },
-                "additionalProperties": false
+                }
             },
             "McpServerClickResult": {
                 "allOf": [
@@ -1321,19 +1238,16 @@
                                             "title": { "type": "string" },
                                             "description": { "type": "string" },
                                             "status": { "$ref": "#/components/schemas/Status" }
-                                        },
-                                        "additionalProperties": false
+                                        }
                                     },
                                     "description": { "type": "string" },
                                     "actions": {
                                         "type": "array",
                                         "items": { "$ref": "#/components/schemas/Action" }
                                     }
-                                },
-                                "additionalProperties": false
+                                }
                             }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -1347,8 +1261,7 @@
                 "properties": {
                     "tabId": { "type": "string" },
                     "action": { "$ref": "#/components/schemas/TabBarAction" }
-                },
-                "additionalProperties": false
+                }
             },
             "TabBarActionResult": {
                 "allOf": [
@@ -1358,8 +1271,7 @@
                         "required": ["success"],
                         "properties": {
                             "success": { "type": "boolean" }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -1374,8 +1286,7 @@
                                 "type": "string",
                                 "enum": ["html", "markdown"]
                             }
-                        },
-                        "additionalProperties": false
+                        }
                     }
                 ]
             },
@@ -1384,8 +1295,7 @@
                 "required": ["content"],
                 "properties": {
                     "content": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             },
             "PromptInputOptionChangeParams": {
                 "type": "object",
@@ -1397,8 +1307,7 @@
                         "additionalProperties": { "type": "string" }
                     },
                     "eventId": { "type": "string" }
-                },
-                "additionalProperties": false
+                }
             }
         }
     }

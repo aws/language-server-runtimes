@@ -31,6 +31,7 @@
     },
     "dependencies": {
         "@aws/language-server-runtimes-types": "^0.1.42",
+        "@local/language-server-runtimes-generated-types": "file:/Users/conorstw/Desktop/language-server-runtimes/types/codegen/generated",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/api-logs": "^0.200.0",
         "@opentelemetry/core": "^2.0.0",

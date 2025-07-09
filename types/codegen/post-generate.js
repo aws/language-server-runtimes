@@ -30,8 +30,12 @@ let modifiedContent = newContent.replace(
     'interface PartialResultParams {'
 )
 
+// Replace any fields named "_export" with "export"
+modifiedContent = modifiedContent.replace(/\b_export\??\s*:/g, 'export?:') // For TypeScript interface properties
+
 // Write the updated content back to the file
 fs.writeFileSync(indexPath, modifiedContent)
 
 console.log('Constants added to generated index.ts file')
 console.log('PartialResultParams interface modified')
+console.log('Renamed "_export" fields to "export"')
