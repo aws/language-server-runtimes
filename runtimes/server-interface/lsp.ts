@@ -8,6 +8,7 @@ import {
     CompletionList,
     CompletionParams,
     ConfigurationOptions,
+    DefinitionParams,
     DidChangeConfigurationParams,
     DidChangeTextDocumentParams,
     DidChangeWorkspaceFoldersParams,
@@ -26,6 +27,8 @@ import {
     InlineCompletionList,
     InlineCompletionListWithReferences,
     InlineCompletionParams,
+    Location,
+    LocationLink,
     LogInlineCompletionSessionResultsParams,
     NotificationHandler,
     ProgressToken,
@@ -133,6 +136,9 @@ export type Lsp = {
     onDidSaveTextDocument: (handler: NotificationHandler<DidSaveTextDocumentParams>) => void
     publishDiagnostics: (params: PublishDiagnosticsParams) => Promise<void>
     sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => Promise<void>
+    onDefinition: (
+        handler: RequestHandler<DefinitionParams, Location | Location[] | LocationLink[] | null | undefined, void>
+    ) => void
     onHover: (handler: RequestHandler<HoverParams, Hover | null | undefined, void>) => void
     onExecuteCommand: (handler: RequestHandler<ExecuteCommandParams, any | undefined | null, void>) => void
     onSemanticTokens: (handler: RequestHandler<SemanticTokensParams, SemanticTokens | null, void>) => void
