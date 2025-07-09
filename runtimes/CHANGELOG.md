@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.105](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.104...language-server-runtimes/v0.2.105) (2025-07-09)
+
+
+### Reverts
+
+* refactor auto-discovery for OS proxy settings ([#595](https://github.com/aws/language-server-runtimes/issues/595))" ([#604](https://github.com/aws/language-server-runtimes/issues/604)) ([2bc289e](https://github.com/aws/language-server-runtimes/commit/2bc289eac95b5fb01e9383754f7c73234c9616ef))
+
 ## [0.2.104](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.103...language-server-runtimes/v0.2.104) (2025-07-08)
 
 
