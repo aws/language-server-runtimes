@@ -58,16 +58,16 @@ export type ProfileKind =
     | 'Unknown'
     | 'SsoTokenProfile'
     | 'IamUserProfile'
-    | 'RoleSourceProfile'
-    | 'RoleInstanceProfile'
-    | 'ProcessProfile'
+    | 'IamRoleSourceProfile'
+    | 'IamRoleInstanceProfile'
+    | 'IamProcessProfile'
 
 export const ProfileKind = {
     SsoTokenProfile: 'SsoTokenProfile',
     IamUserProfile: 'IamUserProfile',
-    RoleSourceProfile: 'RoleSourceProfile',
-    RoleInstanceProfile: 'RoleInstanceProfile',
-    ProcessProfile: 'ProcessProfile',
+    IamRoleSourceProfile: 'IamRoleSourceProfile',
+    IamRoleInstanceProfile: 'IamRoleInstanceProfile',
+    IamProcessProfile: 'IamProcessProfile',
     Unknown: 'Unknown',
 } as const
 
