@@ -255,6 +255,7 @@ export const getIamCredentialOptionsDefaults = {
 
 export interface GetIamCredentialParams {
     profileName: string
+    mfaCode?: string
     options?: GetIamCredentialOptions
 }
 
