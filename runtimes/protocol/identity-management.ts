@@ -71,7 +71,7 @@ export const ProfileKind = {
     Unknown: 'Unknown',
 } as const
 
-// Profile and Session use 'settings' property as namescope for their settings to avoid future
+// Profile and SsoSession use 'settings' property as namescope for their settings to avoid future
 // name conflicts with 'kinds', 'name', and future properties as well as making some setting
 // iteration operations easier.
 
