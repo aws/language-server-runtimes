@@ -8,8 +8,9 @@ export type Credentials = IamCredentials | BearerCredentials
 export type SsoConnectionType = 'builderId' | 'identityCenter' | 'none'
 
 export interface CredentialsProvider {
-    hasCredentials: (type: CredentialsType) => boolean
-    getCredentials: (type: CredentialsType) => Credentials | undefined
+    hasCredentials: (type?: CredentialsType) => boolean
+    getCredentials: (type?: CredentialsType) => Credentials | undefined
+    getCredentialsType: () => CredentialsType | undefined
     getConnectionMetadata: () => ConnectionMetadata | undefined
     getConnectionType: () => SsoConnectionType
     onCredentialsDeleted: (handler: (type: CredentialsType) => void) => void
