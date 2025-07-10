@@ -54,11 +54,20 @@ export class AwsResponseError extends ResponseError<AwsResponseErrorData> {
 }
 
 // listProfiles
-export type ProfileKind = 'Unknown' | 'SsoTokenProfile' | 'IamCredentialProfile'
+export type ProfileKind =
+    | 'Unknown'
+    | 'SsoTokenProfile'
+    | 'IamUserProfile'
+    | 'RoleSourceProfile'
+    | 'RoleInstanceProfile'
+    | 'ProcessProfile'
 
 export const ProfileKind = {
     SsoTokenProfile: 'SsoTokenProfile',
-    IamCredentialProfile: 'IamCredentialProfile',
+    IamUserProfile: 'IamUserProfile',
+    RoleSourceProfile: 'RoleSourceProfile',
+    RoleInstanceProfile: 'RoleInstanceProfile',
+    ProcessProfile: 'ProcessProfile',
     Unknown: 'Unknown',
 } as const
 
@@ -76,7 +85,11 @@ export interface Profile {
         aws_secret_access_key?: string
         aws_session_token?: string
         role_arn?: string
+        role_session_name?: string
         credential_process?: string
+        credential_source?: string
+        source_profile?: string
+        mfa_serial?: string
     }
 }
 
