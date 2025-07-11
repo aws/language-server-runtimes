@@ -157,7 +157,7 @@ export const updateProfileRequestType = new ProtocolRequestType<
 >('aws/identity/updateProfile')
 
 // getSsoToken
-export type CredentialId = string // Opaque identifier
+export type SsoTokenId = string // Opaque identifier
 
 export type IamIdentityCenterSsoTokenSourceKind = 'IamIdentityCenter'
 export type AwsBuilderIdSsoTokenSourceKind = 'AwsBuilderId'
@@ -225,7 +225,7 @@ export interface GetSsoTokenParams {
 }
 
 export interface SsoToken {
-    id: CredentialId
+    id: SsoTokenId
     accessToken: string // This field is encrypted with JWT like 'update'
     // Additional fields captured in token cache file may be added here in the future
 }
@@ -245,6 +245,8 @@ export const getSsoTokenRequestType = new ProtocolRequestType<
 >('aws/identity/getSsoToken')
 
 // getIamCredential
+export type IamCredentialId = string // Opaque identifier
+
 export interface GetIamCredentialOptions {
     generateOnInvalidStsCredential?: boolean
 }
@@ -260,7 +262,7 @@ export interface GetIamCredentialParams {
 }
 
 export interface GetIamCredentialResult {
-    id: CredentialId
+    id: IamCredentialId
     credentials: IamCredentials
     updateCredentialsParams: UpdateCredentialsParams
 }
@@ -275,7 +277,7 @@ export const getIamCredentialRequestType = new ProtocolRequestType<
 
 // invalidateSsoToken
 export interface InvalidateSsoTokenParams {
-    ssoTokenId: CredentialId
+    ssoTokenId: SsoTokenId
 }
 
 export interface InvalidateSsoTokenResult {
@@ -321,7 +323,7 @@ export const SsoTokenChangedKind = {
 
 export interface SsoTokenChangedParams {
     kind: SsoTokenChangedKind
-    ssoTokenId: CredentialId
+    ssoTokenId: SsoTokenId
 }
 
 export const ssoTokenChangedRequestType = new ProtocolNotificationType<SsoTokenChangedParams, void>(
@@ -338,7 +340,7 @@ export const StsCredentialChangedKind = {
 
 export interface StsCredentialChangedParams {
     kind: StsCredentialChangedKind
-    stsCredentialId: CredentialId
+    stsCredentialId: IamCredentialId
 }
 
 export const stsCredentialChangedRequestType = new ProtocolNotificationType<StsCredentialChangedParams, void>(
