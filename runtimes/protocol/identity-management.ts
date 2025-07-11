@@ -90,6 +90,7 @@ export interface Profile {
         credential_source?: string
         source_profile?: string
         mfa_serial?: string
+        external_id?: string
     }
 }
 
