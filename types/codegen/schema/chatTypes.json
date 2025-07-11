@@ -1,9 +1,9 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "ChatItemAction API",
+        "title": "Chat Types",
         "version": "1.0.0",
-        "description": "API definition for ChatItemAction interface"
+        "description": "Chat Types Definitions for FLARE"
     },
     "paths": {},
     "components": {
@@ -129,7 +129,7 @@
             },
             "PositionCursor": {
                 "type": "object",
-                "required": ["position", "TEST"],
+                "required": ["position"],
                 "properties": {
                     "position": {
                         "type": "Position"
@@ -1215,8 +1215,13 @@
                         "type": "object",
                         "properties": {
                             "filterOptions": {
-                                "type": "array",
-                                "items": { "$ref": "#/components/schemas/FilterOption" }
+                                "oneOf": [
+                                    {
+                                        "type": "array",
+                                        "items": { "$ref": "#/components/schemas/FilterOption" }
+                                    },
+                                    { "type": "null" }
+                                ]
                             },
                             "filterActions": {
                                 "type": "array",
