@@ -30,15 +30,16 @@ import {
     didCreateDirectoryNotificationType,
     getIamCredentialRequestType,
     GetIamCredentialParams,
-    IamCredentials,
     ShowOpenDialogParams,
     ShowOpenDialogRequestType,
     stsCredentialChangedRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
+    encryptIamResultWithKey,
     EncryptionInitialization,
     encryptObjectWithKey,
+    encryptSsoResultWithKey,
     readEncryptionDetails,
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
@@ -302,26 +303,10 @@ export const standalone = (props: RuntimeProps) => {
                 lspConnection.onRequest(
                     getSsoTokenRequestType,
                     async (params: GetSsoTokenParams, token: CancellationToken) => {
-                        const result = await handler(params, token)
-
-                        // Encrypt SsoToken.accessToken before sending to client
+                        let result = await handler(params, token)
                         if (result && !(result instanceof Error) && encryptionKey) {
-                            if (result.ssoToken.accessToken) {
-                                result.ssoToken.accessToken = await encryptObjectWithKey(
-                                    result.ssoToken.accessToken,
-                                    encryptionKey
-                                )
-                            }
-                            if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
-                                result.updateCredentialsParams.data = await encryptObjectWithKey(
-                                    // decodeCredentialsRequestToken expects nested 'data' fields
-                                    { data: result.updateCredentialsParams.data },
-                                    encryptionKey
-                                )
-                                result.updateCredentialsParams.encrypted = true
-                            }
+                            result = await encryptSsoResultWithKey(result, encryptionKey)
                         }
-
                         return result
                     }
                 ),
@@ -329,34 +314,10 @@ export const standalone = (props: RuntimeProps) => {
                 lspConnection.onRequest(
                     getIamCredentialRequestType,
                     async (params: GetIamCredentialParams, token: CancellationToken) => {
-                        const result = await handler(params, token)
-
-                        // Encrypt the IAM credential before sending to client
+                        let result = await handler(params, token)
                         if (result && !(result instanceof Error) && encryptionKey) {
-                            result.credentials = {
-                                accessKeyId: await encryptObjectWithKey(result.credentials.accessKeyId, encryptionKey),
-                                secretAccessKey: await encryptObjectWithKey(
-                                    result.credentials.secretAccessKey,
-                                    encryptionKey
-                                ),
-                                ...(result.credentials.sessionToken
-                                    ? {
-                                          sessionToken: await encryptObjectWithKey(
-                                              result.credentials.sessionToken,
-                                              encryptionKey
-                                          ),
-                                      }
-                                    : {}),
-                            }
-                            if (!result.updateCredentialsParams.encrypted) {
-                                result.updateCredentialsParams.data = await encryptObjectWithKey(
-                                    { data: result.updateCredentialsParams.data },
-                                    encryptionKey
-                                )
-                                result.updateCredentialsParams.encrypted = true
-                            }
+                            result = await encryptIamResultWithKey(result, encryptionKey)
                         }
-
                         return result
                     }
                 ),
