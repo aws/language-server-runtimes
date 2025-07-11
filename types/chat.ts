@@ -693,11 +693,4 @@ export interface ListAvailableModelsResult {
 export interface KeyBinding {
     key: string
     command: string
-    when?: string
-}
-
-export interface KeybindingResult {
-    key: string | null
-    isExplicitlyDisabled: boolean
-    isInKeybindingsFile: boolean
 }
