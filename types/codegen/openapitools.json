@@ -9,31 +9,26 @@
                 "output": "#{cwd}/generated",
                 "inputSpec": "#{cwd}/schema/chatTypes.json",
                 "templateDir": "#{cwd}/custom-templates",
-                "typeMappings": {
-                    "Position": "Position",
-                    "Range": "Range",
-                    "TextDocumentIdentifier": "TextDocumentIdentifier"
-                },
-                "importMappings": {
-                    "Position": "../../lsp",
-                    "Range": "../../lsp",
-                    "TextDocumentIdentifier": "../../lsp"
-                },
                 "additionalProperties": {
                     "supportsES6": true,
-                    "modelPropertyNaming": "original",
-                    "enumPropertyNaming": "original",
-                    "npmName": "@aws/language-server-runtimes-generated-types",
-                    "npmVersion": "1.0.0",
-                    "withInterfaces": true,
+                    "modelPropertyNaming": "camelCase",
+                    "enumPropertyNaming": "camelCase",
+                    "npmName": "@local/language-server-runtimes-generated-types",
+                    "npmVersion": "0.0.1",
                     "nullSafeAdditionalProps": false,
                     "withoutRuntimeChecks": true,
                     "stringEnums": true,
-                    "disallowAdditionalPropertiesIfNotPresent": false,
-                    "useSingleRequestParameter": true,
-                    "hasImports": true
+                    "disallowAdditionalPropertiesIfNotPresent": false
                 },
-                "openapi-normalizer": "REF_AS_PARENT_IN_ALLOF=true"
+                "global-property": {
+                    "generateAliasAsModel": true
+                },
+                "openapi-normalizer": {
+                    "REF_AS_PARENT_IN_ALLOF": true
+                },
+                "reservedWordsMappings": {
+                    "export": "export"
+                }
             }
         }
     }
