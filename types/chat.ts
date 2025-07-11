@@ -689,3 +689,8 @@ export interface ListAvailableModelsResult {
     models: Model[]
     selectedModelId?: string
 }
+
+export interface KeyBinding {
+    key: string
+    command: string
+}
