@@ -690,7 +690,6 @@ export interface ListAvailableModelsResult {
     selectedModelId?: string
 }
 
-export interface KeyBinding {
-    key: string
-    command: string
+export interface ExecuteShellCommandShortCutParams {
+    buttonId: string
 }
