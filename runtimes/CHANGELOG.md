@@ -1,5 +1,55 @@
 # Changelog
 
+## [0.2.106](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.105...language-server-runtimes/v0.2.106) (2025-07-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.43 to ^0.1.44
+
+## [0.2.105](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.104...language-server-runtimes/v0.2.105) (2025-07-09)
+
+
+### Reverts
+
+* refactor auto-discovery for OS proxy settings ([#595](https://github.com/aws/language-server-runtimes/issues/595))" ([#604](https://github.com/aws/language-server-runtimes/issues/604)) ([2bc289e](https://github.com/aws/language-server-runtimes/commit/2bc289eac95b5fb01e9383754f7c73234c9616ef))
+
+## [0.2.104](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.103...language-server-runtimes/v0.2.104) (2025-07-08)
+
+
+### Bug Fixes
+
+* **runtimes:** timeout for exiting to emit logs ([#602](https://github.com/aws/language-server-runtimes/issues/602)) ([0a062a3](https://github.com/aws/language-server-runtimes/commit/0a062a38854213ebe8ed388dc42c37ec65682473))
+
+## [0.2.103](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.102...language-server-runtimes/v0.2.103) (2025-07-07)
+
+
+### Bug Fixes
+
+* refactor auto-discovery for OS proxy settings ([#595](https://github.com/aws/language-server-runtimes/issues/595)) ([0e68235](https://github.com/aws/language-server-runtimes/commit/0e682359479e8f099447adac3105658b7a0f8b50))
+
+## [0.2.102](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.101...language-server-runtimes/v0.2.102) (2025-07-01)
+
+
+### Features
+
+* add listAvailableModels request method ([#593](https://github.com/aws/language-server-runtimes/issues/593)) ([0d9d557](https://github.com/aws/language-server-runtimes/commit/0d9d55751bd977e82ded0906d31dbfd8bf027893))
+
+
+### Bug Fixes
+
+* avoid duplicate url with forward slash in the end ([#592](https://github.com/aws/language-server-runtimes/issues/592)) ([ac2eb62](https://github.com/aws/language-server-runtimes/commit/ac2eb62d3d3ad50a2f8092a5649db087e784fa81))
+* onDidSaveTextDocument routing ([#590](https://github.com/aws/language-server-runtimes/issues/590)) ([3660267](https://github.com/aws/language-server-runtimes/commit/36602670b42d4db2ff33e565819dba411b5256de))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.42 to ^0.1.43
+
 ## [0.2.101](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.100...language-server-runtimes/v0.2.101) (2025-06-26)
 
 

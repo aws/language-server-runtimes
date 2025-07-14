@@ -93,6 +93,8 @@ import {
     OpenFileDialogResult,
 } from '@local/language-server-runtimes-generated-types'
 
+import { LIST_AVAILABLE_MODELS_REQUEST_METHOD, ListAvailableModelsResult, ListAvailableModelsParams } from './lsp'
+
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
     ChatParams | EncryptedChatParams,
     ChatResult | string,
@@ -271,3 +273,11 @@ export const promptInputOptionChangeNotificationType = new ProtocolNotificationT
     PromptInputOptionChangeParams,
     void
 >(PROMPT_INPUT_OPTION_CHANGE_METHOD)
+
+export const listAvailableModelsRequestType = new ProtocolRequestType<
+    ListAvailableModelsParams,
+    ListAvailableModelsResult,
+    never,
+    void,
+    void
+>(LIST_AVAILABLE_MODELS_REQUEST_METHOD)

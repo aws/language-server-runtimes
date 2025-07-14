@@ -48,6 +48,9 @@ export const MCP_SERVER_CLICK_REQUEST_METHOD = 'aws/chat/mcpServerClick'
 // export
 export const GET_SERIALIZED_CHAT_REQUEST_METHOD = 'aws/chat/getSerializedChat'
 
+// model selection
+export const LIST_AVAILABLE_MODELS_REQUEST_METHOD = 'aws/chat/listAvailableModels'
+
 // button ids
 export const OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID = 'open-settings-for-ws-index'
 
@@ -670,4 +673,23 @@ export interface PromptInputOptionChangeParams {
     tabId: string
     optionsValues: Record<string, string>
     eventId?: string
+}
+
+export interface Model {
+    id: string
+    name: string
+}
+
+export interface ListAvailableModelsParams {
+    tabId: string
+}
+
+export interface ListAvailableModelsResult {
+    tabId: string
+    models: Model[]
+    selectedModelId?: string
+}
+
+export interface ExecuteShellCommandParams {
+    id: string
 }

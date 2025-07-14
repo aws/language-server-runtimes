@@ -37,6 +37,10 @@ export {
     MCP_SERVER_CLICK_REQUEST_METHOD,
     GET_SERIALIZED_CHAT_REQUEST_METHOD,
     OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID,
+    LIST_AVAILABLE_MODELS_REQUEST_METHOD,
+    //TODO: remove and add to chatTypes.json
+    ListAvailableModelsResult,
+    ListAvailableModelsParams,
 } from './chat'
 export * from './didChangeDependencyPaths'
 export * from './inlineCompletionWithReferences'
