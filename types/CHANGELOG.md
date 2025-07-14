@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.44](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.43...language-server-runtimes-types/v0.1.44) (2025-07-14)
+
+
+### Features
+
+* **types:** add type to executeShellCommandShortCut param ([#607](https://github.com/aws/language-server-runtimes/issues/607)) ([1be8ccf](https://github.com/aws/language-server-runtimes/commit/1be8ccfff810202f4932e5d3829e1e93f2b79296))
+
 ## [0.1.43](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.42...language-server-runtimes-types/v0.1.43) (2025-07-01)
 
 
