@@ -690,6 +690,6 @@ export interface ListAvailableModelsResult {
     selectedModelId?: string
 }
 
-export interface ExecuteShellCommandShortCutParams {
+export interface ExecuteShellCommandParams {
     id: string
 }
