@@ -689,3 +689,7 @@ export interface ListAvailableModelsResult {
     models: Model[]
     selectedModelId?: string
 }
+
+export interface ExecuteShellCommandParams {
+    id: string
+}
