@@ -691,5 +691,5 @@ export interface ListAvailableModelsResult {
 }
 
 export interface ExecuteShellCommandShortCutParams {
-    buttonId: string
+    id: string
 }
