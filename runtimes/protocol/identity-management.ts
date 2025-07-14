@@ -37,6 +37,7 @@ export const AwsErrorCodes = {
     E_SSO_TOKEN_EXPIRED: 'E_SSO_TOKEN_EXPIRED',
     E_STS_CREDENTIAL_EXPIRED: 'E_STS_CREDENTIAL_EXPIRED',
     E_SSO_TOKEN_SOURCE_NOT_SUPPORTED: 'E_SSO_TOKEN_SOURCE_NOT_SUPPORTED',
+    E_MFA_REQUIRED: 'E_MFA_REQUIRED',
     E_TIMEOUT: 'E_TIMEOUT',
     E_UNKNOWN: 'E_UNKNOWN',
     E_CANCELLED: 'E_CANCELLED',
@@ -260,7 +261,6 @@ export const getIamCredentialOptionsDefaults = {
 
 export interface GetIamCredentialParams {
     profileName: string
-    mfaCode?: string
     options?: GetIamCredentialOptions
 }
 
@@ -277,6 +277,23 @@ export const getIamCredentialRequestType = new ProtocolRequestType<
     AwsResponseError,
     void
 >('aws/identity/getIamCredential')
+
+// getMfaCode
+export interface GetMfaCodeParams {
+    // Intentionally left blank
+}
+
+export interface GetMfaCodeResult {
+    code: string
+}
+
+export const getMfaCodeRequestType = new ProtocolRequestType<
+    GetMfaCodeParams,
+    GetMfaCodeResult,
+    never,
+    AwsResponseError,
+    void
+>('aws/identity/getMfaCode')
 
 // invalidateSsoToken
 export interface InvalidateSsoTokenParams {
