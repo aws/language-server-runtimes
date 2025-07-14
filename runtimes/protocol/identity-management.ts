@@ -280,7 +280,8 @@ export const getIamCredentialRequestType = new ProtocolRequestType<
 
 // getMfaCode
 export interface GetMfaCodeParams {
-    // Intentionally left blank
+    mfaSerial: string
+    profileName: string
 }
 
 export interface GetMfaCodeResult {
