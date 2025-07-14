@@ -1,0 +1,35 @@
+{
+    "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+    "spaces": 2,
+    "generator-cli": {
+        "version": "7.14.0",
+        "generators": {
+            "typescript-fetch": {
+                "generatorName": "typescript-fetch",
+                "output": "#{cwd}/generated",
+                "inputSpec": "#{cwd}/schema/chatTypes.json",
+                "templateDir": "#{cwd}/custom-templates",
+                "additionalProperties": {
+                    "supportsES6": true,
+                    "modelPropertyNaming": "camelCase",
+                    "enumPropertyNaming": "camelCase",
+                    "npmName": "@local/language-server-runtimes-generated-types",
+                    "npmVersion": "0.0.1",
+                    "nullSafeAdditionalProps": false,
+                    "withoutRuntimeChecks": true,
+                    "stringEnums": true,
+                    "disallowAdditionalPropertiesIfNotPresent": false
+                },
+                "global-property": {
+                    "generateAliasAsModel": true
+                },
+                "openapi-normalizer": {
+                    "REF_AS_PARENT_IN_ALLOF": true
+                },
+                "reservedWordsMappings": {
+                    "export": "export"
+                }
+            }
+        }
+    }
+}
