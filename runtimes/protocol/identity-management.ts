@@ -250,10 +250,12 @@ export type IamCredentialId = string // Opaque identifier
 
 export interface GetIamCredentialOptions {
     generateOnInvalidStsCredential?: boolean
+    validatePermissions?: boolean
 }
 
 export const getIamCredentialOptionsDefaults = {
     generateOnInvalidStsCredential: true,
+    validatePermissions: true,
 } satisfies GetIamCredentialOptions
 
 export interface GetIamCredentialParams {
