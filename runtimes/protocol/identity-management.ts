@@ -58,17 +58,17 @@ export class AwsResponseError extends ResponseError<AwsResponseErrorData> {
 export type ProfileKind =
     | 'Unknown'
     | 'SsoTokenProfile'
-    | 'IamUserProfile'
-    | 'IamRoleSourceProfile'
-    | 'IamRoleInstanceProfile'
-    | 'IamProcessProfile'
+    | 'IamCredentialsProfile'
+    | 'IamSourceProfileProfile'
+    | 'IamCredentialSourceProfile'
+    | 'IamCredentialProcessProfile'
 
 export const ProfileKind = {
     SsoTokenProfile: 'SsoTokenProfile',
-    IamUserProfile: 'IamUserProfile',
-    IamRoleSourceProfile: 'IamRoleSourceProfile',
-    IamRoleInstanceProfile: 'IamRoleInstanceProfile',
-    IamProcessProfile: 'IamProcessProfile',
+    IamCredentialsProfile: 'IamCredentialsProfile',
+    IamSourceProfileProfile: 'IamSourceProfileProfile',
+    IamCredentialSourceProfile: 'IamCredentialSourceProfile',
+    IamCredentialProcessProfile: 'IamCredentialProcessProfile',
     Unknown: 'Unknown',
 } as const
 
@@ -92,6 +92,8 @@ export interface Profile {
         source_profile?: string
         mfa_serial?: string
         external_id?: string
+        credential_cache?: string
+        credential_cache_location?: string
     }
 }
 
@@ -250,12 +252,12 @@ export const getSsoTokenRequestType = new ProtocolRequestType<
 export type IamCredentialId = string // Opaque identifier
 
 export interface GetIamCredentialOptions {
-    generateOnInvalidStsCredential?: boolean
+    callStsOnInvalidIamCredential?: boolean
     validatePermissions?: boolean
 }
 
 export const getIamCredentialOptionsDefaults = {
-    generateOnInvalidStsCredential: true,
+    callStsOnInvalidIamCredential: true,
     validatePermissions: true,
 } satisfies GetIamCredentialOptions
 
