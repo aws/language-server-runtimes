@@ -23,7 +23,7 @@ export const TAB_BAR_ACTION_REQUEST_METHOD = 'aws/chat/tabBarAction'
 export const CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD = 'aws/chat/chatOptionsUpdate'
 export const PROMPT_INPUT_OPTION_CHANGE_METHOD = 'aws/chat/promptInputOptionChange'
 export const OPEN_FILE_DIALOG_METHOD = 'aws/chat/openFileDialog'
-export const EXECUTE_SHELL_COMMAND_SHORTCUT_MEHOD = 'aws/chat/executeShellCommandShortCut'
+export const EXECUTE_SHELL_COMMAND_SHORTCUT_METHOD = 'aws/chat/executeShellCommandShortCut'
 
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
