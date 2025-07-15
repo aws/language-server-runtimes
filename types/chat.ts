@@ -56,6 +56,11 @@ export const LIST_AVAILABLE_MODELS_REQUEST_METHOD = 'aws/chat/listAvailableModel
 // button ids
 export const OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID = 'open-settings-for-ws-index'
 
+// Subscription Tiers
+export const SUBSCRIPTION_DETAILS_NOTIFICATION_METHOD = 'aws/chat/subscription/details'
+export const SUBSCRIPTION_UPGRADE_NOTIFICATION_METHOD = 'aws/chat/subscription/upgrade'
+export const SUBSCRIPTION_SHOW_COMMAND_METHOD = 'aws/chat/subscription/show'
+
 export interface ChatItemAction {
     pillText: string
     prompt?: string
@@ -276,6 +281,11 @@ export interface ChatOptions {
      * Server signals to Chat Client support of Chat export feature.
      */
     export?: boolean
+
+    /**
+     * Server signals to Client and Chat Client that it supports subscription tier operations
+     */
+    subscriptionDetails?: boolean
 
     /*
         Server signals to Chat Client support of Chat notifications.
@@ -695,3 +705,13 @@ export interface ListAvailableModelsResult {
 export interface ExecuteShellCommandParams {
     id: string
 }
+
+export interface SubscriptionDetailsParams {
+    subscriptionTier: string
+    queryUsage: number
+    queryLimit: number
+    queryOverage: number
+    daysRemaining: number
+}
+
+export interface SubscriptionUpgradeParams {}
