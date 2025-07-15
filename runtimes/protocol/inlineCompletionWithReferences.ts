@@ -7,9 +7,17 @@ import {
     PartialResultParams,
 } from './lsp'
 
-import { ProtocolNotificationType, ProtocolRequestType } from 'vscode-languageserver-protocol'
+import {
+    DidChangeTextDocumentParams,
+    ProtocolNotificationType,
+    ProtocolRequestType,
+} from 'vscode-languageserver-protocol'
 
-export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams
+interface DocumentChangeParams {
+    documentChangeParams?: DidChangeTextDocumentParams
+}
+
+export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams & DocumentChangeParams
 
 export const inlineCompletionWithReferencesRequestType = new ProtocolRequestType<
     InlineCompletionWithReferencesParams,
