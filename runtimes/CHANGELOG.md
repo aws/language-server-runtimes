@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.2.108](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.107...language-server-runtimes/v0.2.108) (2025-07-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.44 to ^0.1.45
+
+## [0.2.107](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.106...language-server-runtimes/v0.2.107) (2025-07-14)
+
+
+### Bug Fixes
+
+* log uncaughtException errors directly to stderr ([#612](https://github.com/aws/language-server-runtimes/issues/612)) ([a4648ea](https://github.com/aws/language-server-runtimes/commit/a4648ea96eeb389d558f05b926e51c1b4e03a2b2))
+
 ## [0.2.106](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.105...language-server-runtimes/v0.2.106) (2025-07-14)
 
 
