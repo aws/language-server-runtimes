@@ -30,12 +30,8 @@
         "generate-types": "ts-node ./script/generate-types.ts"
     },
     "dependencies": {
-<<<<<<< HEAD
-        "@aws/language-server-runtimes-types": "^0.1.44",
-        "@local/language-server-runtimes-generated-types": "file:/Users/conorstw/Desktop/language-server-runtimes/types/codegen/generated",
-=======
         "@aws/language-server-runtimes-types": "^0.1.45",
->>>>>>> origin/main
+        "@local/language-server-runtimes-generated-types": "file:/Users/conorstw/Desktop/language-server-runtimes/types/codegen/generated",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/api-logs": "^0.200.0",
         "@opentelemetry/core": "^2.0.0",
