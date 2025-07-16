@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.109](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.108...language-server-runtimes/v0.2.109) (2025-07-16)
+
+
+### Bug Fixes
+
+* add document change params ([#618](https://github.com/aws/language-server-runtimes/issues/618)) ([76d258f](https://github.com/aws/language-server-runtimes/commit/76d258f833a7b3a94350a60fafe7688a1c87198c))
+
 ## [0.2.108](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.107...language-server-runtimes/v0.2.108) (2025-07-15)
 
 
