@@ -200,7 +200,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onListAvailableModels: handler => lspConnection.onRequest(listAvailableModelsRequestType.method, handler),
         sendSubscriptionDetails: params =>
             lspConnection.sendNotification(subscriptionDetailsNotificationType.method, params),
-        onSubscriptionUpgrade: handler => lspConnection.onRequest(subscriptionUpgradeNotificationType.method, handler),
+        onSubscriptionUpgrade: handler =>
+            lspConnection.onNotification(subscriptionUpgradeNotificationType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
