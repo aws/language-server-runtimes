@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.47](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.46...language-server-runtimes-types/v0.1.47) (2025-07-17)
+
+
+### Features
+
+* **runtimes:** add handlers for IAM and STS credentials management ([#599](https://github.com/aws/language-server-runtimes/issues/599)) ([6276983](https://github.com/aws/language-server-runtimes/commit/6276983b2372e4c46dcb7fd5f8bf80e92bb163d2))
+
 ## [0.1.46](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.45...language-server-runtimes-types/v0.1.46) (2025-07-17)
 
 
