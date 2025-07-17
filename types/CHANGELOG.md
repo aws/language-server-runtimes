@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.46](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.45...language-server-runtimes-types/v0.1.46) (2025-07-17)
+
+
+### Features
+
+* subscription details protocols ([#620](https://github.com/aws/language-server-runtimes/issues/620)) ([ebc2dbb](https://github.com/aws/language-server-runtimes/commit/ebc2dbbf89b8a3aaa444210c2ebb3df353d7b217))
+
 ## [0.1.45](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.44...language-server-runtimes-types/v0.1.45) (2025-07-15)
 
 
