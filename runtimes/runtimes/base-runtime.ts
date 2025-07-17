@@ -60,8 +60,6 @@ import {
     onPinnedContextRemoveNotificationType,
     openFileDialogRequestType,
     listAvailableModelsRequestType,
-    subscriptionDetailsNotificationType,
-    subscriptionUpgradeNotificationType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -202,10 +200,6 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onOpenFileDialog: handler => lspConnection.onRequest(openFileDialogRequestType.method, handler),
         onRuleClick: handler => lspConnection.onRequest(ruleClickRequestType.method, handler),
         onListAvailableModels: handler => lspConnection.onRequest(listAvailableModelsRequestType.method, handler),
-        sendSubscriptionDetails: params =>
-            lspConnection.sendNotification(subscriptionDetailsNotificationType.method, params),
-        onSubscriptionUpgrade: handler =>
-            lspConnection.onNotification(subscriptionUpgradeNotificationType.method, handler),
     }
 
     const identityManagement: IdentityManagement = {
