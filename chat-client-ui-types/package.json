@@ -1,6 +1,6 @@
 {
     "name": "@aws/chat-client-ui-types",
-    "version": "0.1.52",
+    "version": "0.1.53",
     "description": "Type definitions for Chat UIs in Language Servers and Runtimes for AWS",
     "main": "./out/index.js",
     "scripts": {
@@ -18,6 +18,6 @@
     "author": "Amazon Web Services",
     "license": "Apache-2.0",
     "dependencies": {
-        "@aws/language-server-runtimes-types": "^0.1.46"
+        "@aws/language-server-runtimes-types": "^0.1.47"
     }
 }
