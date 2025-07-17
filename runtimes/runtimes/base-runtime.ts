@@ -85,11 +85,15 @@ import { observe } from './lsp'
 import { LspRouter } from './lsp/router/lspRouter'
 import { LspServer } from './lsp/router/lspServer'
 import {
+    getIamCredentialRequestType,
     getSsoTokenRequestType,
+    invalidateStsCredentialRequestType,
     invalidateSsoTokenRequestType,
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
+    stsCredentialChangedRequestType,
+    getMfaCodeRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
 import { WebBase64Encoding } from './encoding'
@@ -208,8 +212,12 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
         onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
         onGetSsoToken: handler => lspConnection.onRequest(getSsoTokenRequestType, handler),
+        onGetIamCredential: handler => lspConnection.onRequest(getIamCredentialRequestType, handler),
         onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+        onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
         sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+        sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
+        sendGetMfaCode: params => lspConnection.sendRequest(getMfaCodeRequestType, params),
     }
 
     // Set up auth without encryption

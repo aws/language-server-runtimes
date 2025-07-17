@@ -28,13 +28,19 @@ import {
     didWriteFileNotificationType,
     didAppendFileNotificationType,
     didCreateDirectoryNotificationType,
+    getIamCredentialRequestType,
+    GetIamCredentialParams,
     ShowOpenDialogParams,
     ShowOpenDialogRequestType,
+    stsCredentialChangedRequestType,
+    getMfaCodeRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
+    encryptIamResultWithKey,
     EncryptionInitialization,
     encryptObjectWithKey,
+    encryptSsoResultWithKey,
     readEncryptionDetails,
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
@@ -50,6 +56,7 @@ import {
     getSsoTokenRequestType,
     IdentityManagement,
     invalidateSsoTokenRequestType,
+    invalidateStsCredentialRequestType,
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
@@ -302,31 +309,29 @@ export const standalone = (props: RuntimeProps) => {
                 lspConnection.onRequest(
                     getSsoTokenRequestType,
                     async (params: GetSsoTokenParams, token: CancellationToken) => {
-                        const result = await handler(params, token)
-
-                        // Encrypt SsoToken.accessToken before sending to client
+                        let result = await handler(params, token)
                         if (result && !(result instanceof Error) && encryptionKey) {
-                            if (result.ssoToken.accessToken) {
-                                result.ssoToken.accessToken = await encryptObjectWithKey(
-                                    result.ssoToken.accessToken,
-                                    encryptionKey
-                                )
-                            }
-                            if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
-                                result.updateCredentialsParams.data = await encryptObjectWithKey(
-                                    // decodeCredentialsRequestToken expects nested 'data' fields
-                                    { data: result.updateCredentialsParams.data },
-                                    encryptionKey
-                                )
-                                result.updateCredentialsParams.encrypted = true
-                            }
+                            result = await encryptSsoResultWithKey(result, encryptionKey)
                         }
-
+                        return result
+                    }
+                ),
+            onGetIamCredential: handler =>
+                lspConnection.onRequest(
+                    getIamCredentialRequestType,
+                    async (params: GetIamCredentialParams, token: CancellationToken) => {
+                        let result = await handler(params, token)
+                        if (result && !(result instanceof Error) && encryptionKey) {
+                            result = await encryptIamResultWithKey(result, encryptionKey)
+                        }
                         return result
                     }
                 ),
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+            onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+            sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
+            sendGetMfaCode: params => lspConnection.sendRequest(getMfaCodeRequestType, params),
         }
 
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()

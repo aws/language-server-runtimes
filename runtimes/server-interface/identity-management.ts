@@ -1,14 +1,21 @@
 import {
     AwsResponseError,
+    GetIamCredentialParams,
+    GetIamCredentialResult,
     GetSsoTokenParams,
     GetSsoTokenResult,
     InvalidateSsoTokenParams,
     InvalidateSsoTokenResult,
+    InvalidateStsCredentialParams,
+    InvalidateStsCredentialResult,
     ListProfilesParams,
     ListProfilesResult,
+    GetMfaCodeParams,
     SsoTokenChangedParams,
+    StsCredentialChangedParams,
     UpdateProfileParams,
     UpdateProfileResult,
+    GetMfaCodeResult,
 } from '../protocol/identity-management'
 import { RequestHandler } from '../protocol'
 
@@ -27,9 +34,25 @@ export type IdentityManagement = {
         handler: RequestHandler<GetSsoTokenParams, GetSsoTokenResult | undefined | null, AwsResponseError>
     ) => void
 
+    onGetIamCredential: (
+        handler: RequestHandler<GetIamCredentialParams, GetIamCredentialResult | undefined | null, AwsResponseError>
+    ) => void
+
     onInvalidateSsoToken: (
         handler: RequestHandler<InvalidateSsoTokenParams, InvalidateSsoTokenResult | undefined | null, AwsResponseError>
     ) => void
 
+    onInvalidateStsCredential: (
+        handler: RequestHandler<
+            InvalidateStsCredentialParams,
+            InvalidateStsCredentialResult | undefined | null,
+            AwsResponseError
+        >
+    ) => void
+
     sendSsoTokenChanged: (params: SsoTokenChangedParams) => void
+
+    sendStsCredentialChanged: (params: StsCredentialChangedParams) => void
+
+    sendGetMfaCode: (params: GetMfaCodeParams) => Promise<GetMfaCodeResult>
 }
