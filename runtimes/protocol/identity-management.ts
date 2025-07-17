@@ -38,10 +38,32 @@ export const AwsErrorCodes = {
     E_STS_CREDENTIAL_EXPIRED: 'E_STS_CREDENTIAL_EXPIRED',
     E_SSO_TOKEN_SOURCE_NOT_SUPPORTED: 'E_SSO_TOKEN_SOURCE_NOT_SUPPORTED',
     E_MFA_REQUIRED: 'E_MFA_REQUIRED',
+    E_PERMISSION_DENIED: 'E_PERMISSION_DENIED',
     E_TIMEOUT: 'E_TIMEOUT',
     E_UNKNOWN: 'E_UNKNOWN',
     E_CANCELLED: 'E_CANCELLED',
 } as const
+
+// Permissions
+export const PermissionSets = {
+    Q: [
+        'q:StartConversation',
+        'q:SendMessage',
+        'q:GetConversation',
+        'q:ListConversations',
+        'q:UpdateConversation',
+        'q:DeleteConversation',
+        'q:PassRequest',
+        'q:StartTroubleshootingAnalysis',
+        'q:StartTroubleshootingResolutionExplanation',
+        'q:GetTroubleshootingResults',
+        'q:UpdateTroubleshootingCommandResult',
+        'q:GetIdentityMetaData',
+        'q:GenerateCodeFromCommands',
+        'q:UsePlugin',
+        'codewhisperer:GenerateRecommendations',
+    ],
+}
 
 export interface AwsResponseErrorData {
     awsErrorCode: string
@@ -253,12 +275,12 @@ export type IamCredentialId = string // Opaque identifier
 
 export interface GetIamCredentialOptions {
     callStsOnInvalidIamCredential?: boolean
-    validatePermissions?: boolean
+    permissionSet?: string[]
 }
 
 export const getIamCredentialOptionsDefaults = {
     callStsOnInvalidIamCredential: true,
-    validatePermissions: true,
+    permissionSet: PermissionSets.Q,
 } satisfies GetIamCredentialOptions
 
 export interface GetIamCredentialParams {
@@ -266,9 +288,13 @@ export interface GetIamCredentialParams {
     options?: GetIamCredentialOptions
 }
 
-export interface GetIamCredentialResult {
-    id: IamCredentialId
+export interface IamCredential {
+    id: string
     credentials: IamCredentials
+}
+
+export interface GetIamCredentialResult {
+    credential: IamCredential
     updateCredentialsParams: UpdateCredentialsParams
 }
 
