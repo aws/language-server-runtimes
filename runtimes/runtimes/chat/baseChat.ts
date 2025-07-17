@@ -88,10 +88,6 @@ import {
     ListAvailableModelsParams,
     ListAvailableModelsResult,
     listAvailableModelsRequestType,
-    SubscriptionDetailsParams,
-    subscriptionDetailsNotificationType,
-    subscriptionUpgradeNotificationType,
-    SubscriptionUpgradeParams,
 } from '../../protocol'
 import { Chat } from '../../server-interface'
 
@@ -246,13 +242,5 @@ export class BaseChat implements Chat {
 
     public onListAvailableModels(handler: RequestHandler<ListAvailableModelsParams, ListAvailableModelsResult, void>) {
         this.connection.onRequest(listAvailableModelsRequestType.method, handler)
-    }
-
-    public sendSubscriptionDetails(params: SubscriptionDetailsParams) {
-        this.connection.sendNotification(subscriptionDetailsNotificationType.method, params)
-    }
-
-    public onSubscriptionUpgrade(handler: NotificationHandler<SubscriptionUpgradeParams>) {
-        this.connection.onNotification(subscriptionUpgradeNotificationType.method, handler)
     }
 }

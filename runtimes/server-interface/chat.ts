@@ -51,8 +51,6 @@ import {
     ActiveEditorChangedParams,
     ListAvailableModelsParams,
     ListAvailableModelsResult,
-    SubscriptionDetailsParams,
-    SubscriptionUpgradeParams,
 } from '../protocol'
 
 /**
@@ -102,6 +100,4 @@ export type Chat = {
     onCreatePrompt: (handler: NotificationHandler<CreatePromptParams>) => void
     onInlineChatResult: (handler: NotificationHandler<InlineChatResultParams>) => void
     onPromptInputOptionChange: (handler: NotificationHandler<PromptInputOptionChangeParams>) => void
-    sendSubscriptionDetails: (params: SubscriptionDetailsParams) => void
-    onSubscriptionUpgrade: (handler: NotificationHandler<SubscriptionUpgradeParams>) => void
 }

@@ -208,8 +208,6 @@ The runtime supports chat by default
 | Send tab bar action request (e.g., export). | `aws/chat/tabBarAction`          | `TabBarActionParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `TabBarActionResult`             |
 | Send request to get serialized chat content in specified format. | `aws/chat/getSerializedChat`          | `GetSerializedChatParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `GetSerializedChatResult`             |
 | Send request to open file dialog for file selection. | `aws/chat/openFileDialog`          | `OpenFileDialogParams`          | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Client to Server | `OpenFileDialogResult`             |
-| Sent to display subscription information in the chat UI | `aws/chat/subscription/details` | SubscriptionDetailsParams | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client | n/a |
-| Sent to begin a subscription upgrade | `aws/chat/subscription/upgrade` | SubscriptionUpgradeParams | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Client to Server | n/a |
 
 
 ```ts

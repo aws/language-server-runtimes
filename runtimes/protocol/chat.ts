@@ -91,10 +91,6 @@ import {
     LIST_AVAILABLE_MODELS_REQUEST_METHOD,
     ListAvailableModelsResult,
     ListAvailableModelsParams,
-    SUBSCRIPTION_DETAILS_NOTIFICATION_METHOD,
-    SubscriptionDetailsParams,
-    SUBSCRIPTION_UPGRADE_NOTIFICATION_METHOD,
-    SubscriptionUpgradeParams,
 } from './lsp'
 
 export const chatRequestType = new AutoParameterStructuresProtocolRequestType<
@@ -283,21 +279,3 @@ export const listAvailableModelsRequestType = new ProtocolRequestType<
     void,
     void
 >(LIST_AVAILABLE_MODELS_REQUEST_METHOD)
-
-// Subscription Tiers
-
-/**
- * Subscription Details Notification is sent from server to client, with the expectation that
- * the client will display the subscription details in the Chat UI.
- */
-export const subscriptionDetailsNotificationType = new ProtocolNotificationType<SubscriptionDetailsParams, void>(
-    SUBSCRIPTION_DETAILS_NOTIFICATION_METHOD
-)
-
-/**
- * Subscription Details Notification is sent from Chat UI through client over to server.
- * Flare will then ask the client to open a URL in the browser.
- */
-export const subscriptionUpgradeNotificationType = new ProtocolNotificationType<SubscriptionUpgradeParams, void>(
-    SUBSCRIPTION_UPGRADE_NOTIFICATION_METHOD
-)
