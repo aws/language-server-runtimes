@@ -93,6 +93,8 @@ import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType } from '../protocol/window'
 import { getTelemetryReasonDesc } from './util/shared'
+import { writeSync } from 'fs'
+import { format } from 'util'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -112,7 +114,10 @@ function setupCrashMonitoring(telemetryEmitter?: (metric: MetricEvent) => void) 
     }
 
     process.on('uncaughtExceptionMonitor', (err, origin) => {
+        // also emit to stderr in case stdout does not completely drain
+        // console error is monkey-patched by vscode-languageserver in stdio mode to log to client instead of stderr
         console.error('Uncaught Exception:', err.message, getTopStackFrames(err))
+        writeSync(process.stderr.fd, `Uncaught exception: ${format(err)}\n` + `Exception origin: ${origin}\n`)
 
         if (telemetryEmitter) {
             try {
