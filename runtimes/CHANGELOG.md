@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.113](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.112...language-server-runtimes/v0.2.113) (2025-07-18)
+
+
+### Reverts
+
+* revert: subscription details protocols [#620](https://github.com/aws/language-server-runtimes/issues/620) ([#623](https://github.com/aws/language-server-runtimes/issues/623))" ([#625](https://github.com/aws/language-server-runtimes/issues/625)) ([5f9062c](https://github.com/aws/language-server-runtimes/commit/5f9062c3ea831bb02fa04eef364b26892e9f4047))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.48 to ^0.1.49
+
 ## [0.2.112](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.111...language-server-runtimes/v0.2.112) (2025-07-17)
 
 
