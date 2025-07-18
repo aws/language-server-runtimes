@@ -289,7 +289,8 @@ export interface GetIamCredentialParams {
 }
 
 export interface IamCredential {
-    id: string
+    id: IamCredentialId
+    kinds: ProfileKind[]
     credentials: IamCredentials
 }
 
@@ -344,7 +345,7 @@ export const invalidateSsoTokenRequestType = new ProtocolRequestType<
 
 // invalidateStsCredential
 export interface InvalidateStsCredentialParams {
-    profileName: string
+    iamCredentialId: IamCredentialId
 }
 
 export interface InvalidateStsCredentialResult {
