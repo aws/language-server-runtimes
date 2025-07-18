@@ -1,5 +1,114 @@
 # Changelog
 
+## [0.2.113](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.112...language-server-runtimes/v0.2.113) (2025-07-18)
+
+
+### Reverts
+
+* revert: subscription details protocols [#620](https://github.com/aws/language-server-runtimes/issues/620) ([#623](https://github.com/aws/language-server-runtimes/issues/623))" ([#625](https://github.com/aws/language-server-runtimes/issues/625)) ([5f9062c](https://github.com/aws/language-server-runtimes/commit/5f9062c3ea831bb02fa04eef364b26892e9f4047))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.48 to ^0.1.49
+
+## [0.2.112](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.111...language-server-runtimes/v0.2.112) (2025-07-17)
+
+
+### Reverts
+
+* subscription details protocols [#620](https://github.com/aws/language-server-runtimes/issues/620) ([#623](https://github.com/aws/language-server-runtimes/issues/623)) ([9cec0d7](https://github.com/aws/language-server-runtimes/commit/9cec0d7a3ce9001a1ef7f0b3c72a624a1c8919b3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.47 to ^0.1.48
+
+## [0.2.111](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.110...language-server-runtimes/v0.2.111) (2025-07-17)
+
+
+### Features
+
+* **runtimes:** add handlers for IAM and STS credentials management ([#599](https://github.com/aws/language-server-runtimes/issues/599)) ([6276983](https://github.com/aws/language-server-runtimes/commit/6276983b2372e4c46dcb7fd5f8bf80e92bb163d2))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.46 to ^0.1.47
+
+## [0.2.110](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.109...language-server-runtimes/v0.2.110) (2025-07-17)
+
+
+### Features
+
+* subscription details protocols ([#620](https://github.com/aws/language-server-runtimes/issues/620)) ([ebc2dbb](https://github.com/aws/language-server-runtimes/commit/ebc2dbbf89b8a3aaa444210c2ebb3df353d7b217))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.45 to ^0.1.46
+
+## [0.2.109](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.108...language-server-runtimes/v0.2.109) (2025-07-16)
+
+
+### Bug Fixes
+
+* add document change params ([#618](https://github.com/aws/language-server-runtimes/issues/618)) ([76d258f](https://github.com/aws/language-server-runtimes/commit/76d258f833a7b3a94350a60fafe7688a1c87198c))
+
+## [0.2.108](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.107...language-server-runtimes/v0.2.108) (2025-07-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.44 to ^0.1.45
+
+## [0.2.107](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.106...language-server-runtimes/v0.2.107) (2025-07-14)
+
+
+### Bug Fixes
+
+* log uncaughtException errors directly to stderr ([#612](https://github.com/aws/language-server-runtimes/issues/612)) ([a4648ea](https://github.com/aws/language-server-runtimes/commit/a4648ea96eeb389d558f05b926e51c1b4e03a2b2))
+
+## [0.2.106](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.105...language-server-runtimes/v0.2.106) (2025-07-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.43 to ^0.1.44
+
+## [0.2.105](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.104...language-server-runtimes/v0.2.105) (2025-07-09)
+
+
+### Reverts
+
+* refactor auto-discovery for OS proxy settings ([#595](https://github.com/aws/language-server-runtimes/issues/595))" ([#604](https://github.com/aws/language-server-runtimes/issues/604)) ([2bc289e](https://github.com/aws/language-server-runtimes/commit/2bc289eac95b5fb01e9383754f7c73234c9616ef))
+
+## [0.2.104](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.103...language-server-runtimes/v0.2.104) (2025-07-08)
+
+
+### Bug Fixes
+
+* **runtimes:** timeout for exiting to emit logs ([#602](https://github.com/aws/language-server-runtimes/issues/602)) ([0a062a3](https://github.com/aws/language-server-runtimes/commit/0a062a38854213ebe8ed388dc42c37ec65682473))
+
+## [0.2.103](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.102...language-server-runtimes/v0.2.103) (2025-07-07)
+
+
+### Bug Fixes
+
+* refactor auto-discovery for OS proxy settings ([#595](https://github.com/aws/language-server-runtimes/issues/595)) ([0e68235](https://github.com/aws/language-server-runtimes/commit/0e682359479e8f099447adac3105658b7a0f8b50))
+
 ## [0.2.102](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.101...language-server-runtimes/v0.2.102) (2025-07-01)
 
 

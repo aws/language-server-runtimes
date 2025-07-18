@@ -23,6 +23,8 @@ export const TAB_BAR_ACTION_REQUEST_METHOD = 'aws/chat/tabBarAction'
 export const CHAT_OPTIONS_UPDATE_NOTIFICATION_METHOD = 'aws/chat/chatOptionsUpdate'
 export const PROMPT_INPUT_OPTION_CHANGE_METHOD = 'aws/chat/promptInputOptionChange'
 export const OPEN_FILE_DIALOG_METHOD = 'aws/chat/openFileDialog'
+export const EXECUTE_SHELL_COMMAND_SHORTCUT_METHOD = 'aws/chat/executeShellCommandShortCut'
+
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
@@ -53,6 +55,11 @@ export const LIST_AVAILABLE_MODELS_REQUEST_METHOD = 'aws/chat/listAvailableModel
 
 // button ids
 export const OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID = 'open-settings-for-ws-index'
+
+// Subscription Tiers
+export const SUBSCRIPTION_DETAILS_NOTIFICATION_METHOD = 'aws/chat/subscription/details'
+export const SUBSCRIPTION_UPGRADE_NOTIFICATION_METHOD = 'aws/chat/subscription/upgrade'
+export const SUBSCRIPTION_SHOW_COMMAND_METHOD = 'aws/chat/subscription/show'
 
 export interface ChatItemAction {
     pillText: string
@@ -274,6 +281,11 @@ export interface ChatOptions {
      * Server signals to Chat Client support of Chat export feature.
      */
     export?: boolean
+
+    /**
+     * Server signals to Client and Chat Client that it supports subscription tier operations
+     */
+    subscriptionDetails?: boolean
 
     /*
         Server signals to Chat Client support of Chat notifications.
@@ -689,3 +701,17 @@ export interface ListAvailableModelsResult {
     models: Model[]
     selectedModelId?: string
 }
+
+export interface ExecuteShellCommandParams {
+    id: string
+}
+
+export interface SubscriptionDetailsParams {
+    subscriptionTier: string
+    queryUsage: number
+    queryLimit: number
+    queryOverage: number
+    daysRemaining: number
+}
+
+export interface SubscriptionUpgradeParams {}

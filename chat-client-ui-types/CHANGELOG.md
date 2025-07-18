@@ -1,5 +1,59 @@
 # Changelog
 
+## [0.1.55](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.54...chat-client-ui-types/v0.1.55) (2025-07-18)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.48 to ^0.1.49
+
+## [0.1.54](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.53...chat-client-ui-types/v0.1.54) (2025-07-17)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.47 to ^0.1.48
+
+## [0.1.53](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.52...chat-client-ui-types/v0.1.53) (2025-07-17)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.46 to ^0.1.47
+
+## [0.1.52](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.51...chat-client-ui-types/v0.1.52) (2025-07-17)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.45 to ^0.1.46
+
+## [0.1.51](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.50...chat-client-ui-types/v0.1.51) (2025-07-15)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.44 to ^0.1.45
+
+## [0.1.50](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.49...chat-client-ui-types/v0.1.50) (2025-07-14)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.43 to ^0.1.44
+
 ## [0.1.49](https://github.com/aws/language-server-runtimes/compare/chat-client-ui-types/v0.1.48...chat-client-ui-types/v0.1.49) (2025-07-01)
 
 

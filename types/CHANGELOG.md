@@ -1,5 +1,52 @@
 # Changelog
 
+## [0.1.49](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.48...language-server-runtimes-types/v0.1.49) (2025-07-18)
+
+
+### Reverts
+
+* revert: subscription details protocols [#620](https://github.com/aws/language-server-runtimes/issues/620) ([#623](https://github.com/aws/language-server-runtimes/issues/623))" ([#625](https://github.com/aws/language-server-runtimes/issues/625)) ([5f9062c](https://github.com/aws/language-server-runtimes/commit/5f9062c3ea831bb02fa04eef364b26892e9f4047))
+
+## [0.1.48](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.47...language-server-runtimes-types/v0.1.48) (2025-07-17)
+
+
+### Reverts
+
+* subscription details protocols [#620](https://github.com/aws/language-server-runtimes/issues/620) ([#623](https://github.com/aws/language-server-runtimes/issues/623)) ([9cec0d7](https://github.com/aws/language-server-runtimes/commit/9cec0d7a3ce9001a1ef7f0b3c72a624a1c8919b3))
+
+## [0.1.47](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.46...language-server-runtimes-types/v0.1.47) (2025-07-17)
+
+
+### Features
+
+* **runtimes:** add handlers for IAM and STS credentials management ([#599](https://github.com/aws/language-server-runtimes/issues/599)) ([6276983](https://github.com/aws/language-server-runtimes/commit/6276983b2372e4c46dcb7fd5f8bf80e92bb163d2))
+
+## [0.1.46](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.45...language-server-runtimes-types/v0.1.46) (2025-07-17)
+
+
+### Features
+
+* subscription details protocols ([#620](https://github.com/aws/language-server-runtimes/issues/620)) ([ebc2dbb](https://github.com/aws/language-server-runtimes/commit/ebc2dbbf89b8a3aaa444210c2ebb3df353d7b217))
+
+## [0.1.45](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.44...language-server-runtimes-types/v0.1.45) (2025-07-15)
+
+
+### Features
+
+* **types:** add method type for execute shell command shortcut ([#614](https://github.com/aws/language-server-runtimes/issues/614)) ([4bc30a8](https://github.com/aws/language-server-runtimes/commit/4bc30a8f5e18b11316c9e535d1f5f42ffa98d105))
+
+
+### Bug Fixes
+
+* typo ([#617](https://github.com/aws/language-server-runtimes/issues/617)) ([b3775e9](https://github.com/aws/language-server-runtimes/commit/b3775e9dd8d10aff04e33f4d4cbbe679a820d5cb))
+
+## [0.1.44](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.43...language-server-runtimes-types/v0.1.44) (2025-07-14)
+
+
+### Features
+
+* **types:** add type to executeShellCommandShortCut param ([#607](https://github.com/aws/language-server-runtimes/issues/607)) ([1be8ccf](https://github.com/aws/language-server-runtimes/commit/1be8ccfff810202f4932e5d3829e1e93f2b79296))
+
 ## [0.1.43](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.42...language-server-runtimes-types/v0.1.43) (2025-07-01)
 
 
