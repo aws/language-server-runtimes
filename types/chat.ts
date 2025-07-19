@@ -708,10 +708,11 @@ export interface ExecuteShellCommandParams {
 
 export interface SubscriptionDetailsParams {
     subscriptionTier: string
+    subscriptionPeriodReset: Date
+    isOverageEnabled: boolean
     queryUsage: number
     queryLimit: number
     queryOverage: number
-    daysRemaining: number
 }
 
 export interface SubscriptionUpgradeParams {}
