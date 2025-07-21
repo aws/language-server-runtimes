@@ -41,5 +41,20 @@ export {
 export * from './didChangeDependencyPaths'
 export * from './inlineCompletionWithReferences'
 export * from './lsp'
-export * from './window'
-export * from './workspace'
+export {
+    ShowOpenDialogResult,
+    SHOW_SAVE_FILE_DIALOG_REQUEST_METHOD,
+    SHOW_OPEN_FILE_DIALOG_REQUEST_METHOD,
+} from './window'
+export {
+    SelectWorkspaceItemParams,
+    WorkspaceItem,
+    SelectWorkspaceItemResult,
+    DID_CREATE_DIRECTORY_NOTIFICATION_METHOD,
+    DID_REMOVE_FILE_OR_DIRECTORY_NOTIFICATION_METHOD,
+    SELECT_WORKSPACE_ITEM_REQUEST_METHOD,
+    OPEN_FILE_DIFF_NOTIFICATION_METHOD,
+    DID_COPY_FILE_NOTIFICATION_METHOD,
+    DID_APPEND_FILE_NOTIFICATION_METHOD,
+    DID_WRITE_FILE_NOTIFICATION_METHOD,
+} from './workspace'

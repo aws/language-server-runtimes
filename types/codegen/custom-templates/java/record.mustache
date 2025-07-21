@@ -1,0 +1,12 @@
+/**
+ * {{description}}{{^description}}{{classname}}{{/description}}
+ */
+{{>generatedAnnotation}}
+public record {{classname}}(
+{{#vars}}
+    @JsonProperty("{{baseName}}")
+    {{#required}}@Nonnull{{/required}}{{^required}}@Nullable{{/required}} {{{datatypeWithEnum}}} {{name}}{{^-last}},{{/-last}}
+{{/vars}}
+) {{#parent}}implements {{{.}}} {{/parent}}{{#vendorExtensions.x-implements}}{{#-first}}implements {{{.}}}{{/-first}}{{^-first}}, {{{.}}}{{/-first}}{{#-last}} {{/-last}}{{/vendorExtensions.x-implements}}{
+
+}
