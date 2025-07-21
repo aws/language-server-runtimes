@@ -40,10 +40,10 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: 'corretto'
           java-version: '21'
-          #should we cache: 'gradle'
+          cache: 'maven'
 
-      - name: Build Java
+      - name: Build Java with Maven
         working-directory: types/codegen/generated/java
-        run: ./gradlew build
+        run: mvn clean verify

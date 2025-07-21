@@ -4,11 +4,12 @@
     "generator-cli": {
         "version": "7.14.0",
         "generators": {
-            "typescript-fetch": {
+            "typescript": {
                 "generatorName": "typescript-fetch",
-                "output": "#{cwd}/generated",
+                "disabled": false,
+                "output": "#{cwd}/generated/typescript",
                 "inputSpec": "#{cwd}/schema/chatTypes.json",
-                "templateDir": "#{cwd}/custom-templates",
+                "templateDir": "#{cwd}/custom-templates/typescript",
                 "additionalProperties": {
                     "supportsES6": true,
                     "modelPropertyNaming": "camelCase",
@@ -20,14 +21,38 @@
                     "stringEnums": true,
                     "disallowAdditionalPropertiesIfNotPresent": false
                 },
-                "global-property": {
-                    "generateAliasAsModel": true
-                },
+                "global-property": {},
                 "openapi-normalizer": {
                     "REF_AS_PARENT_IN_ALLOF": true
                 },
                 "reservedWordsMappings": {
                     "export": "export"
+                }
+            },
+            "java": {
+                "generatorName": "java",
+                "disabled": false,
+                "output": "#{cwd}/generated/java",
+                "inputSpec": "#{cwd}/schema/chatTypes.json",
+                "templateDir": "#{cwd}/custom-templates/java",
+                "additionalProperties": {
+                    "useOneOfInterfaces": true,
+                    "legacyDiscriminatorBehavior": false,
+                    "java8": false,
+                    "dateLibrary": "java8",
+                    "serializableModel": false,
+                    "useBeanValidation": false,
+                    "performBeanValidation": false,
+                    "sourceCompatibility": "21",
+                    "targetCompatibility": "21"
+                },
+                "global-property": {
+                    "models": "CursorPosition:FileParams:CopyFileParams:OpenFileDiffParams:ShowOpenDialogParams:ShowSaveFileDialogParams:ShowSaveFileDialogResult"
+                },
+                "importMappings": {
+                    "Position": "org.eclipse.lsp4j.Position",
+                    "Range": "org.eclipse.lsp4j.Range",
+                    "TextDocumentIdentifier": "org.eclipse.lsp4j.TextDocumentIdentifier"
                 }
             }
         }

@@ -2,7 +2,7 @@
     "openapi": "3.0.0",
     "info": {
         "title": "Chat Types",
-        "version": "1.0.0",
+        "version": "0.0.1",
         "description": "Chat Types Definitions for FLARE"
     },
     "paths": {},
@@ -47,7 +47,7 @@
                     }
                 }
             },
-            "ContentSpan": {
+            "RecommendationContentSpan": {
                 "type": "object",
                 "required": ["start", "end"],
                 "properties": {
@@ -76,7 +76,7 @@
                         "type": "string"
                     },
                     "recommendationContentSpan": {
-                        "$ref": "#/components/schemas/ContentSpan"
+                        "$ref": "#/components/schemas/RecommendationContentSpan"
                     },
                     "information": {
                         "type": "string"
@@ -127,7 +127,7 @@
                 "enum": ["selection", "block"],
                 "description": "Type of code selection"
             },
-            "PositionCursor": {
+            "CursorPosition": {
                 "type": "object",
                 "required": ["position"],
                 "properties": {
@@ -136,7 +136,7 @@
                     }
                 }
             },
-            "RangeCursor": {
+            "CursorRange": {
                 "type": "object",
                 "required": ["range"],
                 "properties": {
@@ -148,10 +148,10 @@
             "CursorState": {
                 "oneOf": [
                     {
-                        "$ref": "#/components/schemas/PositionCursor"
+                        "$ref": "#/components/schemas/CursorPosition"
                     },
                     {
-                        "$ref": "#/components/schemas/RangeCursor"
+                        "$ref": "#/components/schemas/CursorRange"
                     }
                 ]
             },
@@ -438,13 +438,6 @@
                     }
                 ]
             },
-            "EndChatParams": {
-                "type": "object",
-                "required": ["tabId"],
-                "properties": {
-                    "tabId": { "type": "string" }
-                }
-            },
             "QuickActionCommand": {
                 "type": "object",
                 "description": "Configuration object for chat quick action.",
@@ -631,18 +624,19 @@
                     "followUp": { "$ref": "#/components/schemas/ChatItemAction" }
                 }
             },
+            "NewTabOptions": {
+                "type": "object",
+                "properties": {
+                    "state": { "$ref": "#/components/schemas/TabState" },
+                    "data": { "$ref": "#/components/schemas/TabData" }
+                }
+            },
             "OpenTabParams": {
                 "type": "object",
                 "description": "Defines parameters for opening a tab. Opens existing tab if `tabId` is provided, otherwise creates a new tab with options provided in `options` parameter and opens it.",
                 "properties": {
                     "tabId": { "type": "string" },
-                    "newTabOptions": {
-                        "type": "object",
-                        "properties": {
-                            "state": { "$ref": "#/components/schemas/TabState" },
-                            "data": { "$ref": "#/components/schemas/TabData" }
-                        }
-                    }
+                    "newTabOptions": { "$ref": "#/components/schemas/NewTabOptions" }
                 }
             },
             "OpenTabResult": {
@@ -1312,6 +1306,72 @@
                         "additionalProperties": { "type": "string" }
                     },
                     "eventId": { "type": "string" }
+                }
+            },
+            "FileParams": {
+                "type": "object",
+                "required": ["path"],
+                "properties": {
+                    "path": { "type": "string" }
+                }
+            },
+            "CopyFileParams": {
+                "type": "object",
+                "required": ["oldPath", "newPath"],
+                "properties": {
+                    "oldPath": { "type": "string" },
+                    "newPath": { "type": "string" }
+                }
+            },
+            "OpenFileDiffParams": {
+                "type": "object",
+                "required": ["originalFileUri", "isDeleted"],
+                "properties": {
+                    "originalFileUri": { "type": "string" },
+                    "originalFileContent": { "type": "string" },
+                    "isDeleted": { "type": "boolean" },
+                    "fileContent": { "type": "string" }
+                }
+            },
+            "ShowOpenDialogParams": {
+                "type": "object",
+                "properties": {
+                    "canSelectFiles": { "type": "boolean" },
+                    "canSelectFolders": { "type": "boolean" },
+                    "canSelectMany": { "type": "boolean" },
+                    "filters": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "array",
+                            "items": { "type": "string" }
+                        }
+                    },
+                    "defaultUri": { "type": "string" },
+                    "title": { "type": "string" }
+                }
+            },
+            "ShowSaveFileDialogParams": {
+                "type": "object",
+                "properties": {
+                    "supportedFormats": {
+                        "type": "array",
+                        "items": { "type": "string" }
+                    },
+                    "defaultUri": { "type": "string" }
+                }
+            },
+            "ShowSaveFileDialogResult": {
+                "type": "object",
+                "required": ["targetUri"],
+                "properties": {
+                    "targetUri": { "type": "string" }
+                }
+            },
+            "EndChatParams": {
+                "type": "object",
+                "required": ["tabId"],
+                "properties": {
+                    "tabId": { "type": "string" }
                 }
             }
         }
