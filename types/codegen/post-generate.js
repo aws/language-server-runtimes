@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 
 // Path to the generated index.ts file
-const indexPath = path.join(__dirname, 'generated/src/models/index.ts')
+const indexPath = path.join(__dirname, 'generated/typescript/src/models/index.ts')
 
 // Read the constants file
 const constants = fs.readFileSync(path.join(__dirname, 'constants.ts'), 'utf8')
