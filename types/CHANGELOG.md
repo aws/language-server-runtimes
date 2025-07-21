@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.45](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.44...language-server-runtimes-types/v0.1.45) (2025-07-15)
+
+
+### Features
+
+* **types:** add method type for execute shell command shortcut ([#614](https://github.com/aws/language-server-runtimes/issues/614)) ([4bc30a8](https://github.com/aws/language-server-runtimes/commit/4bc30a8f5e18b11316c9e535d1f5f42ffa98d105))
+
+
+### Bug Fixes
+
+* typo ([#617](https://github.com/aws/language-server-runtimes/issues/617)) ([b3775e9](https://github.com/aws/language-server-runtimes/commit/b3775e9dd8d10aff04e33f4d4cbbe679a820d5cb))
+
 ## [0.1.44](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.43...language-server-runtimes-types/v0.1.44) (2025-07-14)
 
 
