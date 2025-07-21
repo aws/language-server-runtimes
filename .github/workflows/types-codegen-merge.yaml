@@ -1,0 +1,17 @@
+name: Chat Types Merge Processing
+
+on:
+  push:
+    branches:
+      - feature/flareProtocolCodeGen
+    paths:
+      - '**/chatTypes.json'
+
+jobs:
+  process-merge:
+    name: Process Merge with chatTypes.json changes
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
