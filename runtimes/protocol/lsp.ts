@@ -145,6 +145,11 @@ export interface AWSInitializationOptions {
              * Indicates client support for `aws/showSaveFileDialog` request from server.
              */
             showSaveFileDialog?: boolean
+
+            /**
+             * Indicates client support for `aws/showLogs` request from server.
+             */
+            showLogs?: boolean
         }
         textDocument?: {
             /**
