@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.50](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.49...language-server-runtimes-types/v0.1.50) (2025-07-22)
+
+
+### Features
+
+* **types:** enable show logs feature ([#629](https://github.com/aws/language-server-runtimes/issues/629)) ([7f2814f](https://github.com/aws/language-server-runtimes/commit/7f2814fc405ab02f2cbdb878eb3105170704d75e))
+
 ## [0.1.49](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.48...language-server-runtimes-types/v0.1.49) (2025-07-18)
 
 

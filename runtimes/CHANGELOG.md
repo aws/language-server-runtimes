@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.114](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.113...language-server-runtimes/v0.2.114) (2025-07-22)
+
+
+### Features
+
+* **types:** enable show logs feature ([#629](https://github.com/aws/language-server-runtimes/issues/629)) ([7f2814f](https://github.com/aws/language-server-runtimes/commit/7f2814fc405ab02f2cbdb878eb3105170704d75e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.49 to ^0.1.50
+
 ## [0.2.113](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.112...language-server-runtimes/v0.2.113) (2025-07-18)
 
 
