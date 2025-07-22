@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.115](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.114...language-server-runtimes/v0.2.115) (2025-07-22)
+
+
+### Features
+
+* **types:** add a feature flag support for show logs ([#631](https://github.com/aws/language-server-runtimes/issues/631)) ([eec091e](https://github.com/aws/language-server-runtimes/commit/eec091eb7354eedae27fd623d379107f4d4e3196))
+
 ## [0.2.114](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.113...language-server-runtimes/v0.2.114) (2025-07-22)
 
 
