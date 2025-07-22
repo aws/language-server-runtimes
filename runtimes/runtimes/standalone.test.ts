@@ -53,7 +53,6 @@ describe('standalone', () => {
             authStub.getCredentialsProvider.returns({
                 hasCredentials: sinon.stub().returns(false),
                 getCredentials: sinon.stub().returns(undefined),
-                getCredentialsType: sinon.stub().returns(undefined),
                 getConnectionMetadata: sinon.stub().returns(undefined),
                 getConnectionType: sinon.stub().returns('none'),
                 onCredentialsDeleted: sinon.stub(),
@@ -92,7 +91,6 @@ describe('standalone', () => {
             authStub.getCredentialsProvider.returns({
                 hasCredentials: sinon.stub().returns(false),
                 getCredentials: sinon.stub().returns(undefined),
-                getCredentialsType: sinon.stub().returns(undefined),
                 getConnectionMetadata: sinon.stub().returns(undefined),
                 getConnectionType: sinon.stub().returns('none'),
                 onCredentialsDeleted: sinon.stub(),

@@ -3,14 +3,13 @@ import { IamCredentials, BearerCredentials, ConnectionMetadata } from '../protoc
 // Exports for Capability implementor
 export { IamCredentials, BearerCredentials, ConnectionMetadata }
 
-export type CredentialsType = 'iam' | 'bearer' | undefined
+export type CredentialsType = 'iam' | 'bearer'
 export type Credentials = IamCredentials | BearerCredentials
 export type SsoConnectionType = 'builderId' | 'identityCenter' | 'none'
 
 export interface CredentialsProvider {
-    hasCredentials: (type?: CredentialsType) => boolean
-    getCredentials: (type?: CredentialsType) => Credentials | undefined
-    getCredentialsType: () => CredentialsType | undefined
+    hasCredentials: (type: CredentialsType) => boolean
+    getCredentials: (type: CredentialsType) => Credentials | undefined
     getConnectionMetadata: () => ConnectionMetadata | undefined
     getConnectionType: () => SsoConnectionType
     onCredentialsDeleted: (handler: (type: CredentialsType) => void) => void
