@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.115](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.114...language-server-runtimes/v0.2.115) (2025-07-22)
+
+
+### Features
+
+* **types:** add a feature flag support for show logs ([#631](https://github.com/aws/language-server-runtimes/issues/631)) ([eec091e](https://github.com/aws/language-server-runtimes/commit/eec091eb7354eedae27fd623d379107f4d4e3196))
+
+## [0.2.114](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.113...language-server-runtimes/v0.2.114) (2025-07-22)
+
+
+### Features
+
+* **types:** enable show logs feature ([#629](https://github.com/aws/language-server-runtimes/issues/629)) ([7f2814f](https://github.com/aws/language-server-runtimes/commit/7f2814fc405ab02f2cbdb878eb3105170704d75e))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.49 to ^0.1.50
+
 ## [0.2.113](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.112...language-server-runtimes/v0.2.113) (2025-07-18)
 
 

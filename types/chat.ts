@@ -283,6 +283,11 @@ export interface ChatOptions {
     export?: boolean
 
     /**
+     * Server signals to Chat Client support of show logs feature.
+     */
+    showLogs?: boolean
+
+    /**
      * Server signals to Client and Chat Client that it supports subscription tier operations
      */
     subscriptionDetails?: boolean
@@ -663,7 +668,7 @@ export interface McpServerClickResult extends McpServerClickParams {
     }
 }
 
-export type TabBarAction = 'export'
+export type TabBarAction = 'export' | 'show_logs'
 export interface TabBarActionParams {
     tabId?: string
     action: TabBarAction
@@ -708,10 +713,11 @@ export interface ExecuteShellCommandParams {
 
 export interface SubscriptionDetailsParams {
     subscriptionTier: string
+    subscriptionPeriodReset: Date
+    isOverageEnabled: boolean
     queryUsage: number
     queryLimit: number
     queryOverage: number
-    daysRemaining: number
 }
 
 export interface SubscriptionUpgradeParams {}
