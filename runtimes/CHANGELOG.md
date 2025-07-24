@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.116](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.115...language-server-runtimes/v0.2.116) (2025-07-24)
+
+
+### Features
+
+* add endpoint override option for easier dev setup ([#633](https://github.com/aws/language-server-runtimes/issues/633)) ([835e7aa](https://github.com/aws/language-server-runtimes/commit/835e7aac5db7068c711a04b41242e73fc5edc828))
+
 ## [0.2.115](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.114...language-server-runtimes/v0.2.115) (2025-07-22)
 
 
