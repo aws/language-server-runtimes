@@ -310,12 +310,13 @@ export const getIamCredentialRequestType = new ProtocolRequestType<
 
 // getMfaCode
 export interface GetMfaCodeParams {
-    mfaSerial: string
     profileName: string
+    mfaSerial?: string
 }
 
 export interface GetMfaCodeResult {
     code: string
+    mfaSerial: string
 }
 
 export const getMfaCodeRequestType = new ProtocolRequestType<
