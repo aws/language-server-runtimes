@@ -277,11 +277,13 @@ export type IamCredentialId = string // Opaque identifier
 export interface GetIamCredentialOptions {
     callStsOnInvalidIamCredential?: boolean
     permissionSet?: string[]
+    credentialOverride?: IamCredentials
 }
 
 export const getIamCredentialOptionsDefaults = {
     callStsOnInvalidIamCredential: true,
     permissionSet: PermissionSets.Q,
+    credentialOverride: undefined,
 } satisfies GetIamCredentialOptions
 
 export interface GetIamCredentialParams {
