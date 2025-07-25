@@ -124,11 +124,11 @@ export async function encryptIamResultWithKey(
     request: GetIamCredentialResult,
     key: string
 ): Promise<GetIamCredentialResult> {
-    request.credentials = {
-        accessKeyId: await encryptObjectWithKey(request.credentials.accessKeyId, key),
-        secretAccessKey: await encryptObjectWithKey(request.credentials.secretAccessKey, key),
-        ...(request.credentials.sessionToken
-            ? { sessionToken: await encryptObjectWithKey(request.credentials.sessionToken, key) }
+    request.credential.credentials = {
+        accessKeyId: await encryptObjectWithKey(request.credential.credentials.accessKeyId, key),
+        secretAccessKey: await encryptObjectWithKey(request.credential.credentials.secretAccessKey, key),
+        ...(request.credential.credentials.sessionToken
+            ? { sessionToken: await encryptObjectWithKey(request.credential.credentials.sessionToken, key) }
             : {}),
     }
     if (!request.updateCredentialsParams.encrypted) {
