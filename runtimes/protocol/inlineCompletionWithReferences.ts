@@ -17,7 +17,9 @@ interface DocumentChangeParams {
     documentChangeParams?: DidChangeTextDocumentParams
 }
 
-export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams & DocumentChangeParams
+export type InlineCompletionWithReferencesParams = InlineCompletionParams &
+    PartialResultParams &
+    DocumentChangeParams & { predictionTypes?: ('COMPLETIONS' | 'EDITS')[] }
 
 export const inlineCompletionWithReferencesRequestType = new ProtocolRequestType<
     InlineCompletionWithReferencesParams,
