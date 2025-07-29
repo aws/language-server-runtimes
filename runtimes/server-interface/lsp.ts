@@ -118,6 +118,13 @@ export type Lsp = {
             void
         >
     ) => void
+    onEditCompletion: (
+        handler: RequestHandler<
+            InlineCompletionParams,
+            InlineCompletionItem[] | InlineCompletionList | undefined | null,
+            void
+        >
+    ) => void
     onCompletion: (
         handler: RequestHandler<CompletionParams, CompletionItem[] | CompletionList | undefined | null, void>
     ) => void
@@ -157,6 +164,13 @@ export type Lsp = {
     }
     extensions: {
         onInlineCompletionWithReferences: (
+            handler: RequestHandler<
+                InlineCompletionWithReferencesParams,
+                InlineCompletionItemWithReferences[] | InlineCompletionListWithReferences | undefined | null,
+                void
+            >
+        ) => void
+        onEditCompletion: (
             handler: RequestHandler<
                 InlineCompletionWithReferencesParams,
                 InlineCompletionItemWithReferences[] | InlineCompletionListWithReferences | undefined | null,

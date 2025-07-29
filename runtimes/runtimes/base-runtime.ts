@@ -104,6 +104,7 @@ import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType } from '../protocol/window'
 import { joinUnixPaths } from './util/pathUtil'
+import { editCompletionRequestType } from '../protocol/editCompletions'
 
 declare const self: WindowOrWorkerGlobalScope
 
@@ -253,6 +254,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             getClientInitializeParams: getClientInitializeParamsHandlerFactory(lspRouter),
             onCompletion: handler => lspConnection.onCompletion(handler),
             onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
+            onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
             didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
             onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
             onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
@@ -289,6 +291,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 onGetConfigurationFromServer: lspServer.setServerConfigurationHandler,
                 onInlineCompletionWithReferences: handler =>
                     lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
+                onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
                 onLogInlineCompletionSessionResults: handler => {
                     lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
                 },
