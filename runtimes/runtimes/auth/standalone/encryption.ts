@@ -1,5 +1,5 @@
 import { Readable } from 'stream'
-import { CompactEncrypt } from 'jose'
+import { compactDecrypt, CompactEncrypt } from 'jose'
 import { GetIamCredentialResult, GetSsoTokenResult } from '../../../protocol'
 
 export function shouldWaitForEncryptionKey(): boolean {
@@ -100,6 +100,15 @@ export function encryptObjectWithKey(request: Object, key: string, alg?: string,
 }
 
 /**
+ * Decrypt an object with the provided key
+ */
+export async function decryptObjectWithKey<T>(request: string, key: string, alg?: string, enc?: string): Promise<T> {
+    const keyBuffer = Buffer.from(key, 'base64')
+    const result = await compactDecrypt(request, keyBuffer)
+    return JSON.parse(new TextDecoder().decode(result.plaintext)) as T
+}
+
+/**
  * Encrypts the SSO access tokens inside the result object with the provided key
  */
 export async function encryptSsoResultWithKey(request: GetSsoTokenResult, key: string): Promise<GetSsoTokenResult> {
@@ -124,12 +133,12 @@ export async function encryptIamResultWithKey(
     request: GetIamCredentialResult,
     key: string
 ): Promise<GetIamCredentialResult> {
+    const { accessKeyId, secretAccessKey, sessionToken, expiration } = request.credential.credentials
     request.credential.credentials = {
-        accessKeyId: await encryptObjectWithKey(request.credential.credentials.accessKeyId, key),
-        secretAccessKey: await encryptObjectWithKey(request.credential.credentials.secretAccessKey, key),
-        ...(request.credential.credentials.sessionToken
-            ? { sessionToken: await encryptObjectWithKey(request.credential.credentials.sessionToken, key) }
-            : {}),
+        accessKeyId: await encryptObjectWithKey(accessKeyId, key),
+        secretAccessKey: await encryptObjectWithKey(secretAccessKey, key),
+        sessionToken: sessionToken ? await encryptObjectWithKey(sessionToken, key) : undefined,
+        expiration: expiration,
     }
     if (!request.updateCredentialsParams.encrypted) {
         request.updateCredentialsParams.data = await encryptObjectWithKey(
