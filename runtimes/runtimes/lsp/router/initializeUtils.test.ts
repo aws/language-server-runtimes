@@ -1,5 +1,6 @@
 import { URI } from 'vscode-uri'
 import * as path from 'path'
+import os from 'os'
 import assert = require('assert')
 import sinon = require('sinon')
 import { InitializeParams, WorkspaceFolder } from 'vscode-languageserver-protocol'
@@ -80,8 +81,15 @@ describe('initializeUtils', () => {
             const params = createParams({ rootPath })
 
             const result = getWorkspaceFoldersFromInit(consoleStub, params)
+            let expectedName
+            if (os.platform() === 'win32') {
+                expectedName = path.basename(URI.parse(pathUri).fsPath)
+            } else {
+                // using path.basename on unix with a windows path
+                // will cause it to return \\Users\\test\\folder instead
+                expectedName = 'folder'
+            }
 
-            const expectedName = path.basename(URI.parse(pathUri).fsPath)
             assert.deepStrictEqual(result, [{ name: expectedName, uri: pathUri }])
         })
 
