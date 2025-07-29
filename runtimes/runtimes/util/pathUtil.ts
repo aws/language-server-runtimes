@@ -39,30 +39,6 @@ export function basenamePath(path: string, ext?: string): string {
         return ''
     }
 
-    // Helper function to remove extension from basename
-    const removeExtension = (basename: string, extension: string): string => {
-        if (!extension || !basename.endsWith(extension) || basename === extension) {
-            return basename
-        }
-
-        if (extension.startsWith('.')) {
-            return basename.slice(0, -extension.length)
-        } else {
-            const dotExt = '.' + extension
-            if (basename.endsWith(dotExt) && basename !== dotExt) {
-                return basename.slice(0, -extension.length) // Keep the dot
-            } else if (basename.endsWith(extension)) {
-                return basename.slice(0, -extension.length)
-            }
-        }
-        return basename
-    }
-
-    // Handle Windows paths that start with \ but not \\
-    if (path.startsWith('\\') && !path.startsWith('\\\\')) {
-        return removeExtension(path, ext || '')
-    }
-
     // Normalize path separators and remove trailing slashes
     const normalizedPath = path.replace(/\\/g, '/').replace(/\/+$/, '')
 
@@ -74,5 +50,19 @@ export function basenamePath(path: string, ext?: string): string {
     const lastSlashIndex = normalizedPath.lastIndexOf('/')
     const basename = lastSlashIndex === -1 ? normalizedPath : normalizedPath.slice(lastSlashIndex + 1)
 
-    return basename ? removeExtension(basename, ext || '') : ''
+    if (!basename || !ext) {
+        return basename
+    }
+
+    // Remove extension if it matches
+    if (ext.startsWith('.')) {
+        return basename.endsWith(ext) && basename !== ext ? basename.slice(0, -ext.length) : basename
+    } else {
+        // For extensions without dot, check both with and without dot
+        if (basename.endsWith(ext) && basename !== ext) {
+            return basename.slice(0, -ext.length)
+        }
+        const dotExt = '.' + ext
+        return basename.endsWith(dotExt) && basename !== dotExt ? basename.slice(0, -dotExt.length) : basename
+    }
 }
