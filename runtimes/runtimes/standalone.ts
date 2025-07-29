@@ -35,9 +35,11 @@ import {
     stsCredentialChangedRequestType,
     getMfaCodeRequestType,
     profileChangedRequestType,
+    UpdateProfileParams,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
+    decryptObjectWithKey,
     encryptIamResultWithKey,
     EncryptionInitialization,
     encryptObjectWithKey,
@@ -305,7 +307,15 @@ export const standalone = (props: RuntimeProps) => {
 
         const identityManagement: IdentityManagement = {
             onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
-            onUpdateProfile: handler => lspConnection.onRequest(updateProfileRequestType, handler),
+            onUpdateProfile: handler =>
+                lspConnection.onRequest(
+                    updateProfileRequestType,
+                    async (params: UpdateProfileParams | string, token: CancellationToken) => {
+                        const decrypted: UpdateProfileParams =
+                            typeof params === 'string' ? await decryptObjectWithKey(params, encryptionKey!) : params
+                        return await handler(decrypted, token)
+                    }
+                ),
             onGetSsoToken: handler =>
                 lspConnection.onRequest(
                     getSsoTokenRequestType,
