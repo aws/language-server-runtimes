@@ -63,11 +63,19 @@ export const newAgent = (): Agent => {
 
             const validateResult = tool.validate(input, token)
             if (validateResult !== true) {
+                const errors = (validateResult as ValidateFunction['errors']) || []
                 const errorDetails =
-                    ((validateResult as ValidateFunction['errors']) || [])
-                        .map((err: ErrorObject) => `${err.instancePath || 'root'}: ${err.message}`)
-                        .join('\n') || `\nReceived: ${input}`
-
+                    errors.map((err: ErrorObject) => `${err.instancePath || 'root'}: ${err.message}`).join('\n') ||
+                    `\nReceived: ${input}`
+                if (
+                    errors.length === 1 &&
+                    errors.at(0)?.instancePath === '/diffs' &&
+                    errors.at(0)?.message === 'must be array'
+                ) {
+                    throw new Error(
+                        `${toolName} tool input validation failed: ${errorDetails} in JSON format without quotation marks`
+                    )
+                }
                 throw new Error(`${toolName} tool input validation failed: ${errorDetails}`)
             }
 
