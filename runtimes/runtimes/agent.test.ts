@@ -90,11 +90,14 @@ describe('Agent Tools', () => {
         await assert.rejects(
             async () => {
                 await AGENT.runTool(TOOL_SPEC_WITH_ARRAY_TYPE.name, {
-                    diffs: '[{"oldStr": "toReplace"}, {"newStr": "newContet"}]',
+                    diffs: '[{"oldStr": "toReplace", "newStr": "newContet"}]',
                 })
             },
             (error: Error) => {
-                assert.ok(error.message === 'fsReplace tool input validation failed: /diffs: must be array')
+                assert.ok(
+                    error.message ===
+                        'fsReplace tool input validation failed: /diffs: must be array in JSON format without quotation marks'
+                )
                 return true
             }
         )
