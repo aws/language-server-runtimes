@@ -34,6 +34,7 @@ import {
     ShowOpenDialogRequestType,
     stsCredentialChangedRequestType,
     getMfaCodeRequestType,
+    profileChangedRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -331,6 +332,7 @@ export const standalone = (props: RuntimeProps) => {
             onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
             sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
+            sendProfileChanged: params => lspConnection.sendNotification(profileChangedRequestType, params),
             sendGetMfaCode: params => lspConnection.sendRequest(getMfaCodeRequestType, params),
         }
 
