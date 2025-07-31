@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.2.117](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.116...language-server-runtimes/v0.2.117) (2025-07-31)
+
+
+### Bug Fixes
+
+* add open tab params to inline completion protocol ([#638](https://github.com/aws/language-server-runtimes/issues/638)) ([fcdf0ac](https://github.com/aws/language-server-runtimes/commit/fcdf0ac24561e32ce079a568b65f9df534e8a140))
+* improve diffs array error msg ([#639](https://github.com/aws/language-server-runtimes/issues/639)) ([10b0371](https://github.com/aws/language-server-runtimes/commit/10b037133608610e2edf2b1c4b752b09f3b74580))
+* replace path.basename with custom browser-safe implementation ([#636](https://github.com/aws/language-server-runtimes/issues/636)) ([a2b8532](https://github.com/aws/language-server-runtimes/commit/a2b8532e5db15615f7aa0349f4cca8835716e85b))
+
 ## [0.2.116](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.115...language-server-runtimes/v0.2.116) (2025-07-24)
 
 
