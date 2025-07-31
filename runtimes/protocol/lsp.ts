@@ -28,6 +28,7 @@ export * from 'vscode-languageserver-protocol'
 // Custom Runtimes LSP extensions
 export * from './inlineCompletionWithReferences'
 export * from './inlineCompletions'
+export * from './editCompletions'
 
 // AutoParameterStructuresProtocolRequestType allows ParameterStructures both by-name and by-position
 export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>

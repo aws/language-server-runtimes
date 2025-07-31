@@ -95,6 +95,7 @@ import { ShowSaveFileDialogRequestType } from '../protocol/window'
 import { getTelemetryReasonDesc } from './util/shared'
 import { writeSync } from 'fs'
 import { format } from 'util'
+import { editCompletionRequestType } from '../protocol/editCompletions'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -379,6 +380,7 @@ export const standalone = (props: RuntimeProps) => {
                 getClientInitializeParams: getClientInitializeParamsHandlerFactory(lspRouter),
                 onCompletion: handler => lspConnection.onCompletion(handler),
                 onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
+                onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
                 didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
                 onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
                 onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
@@ -424,6 +426,7 @@ export const standalone = (props: RuntimeProps) => {
                     onGetConfigurationFromServer: lspServer.setServerConfigurationHandler,
                     onInlineCompletionWithReferences: handler =>
                         lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
+                    onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
                     onLogInlineCompletionSessionResults: handler => {
                         lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
                     },
