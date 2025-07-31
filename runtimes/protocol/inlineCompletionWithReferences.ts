@@ -17,7 +17,14 @@ interface DocumentChangeParams {
     documentChangeParams?: DidChangeTextDocumentParams
 }
 
-export type InlineCompletionWithReferencesParams = InlineCompletionParams & PartialResultParams & DocumentChangeParams
+interface OpenTabParams {
+    openTabFilepaths?: string
+}
+
+export type InlineCompletionWithReferencesParams = InlineCompletionParams &
+    PartialResultParams &
+    DocumentChangeParams &
+    OpenTabParams
 
 export const inlineCompletionWithReferencesRequestType = new ProtocolRequestType<
     InlineCompletionWithReferencesParams,
