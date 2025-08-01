@@ -141,7 +141,7 @@ export interface ListProfilesResult {
 // Potential error codes: E_UNKNOWN | E_TIMEOUT | E_RUNTIME_NOT_SUPPORTED | E_CANNOT_READ_SHARED_CONFIG
 export const listProfilesRequestType = new ProtocolRequestType<
     ListProfilesParams,
-    ListProfilesResult,
+    ListProfilesResult | string,
     never,
     AwsResponseError,
     void

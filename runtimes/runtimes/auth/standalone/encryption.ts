@@ -102,7 +102,7 @@ export function encryptObjectWithKey(request: Object, key: string, alg?: string,
 /**
  * Decrypt an object with the provided key
  */
-export async function decryptObjectWithKey<T>(request: string, key: string, alg?: string, enc?: string): Promise<T> {
+export async function decryptObjectWithKey<T>(request: string, key: string): Promise<T> {
     const keyBuffer = Buffer.from(key, 'base64')
     const result = await compactDecrypt(request, keyBuffer)
     return JSON.parse(new TextDecoder().decode(result.plaintext)) as T

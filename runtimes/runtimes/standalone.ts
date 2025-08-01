@@ -36,6 +36,7 @@ import {
     getMfaCodeRequestType,
     profileChangedRequestType,
     UpdateProfileParams,
+    ListProfilesParams,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -307,7 +308,17 @@ export const standalone = (props: RuntimeProps) => {
         }
 
         const identityManagement: IdentityManagement = {
-            onListProfiles: handler => lspConnection.onRequest(listProfilesRequestType, handler),
+            onListProfiles: handler =>
+                lspConnection.onRequest(
+                    listProfilesRequestType,
+                    async (params: ListProfilesParams, token: CancellationToken) => {
+                        let result = await handler(params, token)
+                        if (result && !(result instanceof Error) && encryptionKey) {
+                            return await encryptObjectWithKey(result, encryptionKey)
+                        }
+                        return result
+                    }
+                ),
             onUpdateProfile: handler =>
                 lspConnection.onRequest(
                     updateProfileRequestType,
