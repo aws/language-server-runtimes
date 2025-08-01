@@ -401,7 +401,7 @@ export interface ButtonClickParams {
     tabId: string
     messageId: string
     buttonId: string
-    metadata: Record<string, string>
+    metadata?: Record<string, string>
 }
 
 export interface ButtonClickResult {
