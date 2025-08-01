@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.119](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.118...language-server-runtimes/v0.2.119) (2025-08-01)
+
+
+### Bug Fixes
+
+* add open tab params to inline completion protocol  ([#645](https://github.com/aws/language-server-runtimes/issues/645)) ([56c9fe0](https://github.com/aws/language-server-runtimes/commit/56c9fe01cca4aacfc15e3a8116a44b72ad10d43a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.50 to ^0.1.51
+
 ## [0.2.118](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.117...language-server-runtimes/v0.2.118) (2025-07-31)
 
 
