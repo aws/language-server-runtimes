@@ -18,7 +18,7 @@ interface DocumentChangeParams {
 }
 
 interface OpenTabParams {
-    openTabFilepaths?: string
+    openTabFilepaths?: string[]
 }
 
 export type InlineCompletionWithReferencesParams = InlineCompletionParams &
