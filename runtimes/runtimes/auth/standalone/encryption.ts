@@ -1,5 +1,6 @@
 import { Readable } from 'stream'
 import { CompactEncrypt } from 'jose'
+import { GetIamCredentialResult, GetSsoTokenResult } from '../../../protocol'
 
 export function shouldWaitForEncryptionKey(): boolean {
     return process.argv.some(arg => arg === '--set-credentials-encryption-key')
@@ -96,6 +97,48 @@ export function encryptObjectWithKey(request: Object, key: string, alg?: string,
     return new CompactEncrypt(payload)
         .setProtectedHeader({ alg: alg ?? 'dir', enc: enc ?? 'A256GCM' })
         .encrypt(keyBuffer)
+}
+
+/**
+ * Encrypts the SSO access tokens inside the result object with the provided key
+ */
+export async function encryptSsoResultWithKey(request: GetSsoTokenResult, key: string): Promise<GetSsoTokenResult> {
+    if (request.ssoToken.accessToken) {
+        request.ssoToken.accessToken = await encryptObjectWithKey(request.ssoToken.accessToken, key)
+    }
+    if (request.updateCredentialsParams.data && !request.updateCredentialsParams.encrypted) {
+        request.updateCredentialsParams.data = await encryptObjectWithKey(
+            // decodeCredentialsRequestToken expects nested 'data' fields
+            { data: request.updateCredentialsParams.data },
+            key
+        )
+        request.updateCredentialsParams.encrypted = true
+    }
+    return request
+}
+
+/**
+ * Encrypts the IAM credentials inside the result object with the provided key
+ */
+export async function encryptIamResultWithKey(
+    request: GetIamCredentialResult,
+    key: string
+): Promise<GetIamCredentialResult> {
+    request.credential.credentials = {
+        accessKeyId: await encryptObjectWithKey(request.credential.credentials.accessKeyId, key),
+        secretAccessKey: await encryptObjectWithKey(request.credential.credentials.secretAccessKey, key),
+        ...(request.credential.credentials.sessionToken
+            ? { sessionToken: await encryptObjectWithKey(request.credential.credentials.sessionToken, key) }
+            : {}),
+    }
+    if (!request.updateCredentialsParams.encrypted) {
+        request.updateCredentialsParams.data = await encryptObjectWithKey(
+            { data: request.updateCredentialsParams.data },
+            key
+        )
+        request.updateCredentialsParams.encrypted = true
+    }
+    return request
 }
 
 /**

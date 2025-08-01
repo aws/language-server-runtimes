@@ -1,4 +1,5 @@
 import {
+    IamCredentials,
     LSPErrorCodes,
     ProgressType,
     ProtocolNotificationType,
@@ -15,25 +16,55 @@ export const AwsErrorCodes = {
     E_CANNOT_OVERWRITE_SSO_SESSION: 'E_CANNOT_OVERWRITE_SSO_SESSION',
     E_CANNOT_READ_SHARED_CONFIG: 'E_CANNOT_READ_SHARED_CONFIG',
     E_CANNOT_READ_SSO_CACHE: 'E_CANNOT_READ_SSO_CACHE',
+    E_CANNOT_READ_STS_CACHE: 'E_CANNOT_READ_STS_CACHE',
     E_CANNOT_REFRESH_SSO_TOKEN: 'E_CANNOT_REFRESH_SSO_TOKEN',
+    E_CANNOT_REFRESH_STS_CREDENTIAL: 'E_CANNOT_REFRESH_STS_CREDENTIAL',
     E_CANNOT_REGISTER_CLIENT: 'E_CANNOT_REGISTER_CLIENT',
     E_CANNOT_CREATE_SSO_TOKEN: 'E_CANNOT_CREATE_SSO_TOKEN',
+    E_CANNOT_CREATE_STS_CREDENTIAL: 'E_CANNOT_CREATE_STS_CREDENTIAL',
     E_CANNOT_WRITE_SHARED_CONFIG: 'E_CANNOT_WRITE_SHARED_CONFIG',
     E_CANNOT_WRITE_SSO_CACHE: 'E_CANNOT_WRITE_SSO_CACHE',
+    E_CANNOT_WRITE_STS_CACHE: 'E_CANNOT_WRITE_STS_CACHE',
     E_ENCRYPTION_REQUIRED: 'E_ENCRYPTION_REQUIRED',
     E_INVALID_PROFILE: 'E_INVALID_PROFILE',
     E_INVALID_SSO_CLIENT: 'E_INVALID_SSO_CLIENT',
     E_INVALID_SSO_SESSION: 'E_INVALID_SSO_SESSION',
     E_INVALID_SSO_TOKEN: 'E_INVALID_SSO_TOKEN',
+    E_INVALID_STS_CREDENTIAL: 'E_INVALID_STS_CREDENTIAL',
     E_PROFILE_NOT_FOUND: 'E_PROFILE_NOT_FOUND',
     E_RUNTIME_NOT_SUPPORTED: 'E_RUNTIME_NOT_SUPPORTED',
     E_SSO_SESSION_NOT_FOUND: 'E_SSO_SESSION_NOT_FOUND',
     E_SSO_TOKEN_EXPIRED: 'E_SSO_TOKEN_EXPIRED',
+    E_STS_CREDENTIAL_EXPIRED: 'E_STS_CREDENTIAL_EXPIRED',
     E_SSO_TOKEN_SOURCE_NOT_SUPPORTED: 'E_SSO_TOKEN_SOURCE_NOT_SUPPORTED',
+    E_CALLER_IDENTITY_NOT_FOUND: 'E_CALLER_IDENTITY_NOT_FOUND',
+    E_MFA_REQUIRED: 'E_MFA_REQUIRED',
+    E_PERMISSION_DENIED: 'E_PERMISSION_DENIED',
     E_TIMEOUT: 'E_TIMEOUT',
     E_UNKNOWN: 'E_UNKNOWN',
     E_CANCELLED: 'E_CANCELLED',
 } as const
+
+// Permissions
+export const PermissionSets = {
+    Q: [
+        'q:StartConversation',
+        'q:SendMessage',
+        'q:GetConversation',
+        'q:ListConversations',
+        'q:UpdateConversation',
+        'q:DeleteConversation',
+        'q:PassRequest',
+        'q:StartTroubleshootingAnalysis',
+        'q:StartTroubleshootingResolutionExplanation',
+        'q:GetTroubleshootingResults',
+        'q:UpdateTroubleshootingCommandResult',
+        'q:GetIdentityMetaData',
+        'q:GenerateCodeFromCommands',
+        'q:UsePlugin',
+        'codewhisperer:GenerateRecommendations',
+    ],
+}
 
 export interface AwsResponseErrorData {
     awsErrorCode: string
@@ -47,10 +78,20 @@ export class AwsResponseError extends ResponseError<AwsResponseErrorData> {
 }
 
 // listProfiles
-export type ProfileKind = 'Unknown' | 'SsoTokenProfile'
+export type ProfileKind =
+    | 'Unknown'
+    | 'SsoTokenProfile'
+    | 'IamCredentialsProfile'
+    | 'IamSourceProfileProfile'
+    | 'IamCredentialSourceProfile'
+    | 'IamCredentialProcessProfile'
 
 export const ProfileKind = {
     SsoTokenProfile: 'SsoTokenProfile',
+    IamCredentialsProfile: 'IamCredentialsProfile',
+    IamSourceProfileProfile: 'IamSourceProfileProfile',
+    IamCredentialSourceProfile: 'IamCredentialSourceProfile',
+    IamCredentialProcessProfile: 'IamCredentialProcessProfile',
     Unknown: 'Unknown',
 } as const
 
@@ -64,6 +105,18 @@ export interface Profile {
     settings?: {
         region?: string
         sso_session?: string
+        aws_access_key_id?: string
+        aws_secret_access_key?: string
+        aws_session_token?: string
+        role_arn?: string
+        role_session_name?: string
+        credential_process?: string
+        credential_source?: string
+        source_profile?: string
+        mfa_serial?: string
+        external_id?: string
+        credential_cache?: string
+        credential_cache_location?: string
     }
 }
 
@@ -218,6 +271,64 @@ export const getSsoTokenRequestType = new ProtocolRequestType<
     void
 >('aws/identity/getSsoToken')
 
+// getIamCredential
+export type IamCredentialId = string // Opaque identifier
+
+export interface GetIamCredentialOptions {
+    callStsOnInvalidIamCredential?: boolean
+    permissionSet?: string[]
+    credentialOverride?: IamCredentials
+}
+
+export const getIamCredentialOptionsDefaults = {
+    callStsOnInvalidIamCredential: true,
+    permissionSet: PermissionSets.Q,
+    credentialOverride: undefined,
+} satisfies GetIamCredentialOptions
+
+export interface GetIamCredentialParams {
+    profileName: string
+    options?: GetIamCredentialOptions
+}
+
+export interface IamCredential {
+    id: IamCredentialId
+    kinds: ProfileKind[]
+    credentials: IamCredentials
+}
+
+export interface GetIamCredentialResult {
+    credential: IamCredential
+    updateCredentialsParams: UpdateCredentialsParams
+}
+
+export const getIamCredentialRequestType = new ProtocolRequestType<
+    GetIamCredentialParams,
+    GetIamCredentialResult,
+    never,
+    AwsResponseError,
+    void
+>('aws/identity/getIamCredential')
+
+// getMfaCode
+export interface GetMfaCodeParams {
+    profileName: string
+    mfaSerial?: string
+}
+
+export interface GetMfaCodeResult {
+    code: string
+    mfaSerial: string
+}
+
+export const getMfaCodeRequestType = new ProtocolRequestType<
+    GetMfaCodeParams,
+    GetMfaCodeResult,
+    never,
+    AwsResponseError,
+    void
+>('aws/identity/getMfaCode')
+
 // invalidateSsoToken
 export interface InvalidateSsoTokenParams {
     ssoTokenId: SsoTokenId
@@ -235,6 +346,23 @@ export const invalidateSsoTokenRequestType = new ProtocolRequestType<
     AwsResponseError,
     void
 >('aws/identity/invalidateSsoToken')
+
+// invalidateStsCredential
+export interface InvalidateStsCredentialParams {
+    iamCredentialId: IamCredentialId
+}
+
+export interface InvalidateStsCredentialResult {
+    // Intentionally left blank
+}
+
+export const invalidateStsCredentialRequestType = new ProtocolRequestType<
+    InvalidateStsCredentialParams,
+    InvalidateStsCredentialResult,
+    never,
+    AwsResponseError,
+    void
+>('aws/identity/invalidateStsCredential')
 
 // ssoTokenChanged
 export type Expired = 'Expired'
@@ -254,4 +382,21 @@ export interface SsoTokenChangedParams {
 
 export const ssoTokenChangedRequestType = new ProtocolNotificationType<SsoTokenChangedParams, void>(
     'aws/identity/ssoTokenChanged'
+)
+
+// stsCredentialChanged
+export type StsCredentialChangedKind = Refreshed | Expired
+
+export const StsCredentialChangedKind = {
+    Expired: 'Expired',
+    Refreshed: 'Refreshed',
+} as const
+
+export interface StsCredentialChangedParams {
+    kind: StsCredentialChangedKind
+    stsCredentialId: IamCredentialId
+}
+
+export const stsCredentialChangedRequestType = new ProtocolNotificationType<StsCredentialChangedParams, void>(
+    'aws/identity/stsCredentialChanged'
 )

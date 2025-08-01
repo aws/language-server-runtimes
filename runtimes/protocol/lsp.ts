@@ -28,6 +28,7 @@ export * from 'vscode-languageserver-protocol'
 // Custom Runtimes LSP extensions
 export * from './inlineCompletionWithReferences'
 export * from './inlineCompletions'
+export * from './editCompletions'
 
 // AutoParameterStructuresProtocolRequestType allows ParameterStructures both by-name and by-position
 export class AutoParameterStructuresProtocolRequestType<P, R, PR, E, RO>
@@ -145,6 +146,11 @@ export interface AWSInitializationOptions {
              * Indicates client support for `aws/showSaveFileDialog` request from server.
              */
             showSaveFileDialog?: boolean
+
+            /**
+             * Indicates client support for `aws/showLogs` request from server.
+             */
+            showLogs?: boolean
         }
         textDocument?: {
             /**
@@ -155,6 +161,10 @@ export interface AWSInitializationOptions {
                  * Whether the client supports inline edit suggestions with the tab-tab-tab workflow.
                  */
                 inlineEditSupport?: boolean
+                /**
+                 * Q inline completion API endpoint override
+                 */
+                endpointOverride?: string
             }
         }
     }

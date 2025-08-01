@@ -28,13 +28,19 @@ import {
     didWriteFileNotificationType,
     didAppendFileNotificationType,
     didCreateDirectoryNotificationType,
+    getIamCredentialRequestType,
+    GetIamCredentialParams,
     ShowOpenDialogParams,
     ShowOpenDialogRequestType,
+    stsCredentialChangedRequestType,
+    getMfaCodeRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
+    encryptIamResultWithKey,
     EncryptionInitialization,
     encryptObjectWithKey,
+    encryptSsoResultWithKey,
     readEncryptionDetails,
     shouldWaitForEncryptionKey,
     validateEncryptionDetails,
@@ -50,6 +56,7 @@ import {
     getSsoTokenRequestType,
     IdentityManagement,
     invalidateSsoTokenRequestType,
+    invalidateStsCredentialRequestType,
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
@@ -86,6 +93,9 @@ import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType } from '../protocol/window'
 import { getTelemetryReasonDesc } from './util/shared'
+import { writeSync } from 'fs'
+import { format } from 'util'
+import { editCompletionRequestType } from '../protocol/editCompletions'
 
 // Honor shared aws config file
 if (checkAWSConfigFile()) {
@@ -105,7 +115,10 @@ function setupCrashMonitoring(telemetryEmitter?: (metric: MetricEvent) => void) 
     }
 
     process.on('uncaughtExceptionMonitor', (err, origin) => {
+        // also emit to stderr in case stdout does not completely drain
+        // console error is monkey-patched by vscode-languageserver in stdio mode to log to client instead of stderr
         console.error('Uncaught Exception:', err.message, getTopStackFrames(err))
+        writeSync(process.stderr.fd, `Uncaught exception: ${format(err)}\n` + `Exception origin: ${origin}\n`)
 
         if (telemetryEmitter) {
             try {
@@ -297,31 +310,29 @@ export const standalone = (props: RuntimeProps) => {
                 lspConnection.onRequest(
                     getSsoTokenRequestType,
                     async (params: GetSsoTokenParams, token: CancellationToken) => {
-                        const result = await handler(params, token)
-
-                        // Encrypt SsoToken.accessToken before sending to client
+                        let result = await handler(params, token)
                         if (result && !(result instanceof Error) && encryptionKey) {
-                            if (result.ssoToken.accessToken) {
-                                result.ssoToken.accessToken = await encryptObjectWithKey(
-                                    result.ssoToken.accessToken,
-                                    encryptionKey
-                                )
-                            }
-                            if (result.updateCredentialsParams.data && !result.updateCredentialsParams.encrypted) {
-                                result.updateCredentialsParams.data = await encryptObjectWithKey(
-                                    // decodeCredentialsRequestToken expects nested 'data' fields
-                                    { data: result.updateCredentialsParams.data },
-                                    encryptionKey
-                                )
-                                result.updateCredentialsParams.encrypted = true
-                            }
+                            result = await encryptSsoResultWithKey(result, encryptionKey)
                         }
-
+                        return result
+                    }
+                ),
+            onGetIamCredential: handler =>
+                lspConnection.onRequest(
+                    getIamCredentialRequestType,
+                    async (params: GetIamCredentialParams, token: CancellationToken) => {
+                        let result = await handler(params, token)
+                        if (result && !(result instanceof Error) && encryptionKey) {
+                            result = await encryptIamResultWithKey(result, encryptionKey)
+                        }
                         return result
                     }
                 ),
             onInvalidateSsoToken: handler => lspConnection.onRequest(invalidateSsoTokenRequestType, handler),
+            onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
+            sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
+            sendGetMfaCode: params => lspConnection.sendRequest(getMfaCodeRequestType, params),
         }
 
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
@@ -369,6 +380,7 @@ export const standalone = (props: RuntimeProps) => {
                 getClientInitializeParams: getClientInitializeParamsHandlerFactory(lspRouter),
                 onCompletion: handler => lspConnection.onCompletion(handler),
                 onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
+                onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
                 didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
                 onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
                 onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
@@ -414,6 +426,7 @@ export const standalone = (props: RuntimeProps) => {
                     onGetConfigurationFromServer: lspServer.setServerConfigurationHandler,
                     onInlineCompletionWithReferences: handler =>
                         lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
+                    onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
                     onLogInlineCompletionSessionResults: handler => {
                         lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
                     },

@@ -1,5 +1,5 @@
 import { InitializeParams, WorkspaceFolder } from 'vscode-languageserver-protocol'
-import * as path from 'path'
+import { basenamePath } from '../../util/pathUtil'
 import { URI } from 'vscode-uri'
 import { RemoteConsole } from 'vscode-languageserver'
 
@@ -12,7 +12,7 @@ export function getWorkspaceFoldersFromInit(console: RemoteConsole, params?: Ini
         return params.workspaceFolders
     }
     try {
-        const getFolderName = (parsedUri: URI) => path.basename(parsedUri.fsPath) || parsedUri.toString()
+        const getFolderName = (parsedUri: URI) => basenamePath(parsedUri.fsPath) || parsedUri.toString()
 
         if (params.rootUri) {
             const parsedUri = URI.parse(params.rootUri)

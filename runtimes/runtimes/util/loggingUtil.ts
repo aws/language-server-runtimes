@@ -32,7 +32,7 @@ export class DefaultLogger implements Logging {
 
     sendToLog(logLevel: LogLevel, message: string): void {
         if (isLogLevelEnabled(this.level, logLevel)) {
-            this.lspConnection.console[logLevel](`[${new Date().toISOString()}] ${message}`)
+            this.lspConnection.console[logLevel](`[${new Date().toISOString()}] lserver: ${message}`)
         }
     }
 
