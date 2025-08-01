@@ -16,6 +16,7 @@ import {
     UpdateProfileParams,
     UpdateProfileResult,
     GetMfaCodeResult,
+    ProfileChangedParams,
 } from '../protocol/identity-management'
 import { RequestHandler } from '../protocol'
 
@@ -53,6 +54,8 @@ export type IdentityManagement = {
     sendSsoTokenChanged: (params: SsoTokenChangedParams) => void
 
     sendStsCredentialChanged: (params: StsCredentialChangedParams) => void
+
+    sendProfileChanged: (params: ProfileChangedParams) => void
 
     sendGetMfaCode: (params: GetMfaCodeParams) => Promise<GetMfaCodeResult>
 }

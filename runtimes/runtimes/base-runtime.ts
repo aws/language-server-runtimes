@@ -94,6 +94,7 @@ import {
     updateProfileRequestType,
     stsCredentialChangedRequestType,
     getMfaCodeRequestType,
+    profileChangedRequestType,
 } from '../protocol/identity-management'
 import { IdentityManagement } from '../server-interface/identity-management'
 import { WebBase64Encoding } from './encoding'
@@ -218,6 +219,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
         sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
         sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
+        sendProfileChanged: params => lspConnection.sendNotification(profileChangedRequestType, params),
         sendGetMfaCode: params => lspConnection.sendRequest(getMfaCodeRequestType, params),
     }
 
