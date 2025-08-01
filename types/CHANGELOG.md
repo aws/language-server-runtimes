@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.51](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.50...language-server-runtimes-types/v0.1.51) (2025-08-01)
+
+
+### Features
+
+* **types:** add types for quickSettings to update permission in tool executions ([#642](https://github.com/aws/language-server-runtimes/issues/642)) ([88f19a8](https://github.com/aws/language-server-runtimes/commit/88f19a8569a6c6b81f25c6a4f821c9b16dd16f3b))
+
 ## [0.1.50](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.49...language-server-runtimes-types/v0.1.50) (2025-07-22)
 
 
