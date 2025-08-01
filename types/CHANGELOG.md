@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.52](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.51...language-server-runtimes-types/v0.1.52) (2025-08-01)
+
+
+### Bug Fixes
+
+* **types:** metadata should be optional ([#646](https://github.com/aws/language-server-runtimes/issues/646)) ([c8cb47f](https://github.com/aws/language-server-runtimes/commit/c8cb47fc9aa81fab0e52d8fde13ed496ef78fb3e))
+
 ## [0.1.51](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.50...language-server-runtimes-types/v0.1.51) (2025-08-01)
 
 
