@@ -1,6 +1,6 @@
 {
     "name": "@aws/language-server-runtimes",
-    "version": "0.2.117",
+    "version": "0.2.118",
     "description": "Runtimes to host Language Servers for AWS",
     "repository": {
         "type": "git",

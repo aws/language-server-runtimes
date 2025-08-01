@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.118](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.117...language-server-runtimes/v0.2.118) (2025-07-31)
+
+
+### Features
+
+* **types:** introduce new completion API for edits suggestion ([#635](https://github.com/aws/language-server-runtimes/issues/635)) ([26ecf77](https://github.com/aws/language-server-runtimes/commit/26ecf770be41b2fa12b9255b446a498c7c209e49))
+
 ## [0.2.117](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.116...language-server-runtimes/v0.2.117) (2025-07-31)
 
 
