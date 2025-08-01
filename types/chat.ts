@@ -138,6 +138,7 @@ export interface FileDetails {
         deleted?: number
         total?: number
     }
+    visibleName?: string
 }
 
 export interface FileList {
