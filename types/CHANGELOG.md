@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.53](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.52...language-server-runtimes-types/v0.1.53) (2025-08-01)
+
+
+### Features
+
+* support visibleName in fileDetails props ([#648](https://github.com/aws/language-server-runtimes/issues/648)) ([ce522ce](https://github.com/aws/language-server-runtimes/commit/ce522ce522b71226287f2b14b48f6699d82c6dc0))
+
 ## [0.1.52](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.51...language-server-runtimes-types/v0.1.52) (2025-08-01)
 
 
