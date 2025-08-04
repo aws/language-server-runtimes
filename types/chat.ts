@@ -460,6 +460,7 @@ export interface ContextCommand extends QuickActionCommand {
     label?: 'file' | 'folder' | 'code' | 'image'
     children?: ContextCommandGroup[]
     content?: Uint8Array
+    pending?: boolean
 }
 
 export interface ContextCommandParams {
