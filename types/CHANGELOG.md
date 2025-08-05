@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.54](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.53...language-server-runtimes-types/v0.1.54) (2025-08-05)
+
+
+### Features
+
+* added action to the list mcp servers result header for buttons ([#651](https://github.com/aws/language-server-runtimes/issues/651)) ([1a8461c](https://github.com/aws/language-server-runtimes/commit/1a8461c15e4b1dc1acfc3044a4969b9e51acbe83))
+
 ## [0.1.53](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.52...language-server-runtimes-types/v0.1.53) (2025-08-01)
 
 
