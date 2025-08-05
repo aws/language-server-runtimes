@@ -546,6 +546,7 @@ export interface Action {
     id: string
     icon?: IconType
     text: string
+    description?: string
 }
 export interface ConversationItem {
     id: string
@@ -647,6 +648,7 @@ export interface ListMcpServersResult {
             title?: string
             status?: Status
         }
+        actions?: Action[]
     }
     list: DetailedListGroup[]
     filterOptions?: FilterOption[]
