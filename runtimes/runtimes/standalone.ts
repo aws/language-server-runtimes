@@ -354,7 +354,10 @@ export const standalone = (props: RuntimeProps) => {
             onInvalidateStsCredential: handler => lspConnection.onRequest(invalidateStsCredentialRequestType, handler),
             sendSsoTokenChanged: params => lspConnection.sendNotification(ssoTokenChangedRequestType, params),
             sendStsCredentialChanged: params => lspConnection.sendNotification(stsCredentialChangedRequestType, params),
-            sendProfileChanged: params => lspConnection.sendNotification(profileChangedRequestType, params),
+            sendProfileChanged: async params => {
+                const encrypted = encryptionKey ? await encryptObjectWithKey(params, encryptionKey) : params
+                lspConnection.sendNotification(profileChangedRequestType, encrypted)
+            },
             sendGetMfaCode: params => lspConnection.sendRequest(getMfaCodeRequestType, params),
         }
 

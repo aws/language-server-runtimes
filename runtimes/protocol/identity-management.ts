@@ -407,6 +407,6 @@ export interface ProfileChangedParams {
     ssoSessions: SsoSession[]
 }
 
-export const profileChangedRequestType = new ProtocolNotificationType<ProfileChangedParams, void>(
+export const profileChangedRequestType = new ProtocolNotificationType<ProfileChangedParams | string, void>(
     'aws/identity/stsCredentialChanged'
 )
