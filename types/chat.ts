@@ -169,6 +169,7 @@ export interface ChatMessage {
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
+    editable?: boolean
     relatedContent?: {
         title?: string
         content: SourceLink[]
@@ -403,6 +404,7 @@ export interface ButtonClickParams {
     messageId: string
     buttonId: string
     metadata?: Record<string, string>
+    editedText?: string
 }
 
 export interface ButtonClickResult {
