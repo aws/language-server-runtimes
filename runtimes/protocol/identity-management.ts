@@ -408,5 +408,5 @@ export interface ProfileChangedParams {
 }
 
 export const profileChangedRequestType = new ProtocolNotificationType<ProfileChangedParams, void>(
-    'aws/identity/stsCredentialChanged'
+    'aws/identity/profileChanged'
 )
