@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.2.123](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.122...language-server-runtimes/v0.2.123) (2025-08-07)
+
+
+### Bug Fixes
+
+* refactor auto-discovery for OS proxy settings ([#654](https://github.com/aws/language-server-runtimes/issues/654)) ([e1b033f](https://github.com/aws/language-server-runtimes/commit/e1b033f9785862ca2fbb956ba6b1436176672b71))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.54 to ^0.1.55
+
 ## [0.2.122](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.121...language-server-runtimes/v0.2.122) (2025-08-05)
 
 
