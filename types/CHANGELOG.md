@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.55](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.54...language-server-runtimes-types/v0.1.55) (2025-08-07)
+
+
+### Features
+
+* support clickable in fileDetails ([#656](https://github.com/aws/language-server-runtimes/issues/656)) ([2325ccb](https://github.com/aws/language-server-runtimes/commit/2325ccb39380d7bcc25f61f27ed58b6f90dfca1b))
+
 ## [0.1.54](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.53...language-server-runtimes-types/v0.1.54) (2025-08-05)
 
 
