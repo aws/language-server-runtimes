@@ -139,6 +139,7 @@ export interface FileDetails {
         total?: number
     }
     visibleName?: string
+    clickable?: boolean
 }
 
 export interface FileList {
