@@ -102,7 +102,8 @@ import { Service } from 'aws-sdk'
 import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
-import { ShowSaveFileDialogRequestType } from '../protocol/window'
+import { ShowSaveFileDialogRequestType, CheckDiagnosticsRequestType } from '../protocol/window'
+import { openWorkspaceFileRequestType } from '../protocol/workspace'
 import { joinUnixPaths } from './util/pathUtil'
 import { editCompletionRequestType } from '../protocol/editCompletions'
 
@@ -273,6 +274,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 onUpdateConfiguration: lspServer.setUpdateConfigurationHandler,
                 selectWorkspaceItem: params => lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
                 openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
+                openWorkspaceFile: params => lspConnection.sendRequest(openWorkspaceFileRequestType.method, params),
             },
             window: {
                 showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
@@ -280,6 +282,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 showDocument: params => lspConnection.sendRequest(ShowDocumentRequest.method, params),
                 showSaveFileDialog: params => lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
                 showOpenDialog: params => lspConnection.sendRequest(ShowOpenDialogRequestType.method, params),
+                checkDiagnostics: params => lspConnection.sendRequest(CheckDiagnosticsRequestType.method, params),
             },
             publishDiagnostics: params => lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
             sendProgress: <P>(type: ProgressType<P>, token: ProgressToken, value: P) => {
