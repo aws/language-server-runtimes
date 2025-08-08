@@ -170,6 +170,7 @@ export interface ChatMessage {
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
+    editable?: boolean
     relatedContent?: {
         title?: string
         content: SourceLink[]
