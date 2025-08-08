@@ -404,10 +404,6 @@ export interface ButtonClickParams {
     messageId: string
     buttonId: string
     metadata?: Record<string, string>
-    /**
-     * Enables passing edited text content when users interact with edit-related buttons
-     **/
-    editedText?: string
 }
 
 export interface ButtonClickResult {
