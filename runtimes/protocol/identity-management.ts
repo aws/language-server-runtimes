@@ -400,3 +400,13 @@ export interface StsCredentialChangedParams {
 export const stsCredentialChangedRequestType = new ProtocolNotificationType<StsCredentialChangedParams, void>(
     'aws/identity/stsCredentialChanged'
 )
+
+// profileChanged
+export interface ProfileChangedParams {
+    profiles: Profile[]
+    ssoSessions: SsoSession[]
+}
+
+export const profileChangedRequestType = new ProtocolNotificationType<ProfileChangedParams, void>(
+    'aws/identity/profileChanged'
+)
