@@ -2,6 +2,7 @@ import { URI } from 'vscode-languageserver-types'
 
 export const SHOW_SAVE_FILE_DIALOG_REQUEST_METHOD = 'aws/showSaveFileDialog'
 export const SHOW_OPEN_FILE_DIALOG_REQUEST_METHOD = 'aws/showOpenFileDialog'
+export const CHECK_DIAGNOSTICS_REQUEST_METHOD = 'aws/checkDiagnostics'
 export interface ShowSaveFileDialogParams {
     // Using untyped string to avoid locking this too strictly.
     // TODO: Migrate to LanguageKind when it is released in 3.18.0
@@ -26,4 +27,12 @@ export interface ShowOpenDialogParams {
 
 export interface ShowOpenDialogResult {
     uris: URI[]
+}
+
+export interface CheckDiagnosticsParams {
+    filePaths: Record<string, any>
+}
+
+export interface CheckDiagnosticsResult {
+    filePaths: Record<string, any>
 }

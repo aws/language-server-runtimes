@@ -8,6 +8,9 @@ import {
     FileParams,
     OPEN_FILE_DIFF_NOTIFICATION_METHOD,
     OpenFileDiffParams,
+    OPEN_WORKSPACE_FILE_REQUEST_METHOD,
+    OpenWorkspaceFileParams,
+    OpenWorkspaceFileResult,
     ProtocolNotificationType,
     ProtocolRequestType,
     SELECT_WORKSPACE_ITEM_REQUEST_METHOD,
@@ -46,3 +49,11 @@ export const didAppendFileNotificationType = new ProtocolNotificationType<FilePa
 export const didCreateDirectoryNotificationType = new ProtocolNotificationType<FileParams, void>(
     DID_CREATE_DIRECTORY_NOTIFICATION_METHOD
 )
+
+export const openWorkspaceFileRequestType = new ProtocolRequestType<
+    OpenWorkspaceFileParams,
+    OpenWorkspaceFileResult,
+    never,
+    void,
+    void
+>(OPEN_WORKSPACE_FILE_REQUEST_METHOD)

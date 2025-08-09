@@ -6,6 +6,9 @@ import {
     ShowOpenDialogResult,
     ShowOpenDialogParams,
     SHOW_OPEN_FILE_DIALOG_REQUEST_METHOD,
+    CHECK_DIAGNOSTICS_REQUEST_METHOD,
+    CheckDiagnosticsParams,
+    CheckDiagnosticsResult,
 } from './lsp'
 
 /**
@@ -27,3 +30,11 @@ export const ShowOpenDialogRequestType = new ProtocolRequestType<
     void,
     void
 >(SHOW_OPEN_FILE_DIALOG_REQUEST_METHOD)
+
+export const CheckDiagnosticsRequestType = new ProtocolRequestType<
+    CheckDiagnosticsParams,
+    CheckDiagnosticsResult,
+    never,
+    void,
+    void
+>(CHECK_DIAGNOSTICS_REQUEST_METHOD)

@@ -61,6 +61,10 @@ import {
     ShowSaveFileDialogResult,
     ShowOpenDialogParams,
     ShowOpenDialogResult,
+    CheckDiagnosticsParams,
+    CheckDiagnosticsResult,
+    OpenWorkspaceFileParams,
+    OpenWorkspaceFileResult,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -154,6 +158,7 @@ export type Lsp = {
             handler: RequestHandler<SelectWorkspaceItemParams, SelectWorkspaceItemResult | undefined | null, void>
         ) => void
         openFileDiff: (params: OpenFileDiffParams) => void
+        openWorkspaceFile: (params: OpenWorkspaceFileParams) => Promise<OpenWorkspaceFileResult>
     }
     window: {
         showMessage: (params: ShowMessageParams) => Promise<void>
@@ -161,6 +166,7 @@ export type Lsp = {
         showDocument: (params: ShowDocumentParams) => Promise<ShowDocumentResult>
         showSaveFileDialog: (params: ShowSaveFileDialogParams) => Promise<ShowSaveFileDialogResult>
         showOpenDialog: (params: ShowOpenDialogParams) => Promise<ShowOpenDialogResult>
+        checkDiagnostics: (params: CheckDiagnosticsParams) => Promise<CheckDiagnosticsResult>
     }
     extensions: {
         onInlineCompletionWithReferences: (

@@ -34,6 +34,8 @@ import {
     ShowOpenDialogRequestType,
     stsCredentialChangedRequestType,
     getMfaCodeRequestType,
+    CheckDiagnosticsParams,
+    OpenWorkspaceFileParams,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -91,7 +93,8 @@ import { getTelemetryLspServer } from './util/telemetryLspServer'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
 import { newAgent } from './agent'
-import { ShowSaveFileDialogRequestType } from '../protocol/window'
+import { ShowSaveFileDialogRequestType, CheckDiagnosticsRequestType } from '../protocol/window'
+import { openWorkspaceFileRequestType } from '../protocol/workspace'
 import { getTelemetryReasonDesc } from './util/shared'
 import { writeSync } from 'fs'
 import { format } from 'util'
@@ -400,6 +403,8 @@ export const standalone = (props: RuntimeProps) => {
                     selectWorkspaceItem: params =>
                         lspConnection.sendRequest(selectWorkspaceItemRequestType.method, params),
                     openFileDiff: params => lspConnection.sendNotification(openFileDiffNotificationType.method, params),
+                    openWorkspaceFile: (params: OpenWorkspaceFileParams) =>
+                        lspConnection.sendRequest(openWorkspaceFileRequestType.method, params),
                 },
                 window: {
                     showMessage: params => lspConnection.sendNotification(ShowMessageNotification.method, params),
@@ -409,6 +414,8 @@ export const standalone = (props: RuntimeProps) => {
                         lspConnection.sendRequest(ShowSaveFileDialogRequestType.method, params),
                     showOpenDialog: (params: ShowOpenDialogParams) =>
                         lspConnection.sendRequest(ShowOpenDialogRequestType.method, params),
+                    checkDiagnostics: (params: CheckDiagnosticsParams) =>
+                        lspConnection.sendRequest(CheckDiagnosticsRequestType.method, params),
                 },
                 publishDiagnostics: params =>
                     lspConnection.sendNotification(PublishDiagnosticsNotification.method, params),
