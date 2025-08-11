@@ -139,6 +139,7 @@ export interface FileDetails {
         total?: number
     }
     visibleName?: string
+    clickable?: boolean
 }
 
 export interface FileList {
@@ -169,6 +170,7 @@ export interface ChatMessage {
     body?: string
     messageId?: string
     canBeVoted?: boolean // requires messageId to be filled to show vote thumbs
+    editable?: boolean
     relatedContent?: {
         title?: string
         content: SourceLink[]
@@ -547,6 +549,7 @@ export interface Action {
     id: string
     icon?: IconType
     text: string
+    description?: string
 }
 export interface ConversationItem {
     id: string
@@ -648,6 +651,7 @@ export interface ListMcpServersResult {
             title?: string
             status?: Status
         }
+        actions?: Action[]
     }
     list: DetailedListGroup[]
     filterOptions?: FilterOption[]
