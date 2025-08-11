@@ -1,5 +1,6 @@
 export * from './auth'
 export {
+    SubscriptionUpgradeParams,
     CHAT_REQUEST_METHOD,
     END_CHAT_REQUEST_METHOD,
     QUICK_ACTION_REQUEST_METHOD,
@@ -37,6 +38,9 @@ export {
     MCP_SERVER_CLICK_REQUEST_METHOD,
     GET_SERIALIZED_CHAT_REQUEST_METHOD,
     OPEN_WORKSPACE_INDEX_SETTINGS_BUTTON_ID,
+    LIST_AVAILABLE_MODELS_REQUEST_METHOD,
+    SUBSCRIPTION_DETAILS_NOTIFICATION_METHOD,
+    SUBSCRIPTION_UPGRADE_NOTIFICATION_METHOD,
 } from './chat'
 export * from './didChangeDependencyPaths'
 export * from './inlineCompletionWithReferences'

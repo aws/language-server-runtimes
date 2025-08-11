@@ -960,6 +960,80 @@
                     }
                 }
             },
+            "Model": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ListAvailableModelsParams": {
+                "type": "object",
+                "required": ["tabId"],
+                "properties": {
+                    "tabId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "ListAvailableModelsResult": {
+                "type": "object",
+                "required": ["tabId", "models"],
+                "properties": {
+                    "tabId": {
+                        "type": "string"
+                    },
+                    "models": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Model"
+                        }
+                    },
+                    "selectedModelId": {
+                        "type": "string"
+                    }
+                }
+            },
+            "SubscriptionDetailsParams": {
+                "type": "object",
+                "required": [
+                    "subscriptionTier",
+                    "subscriptionPeriodReset",
+                    "isOverageEnabled",
+                    "queryUsage",
+                    "queryLimit",
+                    "queryOverage"
+                ],
+                "properties": {
+                    "subscriptionTier": {
+                        "type": "string"
+                    },
+                    "subscriptionPeriodReset": {
+                        "type": "Date"
+                    },
+                    "isOverageEnabled": {
+                        "type": "boolean"
+                    },
+                    "queryUsage": {
+                        "type": "number"
+                    },
+                    "queryLimit": {
+                        "type": "number"
+                    },
+                    "queryOverage": {
+                        "type": "number"
+                    }
+                }
+            },
+            "SubscriptionUpgradeParams": {
+                "type": "object",
+                "properties": {}
+            },
             "ConversationItemGroup": {
                 "type": "object",
                 "properties": {

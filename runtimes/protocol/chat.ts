@@ -38,9 +38,6 @@ import {
     PINNED_CONTEXT_REMOVE_NOTIFICATION_METHOD,
     ACTIVE_EDITOR_CHANGED_NOTIFICATION_METHOD,
     OPEN_FILE_DIALOG_METHOD,
-} from './lsp'
-
-import {
     ChatParams,
     ChatResult,
     EndChatParams,

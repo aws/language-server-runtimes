@@ -8,7 +8,7 @@
         "generate:no-post": "openapi-generator-cli generate"
     },
     "devDependencies": {
-        "@openapitools/openapi-generator-cli": "^2.21.0",
+        "@openapitools/openapi-generator-cli": "^2.21.4",
         "@types/node": "^24.0.4",
         "ts-node": "^10.9.2",
         "typescript": "^5.8.3"
