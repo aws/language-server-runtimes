@@ -41,9 +41,9 @@ export interface DiagnosticInfo {
 }
 
 export interface CheckDiagnosticsParams {
-    filePath: Record<string, DiagnosticInfo[]>
+    fileDiagnostics: Record<string, DiagnosticInfo[]>
 }
 
 export interface CheckDiagnosticsResult {
-    filePath: Record<string, DiagnosticInfo[]>
+    fileDiagnostics: Record<string, DiagnosticInfo[]>
 }
