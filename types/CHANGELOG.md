@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.56](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.55...language-server-runtimes-types/v0.1.56) (2025-08-12)
+
+
+### Features
+
+* add diagnostic checking and workspace file opening support ([#658](https://github.com/aws/language-server-runtimes/issues/658)) ([1013f32](https://github.com/aws/language-server-runtimes/commit/1013f32172c942e5598f8fddcbfe8d6f0836da9f))
+* editable variable for modify functionality  ([#655](https://github.com/aws/language-server-runtimes/issues/655)) ([6480d22](https://github.com/aws/language-server-runtimes/commit/6480d22b5fed8859a217156c24f935296ae72d79))
+
 ## [0.1.55](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.54...language-server-runtimes-types/v0.1.55) (2025-08-07)
 
 
