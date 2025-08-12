@@ -29,10 +29,21 @@ export interface ShowOpenDialogResult {
     uris: URI[]
 }
 
+export interface DiagnosticInfo {
+    range: {
+        start: { line: number; character: number }
+        end: { line: number; character: number }
+    }
+    severity?: number
+    message: string
+    source?: string
+    code?: string | number
+}
+
 export interface CheckDiagnosticsParams {
-    filePaths: Record<string, any>
+    filePath: Record<string, DiagnosticInfo[]>
 }
 
 export interface CheckDiagnosticsResult {
-    filePaths: Record<string, any>
+    filePath: Record<string, DiagnosticInfo[]>
 }
