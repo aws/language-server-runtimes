@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.125](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.124...language-server-runtimes/v0.2.125) (2025-08-12)
+
+
+### Bug Fixes
+
+* add file context override for inline completion ([#660](https://github.com/aws/language-server-runtimes/issues/660)) ([f6f0da8](https://github.com/aws/language-server-runtimes/commit/f6f0da86e935c148c357852a15f43e56c2a7ba44))
+
 ## [0.2.124](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.123...language-server-runtimes/v0.2.124) (2025-08-12)
 
 
