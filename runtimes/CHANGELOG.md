@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.125](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.124...language-server-runtimes/v0.2.125) (2025-08-12)
+
+
+### Bug Fixes
+
+* add file context override for inline completion ([#660](https://github.com/aws/language-server-runtimes/issues/660)) ([f6f0da8](https://github.com/aws/language-server-runtimes/commit/f6f0da86e935c148c357852a15f43e56c2a7ba44))
+
+## [0.2.124](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.123...language-server-runtimes/v0.2.124) (2025-08-12)
+
+
+### Features
+
+* add diagnostic checking and workspace file opening support ([#658](https://github.com/aws/language-server-runtimes/issues/658)) ([1013f32](https://github.com/aws/language-server-runtimes/commit/1013f32172c942e5598f8fddcbfe8d6f0836da9f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.55 to ^0.1.56
+
 ## [0.2.123](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.122...language-server-runtimes/v0.2.123) (2025-08-07)
 
 
