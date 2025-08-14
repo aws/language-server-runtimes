@@ -4,7 +4,7 @@ const fs = require('fs')
 const path = require('path')
 
 // Post-test script to validate generated models against schema definitions
-// Compares models in final-output.json with generated TypeScript and Java models
+// Compares models in complete-schema.json with generated TypeScript and Java models
 // Usage: node post-test.js [--verbose]
 
 // Parse command line arguments
@@ -12,16 +12,16 @@ const args = process.argv.slice(2)
 const verbose = args.includes('--verbose') || args.includes('-v')
 
 // File paths
-const finalOutputPath = path.join(__dirname, '../schema/final-output.json')
+const completeSchemaPath = path.join(__dirname, '../schema/complete-schema.json')
 const typescriptModelsPath = path.join(__dirname, '../generated/typescript/src/models/index.ts')
 const javaModelsDir = path.join(__dirname, '../generated/java/src/main/java/org/openapitools/client/model')
 const openapiConfigPath = path.join(__dirname, '../openapitools.json')
 
 console.log('Starting model validation...\n')
 
-// Check if final-output.json exists
-if (!fs.existsSync(finalOutputPath)) {
-    console.error('Error: final-output.json not found in schema directory')
+// Check if complete-schema.json exists
+if (!fs.existsSync(completeSchemaPath)) {
+    console.error('Error: complete-schema.json not found in schema directory')
     console.error('   Run "npm run generate-schema" first to create the schema file')
     process.exit(1)
 }
@@ -49,21 +49,21 @@ try {
     console.warn('Warning: Could not read OpenAPI configuration:', error.message)
 }
 
-// Load and parse final-output.json
+// Load and parse complete-schema.json
 let schemaModels = new Set()
 try {
-    const finalOutput = JSON.parse(fs.readFileSync(finalOutputPath, 'utf8'))
+    const completeSchema = JSON.parse(fs.readFileSync(completeSchemaPath, 'utf8'))
 
-    if (!finalOutput.components || !finalOutput.components.schemas) {
-        console.error('Error: Invalid OpenAPI structure in final-output.json')
+    if (!completeSchema.components || !completeSchema.components.schemas) {
+        console.error('Error: Invalid OpenAPI structure in complete-schema.json')
         console.error('   Missing components.schemas section')
         process.exit(1)
     }
 
-    schemaModels = new Set(Object.keys(finalOutput.components.schemas))
+    schemaModels = new Set(Object.keys(completeSchema.components.schemas))
     console.log(`Found ${schemaModels.size} models in schema\n`)
 } catch (error) {
-    console.error('Error parsing final-output.json:', error.message)
+    console.error('Error parsing complete-schema.json:', error.message)
     process.exit(1)
 }
 

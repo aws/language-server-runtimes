@@ -8,7 +8,7 @@
                 "generatorName": "typescript-fetch",
                 "disabled": false,
                 "output": "#{cwd}/generated/typescript",
-                "inputSpec": "#{cwd}/schema/final-output.json",
+                "inputSpec": "#{cwd}/schema/complete-schema.json",
                 "templateDir": "#{cwd}/custom-templates/typescript",
                 "additionalProperties": {
                     "supportsES6": true,
@@ -41,7 +41,7 @@
                 "generatorName": "java",
                 "disabled": false,
                 "output": "#{cwd}/generated/java",
-                "inputSpec": "#{cwd}/schema/final-output.json",
+                "inputSpec": "#{cwd}/schema/complete-schema.json",
                 "templateDir": "#{cwd}/custom-templates/java",
                 "additionalProperties": {
                     "useOneOfInterfaces": true,

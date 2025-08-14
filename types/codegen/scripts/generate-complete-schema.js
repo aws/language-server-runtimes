@@ -4,10 +4,10 @@ const fs = require('fs')
 const path = require('path')
 
 // Pre-generation script for all generators
-// Combines all schema files in the schema directory and creates final-output.json with OpenAPI wrapper
+// Combines all schema files in the schema directory and creates complete-schema.json with OpenAPI wrapper
 
 const schemaDir = path.join(__dirname, '../schema')
-const finalOutputPath = path.join(__dirname, '../schema/final-output.json')
+const completeSchemaPath = path.join(__dirname, '../schema/complete-schema.json')
 const openapiConfigPath = path.join(__dirname, '../openapitools.json')
 
 // Validate required directories and files exist
@@ -72,8 +72,8 @@ function processSchemaFiles() {
     try {
         const files = fs.readdirSync(schemaDir)
 
-        // Filter for JSON files, excluding final-output.json
-        const jsonFiles = files.filter(file => file.endsWith('.json') && file !== 'final-output.json')
+        // Filter for JSON files, excluding complete-schema.json
+        const jsonFiles = files.filter(file => file.endsWith('.json') && file !== 'complete-schema.json')
 
         if (jsonFiles.length === 0) {
             console.error('Error: No JSON schema files found in schema directory')
@@ -185,25 +185,25 @@ if (!schemas || Object.keys(schemas).length === 0) {
     process.exit(1)
 }
 
-// create the final output with header + schemas + footer
-const finalOutput = {
+// create the complete schema with header + schemas + footer
+const completeSchema = {
     ...openApiHeader,
     components: {
         schemas: schemas,
     },
 }
 
-// write full OpenAPI spec to final-output.json
+// write full OpenAPI spec to complete-schema.json
 try {
-    fs.writeFileSync(finalOutputPath, JSON.stringify(finalOutput, null, 4))
+    fs.writeFileSync(completeSchemaPath, JSON.stringify(completeSchema, null, 4))
 
-    console.log(`\nComplete OpenAPI structure created in final-output.json (version: ${version})`)
+    console.log(`\nComplete OpenAPI structure created in complete-schema.json (version: ${version})`)
     console.log(`Combined ${Object.keys(schemas).length} total schemas from ${files.length} files: ${files.join(', ')}`)
 
     if (skipped > 0 || errors > 0) {
         console.log(`Processing summary: ${files.length} successful, ${skipped} skipped, ${errors} errors`)
     }
 } catch (error) {
-    console.error('Error writing final-output.json:', error.message)
+    console.error('Error writing complete-schema.json:', error.message)
     process.exit(1)
 }
