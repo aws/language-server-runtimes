@@ -1,5 +1,81 @@
 # Changelog
 
+## [0.2.125](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.124...language-server-runtimes/v0.2.125) (2025-08-12)
+
+
+### Bug Fixes
+
+* add file context override for inline completion ([#660](https://github.com/aws/language-server-runtimes/issues/660)) ([f6f0da8](https://github.com/aws/language-server-runtimes/commit/f6f0da86e935c148c357852a15f43e56c2a7ba44))
+
+## [0.2.124](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.123...language-server-runtimes/v0.2.124) (2025-08-12)
+
+
+### Features
+
+* add diagnostic checking and workspace file opening support ([#658](https://github.com/aws/language-server-runtimes/issues/658)) ([1013f32](https://github.com/aws/language-server-runtimes/commit/1013f32172c942e5598f8fddcbfe8d6f0836da9f))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.55 to ^0.1.56
+
+## [0.2.123](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.122...language-server-runtimes/v0.2.123) (2025-08-07)
+
+
+### Bug Fixes
+
+* refactor auto-discovery for OS proxy settings ([#654](https://github.com/aws/language-server-runtimes/issues/654)) ([e1b033f](https://github.com/aws/language-server-runtimes/commit/e1b033f9785862ca2fbb956ba6b1436176672b71))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.54 to ^0.1.55
+
+## [0.2.122](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.121...language-server-runtimes/v0.2.122) (2025-08-05)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.53 to ^0.1.54
+
+## [0.2.121](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.120...language-server-runtimes/v0.2.121) (2025-08-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.52 to ^0.1.53
+
+## [0.2.120](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.119...language-server-runtimes/v0.2.120) (2025-08-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.51 to ^0.1.52
+
+## [0.2.119](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.118...language-server-runtimes/v0.2.119) (2025-08-01)
+
+
+### Bug Fixes
+
+* add open tab params to inline completion protocol  ([#645](https://github.com/aws/language-server-runtimes/issues/645)) ([56c9fe0](https://github.com/aws/language-server-runtimes/commit/56c9fe01cca4aacfc15e3a8116a44b72ad10d43a))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.50 to ^0.1.51
+
 ## [0.2.118](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.117...language-server-runtimes/v0.2.118) (2025-07-31)
 
 

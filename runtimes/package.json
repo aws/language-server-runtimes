@@ -1,6 +1,6 @@
 {
     "name": "@aws/language-server-runtimes",
-    "version": "0.2.118",
+    "version": "0.2.125",
     "description": "Runtimes to host Language Servers for AWS",
     "repository": {
         "type": "git",
@@ -30,7 +30,7 @@
         "generate-types": "ts-node ./script/generate-types.ts"
     },
     "dependencies": {
-        "@aws/language-server-runtimes-types": "^0.1.50",
+        "@aws/language-server-runtimes-types": "^0.1.56",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/api-logs": "^0.200.0",
         "@opentelemetry/core": "^2.0.0",
@@ -45,12 +45,12 @@
         "hpagent": "^1.2.0",
         "jose": "^5.9.6",
         "mac-ca": "^3.1.1",
-        "os-proxy-config": "^1.1.2",
         "rxjs": "^7.8.2",
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-protocol": "^3.17.5",
         "vscode-uri": "^3.1.0",
-        "win-ca": "^3.5.1"
+        "win-ca": "^3.5.1",
+        "registry-js": "^1.16.1"
     },
     "devDependencies": {
         "@types/mocha": "^10.0.9",

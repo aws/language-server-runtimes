@@ -31,11 +31,18 @@ The server runtime implementation acts as a proxy for LSP methods, which means i
 | onInlineCompletion | Yes     | Provide list of inline completion suggestions from the Server                                                                         |
 | onExecuteCommand   | Yes     | Executes a custom command provided by the Server. Servers are advised to document custom commands they support in the package README. |
 
+##### LSP Window
+
+| Description                          | Method                            | Params                         | Method type                                                                                                                     | Response Type   |
+| ------------------------------------ | --------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| Request to check diagnostics for specified files | `aws/checkDiagnostics`         | `CheckDiagnosticsParams`                   | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Server to Client           | `CheckDiagnosticsResult`    |
+
 ##### LSP Workspace
 
 | Description                          | Method                            | Params                         | Method type                                                                                                                     | Response Type   |
 | ------------------------------------ | --------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- | --------------- |
 | Request to select workspace item (folder, file) with the selected items returned | `aws/selectWorkspaceItem`         | `SelectWorkspaceItemParams`                   | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Server to Client           | `SelectWorkspaceItemResult`    |
+| Request to open a file in the workspace programmatically | `aws/openWorkspaceFile`         | `OpenWorkspaceFileParams`                   | [Request](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#requestMessage) Server to Client           | `OpenWorkspaceFileResult`    |
 | Sent notification to open file differences for the new file content. Supports new, updated or removed files. | `aws/openFileDiff`                | `OpenFileDiffParams`                | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client          | n/a |
 | Sent notification that file was copied from old to new path using file system operation. | `aws/didCopyFile`                | `CopyFileParams`                | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client          | n/a |
 | Sent notification that content was written to file using file system operation. | `aws/didWriteFile`                | `FileParams`                | [Notification](https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#notificationMessage) Server to Client          | n/a |

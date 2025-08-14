@@ -1,5 +1,48 @@
 # Changelog
 
+## [0.1.56](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.55...language-server-runtimes-types/v0.1.56) (2025-08-12)
+
+
+### Features
+
+* add diagnostic checking and workspace file opening support ([#658](https://github.com/aws/language-server-runtimes/issues/658)) ([1013f32](https://github.com/aws/language-server-runtimes/commit/1013f32172c942e5598f8fddcbfe8d6f0836da9f))
+* editable variable for modify functionality  ([#655](https://github.com/aws/language-server-runtimes/issues/655)) ([6480d22](https://github.com/aws/language-server-runtimes/commit/6480d22b5fed8859a217156c24f935296ae72d79))
+
+## [0.1.55](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.54...language-server-runtimes-types/v0.1.55) (2025-08-07)
+
+
+### Features
+
+* support clickable in fileDetails ([#656](https://github.com/aws/language-server-runtimes/issues/656)) ([2325ccb](https://github.com/aws/language-server-runtimes/commit/2325ccb39380d7bcc25f61f27ed58b6f90dfca1b))
+
+## [0.1.54](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.53...language-server-runtimes-types/v0.1.54) (2025-08-05)
+
+
+### Features
+
+* added action to the list mcp servers result header for buttons ([#651](https://github.com/aws/language-server-runtimes/issues/651)) ([1a8461c](https://github.com/aws/language-server-runtimes/commit/1a8461c15e4b1dc1acfc3044a4969b9e51acbe83))
+
+## [0.1.53](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.52...language-server-runtimes-types/v0.1.53) (2025-08-01)
+
+
+### Features
+
+* support visibleName in fileDetails props ([#648](https://github.com/aws/language-server-runtimes/issues/648)) ([ce522ce](https://github.com/aws/language-server-runtimes/commit/ce522ce522b71226287f2b14b48f6699d82c6dc0))
+
+## [0.1.52](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.51...language-server-runtimes-types/v0.1.52) (2025-08-01)
+
+
+### Bug Fixes
+
+* **types:** metadata should be optional ([#646](https://github.com/aws/language-server-runtimes/issues/646)) ([c8cb47f](https://github.com/aws/language-server-runtimes/commit/c8cb47fc9aa81fab0e52d8fde13ed496ef78fb3e))
+
+## [0.1.51](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.50...language-server-runtimes-types/v0.1.51) (2025-08-01)
+
+
+### Features
+
+* **types:** add types for quickSettings to update permission in tool executions ([#642](https://github.com/aws/language-server-runtimes/issues/642)) ([88f19a8](https://github.com/aws/language-server-runtimes/commit/88f19a8569a6c6b81f25c6a4f821c9b16dd16f3b))
+
 ## [0.1.50](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.49...language-server-runtimes-types/v0.1.50) (2025-07-22)
 
 

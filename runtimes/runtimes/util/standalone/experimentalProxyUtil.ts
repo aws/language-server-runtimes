@@ -13,8 +13,8 @@ import { NodeHttpHandler } from '@smithy/node-http-handler'
 import { readMacosCertificates, readLinuxCertificates, readWindowsCertificates } from './certificatesReaders'
 import { Telemetry } from '../../../server-interface'
 import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
-import { pathToFileURL } from 'node:url'
-import { execFileSync } from 'node:child_process'
+import { getMacSystemProxy } from './getProxySettings/getMacProxySettings'
+import { getWindowsSystemProxy } from './getProxySettings/getWindowsProxySettings'
 
 export class ProxyConfigManager {
     /**
@@ -71,35 +71,14 @@ export class ProxyConfigManager {
         return undefined
     }
 
-    private static getSystemProxySync(): string | undefined {
-        try {
-            const resolved = require.resolve('os-proxy-config')
-            const resolvedUrl = pathToFileURL(resolved).href
-
-            const snippet = `
-                (async () => {
-                    try {
-                        const mod = await import(${JSON.stringify(resolvedUrl)});
-                        const r   = await mod.getSystemProxy();
-                        console.log(JSON.stringify(r ?? {}));
-                    } catch (e) {
-                        console.error(e?.message ?? e);
-                        console.log("{}");
-                    }
-                })();
-            `
-
-            const raw = execFileSync(process.execPath, ['-e', snippet], {
-                encoding: 'utf8',
-                stdio: ['ignore', 'pipe', 'inherit'],
-            })
-
-            console.debug(`os-proxy-config output: ${raw}`)
-            const { proxyUrl } = JSON.parse(raw.trim() || '{}')
-            return proxyUrl && /^https?:\/\//.test(proxyUrl) ? proxyUrl : undefined
-        } catch (err) {
-            console.warn('os‑proxy‑config shim failed:', (err as Error).message)
-            return undefined
+    private static getSystemProxy(): string | undefined {
+        switch (process.platform) {
+            case 'darwin':
+                return getMacSystemProxy()?.proxyUrl
+            case 'win32':
+                return getWindowsSystemProxy()?.proxyUrl
+            default:
+                return undefined
         }
     }
 
@@ -209,7 +188,7 @@ export class ProxyConfigManager {
         }
 
         // Fall back to OS auto‑detect (HTTP or HTTPS only)
-        const sysProxyUrl = ProxyConfigManager.getSystemProxySync()
+        const sysProxyUrl = ProxyConfigManager.getSystemProxy()
         if (sysProxyUrl) {
             this.emitProxyMetric('AutoDetect', certs.length, sysProxyUrl)
             return new HttpsProxyAgent({ ...agentOptions, proxy: sysProxyUrl })
