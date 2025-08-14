@@ -731,7 +731,7 @@
                             },
                             "label": {
                                 "type": "string",
-                                "enum": ["file", "folder", "code", "image"]
+                                "description": "file, folder, code, image"
                             },
                             "children": {
                                 "type": "array",

@@ -50,12 +50,16 @@
                     "targetCompatibility": "21"
                 },
                 "global-property": {
-                    "models": "CursorPosition:FileParams:CopyFileParams:OpenFileDiffParams:ShowOpenDialogParams:ShowSaveFileDialogParams:ShowSaveFileDialogResult"
+                    "models": "IconType:ContextCommandGroup:QuickActionCommand:ContextCommand:CursorPosition:FileParams:CopyFileParams:OpenFileDiffParams:ShowOpenDialogParams:ShowSaveFileDialogParams:ShowSaveFileDialogResult"
                 },
                 "importMappings": {
                     "Position": "org.eclipse.lsp4j.Position",
                     "Range": "org.eclipse.lsp4j.Range",
                     "TextDocumentIdentifier": "org.eclipse.lsp4j.TextDocumentIdentifier"
+                },
+                "typeMappings": {
+                    "IconType": "String",
+                    "Uint8Array": "byte[]"
                 }
             }
         }
