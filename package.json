@@ -11,7 +11,7 @@
     ],
     "workspaces": [
         "types",
-        "types/codegen/generated",
+        "types/codegen/generated/typescript",
         "runtimes",
         "chat-client-ui-types"
     ],
