@@ -1,51 +1,205 @@
-# Code Generation
+# OpenAPI Code Generation
 
-This directory contains OpenAPI code generation configuration and post-processing scripts for language server runtime types.
+This directory contains scripts and configuration for generating TypeScript and Java types from OpenAPI schema definitions using OpenAPI Generator CLI.
 
-## Structure
+## Overview
 
-- `schema/` - OpenAPI schema definitions
-- `custom-templates/` - Custom Mustache templates for code generation sorted by langauage
-- `generated/` - Generated output directory where TypeScript and Java types will be located post generation
-- `post-generate.js` - Post-processing script
-- `openapitools.json` - OpenAPI Generator configuration
+The code generation process combines multiple schema files into a complete OpenAPI specification and generates both TypeScript and Java types with custom templates, import mappings, and validation.
+
+**Running `npm run generate` will automatically generate:**
+- **TypeScript types** in `generated/typescript/` - Complete type definitions and runtime client
+- **Java model classes** in `generated/java/` - Filtered model classes for specific use cases
+
+## Directory Structure
+
+```
+types/codegen/
+├── schema/                           # Schema definition files
+│   ├── chatTypes.json               # Main schema definitions
+│   └── complete-schema.json         # Generated complete OpenAPI spec
+├── scripts/                         # Generation and validation scripts
+│   ├── generate-complete-schema.js  # Combines all schema files
+│   ├── post-typescript.js          # TypeScript post-processing
+│   ├── post-test.js                 # Model validation script
+│   ├── pre-typescript.js           # TypeScript pre-processing
+│   └── constants.ts                 # Constants to inject
+├── custom-templates/                # Custom Mustache templates
+│   ├── typescript/                  # TypeScript-specific templates
+│   └── java/                        # Java-specific templates
+├── generated/                       # Generated output files
+│   ├── typescript/                  # TypeScript types
+│   └── java/                        # Java model classes
+├── tests/                           # Test schemas and validation
+└── openapitools.json               # Generator configuration
+```
+
+## Process Flow
+
+### 1. Schema Generation (`generate-complete-schema.js`)
+- Scans all JSON files in the `schema/` directory
+- Combines schemas from multiple files into a single collection
+- Creates `complete-schema.json` with complete OpenAPI 3.0.0 structure:
+  - Dynamic version from `openapitools.json` TypeScript generator config
+  - Combined schemas from all source files
+  - Proper OpenAPI structure and formatting
+  - Conflict detection and warnings for duplicate schema names
+
+### 2. Code Generation (OpenAPI Generator CLI)
+- **TypeScript Generator**: Generates complete TypeScript types and runtime
+  - Uses `typescript-fetch` generator with custom templates
+  - Generates interfaces, types, and enum unions
+  - Includes runtime API client code
+- **Java Generator**: Generates filtered Java model classes
+  - Uses selective model generation via `global-property.models`
+  - Only generates specific models needed for Java integration
+  - Targets Java 21 with modern features
+
+### 3. Post-Processing (`post-typescript.js`)
+- Processes import mappings from `openapitools.json`
+- Adds external library imports (e.g., `vscode-languageserver-types`)
+- Injects constants from `constants.ts`
+- Modifies interface visibility (e.g., makes `PartialResultParams` internal)
+
+### 4. Validation (`post-test.js`)
+- Validates generated models against schema definitions
+- Checks for missing models (should be generated but aren't)
+- Reports extra/intermediate models (generated but not in schema)
+- Supports verbose mode for detailed analysis
+- Respects `global-property.models` filters for accurate validation
+
+## Available Scripts
+
+```bash
+# Generate complete schema from individual files
+npm run generate-schema
+
+# Full generation pipeline (schema + generation + post-processing + validation)
+npm run generate
+
+# Generation without post-processing
+npm run generate:no-post
+
+# Validate generated models (errors only)
+npm run test
+npm run validate
+
+# Validate with detailed output (includes extra/intermediate models)
+npm run test:verbose
+```
 
 ## Configuration
 
-### openapitools.json
+### Generator Configuration (`openapitools.json`)
 
-OpenAPI Generator configuration defining code generation settings for TypeScript and Java:
+The main configuration file contains detailed settings for both TypeScript and Java generators:
 
-**Common Configuration:**
-- `generatorName` - Specifies the generator type (typescript-fetch, java)
-- `disabled` - Allows selective turning off of generators during development. By default, all generators run. New languages/input specs can be added with their own customization
-- `output` - Target directory for generated code
-- `inputSpec` - Source OpenAPI schema file
-- `templateDir` - Points to custom Mustache templates that overwrite canonical templates from [OpenAPI Generator templates](https://openapi-generator.tech/docs/templating)
+#### TypeScript Generator Settings
+- **Generator**: `typescript-fetch` - Generates TypeScript types with fetch-based runtime
+- **ES6 Support**: `supportsES6: true` - Modern JavaScript features
+- **Property Naming**: `camelCase` for both models and enums
+- **String Enums**: `stringEnums: true` - Generates union types instead of numeric enums
+- **Runtime Checks**: `withoutRuntimeChecks: true` - Lighter generated code
+- **Additional Properties**: `nullSafeAdditionalProps: false` - Flexible object handling
+- **OpenAPI Normalizer**: `REF_AS_PARENT_IN_ALLOF: true` - Better inheritance handling
 
-**TypeScript Configuration:**
-- `additionalProperties` - Language-specific options from the [typescript-fetch generator](https://openapi-generator.tech/docs/generators/typescript-fetch/). Notable settings:
-  - `stringEnums` - Generates string enums instead of numeric
-  - `withoutRuntimeChecks` - Reduces unnecessary generated code by removing runtime validation
-  - `supportsES6` - Enables ES6 features
-  - `modelPropertyNaming`/`enumPropertyNaming` - Sets camelCase naming conventions
-- `global-property` - [Global properties](https://openapi-generator.tech/docs/globals) for debugging and selective model generation (alternative to .openapi-generator-ignore file)
-- `openapi-normalizer` - [Normalizers](https://openapi-generator.tech/docs/customization/#openapi-normalizer) shape input before generation:
-  - `REF_AS_PARENT_IN_ALLOF` - Enables traditional inheritance (extends) via allOf instead of including all parent fields in child, resulting in cleaner code
-- `reservedWordsMappings` - Overcomes generator renaming of reserved words. Forces `export` field to remain `export` instead of being renamed to `_export`
-- `typeMappings` - Overcomes generator quirks where `Date` gets converted to `string` or `ModelDate`. Forces generator to use proper `Date` type
+#### Java Generator Settings
+- **Generator**: `java` - Standard Java model classes
+- **Java Version**: Source and target compatibility set to Java 21
+- **OneOf Interfaces**: `useOneOfInterfaces: true` - Union type handling using interfaces
+- **Date Library**: `java8` - Uses modern Java time APIs
+- **Validation**: Bean validation disabled for lighter models
+- **Legacy Behavior**: `legacyDiscriminatorBehavior: false` - Modern discriminator handling
 
-**Java Configuration:** TODO TODO TODO
-- `additionalProperties` - Java-specific settings including Java 21 compatibility, validation options, and serialization settings
-- `global-property.models` - Specifies exact models to generate (CursorPosition, FileParams, etc.) for selective generation
-- `importMappings` - Maps external types to LSP4J classes for seamless integration with Language Server Protocol
+### Model Filtering
 
-## Post-Processing
+Java generator uses selective model generation via `global-property.models`:
+```json
+"global-property": {
+  "models": "IconType:ContextCommandGroup:QuickActionCommand:ContextCommand:CursorPosition:FileParams:CopyFileParams:OpenFileDiffParams:ShowOpenDialogParams:ShowSaveFileDialogParams:ShowSaveFileDialogResult"
+}
+```
 
-The `post-generate.js` script runs after OpenAPI code generation to customize the generated TypeScript types:
+This generates only the specified models, making the Java output focused on specific use cases.
 
-- **Adds constants**: Adds protocol method constants from `constants.ts` to the generated index file. This is due to a limitation of the OpenAPI generator which ignores type alias constants in generation.
-- **Modifies interfaces**: Changes `PartialResultParams` from exported to internal interface. This is because `PartialResultParams` is only used internally and causes conflicts with VS Code LSP protocol type of the same name if exported. This interface is not exported in the current `chat.ts` either.   
-- **Extensible**: Other post-processing steps should be added here.
+### Import Mappings
 
-This ensures the generated types integrate properly with the language server runtime while maintaining clean separation between generated and hand-written code.
+Both generators support external type imports, but handle them differently:
+
+#### Java Import Mappings
+```json
+"importMappings": {
+  "Position": "org.eclipse.lsp4j.Position",
+  "Range": "org.eclipse.lsp4j.Range", 
+  "TextDocumentIdentifier": "org.eclipse.lsp4j.TextDocumentIdentifier"
+}
+```
+
+#### TypeScript Import Mappings
+Handled by `post-typescript.js` for more flexible processing:
+```json
+"importMappings": {
+  "Position": "vscode-languageserver-types",
+  "Range": "vscode-languageserver-types",
+  "TextDocumentIdentifier": "vscode-languageserver-types"
+}
+```
+
+### Type Mappings
+
+Custom type mappings for language-specific types:
+
+#### Java Type Mappings
+```json
+"typeMappings": {
+  "IconType": "String",
+  "Uint8Array": "byte[]"
+}
+```
+
+#### TypeScript Type Mappings
+```json
+"typeMappings": {
+  "Date": "Date"
+}
+```
+
+### Reserved Words
+
+Handle language-specific reserved words:
+```json
+"reservedWordsMappings": {
+  "export": "export"
+}
+```
+
+## Output
+
+### TypeScript Output (`generated/typescript/`)
+- Complete type definitions for all schema models
+- Runtime API client with fetch-based implementation
+- Proper import statements for external dependencies
+- Injected constants and utilities
+- NPM package ready for distribution
+
+### Java Output (`generated/java/`)
+- Selective model classes (only specified models via filtering)
+- Java 21 compatible code
+- LSP4J integration for language server types
+- Maven/Gradle compatible structure
+
+## Validation Results
+
+The validation script provides detailed reporting:
+- **Schema models**: Total models defined in schema files
+- **TypeScript models**: Generated models (includes intermediate models)
+- **Java models**: Generated models (filtered subset based on configuration)
+- **Missing models**: Models that should be generated but aren't
+- **Extra models**: Intermediate models created by OpenAPI generator
+
+## Development Workflow
+
+1. **Add/modify schemas** in `schema/chatTypes.json`
+2. **Run generation**: `npm run generate`
+3. **Review validation**: Check for missing or extra models
+4. **Test integration**: Use generated types in your application
+5. **Commit changes**: Only commit schema files, not generated files
