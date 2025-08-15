@@ -196,10 +196,45 @@ The validation script provides detailed reporting:
 - **Missing models**: Models that should be generated but aren't
 - **Extra models**: Intermediate models created by OpenAPI generator
 
+## Testing
+
+The `tests/` directory contains comprehensive tests for the OpenAPI code generation pipeline. These tests validate that your `openapitools.json` configuration and custom templates work correctly.
+
+### Running Tests
+
+```bash
+# Run all tests
+npm run test:unit
+
+# Inspect generated files for debugging
+KEEP_TEST_OUTPUT=1 npm run test:unit
+
+# Run specific test suites
+npm run test:unit -- --testPathPattern="field-addition"
+npm run test:unit -- --testPathPattern="openapi-normalizer"
+```
+
+### Test Coverage
+
+- **Field Addition Tests (8 tests)**: Validates TypeScript interfaces and Java records for optional/required fields
+- **Configuration Tests**: Ensures camelCase naming, ES6 exports, Java 21 compatibility, and custom templates  
+- **OpenAPI Normalizer Tests (2 tests)**: Tests inheritance vs property flattening based on configuration
+
+The tests use your actual `openapitools.json` configuration (not mocked) to ensure production validation and regression protection.
+
+**Key Features:**
+- Real configuration testing using your actual `openapitools.json`
+- Custom template validation (Java records vs classes)
+- Language-specific behavior testing (TypeScript inheritance, Java flattening)
+- Configuration-aware tests that adapt to your settings
+
+See [tests/README.md](tests/README.md) for detailed test documentation.
+
 ## Development Workflow
 
 1. **Add/modify schemas** in `schema/chatTypes.json`
 2. **Run generation**: `npm run generate`
 3. **Review validation**: Check for missing or extra models
 4. **Test integration**: Use generated types in your application
-5. **Commit changes**: Only commit schema files, not generated files
+5. **Run tests**: `npm run test:unit` to validate configuration and templates
+6. **Commit changes**: Only commit schema files, not generated files

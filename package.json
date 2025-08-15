@@ -38,7 +38,7 @@
         "preversion": "npm run test",
         "version": "npm run compile && git add -A .",
         "watch": "tsc --build --watch",
-        "gen-comp": "cd ./types/codegen/ && npm run generate && cd ./generated && npm run build && cd ../../../ && npm run compile"
+        "gen-comp": "cd ./types/codegen/ && npm run generate && cd ./generated/typescript && npm run build && cd ../../../ && npm run compile"
     },
     "devDependencies": {
         "@commitlint/cli": "^19.8.1",

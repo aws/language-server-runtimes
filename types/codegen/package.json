@@ -9,11 +9,15 @@
         "generate:no-post": "npm run generate-schema && openapi-generator-cli generate",
         "test": "node scripts/post-test.js",
         "test:verbose": "node scripts/post-test.js --verbose",
+        "test:unit": "ts-mocha -b 'tests/unit/**/*.test.js' --bail false",
+        "test:all": "npm run test && npm run test:unit",
         "validate": "npm run test"
     },
     "devDependencies": {
         "@openapitools/openapi-generator-cli": "^2.21.4",
+        "@types/mocha": "^10.0.9",
         "@types/node": "^24.0.4",
+        "ts-mocha": "^11.1.0",
         "ts-node": "^10.9.2",
         "typescript": "^5.8.3"
     }

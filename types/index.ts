@@ -49,6 +49,9 @@ export {
     ShowOpenDialogResult,
     SHOW_SAVE_FILE_DIALOG_REQUEST_METHOD,
     SHOW_OPEN_FILE_DIALOG_REQUEST_METHOD,
+    CHECK_DIAGNOSTICS_REQUEST_METHOD,
+    CheckDiagnosticsParams,
+    CheckDiagnosticsResult,
 } from './window'
 export {
     SelectWorkspaceItemParams,
@@ -61,4 +64,7 @@ export {
     DID_COPY_FILE_NOTIFICATION_METHOD,
     DID_APPEND_FILE_NOTIFICATION_METHOD,
     DID_WRITE_FILE_NOTIFICATION_METHOD,
+    OPEN_WORKSPACE_FILE_REQUEST_METHOD,
+    OpenWorkspaceFileParams,
+    OpenWorkspaceFileResult,
 } from './workspace'
