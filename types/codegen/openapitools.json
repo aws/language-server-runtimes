@@ -1,0 +1,72 @@
+{
+    "$schema": "node_modules/@openapitools/openapi-generator-cli/config.schema.json",
+    "spaces": 2,
+    "generator-cli": {
+        "version": "7.14.0",
+        "generators": {
+            "typescript": {
+                "generatorName": "typescript-fetch",
+                "disabled": false,
+                "output": "#{cwd}/generated/typescript",
+                "inputSpec": "#{cwd}/schema/complete-schema.json",
+                "templateDir": "#{cwd}/custom-templates/typescript",
+                "additionalProperties": {
+                    "supportsES6": true,
+                    "modelPropertyNaming": "camelCase",
+                    "enumPropertyNaming": "camelCase",
+                    "npmName": "@local/language-server-runtimes-generated-types",
+                    "npmVersion": "0.0.1",
+                    "nullSafeAdditionalProps": false,
+                    "withoutRuntimeChecks": true,
+                    "stringEnums": true,
+                    "disallowAdditionalPropertiesIfNotPresent": false
+                },
+                "global-property": {},
+                "openapi-normalizer": {
+                    "REF_AS_PARENT_IN_ALLOF": true
+                },
+                "reservedWordsMappings": {
+                    "export": "export"
+                },
+                "typeMappings": {
+                    "Date": "Date"
+                },
+                "importMappings": {
+                    "Position": "vscode-languageserver-types",
+                    "Range": "vscode-languageserver-types",
+                    "TextDocumentIdentifier": "vscode-languageserver-types"
+                }
+            },
+            "java": {
+                "generatorName": "java",
+                "disabled": false,
+                "output": "#{cwd}/generated/java",
+                "inputSpec": "#{cwd}/schema/complete-schema.json",
+                "templateDir": "#{cwd}/custom-templates/java",
+                "additionalProperties": {
+                    "useOneOfInterfaces": true,
+                    "legacyDiscriminatorBehavior": false,
+                    "java8": false,
+                    "dateLibrary": "java8",
+                    "serializableModel": false,
+                    "useBeanValidation": false,
+                    "performBeanValidation": false,
+                    "sourceCompatibility": "21",
+                    "targetCompatibility": "21"
+                },
+                "global-property": {
+                    "models": "IconType:ContextCommandGroup:QuickActionCommand:ContextCommand:CursorPosition:FileParams:CopyFileParams:OpenFileDiffParams:ShowOpenDialogParams:ShowSaveFileDialogParams:ShowSaveFileDialogResult"
+                },
+                "importMappings": {
+                    "Position": "org.eclipse.lsp4j.Position",
+                    "Range": "org.eclipse.lsp4j.Range",
+                    "TextDocumentIdentifier": "org.eclipse.lsp4j.TextDocumentIdentifier"
+                },
+                "typeMappings": {
+                    "IconType": "String",
+                    "Uint8Array": "byte[]"
+                }
+            }
+        }
+    }
+}

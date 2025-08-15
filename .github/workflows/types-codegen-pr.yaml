@@ -1,0 +1,55 @@
+name: Chat Types PR Validation
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'types/codegen/schema/chatTypes.json'
+  workflow_dispatch:
+
+jobs:
+  validate-pr:
+    name: Validate PR with chatTypes.json changes
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          #should we cache: 'npm'
+
+      # - name: Install root dependencies
+      #   working-directory: .
+      #   run: npm install
+        
+      - name: Install codegen dependencies
+        working-directory: types/codegen
+        run: npm install
+
+      - name: Generate types
+        working-directory: types/codegen
+        run: npm run generate
+
+      - name: Build TypeScript
+        working-directory: types/codegen/generated/typescript
+        run: |
+          npm i
+          npm run build
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Build Java with Maven
+        working-directory: types/codegen/generated/java
+        run: |
+          # Install the LSP4J dependency before compiling
+          mvn dependency:get -Dartifact=org.eclipse.lsp4j:org.eclipse.lsp4j:0.22.0
+          mvn clean compile -Djava.version=21

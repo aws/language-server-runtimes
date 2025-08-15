@@ -1,0 +1,17 @@
+{{>licenseInfo}}
+
+package {{package}};
+
+// Selective imports for records
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
+{{#imports}}
+import {{import}};
+{{/imports}}
+
+{{#models}}
+{{#model}}
+{{#isEnum}}{{>modelEnum}}{{/isEnum}}{{^isEnum}}{{#vendorExtensions.x-is-one-of-interface}}{{>oneof_interface}}{{/vendorExtensions.x-is-one-of-interface}}{{^vendorExtensions.x-is-one-of-interface}}{{>record}}{{/vendorExtensions.x-is-one-of-interface}}{{/isEnum}}
+{{/model}}
+{{/models}}
