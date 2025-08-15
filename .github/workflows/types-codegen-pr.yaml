@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'types/codegen/schema/chatTypes.json'
+      - 'types/codegen/schema/**'
   workflow_dispatch:
 
 jobs:
@@ -31,9 +31,25 @@ jobs:
         working-directory: types/codegen
         run: npm install
 
+      - name: Unit tests
+        working-directory: types/codegen
+        run: npm run test:unit   
+
+      - name: Coalesce schemas
+        working-directory: types/codegen
+        run: npm run generate-full-schema
+
       - name: Generate types
         working-directory: types/codegen
-        run: npm run generate
+        run: npm run generate:only
+
+      - name: Post Process
+        working-directory: types/codegen
+        run: npm run post-process
+
+      - name: Completeness Test
+        working-directory: types/codegen
+        run: npm run test  
 
       - name: Build TypeScript
         working-directory: types/codegen/generated/typescript
