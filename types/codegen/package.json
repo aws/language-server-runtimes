@@ -5,9 +5,9 @@
     "main": "generated/typescript/src/index.ts",
     "scripts": {
         "generate-full-schema": "node scripts/generate-complete-schema.js",
-        "generate": "npm run generate-schema && openapi-generator-cli generate && node scripts/post-typescript.js && npm run test",
+        "generate": "npm run generate-full-schema && openapi-generator-cli generate && node scripts/post-typescript.js && npm run test",
         "generate:only": "openapi-generator-cli generate",
-        "generate:no-post": "npm run generate-schema && openapi-generator-cli generate",
+        "generate:no-post": "npm run generate-full-schema && openapi-generator-cli generate  && node scripts/post-typescript.js",
         "post-process": "node scripts/post-typescript.js",
         "test": "node scripts/post-test.js",
         "test:verbose": "node scripts/post-test.js --verbose",
