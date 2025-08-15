@@ -23,9 +23,9 @@ jobs:
           node-version: '20.x'
           #should we cache: 'npm'
 
-      # - name: Install root dependencies
-      #   working-directory: .
-      #   run: npm install
+      - name: Install root dependencies
+        working-directory: .
+        run: npm install
         
       - name: Install codegen dependencies
         working-directory: types/codegen
