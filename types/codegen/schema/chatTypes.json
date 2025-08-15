@@ -1431,10 +1431,6 @@
             }
         }
     },
-    "SubscriptionUpgradeParams": {
-        "type": "object",
-        "properties": {}
-    },
     "ConversationItemGroup": {
         "type": "object",
         "properties": {
