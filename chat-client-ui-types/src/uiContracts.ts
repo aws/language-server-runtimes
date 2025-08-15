@@ -1,17 +1,16 @@
+import { OPEN_TAB_REQUEST_METHOD, GET_SERIALIZED_CHAT_REQUEST_METHOD } from '@aws/language-server-runtimes-types'
 import {
     InsertToCursorPositionParams,
     ChatOptions,
     CodeSelectionType,
     ReferenceTrackerInformation,
-    OPEN_TAB_REQUEST_METHOD,
     OpenTabResult,
-    GET_SERIALIZED_CHAT_REQUEST_METHOD,
     GetSerializedChatResult,
     ChatPrompt,
     OpenFileDialogParams,
     DropFilesParams,
-} from '@aws/language-server-runtimes-types'
-export { InsertToCursorPositionParams } from '@aws/language-server-runtimes-types'
+} from '@local/language-server-runtimes-generated-types'
+export { InsertToCursorPositionParams } from '@local/language-server-runtimes-generated-types'
 
 export type AuthFollowUpType = 'full-auth' | 're-auth' | 'missing_scopes' | 'use-supported-auth'
 export function isValidAuthFollowUpType(value: string): value is AuthFollowUpType {
