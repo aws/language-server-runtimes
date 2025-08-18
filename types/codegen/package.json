@@ -4,6 +4,7 @@
     "description": "Generate TypeScript defintiinons from JSON Schema using OpenAPI Generator",
     "main": "generated/typescript/src/index.ts",
     "scripts": {
+        "clean": "node scripts/clean.js",
         "generate-full-schema": "node scripts/generate-complete-schema.js",
         "generate": "npm run generate-full-schema && openapi-generator-cli generate && node scripts/post-typescript.js && npm run test",
         "generate:only": "openapi-generator-cli generate",
