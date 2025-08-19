@@ -6,6 +6,7 @@ public record {{classname}}(
 {{#vars}}
 {{#description}}    // {{description}}
 {{/description}}    @JsonProperty("{{baseName}}")
+    @SerializedName("{{baseName}}")
     {{#required}}@Nonnull{{/required}}{{^required}}@Nullable{{/required}} {{{datatypeWithEnum}}} {{name}}{{^-last}},{{/-last}}{{^-last}}
 
 {{/-last}}
