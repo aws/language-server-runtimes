@@ -277,6 +277,12 @@
                         "type": "number"
                     }
                 }
+            },
+            "visibleName": {
+                "type": "string"
+            },
+            "clickable": {
+                "type": "boolean"
             }
         }
     },
@@ -539,6 +545,64 @@
             },
             "contextList": {
                 "$ref": "#/components/schemas/FileList"
+            },
+            "editable": {
+                "type": "boolean"
+            },
+            "quickSettings": {
+                "type": "object",
+                "required": ["type", "messageId", "tabId", "options"],
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["select", "checkbox", "radio"]
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "descriptionLink": {
+                        "type": "object",
+                        "required": ["id", "text", "destination"],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "text": {
+                                "type": "string"
+                            },
+                            "destination": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "messageId": {
+                        "type": "string"
+                    },
+                    "tabId": {
+                        "type": "string"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["id", "label", "value"],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "label": {
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "type": "string"
+                                },
+                                "selected": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     },
@@ -646,25 +710,38 @@
         "description": "Registration options regarding chat data. Currently contains the available quick actions provided by a server and the default tab data to be shown to the user in the chat UI.",
         "properties": {
             "quickActions": {
-                "$ref": "#/components/schemas/QuickActions"
+                "$ref": "#/components/schemas/QuickActions",
+                "description": "Chat QuickActions, supported by Server. Chat Client renders and sets up actions handler for registered QuickAction in UI."
             },
             "mcpServers": {
                 "type": "boolean"
             },
             "modelSelection": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Server signals to Chat Client support of model selection."
             },
             "history": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Server signals to Chat Client support of conversation history."
             },
             "export": {
-                "type": "boolean"
+                "type": "boolean",
+                "description": "Server signals to Chat Client support of Chat export feature."
+            },
+            "showLogs": {
+                "type": "boolean",
+                "description": "Server signals to Chat Client support of show logs feature."
+            },
+            "subscriptionDetails": {
+                "type": "boolean",
+                "description": "Server signals to Client and Chat Client that it supports subscription tier operations"
             },
             "chatNotifications": {
                 "type": "array",
                 "items": {
                     "$ref": "#/components/schemas/ChatMessage"
-                }
+                },
+                "description": "Server signals to Chat Client support of Chat notifications. Currently used for sending chat notifications for developer profile updates. Can be extended to support other types of notifications."
             }
         }
     },
@@ -917,6 +994,12 @@
             },
             "buttonId": {
                 "type": "string"
+            },
+            "metadata": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string"
+                }
             }
         }
     },
@@ -1051,7 +1134,8 @@
                     }
                 }
             }
-        ]
+        ],
+        "required": []
     },
     "ContextCommandParams": {
         "type": "object",
@@ -1431,6 +1515,15 @@
             }
         }
     },
+    "ExecuteShellCommandParams": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+            "id": {
+                "type": "string"
+            }
+        }
+    },
     "ConversationItemGroup": {
         "type": "object",
         "properties": {
@@ -1690,6 +1783,7 @@
     },
     "ListMcpServersResultHeader": {
         "type": "object",
+        "required": ["title"],
         "properties": {
             "title": {
                 "type": "string"
@@ -1699,6 +1793,12 @@
             },
             "status": {
                 "$ref": "#/components/schemas/ListMcpServersResultHeaderStatus"
+            },
+            "actions": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Action"
+                }
             }
         }
     },
@@ -1849,7 +1949,7 @@
     },
     "TabBarAction": {
         "type": "string",
-        "enum": ["export"]
+        "enum": ["export", "show_logs"]
     },
     "TabBarActionParams": {
         "type": "object",
@@ -1923,97 +2023,7 @@
             }
         }
     },
-    "FileParams": {
-        "type": "object",
-        "required": ["path"],
-        "properties": {
-            "path": {
-                "type": "string"
-            }
-        }
-    },
-    "CopyFileParams": {
-        "type": "object",
-        "required": ["oldPath", "newPath"],
-        "properties": {
-            "oldPath": {
-                "type": "string"
-            },
-            "newPath": {
-                "type": "string"
-            }
-        }
-    },
-    "OpenFileDiffParams": {
-        "type": "object",
-        "required": ["originalFileUri", "isDeleted"],
-        "properties": {
-            "originalFileUri": {
-                "type": "string"
-            },
-            "originalFileContent": {
-                "type": "string"
-            },
-            "isDeleted": {
-                "type": "boolean"
-            },
-            "fileContent": {
-                "type": "string"
-            }
-        }
-    },
-    "ShowOpenDialogParams": {
-        "type": "object",
-        "properties": {
-            "canSelectFiles": {
-                "type": "boolean"
-            },
-            "canSelectFolders": {
-                "type": "boolean"
-            },
-            "canSelectMany": {
-                "type": "boolean"
-            },
-            "filters": {
-                "type": "object",
-                "additionalProperties": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                }
-            },
-            "defaultUri": {
-                "type": "string"
-            },
-            "title": {
-                "type": "string"
-            }
-        }
-    },
-    "ShowSaveFileDialogParams": {
-        "type": "object",
-        "properties": {
-            "supportedFormats": {
-                "type": "array",
-                "items": {
-                    "type": "string"
-                }
-            },
-            "defaultUri": {
-                "type": "string"
-            }
-        }
-    },
-    "ShowSaveFileDialogResult": {
-        "type": "object",
-        "required": ["targetUri"],
-        "properties": {
-            "targetUri": {
-                "type": "string"
-            }
-        }
-    },
+
     "EndChatParams": {
         "type": "object",
         "required": ["tabId"],

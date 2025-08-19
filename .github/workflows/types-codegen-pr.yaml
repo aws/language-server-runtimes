@@ -29,11 +29,7 @@ jobs:
         
       - name: Install codegen dependencies
         working-directory: types/codegen
-        run: npm install
-
-      - name: Unit tests
-        working-directory: types/codegen
-        run: npm run test:unit   
+        run: npm install 
 
       - name: Coalesce schemas
         working-directory: types/codegen
@@ -50,6 +46,10 @@ jobs:
       - name: Completeness Test
         working-directory: types/codegen
         run: npm run test  
+
+      - name: Unit tests
+        working-directory: types/codegen
+        run: npm run test:unit  
 
       - name: Build TypeScript
         working-directory: types/codegen/generated/typescript

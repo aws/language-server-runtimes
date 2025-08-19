@@ -12,13 +12,10 @@ import {
     RegistrationType,
     RequestType,
 } from 'vscode-languageserver-protocol'
-import { ChatOptions } from '@local/language-server-runtimes-generated-types'
+import { ChatOptions } from '@aws/language-server-runtimes-types'
 import { LogLevel } from '../runtimes/util/loggingUtil'
 
-//Changed so only METHODS are exported from ./chat
 export * from '@aws/language-server-runtimes-types'
-
-export * from '@local/language-server-runtimes-generated-types'
 export { TextDocument } from 'vscode-languageserver-textdocument'
 
 // LSP protocol is a core dependency for LSP feature provided by runtimes.
