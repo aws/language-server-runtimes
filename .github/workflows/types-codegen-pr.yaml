@@ -6,7 +6,6 @@ on:
       - main
     paths:
       - 'types/codegen/schema/**'
-  workflow_dispatch:
 
 jobs:
   validate-pr:
@@ -21,7 +20,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          #should we cache: 'npm'
 
       - name: Install root dependencies
         working-directory: .

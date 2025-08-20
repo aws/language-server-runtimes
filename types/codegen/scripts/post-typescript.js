@@ -78,12 +78,19 @@ const importResult = processImportMappings()
 // Read the generated index.ts file
 let indexContent = fs.readFileSync(indexPath, 'utf8')
 
-// Find the position after existing imports
-const importEndPos = indexContent.lastIndexOf('import')
+// Find the insertion position - either at top of file or after lint disable comments
 let insertPos = 0
 
-if (importEndPos !== -1) {
-    insertPos = indexContent.indexOf('\n', importEndPos) + 1
+// Check if file starts with lint disable comments
+const lintDisablePattern = /^(\s*\/\*\s*tslint:disable\s*\*\/\s*\/\*\s*eslint-disable\s*\*\/\s*)/
+const lintDisableMatch = indexContent.match(lintDisablePattern)
+
+if (lintDisableMatch) {
+    // Insert after the lint disable comments
+    insertPos = lintDisableMatch[0].length
+} else {
+    // Insert at the very top of the file
+    insertPos = 0
 }
 
 // Insert import statements and constants after existing imports
