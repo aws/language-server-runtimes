@@ -47,23 +47,30 @@ export function getTelemetryLspServer(
         const optOut = params.initializationOptions?.telemetryOptOut ?? true // telemetry disabled if option not provided
         const endpoint = runtime.getConfiguration('TELEMETRY_GATEWAY_ENDPOINT') ?? DEFAULT_TELEMETRY_ENDPOINT
 
-        logging.debug(`Configuring Runtimes OperationalTelemetry with endpoint: ${endpoint}`)
+        // Initialize telemetry asynchronously without blocking
+        setImmediate(() => {
+            try {
+                logging.debug(`Configuring Runtimes OperationalTelemetry with endpoint: ${endpoint}`)
 
-        const optel = OperationalTelemetryService.getInstance({
-            serviceName: props.name,
-            serviceVersion: props.version,
-            extendedClientInfo: params.initializationOptions?.aws?.clientInfo,
-            logging: logging,
-            endpoint: endpoint,
-            telemetryOptOut: optOut,
+                const optel = OperationalTelemetryService.getInstance({
+                    serviceName: props.name,
+                    serviceVersion: props.version,
+                    extendedClientInfo: params.initializationOptions?.aws?.clientInfo,
+                    logging: logging,
+                    endpoint: endpoint,
+                    telemetryOptOut: optOut,
+                })
+
+                OperationalTelemetryProvider.setTelemetryInstance(optel)
+
+                logging.info(`Initialized Runtimes OperationalTelemetry with optOut=${optOut}`)
+
+                setServerCrashTelemetryListeners()
+                setMemoryUsageTelemetry()
+            } catch (error) {
+                logging.warn(`Failed to initialize telemetry: ${error}`)
+            }
         })
-
-        OperationalTelemetryProvider.setTelemetryInstance(optel)
-
-        logging.info(`Initialized Runtimes OperationalTelemetry with optOut=${optOut}`)
-
-        setServerCrashTelemetryListeners()
-        setMemoryUsageTelemetry()
 
         return {
             capabilities: {},
