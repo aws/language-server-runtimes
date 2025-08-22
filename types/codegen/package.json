@@ -1,0 +1,26 @@
+{
+    "name": "type-generator",
+    "version": "0.0.1",
+    "description": "Generate TypeScript defintiinons from JSON Schema using OpenAPI Generator",
+    "main": "generated/typescript/src/index.ts",
+    "scripts": {
+        "clean": "node scripts/clean.js",
+        "process-schemas": "node scripts/generate-complete-schema.js",
+        "generate": "npm run process-schemas && openapi-generator-cli generate && npm run post-process && npm run test",
+        "generate:only": "openapi-generator-cli generate",
+        "generate:no-post": "npm run process-schemas && openapi-generator-cli generate && npm run post-process",
+        "post-process": "node scripts/post-typescript.js",
+        "test": "node scripts/post-test.js",
+        "test:verbose": "node scripts/post-test.js --verbose",
+        "test:unit": "ts-mocha -b 'tests/unit/**/*.test.js' --bail false",
+        "test:all": "npm run test && npm run test:unit"
+    },
+    "devDependencies": {
+        "@openapitools/openapi-generator-cli": "^2.21.4",
+        "@types/mocha": "^10.0.9",
+        "@types/node": "^24.0.4",
+        "ts-mocha": "^11.1.0",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.8.3"
+    }
+}

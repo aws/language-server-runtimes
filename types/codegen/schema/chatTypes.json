@@ -1,0 +1,2036 @@
+{
+    "ChatItemAction": {
+        "type": "object",
+        "required": ["pillText"],
+        "properties": {
+            "pillText": {
+                "type": "string"
+            },
+            "prompt": {
+                "type": "string"
+            },
+            "disabled": {
+                "type": "boolean"
+            },
+            "description": {
+                "type": "string"
+            },
+            "type": {
+                "type": "string"
+            }
+        }
+    },
+    "SourceLink": {
+        "type": "object",
+        "required": ["title", "url"],
+        "properties": {
+            "title": {
+                "type": "string",
+                "description": "The title of the source link"
+            },
+            "url": {
+                "type": "string",
+                "description": "The URL of the source link"
+            },
+            "body": {
+                "type": "string",
+                "description": "Optional body text for the source link"
+            }
+        }
+    },
+    "RecommendationContentSpan": {
+        "type": "object",
+        "required": ["start", "end"],
+        "properties": {
+            "start": {
+                "type": "number",
+                "description": "Start position of the content span"
+            },
+            "end": {
+                "type": "number",
+                "description": "End position of the content span"
+            }
+        },
+        "description": "Content span information"
+    },
+    "ReferenceTrackerInformation": {
+        "type": "object",
+        "required": ["information"],
+        "properties": {
+            "licenseName": {
+                "type": "string"
+            },
+            "repository": {
+                "type": "string"
+            },
+            "url": {
+                "type": "string"
+            },
+            "recommendationContentSpan": {
+                "$ref": "#/components/schemas/RecommendationContentSpan"
+            },
+            "information": {
+                "type": "string"
+            }
+        }
+    },
+    "ChatPrompt": {
+        "type": "object",
+        "properties": {
+            "prompt": {
+                "type": "string",
+                "description": "Optional prompt text"
+            },
+            "escapedPrompt": {
+                "type": "string",
+                "description": "Optional escaped prompt text"
+            },
+            "command": {
+                "type": "string",
+                "description": "Optional command"
+            }
+        }
+    },
+    "FeedbackPayload": {
+        "type": "object",
+        "required": ["messageId", "tabId", "selectedOption"],
+        "properties": {
+            "messageId": {
+                "type": "string",
+                "description": "ID of the message"
+            },
+            "tabId": {
+                "type": "string",
+                "description": "ID of the tab"
+            },
+            "selectedOption": {
+                "type": "string",
+                "description": "Selected feedback option"
+            },
+            "comment": {
+                "type": "string",
+                "description": "Optional comment"
+            }
+        }
+    },
+    "CodeSelectionType": {
+        "type": "string",
+        "enum": ["selection", "block"],
+        "description": "Type of code selection"
+    },
+    "CursorPosition": {
+        "type": "object",
+        "required": ["position"],
+        "properties": {
+            "position": {
+                "type": "Position"
+            }
+        }
+    },
+    "CursorRange": {
+        "type": "object",
+        "required": ["range"],
+        "properties": {
+            "range": {
+                "type": "Range"
+            }
+        }
+    },
+    "CursorState": {
+        "oneOf": [
+            {
+                "$ref": "#/components/schemas/CursorPosition"
+            },
+            {
+                "$ref": "#/components/schemas/CursorRange"
+            }
+        ]
+    },
+    "PartialResultToken": {
+        "oneOf": [
+            {
+                "type": "number"
+            },
+            {
+                "type": "string"
+            }
+        ]
+    },
+    "PartialResultParams": {
+        "type": "object",
+        "properties": {
+            "partialResultToken": {
+                "$ref": "#/components/schemas/PartialResultToken"
+            }
+        }
+    },
+    "ChatParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/PartialResultParams"
+            },
+            {
+                "type": "object",
+                "required": ["tabId", "prompt"],
+                "properties": {
+                    "tabId": {
+                        "type": "string"
+                    },
+                    "prompt": {
+                        "$ref": "#/components/schemas/ChatPrompt"
+                    },
+                    "cursorState": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CursorState"
+                        }
+                    },
+                    "textDocument": {
+                        "type": "TextDocumentIdentifier"
+                    },
+                    "context": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/QuickActionCommand"
+                        },
+                        "description": "Context of the current chat message to be handled by the servers. Context can be added through QuickActionCommand triggered by `@`."
+                    }
+                }
+            }
+        ]
+    },
+    "InlineChatParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/PartialResultParams"
+            },
+            {
+                "type": "object",
+                "required": ["prompt"],
+                "properties": {
+                    "prompt": {
+                        "$ref": "#/components/schemas/ChatPrompt"
+                    },
+                    "cursorState": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CursorState"
+                        }
+                    },
+                    "textDocument": {
+                        "type": "TextDocumentIdentifier"
+                    }
+                }
+            }
+        ]
+    },
+    "EncryptedChatParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/PartialResultParams"
+            },
+            {
+                "type": "object",
+                "required": ["message"],
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        ]
+    },
+    "FileDetails": {
+        "type": "object",
+        "properties": {
+            "description": {
+                "type": "string"
+            },
+            "fullPath": {
+                "type": "string"
+            },
+            "lineRanges": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "required": ["first", "second"],
+                    "properties": {
+                        "first": {
+                            "type": "number"
+                        },
+                        "second": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "changes": {
+                "type": "object",
+                "properties": {
+                    "added": {
+                        "type": "number"
+                    },
+                    "deleted": {
+                        "type": "number"
+                    },
+                    "total": {
+                        "type": "number"
+                    }
+                }
+            },
+            "visibleName": {
+                "type": "string"
+            },
+            "clickable": {
+                "type": "boolean"
+            }
+        }
+    },
+    "FileList": {
+        "type": "object",
+        "properties": {
+            "rootFolderTitle": {
+                "type": "string"
+            },
+            "filePaths": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "deletedFiles": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "details": {
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/FileDetails"
+                }
+            }
+        }
+    },
+    "Status": {
+        "type": "string",
+        "enum": ["info", "success", "warning", "error"]
+    },
+    "ContextCommandIconType": {
+        "type": "string",
+        "enum": ["file", "folder", "code-block", "list-add", "magic"]
+    },
+    "IconType": {
+        "oneOf": [
+            {
+                "$ref": "#/components/schemas/ContextCommandIconType"
+            },
+            {
+                "type": "string"
+            }
+        ],
+        "description": "Can be ContextCommandIconType or other values like 'help', 'trash', 'search', 'calendar', or any string"
+    },
+    "ButtonPartialStatus": {
+        "type": "string",
+        "enum": ["main", "primary", "clear"]
+    },
+    "ButtonStatus": {
+        "oneOf": [
+            {
+                "$ref": "#/components/schemas/ButtonPartialStatus"
+            },
+            {
+                "$ref": "#/components/schemas/Status"
+            }
+        ]
+    },
+    "Button": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "text": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "icon": {
+                "$ref": "#/components/schemas/IconType"
+            },
+            "disabled": {
+                "type": "boolean"
+            },
+            "keepCardAfterClick": {
+                "type": "boolean"
+            },
+            "status": {
+                "$ref": "#/components/schemas/ButtonStatus"
+            }
+        }
+    },
+    "ChatMessage": {
+        "type": "object",
+        "properties": {
+            "type": {
+                "type": "string",
+                "enum": ["answer", "prompt", "system-prompt", "directive", "tool"],
+                "description": "will default to 'answer'"
+            },
+            "header": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["answer", "prompt", "system-prompt", "directive", "tool"]
+                    },
+                    "buttons": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Button"
+                        }
+                    },
+                    "body": {
+                        "type": "string"
+                    },
+                    "messageId": {
+                        "type": "string"
+                    },
+                    "canBeVoted": {
+                        "type": "boolean"
+                    },
+                    "relatedContent": {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string"
+                            },
+                            "content": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/SourceLink"
+                                }
+                            }
+                        },
+                        "required": ["content"]
+                    },
+                    "summary": {
+                        "type": "object",
+                        "properties": {
+                            "content": {
+                                "$ref": "#/components/schemas/ChatMessage"
+                            },
+                            "collapsedContent": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ChatMessage"
+                                }
+                            }
+                        }
+                    },
+                    "followUp": {
+                        "type": "object",
+                        "properties": {
+                            "text": {
+                                "type": "string"
+                            },
+                            "options": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/ChatItemAction"
+                                }
+                            }
+                        }
+                    },
+                    "codeReference": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReferenceTrackerInformation"
+                        }
+                    },
+                    "fileList": {
+                        "$ref": "#/components/schemas/FileList"
+                    },
+                    "contextList": {
+                        "$ref": "#/components/schemas/FileList"
+                    },
+                    "icon": {
+                        "$ref": "#/components/schemas/IconType"
+                    },
+                    "status": {
+                        "type": "object",
+                        "properties": {
+                            "status": {
+                                "$ref": "#/components/schemas/Status"
+                            },
+                            "icon": {
+                                "$ref": "#/components/schemas/IconType"
+                            },
+                            "text": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "buttons": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Button"
+                }
+            },
+            "body": {
+                "type": "string"
+            },
+            "messageId": {
+                "type": "string"
+            },
+            "canBeVoted": {
+                "type": "boolean"
+            },
+            "relatedContent": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SourceLink"
+                        }
+                    }
+                },
+                "required": ["content"]
+            },
+            "summary": {
+                "type": "object",
+                "properties": {
+                    "content": {
+                        "$ref": "#/components/schemas/ChatMessage"
+                    },
+                    "collapsedContent": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ChatMessage"
+                        }
+                    }
+                }
+            },
+            "followUp": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ChatItemAction"
+                        }
+                    }
+                }
+            },
+            "codeReference": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ReferenceTrackerInformation"
+                }
+            },
+            "fileList": {
+                "$ref": "#/components/schemas/FileList"
+            },
+            "contextList": {
+                "$ref": "#/components/schemas/FileList"
+            },
+            "editable": {
+                "type": "boolean"
+            },
+            "quickSettings": {
+                "type": "object",
+                "required": ["type", "messageId", "tabId", "options"],
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "enum": ["select", "checkbox", "radio"]
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "descriptionLink": {
+                        "type": "object",
+                        "required": ["id", "text", "destination"],
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "text": {
+                                "type": "string"
+                            },
+                            "destination": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "messageId": {
+                        "type": "string"
+                    },
+                    "tabId": {
+                        "type": "string"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": ["id", "label", "value"],
+                            "properties": {
+                                "id": {
+                                    "type": "string"
+                                },
+                                "label": {
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "type": "string"
+                                },
+                                "selected": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "ChatResult": {
+        "description": "Represents the result of a chat interaction. A ChatResult extends ChatMessage and can optionally include additional messages that provide context, reasoning, or intermediate steps that led to the final response. Response for chat prompt request can be empty, if server chooses to handle the request and push updates asynchronously.",
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/ChatMessage"
+            },
+            {
+                "type": "object",
+                "properties": {
+                    "additionalMessages": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ChatMessage"
+                        },
+                        "description": "Optional array of supporting messages that provide additional context for the primary message. These can include: - Reasoning steps that led to the final answer - Tool usage and outputs during processing - Intermediate calculations or decision points - Status updates about the processing - Human interactions that influenced the response. The primary message (this ChatResult itself) should contain the final, complete response, while additionalMessages provides transparency into how that response was generated. UI implementations should typically display the primary message prominently, with additionalMessages shown as supporting information when relevant."
+                    }
+                }
+            }
+        ]
+    },
+    "InlineChatResult": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/ChatMessage"
+            },
+            {
+                "type": "object",
+                "properties": {
+                    "requestId": {
+                        "type": "string"
+                    }
+                }
+            }
+        ]
+    },
+    "QuickActionCommand": {
+        "type": "object",
+        "description": "Configuration object for chat quick action.",
+        "required": ["command"],
+        "properties": {
+            "command": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "placeholder": {
+                "type": "string"
+            },
+            "icon": {
+                "$ref": "#/components/schemas/IconType"
+            }
+        }
+    },
+    "QuickActionCommandGroup": {
+        "type": "object",
+        "description": "Configuration object for registering chat quick actions groups.",
+        "required": ["commands"],
+        "properties": {
+            "groupName": {
+                "type": "string"
+            },
+            "commands": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/QuickActionCommand"
+                }
+            }
+        }
+    },
+    "QuickActions": {
+        "type": "object",
+        "description": "Registration options for a Chat QuickActionRequest.",
+        "required": ["quickActionsCommandGroups"],
+        "properties": {
+            "quickActionsCommandGroups": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/QuickActionCommandGroup"
+                },
+                "description": "The chat quick actions groups and commands to be executed on server."
+            }
+        }
+    },
+    "TabData": {
+        "type": "object",
+        "required": ["messages"],
+        "properties": {
+            "placeholderText": {
+                "type": "string"
+            },
+            "messages": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ChatMessage"
+                }
+            }
+        }
+    },
+    "ChatOptions": {
+        "type": "object",
+        "description": "Registration options regarding chat data. Currently contains the available quick actions provided by a server and the default tab data to be shown to the user in the chat UI.",
+        "properties": {
+            "quickActions": {
+                "$ref": "#/components/schemas/QuickActions",
+                "description": "Chat QuickActions, supported by Server. Chat Client renders and sets up actions handler for registered QuickAction in UI."
+            },
+            "mcpServers": {
+                "type": "boolean"
+            },
+            "modelSelection": {
+                "type": "boolean",
+                "description": "Server signals to Chat Client support of model selection."
+            },
+            "history": {
+                "type": "boolean",
+                "description": "Server signals to Chat Client support of conversation history."
+            },
+            "export": {
+                "type": "boolean",
+                "description": "Server signals to Chat Client support of Chat export feature."
+            },
+            "showLogs": {
+                "type": "boolean",
+                "description": "Server signals to Chat Client support of show logs feature."
+            },
+            "subscriptionDetails": {
+                "type": "boolean",
+                "description": "Server signals to Client and Chat Client that it supports subscription tier operations"
+            },
+            "chatNotifications": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ChatMessage"
+                },
+                "description": "Server signals to Chat Client support of Chat notifications. Currently used for sending chat notifications for developer profile updates. Can be extended to support other types of notifications."
+            }
+        }
+    },
+    "QuickActionParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/PartialResultParams"
+            },
+            {
+                "type": "object",
+                "required": ["tabId", "quickAction"],
+                "properties": {
+                    "tabId": {
+                        "type": "string"
+                    },
+                    "quickAction": {
+                        "type": "string"
+                    },
+                    "prompt": {
+                        "type": "string"
+                    },
+                    "cursorState": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CursorState"
+                        }
+                    },
+                    "textDocument": {
+                        "type": "TextDocumentIdentifier"
+                    }
+                }
+            }
+        ]
+    },
+    "EncryptedQuickActionParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/PartialResultParams"
+            },
+            {
+                "type": "object",
+                "required": ["message"],
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        ]
+    },
+    "QuickActionResult": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/ChatMessage"
+            }
+        ],
+        "description": "Currently the QuickActionResult and ChatResult share the same shape. Response for quick actions request can be empty, if server chooses to handle the request and push updates asynchronously."
+    },
+    "FeedbackParams": {
+        "type": "object",
+        "required": ["tabId", "feedbackPayload"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "feedbackPayload": {
+                "$ref": "#/components/schemas/FeedbackPayload"
+            },
+            "eventId": {
+                "type": "string"
+            }
+        }
+    },
+    "TabEventParams": {
+        "type": "object",
+        "required": ["tabId"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            }
+        }
+    },
+    "TabAddParams": {
+        "type": "object",
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/TabEventParams"
+            }
+        ],
+        "properties": {
+            "restoredTab": {
+                "type": "boolean"
+            }
+        }
+    },
+    "TabChangeParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/TabEventParams"
+            }
+        ]
+    },
+    "TabRemoveParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/TabEventParams"
+            }
+        ]
+    },
+    "InsertToCursorPositionParams": {
+        "type": "object",
+        "required": ["tabId", "messageId"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "messageId": {
+                "type": "string"
+            },
+            "cursorPosition": {
+                "type": "Position"
+            },
+            "textDocument": {
+                "type": "TextDocumentIdentifier"
+            },
+            "code": {
+                "type": "string"
+            },
+            "type": {
+                "$ref": "#/components/schemas/CodeSelectionType"
+            },
+            "referenceTrackerInformation": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ReferenceTrackerInformation"
+                }
+            },
+            "eventId": {
+                "type": "string"
+            },
+            "codeBlockIndex": {
+                "type": "number"
+            },
+            "totalCodeBlocks": {
+                "type": "number"
+            }
+        }
+    },
+    "InfoLinkClickParams": {
+        "type": "object",
+        "required": ["tabId", "link"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "link": {
+                "type": "string"
+            },
+            "eventId": {
+                "type": "string"
+            }
+        }
+    },
+    "LinkClickParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/InfoLinkClickParams"
+            },
+            {
+                "type": "object",
+                "required": ["messageId"],
+                "properties": {
+                    "messageId": {
+                        "type": "string"
+                    }
+                }
+            }
+        ]
+    },
+    "SourceLinkClickParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/InfoLinkClickParams"
+            },
+            {
+                "type": "object",
+                "required": ["messageId"],
+                "properties": {
+                    "messageId": {
+                        "type": "string"
+                    }
+                }
+            }
+        ]
+    },
+    "FollowUpClickParams": {
+        "type": "object",
+        "required": ["tabId", "messageId", "followUp"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "messageId": {
+                "type": "string"
+            },
+            "followUp": {
+                "$ref": "#/components/schemas/ChatItemAction"
+            }
+        }
+    },
+    "NewTabOptions": {
+        "type": "object",
+        "properties": {
+            "state": {
+                "$ref": "#/components/schemas/TabState"
+            },
+            "data": {
+                "$ref": "#/components/schemas/TabData"
+            }
+        }
+    },
+    "OpenTabParams": {
+        "type": "object",
+        "description": "Defines parameters for opening a tab. Opens existing tab if `tabId` is provided, otherwise creates a new tab with options provided in `options` parameter and opens it.",
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "newTabOptions": {
+                "$ref": "#/components/schemas/NewTabOptions"
+            }
+        }
+    },
+    "OpenTabResult": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/TabEventParams"
+            }
+        ]
+    },
+    "ButtonClickParams": {
+        "type": "object",
+        "required": ["tabId", "messageId", "buttonId"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "messageId": {
+                "type": "string"
+            },
+            "buttonId": {
+                "type": "string"
+            },
+            "metadata": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "ButtonClickResult": {
+        "type": "object",
+        "required": ["success"],
+        "properties": {
+            "success": {
+                "type": "boolean"
+            },
+            "failureReason": {
+                "type": "string"
+            }
+        }
+    },
+    "TabState": {
+        "type": "object",
+        "properties": {
+            "inProgress": {
+                "type": "boolean"
+            },
+            "cancellable": {
+                "type": "boolean"
+            }
+        }
+    },
+    "ChatUpdateParams": {
+        "type": "object",
+        "required": ["tabId"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "state": {
+                "$ref": "#/components/schemas/TabState"
+            },
+            "data": {
+                "$ref": "#/components/schemas/TabData"
+            }
+        }
+    },
+    "ChatOptionsUpdateParams": {
+        "type": "object",
+        "required": ["tabId"],
+        "description": "Server-initiated chat metadata updates.",
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "chatNotifications": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ChatMessage"
+                },
+                "description": "Processes changes of developer profiles."
+            },
+            "modelId": {
+                "type": "string",
+                "description": "The last selected modelId for the conversation. This is used to allow the server to programmatically update the selected model for persistance across sessions."
+            }
+        }
+    },
+    "FileAction": {
+        "type": "string",
+        "enum": ["accept-change", "reject-change"]
+    },
+    "FileClickParams": {
+        "type": "object",
+        "required": ["tabId", "filePath"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "filePath": {
+                "type": "string"
+            },
+            "action": {
+                "$ref": "#/components/schemas/FileAction"
+            },
+            "messageId": {
+                "type": "string"
+            },
+            "fullPath": {
+                "type": "string"
+            }
+        }
+    },
+    "ContextCommandGroup": {
+        "type": "object",
+        "required": ["commands"],
+        "properties": {
+            "groupName": {
+                "type": "string"
+            },
+            "commands": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ContextCommand"
+                }
+            }
+        }
+    },
+    "ContextCommand": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/QuickActionCommand"
+            },
+            {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "route": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "label": {
+                        "type": "string",
+                        "description": "file, folder, code, image"
+                    },
+                    "children": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ContextCommandGroup"
+                        }
+                    },
+                    "content": {
+                        "type": "Uint8Array"
+                    }
+                }
+            }
+        ],
+        "required": []
+    },
+    "ContextCommandParams": {
+        "type": "object",
+        "required": ["contextCommandGroups"],
+        "properties": {
+            "contextCommandGroups": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ContextCommandGroup"
+                }
+            }
+        }
+    },
+    "PinnedContextParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/ContextCommandParams"
+            },
+            {
+                "type": "object",
+                "required": ["tabId"],
+                "properties": {
+                    "tabId": {
+                        "type": "string"
+                    },
+                    "textDocument": {
+                        "type": "TextDocumentIdentifier"
+                    },
+                    "showRules": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        ]
+    },
+    "CreatePromptParams": {
+        "type": "object",
+        "required": ["promptName"],
+        "properties": {
+            "promptName": {
+                "type": "string"
+            },
+            "isRule": {
+                "type": "boolean"
+            }
+        }
+    },
+    "OpenFileDialogParams": {
+        "type": "object",
+        "required": ["tabId", "fileType"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "fileType": {
+                "$ref": "#/components/schemas/FileDialogType"
+            },
+            "insertPosition": {
+                "type": "number"
+            }
+        }
+    },
+    "OpenFileDialogResult": {
+        "type": "object",
+        "required": ["tabId", "fileType", "filePaths"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "fileType": {
+                "$ref": "#/components/schemas/FileDialogType"
+            },
+            "filePaths": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "errorMessage": {
+                "type": "string"
+            },
+            "insertPosition": {
+                "type": "number"
+            }
+        }
+    },
+    "DropFilesParams": {
+        "type": "object",
+        "required": ["tabId", "files", "insertPosition"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "files": {
+                "$ref": "#/components/schemas/FileList"
+            },
+            "insertPosition": {
+                "type": "number"
+            },
+            "errorMessage": {
+                "type": "string"
+            }
+        }
+    },
+    "ProgrammingLanguage": {
+        "type": "object",
+        "required": ["languageName"],
+        "properties": {
+            "languageName": {
+                "type": "string"
+            }
+        }
+    },
+    "InlineChatUserDecision": {
+        "type": "string",
+        "enum": ["ACCEPT", "REJECT", "DISMISS"]
+    },
+    "TextBasedFilterType": {
+        "type": "string",
+        "enum": ["textarea", "textinput", "numericinput"]
+    },
+    "OptionBasedFilterType": {
+        "type": "string",
+        "enum": ["select", "radiogroup"]
+    },
+    "FileDialogType": {
+        "type": "string",
+        "enum": ["image", ""]
+    },
+    "RuleType": {
+        "type": "string",
+        "enum": ["folder", "rule"]
+    },
+    "RuleActiveState": {
+        "oneOf": [
+            {
+                "type": "boolean"
+            },
+            {
+                "$ref": "#/components/schemas/RuleActiveStateString"
+            }
+        ]
+    },
+    "RuleActiveStateString": {
+        "type": "string",
+        "enum": ["indeterminate"]
+    },
+    "InlineChatResultParams": {
+        "type": "object",
+        "required": ["requestId"],
+        "properties": {
+            "requestId": {
+                "type": "string"
+            },
+            "inputLength": {
+                "type": "number"
+            },
+            "selectedLines": {
+                "type": "number"
+            },
+            "suggestionAddedChars": {
+                "type": "number"
+            },
+            "suggestionAddedLines": {
+                "type": "number"
+            },
+            "suggestionDeletedChars": {
+                "type": "number"
+            },
+            "suggestionDeletedLines": {
+                "type": "number"
+            },
+            "codeIntent": {
+                "type": "boolean"
+            },
+            "userDecision": {
+                "$ref": "#/components/schemas/InlineChatUserDecision"
+            },
+            "responseStartLatency": {
+                "type": "number"
+            },
+            "responseEndLatency": {
+                "type": "number"
+            },
+            "programmingLanguage": {
+                "$ref": "#/components/schemas/ProgrammingLanguage"
+            }
+        }
+    },
+    "FilterValue": {
+        "type": "string"
+    },
+    "BaseProperties": {
+        "type": "object",
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "placeholder": {
+                "type": "string"
+            },
+            "title": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "icon": {
+                "$ref": "#/components/schemas/IconType"
+            }
+        },
+        "required": ["id"]
+    },
+    "SelectOption": {
+        "type": "object",
+        "properties": {
+            "value": {
+                "type": "string"
+            },
+            "label": {
+                "type": "string"
+            }
+        },
+        "required": ["value", "label"]
+    },
+    "TextBasedFilter": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/BaseProperties"
+            },
+            {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "$ref": "#/components/schemas/TextBasedFilterType"
+                    }
+                },
+                "required": ["type"]
+            }
+        ]
+    },
+    "OptionBasedFilter": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/BaseProperties"
+            },
+            {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "$ref": "#/components/schemas/OptionBasedFilterType"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/SelectOption"
+                        }
+                    }
+                },
+                "required": ["type", "options"]
+            }
+        ]
+    },
+    "FilterOption": {
+        "oneOf": [
+            {
+                "$ref": "#/components/schemas/TextBasedFilter"
+            },
+            {
+                "$ref": "#/components/schemas/OptionBasedFilter"
+            }
+        ]
+    },
+    "Action": {
+        "type": "object",
+        "required": ["id", "text"],
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "icon": {
+                "$ref": "#/components/schemas/IconType"
+            },
+            "text": {
+                "type": "string"
+            }
+        }
+    },
+    "ConversationItem": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "icon": {
+                "$ref": "#/components/schemas/IconType"
+            },
+            "description": {
+                "type": "string"
+            },
+            "actions": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Action"
+                }
+            }
+        }
+    },
+    "Model": {
+        "type": "object",
+        "required": ["id", "name"],
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "name": {
+                "type": "string"
+            }
+        }
+    },
+    "ListAvailableModelsParams": {
+        "type": "object",
+        "required": ["tabId"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            }
+        }
+    },
+    "ListAvailableModelsResult": {
+        "type": "object",
+        "required": ["tabId", "models"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "models": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Model"
+                }
+            },
+            "selectedModelId": {
+                "type": "string"
+            }
+        }
+    },
+    "SubscriptionDetailsParams": {
+        "type": "object",
+        "required": [
+            "subscriptionTier",
+            "subscriptionPeriodReset",
+            "isOverageEnabled",
+            "queryUsage",
+            "queryLimit",
+            "queryOverage"
+        ],
+        "properties": {
+            "subscriptionTier": {
+                "type": "string"
+            },
+            "subscriptionPeriodReset": {
+                "type": "Date"
+            },
+            "isOverageEnabled": {
+                "type": "boolean"
+            },
+            "queryUsage": {
+                "type": "number"
+            },
+            "queryLimit": {
+                "type": "number"
+            },
+            "queryOverage": {
+                "type": "number"
+            }
+        }
+    },
+    "ExecuteShellCommandParams": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+            "id": {
+                "type": "string"
+            }
+        }
+    },
+    "ConversationItemGroup": {
+        "type": "object",
+        "properties": {
+            "groupName": {
+                "type": "string"
+            },
+            "icon": {
+                "$ref": "#/components/schemas/IconType"
+            },
+            "items": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ConversationItem"
+                }
+            }
+        }
+    },
+    "ListConversationsParams": {
+        "type": "object",
+        "properties": {
+            "filter": {
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/FilterValue"
+                }
+            }
+        }
+    },
+    "ListMcpServersParams": {
+        "type": "object",
+        "properties": {
+            "filter": {
+                "type": "object",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/FilterValue"
+                }
+            }
+        }
+    },
+    "ListRulesParams": {
+        "type": "object",
+        "required": ["tabId"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            }
+        }
+    },
+    "ListRulesResult": {
+        "type": "object",
+        "required": ["tabId", "rules"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "header": {
+                "type": "object",
+                "required": ["title"],
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    }
+                }
+            },
+            "filterOptions": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/FilterOption"
+                }
+            },
+            "rules": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/RulesFolder"
+                }
+            }
+        }
+    },
+    "RulesFolder": {
+        "type": "object",
+        "required": ["active", "rules"],
+        "properties": {
+            "folderName": {
+                "type": "string"
+            },
+            "active": {
+                "$ref": "#/components/schemas/RuleActiveState",
+                "description": "Represents the active state of the folder: - true: all rules in the folder are active - false: all rules in the folder are inactive - 'indeterminate': rules inside the folder have mixed active states (some active, some inactive), similar to a parent checkbox in a nested checkbox list having an indeterminate state"
+            },
+            "rules": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Rule"
+                }
+            }
+        }
+    },
+    "Rule": {
+        "type": "object",
+        "required": ["active", "name", "id"],
+        "properties": {
+            "active": {
+                "type": "boolean"
+            },
+            "name": {
+                "type": "string"
+            },
+            "id": {
+                "type": "string"
+            }
+        }
+    },
+    "RuleClickParams": {
+        "type": "object",
+        "required": ["tabId", "type", "id"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "type": {
+                "$ref": "#/components/schemas/RuleType"
+            },
+            "id": {
+                "type": "string"
+            }
+        }
+    },
+    "RuleClickResult": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/RuleClickParams"
+            },
+            {
+                "type": "object",
+                "required": ["success"],
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        ]
+    },
+    "ActiveEditorChangedParams": {
+        "type": "object",
+        "properties": {
+            "cursorState": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/CursorState"
+                }
+            },
+            "textDocument": {
+                "type": "TextDocumentIdentifier"
+            }
+        }
+    },
+    "ConversationsList": {
+        "type": "object",
+        "required": ["list"],
+        "properties": {
+            "header": {
+                "type": "object",
+                "required": ["title"],
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    }
+                }
+            },
+            "filterOptions": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/FilterOption"
+                }
+            },
+            "list": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/ConversationItemGroup"
+                }
+            }
+        }
+    },
+    "ListConversationsResult": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/ConversationsList"
+            },
+            {
+                "type": "object",
+                "properties": {}
+            }
+        ]
+    },
+    "McpServerStatus": {
+        "type": "string",
+        "enum": ["INITIALIZING", "ENABLED", "FAILED", "DISABLED"]
+    },
+    "DetailedListItem": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+            "title": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "groupActions": {
+                "type": "boolean"
+            },
+            "children": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/DetailedListGroup"
+                }
+            }
+        }
+    },
+    "DetailedListGroup": {
+        "type": "object",
+        "properties": {
+            "groupName": {
+                "type": "string"
+            },
+            "children": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/DetailedListItem"
+                }
+            },
+            "actions": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Action"
+                }
+            },
+            "icon": {
+                "$ref": "#/components/schemas/IconType"
+            }
+        }
+    },
+    "ListMcpServersResultHeaderStatus": {
+        "type": "object",
+        "properties": {
+            "icon": {
+                "$ref": "#/components/schemas/IconType"
+            },
+            "title": {
+                "type": "string"
+            },
+            "status": {
+                "$ref": "#/components/schemas/Status"
+            }
+        }
+    },
+    "ListMcpServersResultHeader": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+            "title": {
+                "type": "string"
+            },
+            "description": {
+                "type": "string"
+            },
+            "status": {
+                "$ref": "#/components/schemas/ListMcpServersResultHeaderStatus"
+            },
+            "actions": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Action"
+                }
+            }
+        }
+    },
+    "ListMcpServersResult": {
+        "type": "object",
+        "required": ["list"],
+        "properties": {
+            "header": {
+                "$ref": "#/components/schemas/ListMcpServersResultHeader"
+            },
+            "list": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/DetailedListGroup"
+                }
+            },
+            "filterOptions": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/FilterOption"
+                }
+            }
+        }
+    },
+    "ConversationAction": {
+        "type": "string",
+        "enum": ["delete", "export"]
+    },
+    "ConversationClickParams": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "action": {
+                "$ref": "#/components/schemas/ConversationAction"
+            }
+        }
+    },
+    "ConversationClickResult": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/ConversationClickParams"
+            },
+            {
+                "type": "object",
+                "required": ["success"],
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        ]
+    },
+    "McpServerClickParams": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+            "id": {
+                "type": "string"
+            },
+            "title": {
+                "type": "string"
+            },
+            "optionsValues": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "McpServerClickResult": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/McpServerClickParams"
+            },
+            {
+                "type": "object",
+                "properties": {
+                    "filterOptions": {
+                        "oneOf": [
+                            {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/FilterOption"
+                                }
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "filterActions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Button"
+                        }
+                    },
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/DetailedListGroup"
+                        }
+                    },
+                    "header": {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string"
+                            },
+                            "icon": {
+                                "$ref": "#/components/schemas/IconType"
+                            },
+                            "status": {
+                                "type": "object",
+                                "properties": {
+                                    "icon": {
+                                        "$ref": "#/components/schemas/IconType"
+                                    },
+                                    "title": {
+                                        "type": "string"
+                                    },
+                                    "description": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "$ref": "#/components/schemas/Status"
+                                    }
+                                }
+                            },
+                            "description": {
+                                "type": "string"
+                            },
+                            "actions": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Action"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "TabBarAction": {
+        "type": "string",
+        "enum": ["export", "show_logs"]
+    },
+    "TabBarActionParams": {
+        "type": "object",
+        "required": ["action"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "action": {
+                "$ref": "#/components/schemas/TabBarAction"
+            }
+        }
+    },
+    "TabBarActionResult": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/TabBarActionParams"
+            },
+            {
+                "type": "object",
+                "required": ["success"],
+                "properties": {
+                    "success": {
+                        "type": "boolean"
+                    }
+                }
+            }
+        ]
+    },
+    "GetSerializedChatParams": {
+        "allOf": [
+            {
+                "$ref": "#/components/schemas/TabEventParams"
+            },
+            {
+                "type": "object",
+                "required": ["format"],
+                "properties": {
+                    "format": {
+                        "type": "string",
+                        "enum": ["html", "markdown"]
+                    }
+                }
+            }
+        ]
+    },
+    "GetSerializedChatResult": {
+        "type": "object",
+        "required": ["content"],
+        "properties": {
+            "content": {
+                "type": "string"
+            }
+        }
+    },
+    "PromptInputOptionChangeParams": {
+        "type": "object",
+        "required": ["tabId", "optionsValues"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            },
+            "optionsValues": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "string"
+                }
+            },
+            "eventId": {
+                "type": "string"
+            }
+        }
+    },
+
+    "EndChatParams": {
+        "type": "object",
+        "required": ["tabId"],
+        "properties": {
+            "tabId": {
+                "type": "string"
+            }
+        }
+    }
+}

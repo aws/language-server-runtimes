@@ -1,0 +1,54 @@
+{
+    "ShowOpenDialogParams": {
+        "type": "object",
+        "properties": {
+            "canSelectFiles": {
+                "type": "boolean"
+            },
+            "canSelectFolders": {
+                "type": "boolean"
+            },
+            "canSelectMany": {
+                "type": "boolean"
+            },
+            "filters": {
+                "type": "object",
+                "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "defaultUri": {
+                "type": "string"
+            },
+            "title": {
+                "type": "string"
+            }
+        }
+    },
+    "ShowSaveFileDialogParams": {
+        "type": "object",
+        "properties": {
+            "supportedFormats": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            },
+            "defaultUri": {
+                "type": "string"
+            }
+        }
+    },
+    "ShowSaveFileDialogResult": {
+        "type": "object",
+        "required": ["targetUri"],
+        "properties": {
+            "targetUri": {
+                "type": "string"
+            }
+        }
+    }
+}

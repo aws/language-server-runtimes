@@ -1,0 +1,16 @@
+# Generated code
+generated/
+
+# Template bank
+typescript-template-bank/
+
+# OpenAPI generator metadata
+.openapi-generator/
+
+# Node.js dependencies
+node_modules/
+
+# Build outputs
+dist/
+
+schema/complete-schema.json

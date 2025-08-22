@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.126](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.125...language-server-runtimes/v0.2.126) (2025-08-18)
+
+
+### Bug Fixes
+
+* skip PAC URLs in macOS proxy detection ([#664](https://github.com/aws/language-server-runtimes/issues/664)) ([92fb02d](https://github.com/aws/language-server-runtimes/commit/92fb02d1d4c6aedb7b59b042b8d10e54bb750d92))
+
 ## [0.2.125](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.124...language-server-runtimes/v0.2.125) (2025-08-12)
 
 

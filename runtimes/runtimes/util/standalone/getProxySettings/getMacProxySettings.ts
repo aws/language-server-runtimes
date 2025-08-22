@@ -35,8 +35,10 @@ export function getMacSystemProxy(): ProxyConfig | undefined {
 
     // Honor PAC URL first if configured
     if (settings.ProxyAutoConfigEnable === '1' && settings.ProxyAutoConfigURLString) {
-        console.debug(`Using PAC URL: ${settings.ProxyAutoConfigURLString}`)
-        return { proxyUrl: settings.ProxyAutoConfigURLString, noProxy }
+        console.debug(`PAC URL detected: ${settings.ProxyAutoConfigURLString}`)
+        // TODO: Parse PAC file to get actual proxy
+        // For now, skip PAC and fall through to manual proxy settings
+        console.warn('PAC file support not yet implemented, falling back to manual proxy settings')
     }
 
     // Otherwise pick the first enabled protocol

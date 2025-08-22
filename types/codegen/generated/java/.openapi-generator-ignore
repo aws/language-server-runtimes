@@ -1,0 +1,11 @@
+src/test/**
+docs/**
+api/**
+README.md
+.travis.yml
+.github/**
+gradle/**
+gradlew*
+build.gradle
+git_push.sh
+src/main/java/org/openapitools/client/auth/**

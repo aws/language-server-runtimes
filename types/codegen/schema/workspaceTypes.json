@@ -1,0 +1,41 @@
+{
+    "FileParams": {
+        "type": "object",
+        "required": ["path"],
+        "properties": {
+            "path": {
+                "type": "string"
+            }
+        }
+    },
+    "CopyFileParams": {
+        "type": "object",
+        "required": ["oldPath", "newPath"],
+        "properties": {
+            "oldPath": {
+                "type": "string"
+            },
+            "newPath": {
+                "type": "string"
+            }
+        }
+    },
+    "OpenFileDiffParams": {
+        "type": "object",
+        "required": ["originalFileUri", "isDeleted"],
+        "properties": {
+            "originalFileUri": {
+                "type": "string"
+            },
+            "originalFileContent": {
+                "type": "string"
+            },
+            "isDeleted": {
+                "type": "boolean"
+            },
+            "fileContent": {
+                "type": "string"
+            }
+        }
+    }
+}
