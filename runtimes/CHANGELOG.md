@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.127](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.126...language-server-runtimes/v0.2.127) (2025-08-21)
+
+
+### Bug Fixes
+
+* initialize telemetry asynchronously without blocking ([#666](https://github.com/aws/language-server-runtimes/issues/666)) ([28ee764](https://github.com/aws/language-server-runtimes/commit/28ee7640dab43b42d320753cd7837995009162ee))
+
 ## [0.2.126](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.125...language-server-runtimes/v0.2.126) (2025-08-18)
 
 
