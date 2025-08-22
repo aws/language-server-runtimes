@@ -46,7 +46,7 @@
                 "additionalProperties": {
                     "useOneOfInterfaces": true,
                     "legacyDiscriminatorBehavior": false,
-                    "java8": false,
+                    "java8": true,
                     "dateLibrary": "java8",
                     "serializableModel": false,
                     "useBeanValidation": false,

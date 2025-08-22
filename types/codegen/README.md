@@ -7,8 +7,8 @@ This directory contains scripts and configuration for generating TypeScript and 
 The code generation process combines multiple schema files into a complete OpenAPI specification and generates both TypeScript and Java types with custom templates, import mappings, and validation.
 
 **Running `npm run generate` will automatically generate:**
-- **TypeScript types** in `generated/typescript/` - Complete type definitions and runtime client
-- **Java model classes** in `generated/java/` - Filtered model classes for specific use cases
+- **TypeScript types** in `generated/typescript/` - Complete type definitions
+- **Java model classes** in `generated/java/` - Java model classes with custom templates
 
 ## Directory Structure
 
@@ -21,7 +21,7 @@ types/codegen/
 │   ├── generate-complete-schema.js  # Combines all schema files
 │   ├── post-typescript.js          # TypeScript post-processing
 │   ├── post-test.js                 # Model validation script
-│   ├── pre-typescript.js           # TypeScript pre-processing
+│   ├── clean.js                     # Cleanup utilities
 │   └── constants.ts                 # Constants to inject
 ├── custom-templates/                # Custom Mustache templates
 │   ├── typescript/                  # TypeScript-specific templates
@@ -45,14 +45,13 @@ types/codegen/
   - Conflict detection and warnings for duplicate schema names
 
 ### 2. Code Generation (OpenAPI Generator CLI)
-- **TypeScript Generator**: Generates complete TypeScript types and runtime
+- **TypeScript Generator**: Generates complete TypeScript types
   - Uses `typescript-fetch` generator with custom templates
   - Generates interfaces, types, and enum unions
-  - Includes runtime API client code
-- **Java Generator**: Generates filtered Java model classes
-  - Uses selective model generation via `global-property.models`
-  - Only generates specific models needed for Java integration
+- **Java Generator**: Generates Java model classes
+  - Uses custom templates for modern Java features
   - Targets Java 21 with modern features
+  - Supports model filtering via `global-property.models` when needed
 
 ### 3. Post-Processing (`post-typescript.js`)
 - Processes import mappings from `openapitools.json`
@@ -94,7 +93,7 @@ npm run test:verbose
 The main configuration file contains detailed settings for both TypeScript and Java generators:
 
 #### TypeScript Generator Settings
-- **Generator**: `typescript-fetch` - Generates TypeScript types with fetch-based runtime
+- **Generator**: `typescript-fetch` - Generates TypeScript types
 - **ES6 Support**: `supportsES6: true` - Modern JavaScript features
 - **Property Naming**: `camelCase` for both models and enums
 - **String Enums**: `stringEnums: true` - Generates union types instead of numeric enums
@@ -110,16 +109,16 @@ The main configuration file contains detailed settings for both TypeScript and J
 - **Validation**: Bean validation disabled for lighter models
 - **Legacy Behavior**: `legacyDiscriminatorBehavior: false` - Modern discriminator handling
 
-### Model Filtering
+### Model Filtering (Optional)
 
-Java generator uses selective model generation via `global-property.models`:
+Java generator supports selective model generation via `global-property.models` when needed:
 ```json
 "global-property": {
-  "models": "IconType:ContextCommandGroup:QuickActionCommand:ContextCommand:CursorPosition:FileParams:CopyFileParams:OpenFileDiffParams:ShowOpenDialogParams:ShowSaveFileDialogParams:ShowSaveFileDialogResult"
+  "models": "IconType:ContextCommandGroup:QuickActionCommand:ContextCommand"
 }
 ```
 
-This generates only the specified models, making the Java output focused on specific use cases.
+When specified, this generates only the listed models. If omitted, all models are generated.
 
 ### Import Mappings
 
@@ -176,13 +175,12 @@ Handle language-specific reserved words:
 
 ### TypeScript Output (`generated/typescript/`)
 - Complete type definitions for all schema models
-- Runtime API client with fetch-based implementation
 - Proper import statements for external dependencies
 - Injected constants and utilities
 - NPM package ready for distribution
 
 ### Java Output (`generated/java/`)
-- Selective model classes (only specified models via filtering)
+- Java model classes with custom templates
 - Java 21 compatible code
 - LSP4J integration for language server types
 - Maven/Gradle compatible structure

@@ -45,8 +45,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>21</source>
-                    <target>21</target>
+                    <source>{{#sourceCompatibility}}{{sourceCompatibility}}{{/sourceCompatibility}}{{^sourceCompatibility}}21{{/sourceCompatibility}}</source>
+                    <target>{{#targetCompatibility}}{{targetCompatibility}}{{/targetCompatibility}}{{^targetCompatibility}}21{{/targetCompatibility}}</target>
                     <fork>true</fork>
                     <meminitial>128m</meminitial>
                     <maxmem>512m</maxmem>
@@ -107,7 +107,7 @@
                 <version>3.6.3</version>
                 <configuration>
                     <doclint>none</doclint>
-                    <source>21</source>
+                    <source>{{#sourceCompatibility}}{{sourceCompatibility}}{{/sourceCompatibility}}{{^sourceCompatibility}}21{{/sourceCompatibility}}</source>
                 </configuration>
                 <executions>
                     <execution>

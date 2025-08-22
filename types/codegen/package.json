@@ -1,20 +1,19 @@
 {
-    "name": "chat-types-generator",
+    "name": "type-generator",
     "version": "0.0.1",
     "description": "Generate TypeScript defintiinons from JSON Schema using OpenAPI Generator",
     "main": "generated/typescript/src/index.ts",
     "scripts": {
         "clean": "node scripts/clean.js",
-        "generate-full-schema": "node scripts/generate-complete-schema.js",
-        "generate": "npm run generate-full-schema && openapi-generator-cli generate && node scripts/post-typescript.js && npm run test",
+        "process-schemas": "node scripts/generate-complete-schema.js",
+        "generate": "npm run process-schemas && openapi-generator-cli generate && npm run post-process && npm run test",
         "generate:only": "openapi-generator-cli generate",
-        "generate:no-post": "npm run generate-full-schema && openapi-generator-cli generate  && node scripts/post-typescript.js",
+        "generate:no-post": "npm run process-schemas && openapi-generator-cli generate && npm run post-process",
         "post-process": "node scripts/post-typescript.js",
         "test": "node scripts/post-test.js",
         "test:verbose": "node scripts/post-test.js --verbose",
         "test:unit": "ts-mocha -b 'tests/unit/**/*.test.js' --bail false",
-        "test:all": "npm run test && npm run test:unit",
-        "validate": "npm run test"
+        "test:all": "npm run test && npm run test:unit"
     },
     "devDependencies": {
         "@openapitools/openapi-generator-cli": "^2.21.4",
