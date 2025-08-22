@@ -68,3 +68,4 @@ export {
     OpenWorkspaceFileParams,
     OpenWorkspaceFileResult,
 } from './workspace'
+export * from './codegen/generated/typescript/src'
