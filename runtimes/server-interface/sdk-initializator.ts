@@ -1,5 +1,5 @@
-import { Service } from 'aws-sdk'
-import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import { Service } from 'aws-sdk2-types'
+import { ServiceConfigurationOptions } from 'aws-sdk2-types/lib/service'
 
 // aws sdk v2 clients constructor type
 export type SDKClientConstructorV2<T, P extends ServiceConfigurationOptions> = new (config?: P) => T
