@@ -30,8 +30,8 @@ import {
     InitializeParams,
 } from '../protocol'
 import { IdentityManagement } from '../server-interface/identity-management'
-import { Service } from 'aws-sdk'
-import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
+import { Service } from 'aws-sdk2-types'
+import { ServiceConfigurationOptions } from 'aws-sdk2-types/lib/service'
 
 /**
  * A test helper package to test Server implementations. Accepts a single callback
