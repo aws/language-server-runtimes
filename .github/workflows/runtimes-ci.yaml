@@ -41,3 +41,20 @@ jobs:
             - name: Test
               run: |
                   npm run test
+    test-mac:
+        name: Test (macOS)
+        runs-on: macos-latest
+        steps:
+            - name: Sync Code
+              uses: actions/checkout@v4
+            - name: Set up Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 22
+            - name: Build
+              run: |
+                  npm ci
+                  npm run compile
+            - name: Test
+              run: |
+                  npm run test
