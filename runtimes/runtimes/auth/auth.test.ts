@@ -120,6 +120,11 @@ describe('Auth', () => {
         clearHandlers()
     })
 
+    afterEach(() => {
+        serverConnection.dispose()
+        clientConnection.dispose()
+    })
+
     it('Handles IAM credentials', async () => {
         const updateRequest: UpdateCredentialsParams = {
             data: iamCredentials,
