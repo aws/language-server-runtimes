@@ -65,6 +65,8 @@ import {
     CheckDiagnosticsResult,
     OpenWorkspaceFileParams,
     OpenWorkspaceFileResult,
+    GetSupplementalContextParams,
+    SupplementalContextItem,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -129,6 +131,9 @@ export type Lsp = {
             void
         >
     ) => void
+    onGetSupplementalContext: (
+        handler: RequestHandler<GetSupplementalContextParams, SupplementalContextItem[] | undefined | null, void>
+    ) => void
     onCompletion: (
         handler: RequestHandler<CompletionParams, CompletionItem[] | CompletionList | undefined | null, void>
     ) => void
@@ -188,5 +193,8 @@ export type Lsp = {
         ) => void
         onGetConfigurationFromServer: (handler: RequestHandler<GetConfigurationFromServerParams, LSPAny, void>) => void
         onDidChangeDependencyPaths: (handler: NotificationHandler<DidChangeDependencyPathsParams>) => void
+        onGetSupplementalContext: (
+            handler: RequestHandler<GetSupplementalContextParams, SupplementalContextItem[] | undefined | null, void>
+        ) => void
     }
 }

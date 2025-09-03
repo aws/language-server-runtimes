@@ -36,6 +36,7 @@ import {
     getMfaCodeRequestType,
     CheckDiagnosticsParams,
     OpenWorkspaceFileParams,
+    getSupplementalContextRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -388,6 +389,8 @@ export const standalone = (props: RuntimeProps) => {
                 onCompletion: handler => lspConnection.onCompletion(handler),
                 onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
                 onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
+                onGetSupplementalContext: handler =>
+                    lspConnection.onRequest(getSupplementalContextRequestType, handler),
                 didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
                 onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
                 onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
@@ -443,6 +446,9 @@ export const standalone = (props: RuntimeProps) => {
                     },
                     onDidChangeDependencyPaths(handler) {
                         lspConnection.onNotification(didChangeDependencyPathsNotificationType, handler)
+                    },
+                    onGetSupplementalContext: handler => {
+                        lspConnection.onRequest(getSupplementalContextRequestType, handler)
                     },
                 },
             }
