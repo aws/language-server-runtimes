@@ -33,6 +33,16 @@ interface FileContextParams {
     fileContextOverride?: FileContext
 }
 
+export interface SupplementalContextItem {
+    content: string
+    filePath: string
+    score?: number
+}
+
+export interface GetSupplementalContextParams {
+    filePath: string
+}
+
 export type InlineCompletionWithReferencesParams = InlineCompletionParams &
     PartialResultParams &
     DocumentChangeParams &
@@ -51,3 +61,11 @@ export const logInlineCompletionSessionResultsNotificationType = new ProtocolNot
     LogInlineCompletionSessionResultsParams,
     void
 >('aws/logInlineCompletionSessionResults')
+
+export const getSupplementalContextRequestType = new ProtocolRequestType<
+    GetSupplementalContextParams,
+    SupplementalContextItem[],
+    SupplementalContextItem[],
+    void,
+    void
+>('aws/textDocument/getProjectContext')
