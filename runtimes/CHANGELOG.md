@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.128](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.127...language-server-runtimes/v0.2.128) (2025-09-04)
+
+
+### Features
+
+* add supplemental context api ([#672](https://github.com/aws/language-server-runtimes/issues/672)) ([04e6cb4](https://github.com/aws/language-server-runtimes/commit/04e6cb490c0e53ed054641605177971101b95af1))
+
 ## [0.2.127](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.126...language-server-runtimes/v0.2.127) (2025-08-21)
 
 
