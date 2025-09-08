@@ -63,6 +63,7 @@ import {
     subscriptionDetailsNotificationType,
     subscriptionUpgradeNotificationType,
     executeTerminalCommandRequest,
+    getSupplementalContextRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
 import {
@@ -257,6 +258,7 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             onCompletion: handler => lspConnection.onCompletion(handler),
             onInlineCompletion: handler => lspConnection.onRequest(inlineCompletionRequestType, handler),
             onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
+            onGetSupplementalContext: handler => lspConnection.onRequest(getSupplementalContextRequestType, handler),
             didChangeConfiguration: lspServer.setDidChangeConfigurationHandler,
             onDidFormatDocument: handler => lspConnection.onDocumentFormatting(handler),
             onDidOpenTextDocument: handler => documentsObserver.callbacks.onDidOpenTextDocument(handler),
@@ -296,6 +298,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 onInlineCompletionWithReferences: handler =>
                     lspConnection.onRequest(inlineCompletionWithReferencesRequestType, handler),
                 onEditCompletion: handler => lspConnection.onRequest(editCompletionRequestType, handler),
+                onGetSupplementalContext: handler =>
+                    lspConnection.onRequest(getSupplementalContextRequestType, handler),
                 onLogInlineCompletionSessionResults: handler => {
                     lspConnection.onNotification(logInlineCompletionSessionResultsNotificationType, handler)
                 },
