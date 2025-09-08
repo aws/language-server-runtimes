@@ -65,6 +65,9 @@ import {
     CheckDiagnosticsResult,
     OpenWorkspaceFileParams,
     OpenWorkspaceFileResult,
+    ExecuteTerminalCommandParams,
+    ExecuteTerminalCommandResult,
+    CancellationToken,
 } from '../protocol'
 
 // Re-export whole surface of LSP protocol used in Runtimes.
@@ -188,5 +191,17 @@ export type Lsp = {
         ) => void
         onGetConfigurationFromServer: (handler: RequestHandler<GetConfigurationFromServerParams, LSPAny, void>) => void
         onDidChangeDependencyPaths: (handler: NotificationHandler<DidChangeDependencyPathsParams>) => void
+    }
+    terminal: {
+        /**
+         * Execute a command in the IDE terminal
+         * @param params Terminal command execution parameters
+         * @param token Optional cancellation token
+         * @returns Promise that resolves with the execution result
+         */
+        executeCommand: (
+            params: ExecuteTerminalCommandParams,
+            token?: CancellationToken
+        ) => Promise<ExecuteTerminalCommandResult>
     }
 }

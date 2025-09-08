@@ -36,6 +36,7 @@ import {
     getMfaCodeRequestType,
     CheckDiagnosticsParams,
     OpenWorkspaceFileParams,
+    executeTerminalCommandRequest,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
 import {
@@ -444,6 +445,10 @@ export const standalone = (props: RuntimeProps) => {
                     onDidChangeDependencyPaths(handler) {
                         lspConnection.onNotification(didChangeDependencyPathsNotificationType, handler)
                     },
+                },
+                terminal: {
+                    executeCommand: (params, token) =>
+                        lspConnection.sendRequest(executeTerminalCommandRequest, params, token),
                 },
             }
 
