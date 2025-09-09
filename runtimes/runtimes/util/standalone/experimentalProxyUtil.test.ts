@@ -72,14 +72,6 @@ describe('ProxyConfigManager', function () {
         mockFs.restore()
     })
 
-    it('should cache and return same V2 config', () => {
-        const config1 = proxyManager.getV2ProxyConfig()
-        const config2 = proxyManager.getV2ProxyConfig()
-
-        assert.strictEqual(config1, config2)
-        assert.strictEqual(config1.httpOptions?.agent, config2.httpOptions?.agent)
-    })
-
     it('should cache and return same V3 config', () => {
         const config1 = proxyManager.getV3ProxyConfig()
         const config2 = proxyManager.getV3ProxyConfig()
@@ -87,13 +79,11 @@ describe('ProxyConfigManager', function () {
         assert.strictEqual(config1, config2)
     })
 
-    it('should use same agent for V2 and V3 configs', () => {
+    it('should use secure agent for V3 config', () => {
         const getAgentSpy = sinon.spy(proxyManager, 'getSecureAgent')
-        proxyManager.getV2ProxyConfig()
         proxyManager.getV3ProxyConfig()
 
-        assert(getAgentSpy.calledTwice)
-        assert.strictEqual(getAgentSpy.firstCall.returnValue, getAgentSpy.secondCall.returnValue)
+        assert(getAgentSpy.calledOnce)
     })
 
     describe('getProxyUrlFromEnv', () => {

@@ -72,7 +72,6 @@ import {
     Runtime,
     Telemetry,
     Workspace,
-    SDKClientConstructorV2,
     SDKClientConstructorV3,
     SDKInitializator,
     MessageReader,
@@ -99,8 +98,6 @@ import {
 import { IdentityManagement } from '../server-interface/identity-management'
 import { WebBase64Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
-import { Service } from 'aws-sdk'
-import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType, CheckDiagnosticsRequestType } from '../protocol/window'
@@ -308,17 +305,8 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
             },
         }
 
-        const sdkInitializator: SDKInitializator = Object.assign(
-            // Default callable function for v3 clients
-            <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => new Ctor({ ...current_config }),
-            // Property for v2 clients
-            {
-                v2: <T extends Service, P extends ServiceConfigurationOptions>(
-                    Ctor: SDKClientConstructorV2<T, P>,
-                    current_config: P
-                ): T => new Ctor({ ...current_config }),
-            }
-        )
+        const sdkInitializator: SDKInitializator = <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T =>
+            new Ctor({ ...current_config })
         credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
 
         const agent = newAgent()

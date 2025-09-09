@@ -7,7 +7,6 @@ import { readFileSync } from 'node:fs'
 import * as tls from 'node:tls'
 import { Agent as HttpsAgent } from 'node:https'
 import { X509Certificate } from 'node:crypto'
-import { ConfigurationOptions } from 'aws-sdk'
 import { HttpsProxyAgent } from 'hpagent'
 import { NodeHttpHandler } from '@smithy/node-http-handler'
 import { readMacosCertificates, readLinuxCertificates, readWindowsCertificates } from './certificatesReaders'
@@ -21,7 +20,6 @@ export class ProxyConfigManager {
      * Environment variables for proxy configuration, in order of precedence
      */
     private PROXY_ENV_VARS = ['HTTPS_PROXY', 'https_proxy', 'HTTP_PROXY', 'http_proxy']
-    private cachedV2Config?: ConfigurationOptions
     private cachedV3Config?: NodeHttpHandler
     private cachedAgent?: HttpsAgent | HttpsProxyAgent
 
@@ -32,18 +30,6 @@ export class ProxyConfigManager {
             this.cachedAgent = this.createSecureAgent()
         }
         return this.cachedAgent
-    }
-
-    public getV2ProxyConfig(): ConfigurationOptions {
-        if (!this.cachedV2Config) {
-            const agent = this.getSecureAgent()
-            this.cachedV2Config = {
-                httpOptions: {
-                    agent: agent,
-                },
-            }
-        }
-        return this.cachedV2Config
     }
 
     public getV3ProxyConfig(): NodeHttpHandler {
