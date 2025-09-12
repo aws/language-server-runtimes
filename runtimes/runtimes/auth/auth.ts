@@ -96,10 +96,10 @@ export class Auth {
                 //  Commercial: https://d-12345abcde.awsapps.com/start
                 //  GovCloud: https://start.us-gov-home.awsapps.com/directory/d-12345abcde
                 //  China: https://start.home.awsapps.cn/directory/d-12345abcde
-                const host = URL.parse(startUrl)?.host
-                if (!host) {
+                if (!URL.canParse(startUrl)) {
                     return 'none'
                 }
+                const host = new URL(startUrl).host
 
                 if (
                     host.endsWith('.amazonaws.com') ||
