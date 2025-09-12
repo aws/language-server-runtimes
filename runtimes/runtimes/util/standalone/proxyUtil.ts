@@ -1,6 +1,6 @@
 import { Workspace } from '../../../server-interface'
 
-import { ConfigurationOptions } from 'aws-sdk'
+import { ConfigurationOptions } from 'aws-sdk2-types'
 import { HttpsProxyAgent } from 'hpagent'
 import { NodeHttpHandler } from '@smithy/node-http-handler'
 
