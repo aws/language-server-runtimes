@@ -96,7 +96,17 @@ export class Auth {
                 //  Commercial: https://d-12345abcde.awsapps.com/start
                 //  GovCloud: https://start.us-gov-home.awsapps.com/directory/d-12345abcde
                 //  China: https://start.home.awsapps.cn/directory/d-12345abcde
-                if (startUrl.includes('.awsapps.c') || startUrl.includes('.amazonaws.com')) {
+                const host = URL.parse(startUrl)?.host
+                if (!host) {
+                    return 'none'
+                }
+
+                if (
+                    host.endsWith('.amazonaws.com') ||
+                    host.endsWith('.awsapps.com') ||
+                    host.endsWith('.amazonaws.cn') ||
+                    host.endsWith('.awsapps.cn')
+                ) {
                     return 'identityCenter'
                 }
 
