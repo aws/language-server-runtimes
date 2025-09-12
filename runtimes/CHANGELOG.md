@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.129](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.128...language-server-runtimes/v0.2.129) (2025-09-12)
+
+
+### Features
+
+* add 'external_idp' as a sso connection type ([#679](https://github.com/aws/language-server-runtimes/issues/679)) ([fb0b452](https://github.com/aws/language-server-runtimes/commit/fb0b4529c72d568fbf0ca212235425f52e2fd825))
+
 ## [0.2.128](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.127...language-server-runtimes/v0.2.128) (2025-09-04)
 
 
