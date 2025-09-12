@@ -79,7 +79,38 @@ export class Auth {
             },
             getConnectionType: () => {
                 const startUrl = this.connectionMetadata?.sso?.startUrl
-                return !startUrl ? 'none' : startUrl.includes(BUILDER_ID_START_URL) ? 'builderId' : 'identityCenter'
+                if (!startUrl) {
+                    return 'none'
+                }
+
+                if (startUrl.includes(BUILDER_ID_START_URL)) {
+                    return 'builderId'
+                }
+
+                // Issuer format:
+                // Commercial: https://identitycenter.amazonaws.com/ssoins-...
+                // GovCloud: https://identitycenter.us-gov.amazonaws.com/ssoins-...
+                // China: https://identitycenter.amazonaws.com.cn/ssoins-...
+
+                // Start URL format:
+                //  Commercial: https://d-12345abcde.awsapps.com/start
+                //  GovCloud: https://start.us-gov-home.awsapps.com/directory/d-12345abcde
+                //  China: https://start.home.awsapps.cn/directory/d-12345abcde
+                if (!URL.canParse(startUrl)) {
+                    return 'none'
+                }
+                const host = new URL(startUrl).host
+
+                if (
+                    host.endsWith('.amazonaws.com') ||
+                    host.endsWith('.awsapps.com') ||
+                    host.endsWith('.amazonaws.cn') ||
+                    host.endsWith('.awsapps.cn')
+                ) {
+                    return 'identityCenter'
+                }
+
+                return 'external_idp'
             },
             onCredentialsDeleted: (handler: (type: CredentialsType) => void) => {
                 this.credentialsDeleteHandler = handler

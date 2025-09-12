@@ -361,7 +361,7 @@ describe('Auth', () => {
             assert.deepEqual(credentialsProvider.getConnectionType(), 'builderId')
         })
 
-        it('getConnectionType return identityCenter', async () => {
+        it('getConnectionType return identityCenter for start url', async () => {
             const CONNECTION_METADATA = {
                 sso: {
                     startUrl: 'https://idc.awsapps.com/start',
@@ -379,6 +379,46 @@ describe('Auth', () => {
             await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
 
             assert.deepEqual(credentialsProvider.getConnectionType(), 'identityCenter')
+        })
+
+        it('getConnectionType return identityCenter for issuer url', async () => {
+            const CONNECTION_METADATA = {
+                sso: {
+                    startUrl: 'https://idc.awsapps.com/start',
+                },
+            }
+
+            const updateRequest: UpdateCredentialsParams = {
+                data: bearerCredentials,
+                metadata: CONNECTION_METADATA,
+                encrypted: false,
+            }
+            const auth = new Auth(serverConnection, lspRouter)
+            const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+
+            await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
+
+            assert.deepEqual(credentialsProvider.getConnectionType(), 'identityCenter')
+        })
+
+        it('getConnectionType return external_idp for non-IdC bearer', async () => {
+            const CONNECTION_METADATA = {
+                sso: {
+                    startUrl: 'https://some.nice.example.com',
+                },
+            }
+
+            const updateRequest: UpdateCredentialsParams = {
+                data: bearerCredentials,
+                metadata: CONNECTION_METADATA,
+                encrypted: false,
+            }
+            const auth = new Auth(serverConnection, lspRouter)
+            const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+
+            await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
+
+            assert.deepEqual(credentialsProvider.getConnectionType(), 'external_idp')
         })
 
         it('getConnectionType return none', async () => {
