@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.129...language-server-runtimes/v0.3.0) (2025-09-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* removed v2 SDK support, updated to v3-only APIs
+
+### Features
+
+* migrate from AWS SDK v2 to v3 ([#685](https://github.com/aws/language-server-runtimes/issues/685)) ([66a6c6d](https://github.com/aws/language-server-runtimes/commit/66a6c6dd45ee684965208cbb4e2df505c9063e9f))
+
 ## [0.2.129](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.128...language-server-runtimes/v0.2.129) (2025-09-12)
 
 
