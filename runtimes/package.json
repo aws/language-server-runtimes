@@ -41,7 +41,6 @@
         "@opentelemetry/sdk-metrics": "^2.0.1",
         "@smithy/node-http-handler": "^4.0.4",
         "ajv": "^8.17.1",
-        "aws-sdk": "^2.1692.0",
         "hpagent": "^1.2.0",
         "jose": "^5.9.6",
         "mac-ca": "^3.1.1",
