@@ -719,6 +719,7 @@ export interface PromptInputOptionChangeParams {
 export interface Model {
     id: string
     name: string
+    description?: string
 }
 
 export interface ListAvailableModelsParams {
