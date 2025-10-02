@@ -10,7 +10,7 @@
     "author": "Amazon Web Services",
     "license": "Apache-2.0",
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=24.0.0"
     },
     "scripts": {
         "clean": "rm -rf out/",
