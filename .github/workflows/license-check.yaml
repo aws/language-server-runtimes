@@ -4,6 +4,10 @@ on:
   pull_request:
     branches: [main]
 
+
+permissions:
+  contents: read
+
 jobs:
   license-check:
     runs-on: ubuntu-latest
