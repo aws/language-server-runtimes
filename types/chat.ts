@@ -204,9 +204,9 @@ export interface ChatMessage {
         }[]
     }
     forModifiedFilesTracker?: {
-        title?: string;
-        removeFile?: boolean;
-    } | undefined;
+        title?: string
+        removeFile?: boolean
+    }
 }
 
 /**
