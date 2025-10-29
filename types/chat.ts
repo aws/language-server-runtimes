@@ -203,6 +203,10 @@ export interface ChatMessage {
             selected?: boolean | undefined
         }[]
     }
+    forModifiedFilesTracker?: {
+        title?: string;
+        removeFile?: boolean;
+    } | undefined;
 }
 
 /**
