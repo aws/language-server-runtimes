@@ -5,7 +5,7 @@ export { IamCredentials, BearerCredentials, ConnectionMetadata }
 
 export type CredentialsType = 'iam' | 'bearer'
 export type Credentials = IamCredentials | BearerCredentials
-export type SsoConnectionType = 'builderId' | 'identityCenter' | 'none'
+export type SsoConnectionType = 'builderId' | 'identityCenter' | 'external_idp' | 'none'
 
 export interface CredentialsProvider {
     hasCredentials: (type: CredentialsType) => boolean

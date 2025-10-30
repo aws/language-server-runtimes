@@ -1,6 +1,6 @@
 {
     "name": "@aws/language-server-runtimes",
-    "version": "0.2.128",
+    "version": "0.3.1",
     "description": "Runtimes to host Language Servers for AWS",
     "repository": {
         "type": "git",
@@ -10,7 +10,7 @@
     "author": "Amazon Web Services",
     "license": "Apache-2.0",
     "engines": {
-        "node": ">=18.0.0"
+        "node": ">=24.0.0"
     },
     "scripts": {
         "clean": "rm -rf out/",
@@ -30,7 +30,7 @@
         "generate-types": "ts-node ./script/generate-types.ts"
     },
     "dependencies": {
-        "@aws/language-server-runtimes-types": "^0.1.56",
+        "@aws/language-server-runtimes-types": "^0.1.57",
         "@opentelemetry/api": "^1.9.0",
         "@opentelemetry/api-logs": "^0.200.0",
         "@opentelemetry/core": "^2.0.0",
@@ -41,7 +41,6 @@
         "@opentelemetry/sdk-metrics": "^2.0.1",
         "@smithy/node-http-handler": "^4.0.4",
         "ajv": "^8.17.1",
-        "aws-sdk": "^2.1692.0",
         "hpagent": "^1.2.0",
         "jose": "^5.9.6",
         "mac-ca": "^3.1.1",

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.57](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.56...language-server-runtimes-types/v0.1.57) (2025-10-01)
+
+
+### Features
+
+* add description to model interface ([#689](https://github.com/aws/language-server-runtimes/issues/689)) ([0e74829](https://github.com/aws/language-server-runtimes/commit/0e74829adc061e81c54afff5d684d1beb7f83cc8))
+* optional pending state for ContextCommand  ([#687](https://github.com/aws/language-server-runtimes/issues/687)) ([df9c9a1](https://github.com/aws/language-server-runtimes/commit/df9c9a16a33e50c874a9897cb8cb8c8eb836333d))
+
 ## [0.1.56](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.55...language-server-runtimes-types/v0.1.56) (2025-08-12)
 
 

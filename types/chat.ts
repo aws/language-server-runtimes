@@ -466,6 +466,7 @@ export interface ContextCommand extends QuickActionCommand {
     label?: 'file' | 'folder' | 'code' | 'image'
     children?: ContextCommandGroup[]
     content?: Uint8Array
+    disabledText?: string
 }
 
 export interface ContextCommandParams {
@@ -722,6 +723,7 @@ export interface PromptInputOptionChangeParams {
 export interface Model {
     id: string
     name: string
+    description?: string
 }
 
 export interface ListAvailableModelsParams {

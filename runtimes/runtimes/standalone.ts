@@ -63,7 +63,6 @@ import {
     listProfilesRequestType,
     ssoTokenChangedRequestType,
     updateProfileRequestType,
-    SDKClientConstructorV2,
     SDKClientConstructorV3,
     SDKInitializator,
     MetricEvent,
@@ -88,11 +87,9 @@ import { getServerDataDirPath } from './util/serverDataDirPath'
 import { ProxyConfigManager } from './util/standalone/experimentalProxyUtil'
 import { Encoding } from './encoding'
 import { LoggingServer } from './lsp/router/loggingServer'
-import { Service } from 'aws-sdk'
-import { ServiceConfigurationOptions } from 'aws-sdk/lib/service'
 import { getTelemetryLspServer } from './util/telemetryLspServer'
 import { getClientInitializeParamsHandlerFactory } from './util/lspCacheUtil'
-import { makeProxyConfigv2Standalone, makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
+import { makeProxyConfigv3Standalone } from './util/standalone/proxyUtil'
 import { newAgent } from './agent'
 import { ShowSaveFileDialogRequestType, CheckDiagnosticsRequestType } from '../protocol/window'
 import { openWorkspaceFileRequestType } from '../protocol/workspace'
@@ -454,71 +451,38 @@ export const standalone = (props: RuntimeProps) => {
             }
 
             const isExperimentalProxy = process.env.EXPERIMENTAL_HTTP_PROXY_SUPPORT === 'true'
-            const sdkInitializator: SDKInitializator = Object.assign(
-                // Default v3 implementation as the callable function
-                <T, P>(Ctor: SDKClientConstructorV3<T, P>, current_config: P): T => {
-                    try {
-                        const requestHandler = isExperimentalProxy
-                            ? sdkProxyConfigManager.getV3ProxyConfig()
-                            : makeProxyConfigv3Standalone(workspace)
+            const sdkInitializator: SDKInitializator = <T, P>(
+                Ctor: SDKClientConstructorV3<T, P>,
+                current_config: P
+            ): T => {
+                try {
+                    const requestHandler = isExperimentalProxy
+                        ? sdkProxyConfigManager.getV3ProxyConfig()
+                        : makeProxyConfigv3Standalone(workspace)
 
-                        logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
+                    logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
 
-                        // setup proxy
-                        let instance = new Ctor({
-                            ...current_config,
-                            requestHandler: requestHandler,
-                        })
-                        logging.log(`Configured AWS SDK V3 Proxy for client.`)
-                        return instance
-                    } catch (err) {
-                        telemetry.emitMetric({
-                            name: 'runtime_httpProxyConfiguration',
-                            result: 'Failed',
-                            errorData: {
-                                reason: err instanceof Error ? err.toString() : 'unknown',
-                            },
-                        })
+                    // setup proxy
+                    let instance = new Ctor({
+                        ...current_config,
+                        requestHandler: requestHandler,
+                    })
+                    logging.log(`Configured AWS SDK V3 Proxy for client.`)
+                    return instance
+                } catch (err) {
+                    telemetry.emitMetric({
+                        name: 'runtime_httpProxyConfiguration',
+                        result: 'Failed',
+                        errorData: {
+                            reason: err instanceof Error ? err.toString() : 'unknown',
+                        },
+                    })
 
-                        // Fallback
-                        logging.log(`Failed to configure AWS SDK V3 Proxy for client. Starting without proxy.`)
-                        return new Ctor({ ...current_config })
-                    }
-                },
-                // v2 implementation as a property
-                {
-                    v2: <T extends Service, P extends ServiceConfigurationOptions>(
-                        Ctor: SDKClientConstructorV2<T, P>,
-                        current_config: P
-                    ): T => {
-                        let instance = new Ctor({ ...current_config })
-
-                        try {
-                            const configOptions = isExperimentalProxy
-                                ? sdkProxyConfigManager.getV2ProxyConfig()
-                                : makeProxyConfigv2Standalone(workspace)
-
-                            logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
-
-                            instance.config.update(configOptions)
-                            logging.log(`Configured AWS SDK V2 Proxy for client.`)
-                            return instance
-                        } catch (err) {
-                            telemetry.emitMetric({
-                                name: 'runtime_httpProxyConfiguration',
-                                result: 'Failed',
-                                errorData: {
-                                    reason: err instanceof Error ? err.toString() : 'unknown',
-                                },
-                            })
-
-                            // Fallback
-                            logging.log(`Failed to configure AWS SDK V2 Proxy for client. Starting without proxy.`)
-                            return instance
-                        }
-                    },
+                    // Fallback
+                    logging.log(`Failed to configure AWS SDK V3 Proxy for client. Starting without proxy.`)
+                    return new Ctor({ ...current_config })
                 }
-            )
+            }
 
             credentialsProvider.onCredentialsDeleted = lspServer.setCredentialsDeleteHandler
 

@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.3.1](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.0...language-server-runtimes/v0.3.1) (2025-10-01)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.56 to ^0.1.57
+
+## [0.3.0](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.129...language-server-runtimes/v0.3.0) (2025-09-19)
+
+
+### ⚠ BREAKING CHANGES
+
+* removed v2 SDK support, updated to v3-only APIs
+
+### Features
+
+* migrate from AWS SDK v2 to v3 ([#685](https://github.com/aws/language-server-runtimes/issues/685)) ([66a6c6d](https://github.com/aws/language-server-runtimes/commit/66a6c6dd45ee684965208cbb4e2df505c9063e9f))
+
+## [0.2.129](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.128...language-server-runtimes/v0.2.129) (2025-09-12)
+
+
+### Features
+
+* add 'external_idp' as a sso connection type ([#679](https://github.com/aws/language-server-runtimes/issues/679)) ([fb0b452](https://github.com/aws/language-server-runtimes/commit/fb0b4529c72d568fbf0ca212235425f52e2fd825))
+
 ## [0.2.128](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.2.127...language-server-runtimes/v0.2.128) (2025-09-04)
 
 

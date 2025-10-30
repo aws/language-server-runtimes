@@ -1,8 +1,8 @@
 import { URI } from 'vscode-uri'
 import * as path from 'path'
 import os from 'os'
-import assert = require('assert')
-import sinon = require('sinon')
+import * as assert from 'assert'
+import * as sinon from 'sinon'
 import { InitializeParams, WorkspaceFolder } from 'vscode-languageserver-protocol'
 import { getWorkspaceFoldersFromInit } from './initializeUtils'
 import { RemoteConsole } from 'vscode-languageserver'
