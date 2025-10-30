@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.3.2](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.1...language-server-runtimes/v0.3.2) (2025-10-30)
+
+
+### Bug Fixes
+
+* CI builds failing due to proxyquire incompatibility with Node.js 24 ([#700](https://github.com/aws/language-server-runtimes/issues/700)) ([1e6bcab](https://github.com/aws/language-server-runtimes/commit/1e6bcabddf0634cea231fc7441511dab6c0431f7))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.57 to ^0.1.58
+
 ## [0.3.1](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.0...language-server-runtimes/v0.3.1) (2025-10-01)
 
 
