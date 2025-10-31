@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.59](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.58...language-server-runtimes-types/v0.1.59) (2025-10-31)
+
+
+### Bug Fixes
+
+* dummy commit to trigger release ([#703](https://github.com/aws/language-server-runtimes/issues/703)) ([89a68b1](https://github.com/aws/language-server-runtimes/commit/89a68b1b6e8581e7c0e0f2965973f1f3e1aaceff))
+
 ## [0.1.58](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.57...language-server-runtimes-types/v0.1.58) (2025-10-30)
 
 
