@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.58](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.57...language-server-runtimes-types/v0.1.58) (2025-10-30)
+
+
+### Features
+
+* **types:** extended chatMessage to support enhanced ux ([#699](https://github.com/aws/language-server-runtimes/issues/699)) ([d6ccf58](https://github.com/aws/language-server-runtimes/commit/d6ccf58f0d2efb20ddd4cd2e784c2d4f928baa12))
+
 ## [0.1.57](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.56...language-server-runtimes-types/v0.1.57) (2025-10-01)
 
 
