@@ -204,6 +204,7 @@ export interface ChatMessage {
         }[]
     }
     modifiedFilesTracker?: {
+        // This is used for the new component: https://github.com/aws/mynah-ui/commit/2e4d1e91566556e98a62da4bfd13cbfbe836dcdf
         title?: string
         removeFile?: boolean
     }
