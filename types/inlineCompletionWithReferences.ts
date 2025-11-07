@@ -144,4 +144,8 @@ export interface LogInlineCompletionSessionResultsParams {
      * List of diagnostic removed after inline completion completion acceptence.
      */
     removedDiagnostics?: IdeDiagnostic[]
+    /**
+     * Generic logging reason
+     */
+    reason?: string
 }
