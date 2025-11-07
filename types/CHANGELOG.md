@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.61](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.60...language-server-runtimes-types/v0.1.61) (2025-11-07)
+
+
+### Bug Fixes
+
+* add reason to logging schema ([#708](https://github.com/aws/language-server-runtimes/issues/708)) ([9d02fbb](https://github.com/aws/language-server-runtimes/commit/9d02fbb8b9571b73eaacabc0abad503a2de5f50b))
+
 ## [0.1.60](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.59...language-server-runtimes-types/v0.1.60) (2025-11-04)
 
 
