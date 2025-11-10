@@ -576,6 +576,7 @@ export interface ListConversationsParams {
 
 export interface ListMcpServersParams {
     filter?: Record<string, FilterValue>
+    isMcpRegistry?: boolean
 }
 
 export interface ListRulesParams {
@@ -660,6 +661,7 @@ export interface ListMcpServersResult {
     }
     list: DetailedListGroup[]
     filterOptions?: FilterOption[]
+    isMcpRegistry?: boolean
 }
 
 export type ConversationAction = 'delete' | 'export'
@@ -677,6 +679,7 @@ export interface McpServerClickParams {
     id: string
     title?: string
     optionsValues?: Record<string, string>
+    isMcpRegistry?: boolean
 }
 
 export interface McpServerClickResult extends McpServerClickParams {
