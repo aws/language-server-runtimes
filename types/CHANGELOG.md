@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.62](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.61...language-server-runtimes-types/v0.1.62) (2025-11-11)
+
+
+### Features
+
+* **types:** add isMcpRegistry field to MCP protocol types ([#710](https://github.com/aws/language-server-runtimes/issues/710)) ([c6028b0](https://github.com/aws/language-server-runtimes/commit/c6028b0726ab24add274747e60e2b45333067283))
+
 ## [0.1.61](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.60...language-server-runtimes-types/v0.1.61) (2025-11-07)
 
 
