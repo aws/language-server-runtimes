@@ -48,8 +48,7 @@
         "vscode-languageserver": "^9.0.1",
         "vscode-languageserver-protocol": "^3.17.5",
         "vscode-uri": "^3.1.0",
-        "win-ca": "^3.5.1",
-        "registry-js": "^1.16.1"
+        "win-ca": "^3.5.1"
     },
     "devDependencies": {
         "@types/mocha": "^10.0.9",
