@@ -268,7 +268,7 @@ describe('Auth', () => {
             encrypted: false,
         }
         // Add credentialkey to route to alternate storage
-        ;(updateRequest as any).credentialkey = 'bearer-alternate'
+        ;(updateRequest as any).credentialkey = 'atx-bearer'
 
         const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()

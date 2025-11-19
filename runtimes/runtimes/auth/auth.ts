@@ -34,7 +34,7 @@ export function isBearerCredentials(credentials: Credentials): credentials is Be
 export class Auth {
     private iamCredentials: IamCredentials | undefined
     private bearerCredentials: BearerCredentials | undefined
-    private alternateCredentials: BearerCredentials | undefined
+    private atxCredentials: BearerCredentials | undefined
     private credentialsProvider: CredentialsProvider
     private connectionMetadata: ConnectionMetadata | undefined
 
@@ -129,20 +129,28 @@ export class Auth {
         return {
             getCredentials: (type: CredentialsType): Credentials | undefined => {
                 if (type === 'bearer') {
-                    return this.alternateCredentials
+                    return this.atxCredentials
                 }
                 throw new Error(`ATX credentials provider only supports bearer type, got: ${type}`)
             },
 
             hasCredentials: (type: CredentialsType): boolean => {
                 if (type === 'bearer') {
-                    return this.alternateCredentials !== undefined
+                    return this.atxCredentials !== undefined
                 }
                 throw new Error(`ATX credentials provider only supports bearer type, got: ${type}`)
             },
 
             getConnectionMetadata: () => {
                 return this.connectionMetadata
+            },
+
+            getConnectionType: () => {
+                return this.credentialsProvider.getConnectionType()
+            },
+
+            onCredentialsDeleted: (handler: (type: CredentialsType) => void) => {
+                this.credentialsDeleteHandler = handler
             },
         }
     }
@@ -189,10 +197,9 @@ export class Auth {
                 : (request.data as BearerCredentials)
 
             if (isBearerCredentials(bearerCredentials)) {
-                if ((request as any).credentialkey === 'bearer-alternate') {
-                    this.connection.console.info('Runtime: Storing alternate credentials in bearer-alternate')
-                    this.alternateCredentials = bearerCredentials
-                    Object.freeze(this.alternateCredentials)
+                if ((request as any).credentialkey === 'atx-bearer') {
+                    this.connection.console.info('Runtime: Storing alternate credentials in atx-bearer')
+                    this.atxCredentials = bearerCredentials
                 } else {
                     this.connection.console.info('Runtime: Storing Q credentials in bearer')
                     this.setCredentials(bearerCredentials)
@@ -202,14 +209,14 @@ export class Auth {
                 this.connection.console.info('Runtime: Successfully saved bearer credentials')
             } else {
                 this.bearerCredentials = undefined
-                this.alternateCredentials = undefined
+                this.atxCredentials = undefined
                 throw new Error('Invalid bearer credentials')
             }
         })
 
         this.connection.onNotification(bearerCredentialsDeleteNotificationType, () => {
             this.bearerCredentials = undefined
-            this.alternateCredentials = undefined
+            this.atxCredentials = undefined
             this.connectionMetadata = undefined
             this.lspRouter.onCredentialsDeletion('bearer')
             this.connection.console.info('Runtime: Deleted bearer credentials')
