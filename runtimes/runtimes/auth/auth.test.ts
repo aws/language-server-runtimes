@@ -272,15 +272,16 @@ describe('Auth', () => {
 
         const auth = new Auth(serverConnection, lspRouter)
         const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+        const atxCredentialsProvider: CredentialsProvider = auth.getAtxCredentialsProvider()
 
-        assert(!credentialsProvider.hasCredentials('bearer-alternate'))
+        assert(!atxCredentialsProvider.hasCredentials('bearer'))
         assert(!credentialsProvider.hasCredentials('bearer'))
 
         await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
 
-        assert(credentialsProvider.hasCredentials('bearer-alternate'))
+        assert(atxCredentialsProvider.hasCredentials('bearer'))
         assert(!credentialsProvider.hasCredentials('bearer'))
-        assert.deepEqual(credentialsProvider.getCredentials('bearer-alternate'), alternateCredentials)
+        assert.deepEqual(atxCredentialsProvider.getCredentials('bearer'), alternateCredentials)
         assert(credentialsProvider.getCredentials('bearer') === undefined)
     })
 

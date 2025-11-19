@@ -3,7 +3,7 @@ import { IamCredentials, BearerCredentials, ConnectionMetadata } from '../protoc
 // Exports for Capability implementor
 export { IamCredentials, BearerCredentials, ConnectionMetadata }
 
-export type CredentialsType = 'iam' | 'bearer' | 'bearer-alternate'
+export type CredentialsType = 'iam' | 'bearer'
 export type Credentials = IamCredentials | BearerCredentials
 export type SsoConnectionType = 'builderId' | 'identityCenter' | 'external_idp' | 'none'
 

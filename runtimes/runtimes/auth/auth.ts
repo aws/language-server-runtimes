@@ -62,9 +62,6 @@ export class Auth {
                 if (type === 'bearer') {
                     return this.bearerCredentials
                 }
-                if (type === 'bearer-alternate') {
-                    return this.alternateCredentials
-                }
                 throw new Error(`Unsupported credentials type: ${type}`)
             },
 
@@ -74,9 +71,6 @@ export class Auth {
                 }
                 if (type === 'bearer') {
                     return this.bearerCredentials !== undefined
-                }
-                if (type === 'bearer-alternate') {
-                    return this.alternateCredentials !== undefined
                 }
                 throw new Error(`Unsupported credentials type: ${type}`)
             },
@@ -129,6 +123,28 @@ export class Auth {
 
     public getCredentialsProvider(): CredentialsProvider {
         return this.credentialsProvider
+    }
+
+    public getAtxCredentialsProvider(): CredentialsProvider {
+        return {
+            getCredentials: (type: CredentialsType): Credentials | undefined => {
+                if (type === 'bearer') {
+                    return this.alternateCredentials
+                }
+                throw new Error(`ATX credentials provider only supports bearer type, got: ${type}`)
+            },
+
+            hasCredentials: (type: CredentialsType): boolean => {
+                if (type === 'bearer') {
+                    return this.alternateCredentials !== undefined
+                }
+                throw new Error(`ATX credentials provider only supports bearer type, got: ${type}`)
+            },
+
+            getConnectionMetadata: () => {
+                return this.connectionMetadata
+            },
+        }
     }
 
     private areValidCredentials(creds: Credentials): boolean {
