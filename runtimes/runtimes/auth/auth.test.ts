@@ -259,6 +259,32 @@ describe('Auth', () => {
         clientConnection.sendNotification(credentialsProtocolMethodNames.bearerCredentialsDelete, updateRequest)
     })
 
+    it('Handles bearer-alternate credentials routing', async () => {
+        const alternateCredentials: BearerCredentials = {
+            token: 'alternateToken',
+        }
+        const updateRequest: UpdateCredentialsParams = {
+            data: alternateCredentials,
+            encrypted: false,
+        }
+        // Add credentialkey to route to alternate storage
+        ;(updateRequest as any).credentialkey = 'atx-bearer'
+
+        const auth = new Auth(serverConnection, lspRouter)
+        const credentialsProvider: CredentialsProvider = auth.getCredentialsProvider()
+        const atxCredentialsProvider: CredentialsProvider = auth.getAtxCredentialsProvider()
+
+        assert(!atxCredentialsProvider.hasCredentials('bearer'))
+        assert(!credentialsProvider.hasCredentials('bearer'))
+
+        await clientConnection.sendRequest(credentialsProtocolMethodNames.bearerCredentialsUpdate, updateRequest)
+
+        assert(atxCredentialsProvider.hasCredentials('bearer'))
+        assert(!credentialsProvider.hasCredentials('bearer'))
+        assert.deepEqual(atxCredentialsProvider.getCredentials('bearer'), alternateCredentials)
+        assert(credentialsProvider.getCredentials('bearer') === undefined)
+    })
+
     it('Rejects when IAM credentials are invalid', async () => {
         const malformedIamCredentials = {
             accessKeyId: 'testKey',
