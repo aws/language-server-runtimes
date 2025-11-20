@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.7](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.6...language-server-runtimes/v0.3.7) (2025-11-20)
+
+
+### Features
+
+* adding support for alternate bearer token ([#715](https://github.com/aws/language-server-runtimes/issues/715)) ([2ae27f3](https://github.com/aws/language-server-runtimes/commit/2ae27f3ee6da4666fb1be6168bd14634705c3305))
+
 ## [0.3.6](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.5...language-server-runtimes/v0.3.6) (2025-11-11)
 
 
