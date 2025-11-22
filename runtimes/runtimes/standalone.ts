@@ -352,6 +352,9 @@ export const standalone = (props: RuntimeProps) => {
             getConfiguration(key: string) {
                 return process.env[key]
             },
+            getAtxCredentialsProvider() {
+                return auth.getAtxCredentialsProvider()
+            },
         }
 
         const encoding: Encoding = {

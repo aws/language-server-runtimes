@@ -232,6 +232,9 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         getConfiguration(key: string) {
             return undefined
         },
+        getAtxCredentialsProvider() {
+            return auth.getAtxCredentialsProvider()
+        },
     }
 
     const encoding = new WebBase64Encoding(self)
