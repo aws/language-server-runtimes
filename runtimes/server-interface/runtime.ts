@@ -26,4 +26,10 @@ export interface Runtime {
      * @returns The configuration value or undefined if the key is not set.
      */
     getConfiguration(key: string): string | undefined
+
+    /**
+     * Get the ATX credentials provider.
+     * @returns The ATX credentials provider.
+     */
+    getAtxCredentialsProvider(): any
 }
