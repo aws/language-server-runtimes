@@ -498,6 +498,7 @@ export const standalone = (props: RuntimeProps) => {
                 notification: lspServer.notification,
                 sdkInitializator: sdkInitializator,
                 agent,
+                atxCredentialsProvider: auth.getAtxCredentialsProvider(),
             })
         })
 
