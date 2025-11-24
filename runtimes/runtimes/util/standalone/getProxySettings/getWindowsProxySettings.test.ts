@@ -18,15 +18,15 @@ describe('getWindowsSystemProxy', () => {
     //     }
     // })
 
-    it('returns undefined on non-Windows platforms', function () {
+    it('returns undefined on non-Windows platforms', async function () {
         if (process.platform === 'win32') return this.skip()
 
-        const result = getWindowsSystemProxy()
+        const result = await getWindowsSystemProxy()
         assert.strictEqual(result, undefined)
     })
 
-    it('handles registry access failure gracefully', function () {
+    it('handles registry access failure gracefully', async function () {
         // This test verifies the function doesn't throw
-        assert.doesNotThrow(() => getWindowsSystemProxy())
+        assert.doesNotThrow(async () => await getWindowsSystemProxy())
     })
 })
