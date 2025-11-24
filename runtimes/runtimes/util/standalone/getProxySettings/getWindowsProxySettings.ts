@@ -26,7 +26,7 @@ function readWindowsRegistry(): Promise<WindowsProxyRegistryKeys> {
     return new Promise((resolve, reject) => {
         const regKey = new winreg({
             hive: winreg.HKCU,
-            key: 'Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings',
+            key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings',
         })
 
         regKey.values((err: Error, items: winreg.RegistryItem[]) => {
