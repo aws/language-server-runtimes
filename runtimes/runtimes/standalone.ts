@@ -206,7 +206,7 @@ export const standalone = async (props: RuntimeProps) => {
             lspConnection.console.info('Runtime: Initializing runtime without encryption')
             auth = new Auth(lspConnection, lspRouter)
 
-            await initializeRuntime().then()
+            await initializeRuntime()
         }
     }
 
