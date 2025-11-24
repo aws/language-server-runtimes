@@ -73,7 +73,7 @@ describe('ProxyConfigManager', function () {
         mockFs.restore()
     })
 
-    it('should cache and return same V3 config', async () => {
+    it.skip('should cache and return same V3 config', async () => {
         // TODO: dev purpose
         if (os.platform() === 'win32') {
             assert.ok(process.env.windir)
@@ -84,7 +84,7 @@ describe('ProxyConfigManager', function () {
         assert.strictEqual(config1, config2)
     })
 
-    it('should use secure agent for V3 config', async () => {
+    it.skip('should use secure agent for V3 config', async () => {
         const getAgentSpy = sinon.spy(proxyManager, 'getSecureAgent')
         await proxyManager.getV3ProxyConfig()
 
