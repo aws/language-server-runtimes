@@ -126,8 +126,8 @@ describe('standalone', () => {
     describe('features', () => {
         let features: Features
 
-        beforeEach(() => {
-            standalone(props)
+        beforeEach(async () => {
+            await standalone(props)
             features = stubServer.getCall(0).args[0]
         })
 
