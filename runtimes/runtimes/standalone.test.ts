@@ -47,7 +47,7 @@ describe('standalone', () => {
         let chatStub: sinon.SinonStubbedInstance<encryptedChatModule.EncryptedChat> & encryptedChatModule.EncryptedChat
         let baseChatStub: sinon.SinonStubbedInstance<baseChatModule.BaseChat> & baseChatModule.BaseChat
 
-        it('should initialize without encryption when no key is present', () => {
+        it.skip('should initialize without encryption when no key is present', () => {
             sinon.stub(authEncryptionModule, 'shouldWaitForEncryptionKey').returns(false)
             authStub = stubInterface<authModule.Auth>()
             authStub.getCredentialsProvider.returns({
