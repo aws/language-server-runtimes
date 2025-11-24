@@ -12,15 +12,17 @@ export interface ProxyConfig {
     noProxy: string[]
 }
 
-const PROXY_ENABLE = 'ProxyEnable'
-const PROXY_SERVER = 'ProxyServer'
-const PROXY_OVERRIDE = 'ProxyOverride'
+const KEY_PROXY_ENABLE = 'ProxyEnable'
+const KEY_PROXY_SERVER = 'ProxyServer'
+const KEY_PROXY_OVERRIDE = 'ProxyOverride'
 
-function readWindowsRegistry(): Promise<{
+type WindowsProxyRegistryKeys = {
     proxyEnable: string | undefined
     proxyServer: string | undefined
     proxyOverride: string | undefined
-}> {
+}
+
+function readWindowsRegistry(): Promise<WindowsProxyRegistryKeys> {
     return new Promise((resolve, reject) => {
         const regKey = new winreg({
             hive: winreg.HKCU,
@@ -45,9 +47,9 @@ function readWindowsRegistry(): Promise<{
             })
 
             resolve({
-                proxyEnable: results[PROXY_ENABLE],
-                proxyServer: results[PROXY_SERVER],
-                proxyOverride: results[PROXY_OVERRIDE],
+                proxyEnable: results[KEY_PROXY_ENABLE],
+                proxyServer: results[KEY_PROXY_SERVER],
+                proxyOverride: results[KEY_PROXY_OVERRIDE],
             })
         })
     })
