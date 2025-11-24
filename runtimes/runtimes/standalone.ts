@@ -189,12 +189,12 @@ export const standalone = (props: RuntimeProps) => {
             // Contract: Only read up to (and including) the first newline (\n).
             readEncryptionDetails(process.stdin)
                 .then(
-                    (encryptionDetails: EncryptionInitialization) => {
+                    async (encryptionDetails: EncryptionInitialization) => {
                         validateEncryptionDetails(encryptionDetails)
                         lspConnection.console.info('Runtime: Initializing runtime with encryption')
                         auth = new Auth(lspConnection, lspRouter, encryptionDetails.key, encryptionDetails.mode)
                         chat = new EncryptedChat(lspConnection, encryptionDetails.key, encryptionDetails.mode)
-                        initializeRuntime(encryptionDetails.key)
+                        await initializeRuntime(encryptionDetails.key)
                     },
                     error => {
                         console.error(error)
@@ -212,7 +212,7 @@ export const standalone = (props: RuntimeProps) => {
             lspConnection.console.info('Runtime: Initializing runtime without encryption')
             auth = new Auth(lspConnection, lspRouter)
 
-            initializeRuntime()
+            initializeRuntime().then()
         }
     }
 
@@ -220,7 +220,7 @@ export const standalone = (props: RuntimeProps) => {
     // TODO: make this dependent on the actual requirements of the
     // capabilities parameter.
 
-    function initializeRuntime(encryptionKey?: string) {
+    async function initializeRuntime(encryptionKey?: string) {
         const documents = new TextDocuments(TextDocument)
         // Set up telemetry over LSP
         const telemetry: Telemetry = {
@@ -370,6 +370,8 @@ export const standalone = (props: RuntimeProps) => {
 
         const agent = newAgent()
 
+        const v3ProxyConfig = await sdkProxyConfigManager.getV3ProxyConfig()
+
         // Initialize every Server
         const disposables = props.servers.map(s => {
             // Create LSP server representation that holds internal server state
@@ -456,9 +458,8 @@ export const standalone = (props: RuntimeProps) => {
                 current_config: P
             ): T => {
                 try {
-                    const requestHandler = isExperimentalProxy
-                        ? sdkProxyConfigManager.getV3ProxyConfig()
-                        : makeProxyConfigv3Standalone(workspace)
+                    // TODO: modify here
+                    const requestHandler = isExperimentalProxy ? v3ProxyConfig : makeProxyConfigv3Standalone(workspace)
 
                     logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
 
