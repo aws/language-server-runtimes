@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.63](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.62...language-server-runtimes-types/v0.1.63) (2025-11-25)
+
+
+### Features
+
+* add tokenLimits to model interface ([#721](https://github.com/aws/language-server-runtimes/issues/721)) ([083464b](https://github.com/aws/language-server-runtimes/commit/083464b0f5368ff1cc24dca41c0f2a402284651b))
+
 ## [0.1.62](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.61...language-server-runtimes-types/v0.1.62) (2025-11-11)
 
 
