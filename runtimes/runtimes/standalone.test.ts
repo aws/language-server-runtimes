@@ -47,7 +47,7 @@ describe('standalone', () => {
         let chatStub: sinon.SinonStubbedInstance<encryptedChatModule.EncryptedChat> & encryptedChatModule.EncryptedChat
         let baseChatStub: sinon.SinonStubbedInstance<baseChatModule.BaseChat> & baseChatModule.BaseChat
 
-        it('should initialize without encryption when no key is present', () => {
+        it('should initialize without encryption when no key is present', async () => {
             sinon.stub(authEncryptionModule, 'shouldWaitForEncryptionKey').returns(false)
             authStub = stubInterface<authModule.Auth>()
             authStub.getCredentialsProvider.returns({
@@ -61,7 +61,7 @@ describe('standalone', () => {
             baseChatStub = stubInterface<baseChatModule.BaseChat>()
             sinon.stub(baseChatModule, 'BaseChat').returns(baseChatStub)
 
-            standalone(props)
+            await standalone(props)
 
             sinon.assert.calledWithExactly(authModule.Auth as unknown as sinon.SinonStub, stubConnection, lspRouterStub)
             sinon.assert.calledWithExactly(
@@ -126,8 +126,8 @@ describe('standalone', () => {
     describe('features', () => {
         let features: Features
 
-        beforeEach(() => {
-            standalone(props)
+        beforeEach(async () => {
+            await standalone(props)
             features = stubServer.getCall(0).args[0]
         })
 
