@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.9](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.8...language-server-runtimes/v0.3.9) (2025-11-25)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.62 to ^0.1.63
+
 ## [0.3.8](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.7...language-server-runtimes/v0.3.8) (2025-11-24)
 
 
