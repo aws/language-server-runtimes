@@ -452,7 +452,6 @@ export const standalone = async (props: RuntimeProps) => {
                 current_config: P
             ): T => {
                 try {
-                    // TODO: modify here
                     const requestHandler = isExperimentalProxy ? v3ProxyConfig : makeProxyConfigv3Standalone(workspace)
 
                     logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
