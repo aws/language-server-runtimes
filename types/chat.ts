@@ -724,10 +724,16 @@ export interface PromptInputOptionChangeParams {
     eventId?: string
 }
 
+export interface TokenLimits {
+    maxInputTokens?: number
+    maxOutputTokens?: number
+}
+
 export interface Model {
     id: string
     name: string
     description?: string
+    tokenLimits?: TokenLimits
 }
 
 export interface ListAvailableModelsParams {

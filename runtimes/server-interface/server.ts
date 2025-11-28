@@ -41,4 +41,5 @@ export type Features = {
     notification: Notification
     sdkInitializator: SDKInitializator
     agent: Agent
+    atxCredentialsProvider?: CredentialsProvider
 }

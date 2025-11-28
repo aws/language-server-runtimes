@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.3.9](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.8...language-server-runtimes/v0.3.9) (2025-11-25)
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.62 to ^0.1.63
+
+## [0.3.8](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.7...language-server-runtimes/v0.3.8) (2025-11-24)
+
+
+### Bug Fixes
+
+* updating atxCredentialProvider accessible in server ([#718](https://github.com/aws/language-server-runtimes/issues/718)) ([a0b50d4](https://github.com/aws/language-server-runtimes/commit/a0b50d40340a41724ab5cb14371bff869e7e234e))
+
 ## [0.3.7](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.6...language-server-runtimes/v0.3.7) (2025-11-20)
 
 
