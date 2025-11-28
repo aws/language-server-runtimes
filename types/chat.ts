@@ -117,6 +117,7 @@ export interface ChatParams extends PartialResultParams {
      * Context can be added through QuickActionCommand triggered by `@`.
      */
     context?: QuickActionCommand[]
+    findingsPath?: string
 }
 
 export interface InlineChatParams extends PartialResultParams {
