@@ -169,7 +169,7 @@ function setupCrashMonitoring(telemetryEmitter?: (metric: MetricEvent) => void) 
  * @param props.servers The list of servers to initialize and run
  * @returns
  */
-export const standalone = (props: RuntimeProps) => {
+export const standalone = async (props: RuntimeProps) => {
     handleVersionArgument(props.version)
 
     const lspConnection = createConnection(ProposedFeatures.all)
@@ -179,40 +179,34 @@ export const standalone = (props: RuntimeProps) => {
 
     let auth: Auth
     let chat: Chat
-    initializeAuth()
+    await initializeAuth()
 
     // Initialize Auth service
-    function initializeAuth() {
+    async function initializeAuth() {
         if (shouldWaitForEncryptionKey()) {
             // Before starting the runtime, accept encryption initialization details
             // directly from the destination for standalone runtimes.
             // Contract: Only read up to (and including) the first newline (\n).
-            readEncryptionDetails(process.stdin)
-                .then(
-                    (encryptionDetails: EncryptionInitialization) => {
-                        validateEncryptionDetails(encryptionDetails)
-                        lspConnection.console.info('Runtime: Initializing runtime with encryption')
-                        auth = new Auth(lspConnection, lspRouter, encryptionDetails.key, encryptionDetails.mode)
-                        chat = new EncryptedChat(lspConnection, encryptionDetails.key, encryptionDetails.mode)
-                        initializeRuntime(encryptionDetails.key)
-                    },
-                    error => {
-                        console.error(error)
-                        // arbitrary 5 second timeout to ensure console.error flushes before process exit
-                        // note: webpacked version may output exclusively to stdout, not stderr.
-                        setTimeout(() => {
-                            process.exit(10)
-                        }, 5000)
-                    }
-                )
-                .catch((error: Error) => {
-                    console.error('Error at runtime initialization:', error.message)
-                })
+            try {
+                const encryptionDetails: EncryptionInitialization = await readEncryptionDetails(process.stdin)
+                validateEncryptionDetails(encryptionDetails)
+                lspConnection.console.info('Runtime: Initializing runtime with encryption')
+                auth = new Auth(lspConnection, lspRouter, encryptionDetails.key, encryptionDetails.mode)
+                chat = new EncryptedChat(lspConnection, encryptionDetails.key, encryptionDetails.mode)
+                await initializeRuntime(encryptionDetails.key)
+            } catch (error) {
+                console.error(error)
+                // arbitrary 5 second timeout to ensure console.error flushes before process exit
+                // note: webpacked version may output exclusively to stdout, not stderr.
+                setTimeout(() => {
+                    process.exit(10)
+                }, 5000)
+            }
         } else {
             lspConnection.console.info('Runtime: Initializing runtime without encryption')
             auth = new Auth(lspConnection, lspRouter)
 
-            initializeRuntime()
+            await initializeRuntime()
         }
     }
 
@@ -220,7 +214,7 @@ export const standalone = (props: RuntimeProps) => {
     // TODO: make this dependent on the actual requirements of the
     // capabilities parameter.
 
-    function initializeRuntime(encryptionKey?: string) {
+    async function initializeRuntime(encryptionKey?: string) {
         const documents = new TextDocuments(TextDocument)
         // Set up telemetry over LSP
         const telemetry: Telemetry = {
@@ -373,6 +367,8 @@ export const standalone = (props: RuntimeProps) => {
 
         const agent = newAgent()
 
+        const v3ProxyConfig = await sdkProxyConfigManager.getV3ProxyConfig()
+
         // Initialize every Server
         const disposables = props.servers.map(s => {
             // Create LSP server representation that holds internal server state
@@ -459,9 +455,7 @@ export const standalone = (props: RuntimeProps) => {
                 current_config: P
             ): T => {
                 try {
-                    const requestHandler = isExperimentalProxy
-                        ? sdkProxyConfigManager.getV3ProxyConfig()
-                        : makeProxyConfigv3Standalone(workspace)
+                    const requestHandler = isExperimentalProxy ? v3ProxyConfig : makeProxyConfigv3Standalone(workspace)
 
                     logging.log(`Using ${isExperimentalProxy ? 'experimental' : 'standard'} proxy util`)
 

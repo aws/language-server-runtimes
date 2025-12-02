@@ -6,10 +6,10 @@ import * as assert from 'assert'
 import { getWindowsSystemProxy } from './getWindowsProxySettings'
 
 describe('getWindowsSystemProxy', () => {
-    it('can get the Windows system proxy', function () {
+    it('can get the Windows system proxy', async function () {
         if (process.platform !== 'win32') return this.skip()
 
-        const result = getWindowsSystemProxy()
+        const result = await getWindowsSystemProxy()
         assert.ok(result === undefined || (typeof result === 'object' && result !== null))
 
         if (result) {
@@ -18,15 +18,15 @@ describe('getWindowsSystemProxy', () => {
         }
     })
 
-    it('returns undefined on non-Windows platforms', function () {
+    it('returns undefined on non-Windows platforms', async function () {
         if (process.platform === 'win32') return this.skip()
 
-        const result = getWindowsSystemProxy()
+        const result = await getWindowsSystemProxy()
         assert.strictEqual(result, undefined)
     })
 
-    it('handles registry access failure gracefully', function () {
+    it('handles registry access failure gracefully', async function () {
         // This test verifies the function doesn't throw
-        assert.doesNotThrow(() => getWindowsSystemProxy())
+        assert.doesNotThrow(async () => await getWindowsSystemProxy())
     })
 })
