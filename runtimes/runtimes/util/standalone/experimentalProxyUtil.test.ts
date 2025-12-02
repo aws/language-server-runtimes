@@ -73,7 +73,7 @@ describe('ProxyConfigManager', function () {
         mockFs.restore()
     })
 
-    it.skip('should cache and return same V3 config', async () => {
+    it('should cache and return same V3 config', async () => {
         // TODO: dev purpose
         if (os.platform() === 'win32') {
             assert.ok(process.env.windir)
