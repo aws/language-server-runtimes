@@ -53,8 +53,8 @@ describe('ProxyConfigManager', function () {
     })
 
     beforeEach(() => {
-        originalEnv = { ...process.env }
-        process.env = {}
+        // originalEnv = { ...process.env }
+        // process.env = {}
 
         telemetryStub = {
             emitMetric: sinon.stub(),
