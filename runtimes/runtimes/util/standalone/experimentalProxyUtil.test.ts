@@ -14,7 +14,6 @@ import { Telemetry } from '../../../server-interface'
 import forge from 'node-forge'
 import * as tls from 'node:tls'
 import { X509Certificate } from 'node:crypto'
-import * as os from 'os'
 
 export const generateCert = (validityDays = 365) => {
     const keys = forge.pki.rsa.generateKeyPair(2048)
@@ -54,7 +53,6 @@ describe('ProxyConfigManager', function () {
 
     beforeEach(() => {
         originalEnv = { ...process.env }
-        // process.env = {}
 
         telemetryStub = {
             emitMetric: sinon.stub(),
