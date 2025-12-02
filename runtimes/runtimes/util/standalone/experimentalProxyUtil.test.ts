@@ -31,8 +31,6 @@ export const generateCert = (validityDays = 365) => {
     }
 }
 
-describe('', function () {})
-
 describe('ProxyConfigManager', function () {
     this.timeout(0)
     let proxyManager: ProxyConfigManager
