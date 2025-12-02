@@ -84,7 +84,7 @@ describe('ProxyConfigManager', function () {
         assert.strictEqual(config1, config2)
     })
 
-    it.skip('should use secure agent for V3 config', async () => {
+    it('should use secure agent for V3 config', async () => {
         const getAgentSpy = sinon.spy(proxyManager, 'getSecureAgent')
         await proxyManager.getV3ProxyConfig()
 
