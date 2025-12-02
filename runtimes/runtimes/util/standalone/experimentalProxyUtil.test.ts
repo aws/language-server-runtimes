@@ -31,6 +31,8 @@ export const generateCert = (validityDays = 365) => {
     }
 }
 
+describe('', function () {})
+
 describe('ProxyConfigManager', function () {
     this.timeout(0)
     let proxyManager: ProxyConfigManager
@@ -53,7 +55,7 @@ describe('ProxyConfigManager', function () {
     })
 
     beforeEach(() => {
-        // originalEnv = { ...process.env }
+        originalEnv = { ...process.env }
         // process.env = {}
 
         telemetryStub = {
@@ -74,10 +76,6 @@ describe('ProxyConfigManager', function () {
     })
 
     it('should cache and return same V3 config', async () => {
-        // TODO: dev purpose
-        if (os.platform() === 'win32') {
-            assert.ok(process.env.windir)
-        }
         const config1 = await proxyManager.getV3ProxyConfig()
         const config2 = await proxyManager.getV3ProxyConfig()
 
