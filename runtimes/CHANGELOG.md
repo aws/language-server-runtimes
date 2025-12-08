@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.10](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.9...language-server-runtimes/v0.3.10) (2025-12-08)
+
+
+### Bug Fixes
+
+* cve ([#719](https://github.com/aws/language-server-runtimes/issues/719)) ([90597c2](https://github.com/aws/language-server-runtimes/commit/90597c209287640aeae34be4f5dbae35787c6e45))
+
 ## [0.3.9](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.8...language-server-runtimes/v0.3.9) (2025-11-25)
 
 
