@@ -116,15 +116,14 @@ export class ProxyConfigManager {
     getCertificates(): string[] {
         // Preserve NodeJS default certificates
         const certificates = [...tls.rootCertificates]
-        const systemCertCount = certificates.length
-        let awsCaBundleCount = 0
-        let nodeExtraCertsCount = 0
+        let logstr = '[SSL Certificates]\n'
 
         try {
             const certs = this.readSystemCertificates()
             if (certs) {
                 certificates.push(...certs)
             }
+            logstr += `- System root certificates length=${certs.length}`
         } catch (error: any) {
             OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).emitEvent({
                 errorOrigin: 'caughtError',
@@ -136,34 +135,27 @@ export class ProxyConfigManager {
             console.warn('Failed to read system certificates:', error)
         }
 
-        const beforeAwsBundle = certificates.length
         if (process.env.AWS_CA_BUNDLE) {
             const cert = this.readCertificateFile(process.env.AWS_CA_BUNDLE)
             if (cert) {
                 certificates.push(cert)
-                awsCaBundleCount = certificates.length - beforeAwsBundle
+                logstr += `- AWS_CA_BUNDLE=${cert}`
             }
         }
 
-        const beforeNodeExtra = certificates.length
         if (process.env.NODE_EXTRA_CA_CERTS) {
             const cert = this.readCertificateFile(process.env.NODE_EXTRA_CA_CERTS)
             if (cert) {
                 certificates.push(cert)
-                nodeExtraCertsCount = certificates.length - beforeNodeExtra
+                logstr += `- NODE_EXTRA_CA_CERTS=${cert}`
             }
         }
 
         const validCerts = this.removeExpiredCertificates(certificates)
+        logstr += `- Total certificates loaded=${certificates.length}`
+        logstr += `- Valid (non-expired) cert length=${validCerts.length}`
 
-        console.debug(
-            `[SSL Certificates]\n` +
-                `  System root certificates: ${systemCertCount}\n` +
-                `  AWS_CA_BUNDLE: ${awsCaBundleCount}\n` +
-                `  NODE_EXTRA_CA_CERTS: ${nodeExtraCertsCount}\n` +
-                `  Total loaded: ${certificates.length}\n` +
-                `  Valid (non-expired): ${validCerts.length}`
-        )
+        console.debug(logstr)
 
         return validCerts
     }
