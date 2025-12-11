@@ -116,6 +116,9 @@ export class ProxyConfigManager {
     getCertificates(): string[] {
         // Preserve NodeJS default certificates
         const certificates = [...tls.rootCertificates]
+        const systemCertCount = certificates.length
+        let awsCaBundleCount = 0
+        let nodeExtraCertsCount = 0
 
         try {
             const certs = this.readSystemCertificates()
@@ -133,20 +136,35 @@ export class ProxyConfigManager {
             console.warn('Failed to read system certificates:', error)
         }
 
+        const beforeAwsBundle = certificates.length
         if (process.env.AWS_CA_BUNDLE) {
             const cert = this.readCertificateFile(process.env.AWS_CA_BUNDLE)
-            cert && certificates.push(cert)
+            if (cert) {
+                certificates.push(cert)
+                awsCaBundleCount = certificates.length - beforeAwsBundle
+            }
         }
 
+        const beforeNodeExtra = certificates.length
         if (process.env.NODE_EXTRA_CA_CERTS) {
             const cert = this.readCertificateFile(process.env.NODE_EXTRA_CA_CERTS)
-            cert && certificates.push(cert)
+            if (cert) {
+                certificates.push(cert)
+                nodeExtraCertsCount = certificates.length - beforeNodeExtra
+            }
         }
 
-        console.debug(`Total certificates read: ${certificates.length}`)
         const validCerts = this.removeExpiredCertificates(certificates)
 
-        console.debug(`Using certificates: ${validCerts.length}`)
+        console.debug(
+            `[SSL Certificates]\n` +
+                `  System root certificates: ${systemCertCount}\n` +
+                `  AWS_CA_BUNDLE: ${awsCaBundleCount}\n` +
+                `  NODE_EXTRA_CA_CERTS: ${nodeExtraCertsCount}\n` +
+                `  Total loaded: ${certificates.length}\n` +
+                `  Valid (non-expired): ${validCerts.length}`
+        )
+
         return validCerts
     }
 
