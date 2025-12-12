@@ -116,12 +116,14 @@ export class ProxyConfigManager {
     getCertificates(): string[] {
         // Preserve NodeJS default certificates
         const certificates = [...tls.rootCertificates]
+        let logstr = '[SSL Certificates]\n'
 
         try {
             const certs = this.readSystemCertificates()
             if (certs) {
                 certificates.push(...certs)
             }
+            logstr += `- System root certificates length=${certs.length}`
         } catch (error: any) {
             OperationalTelemetryProvider.getTelemetryForScope(TELEMETRY_SCOPES.RUNTIMES).emitEvent({
                 errorOrigin: 'caughtError',
@@ -135,18 +137,26 @@ export class ProxyConfigManager {
 
         if (process.env.AWS_CA_BUNDLE) {
             const cert = this.readCertificateFile(process.env.AWS_CA_BUNDLE)
-            cert && certificates.push(cert)
+            if (cert) {
+                certificates.push(cert)
+                logstr += `- AWS_CA_BUNDLE=${cert}`
+            }
         }
 
         if (process.env.NODE_EXTRA_CA_CERTS) {
             const cert = this.readCertificateFile(process.env.NODE_EXTRA_CA_CERTS)
-            cert && certificates.push(cert)
+            if (cert) {
+                certificates.push(cert)
+                logstr += `- NODE_EXTRA_CA_CERTS=${cert}`
+            }
         }
 
-        console.debug(`Total certificates read: ${certificates.length}`)
         const validCerts = this.removeExpiredCertificates(certificates)
+        logstr += `- Total certificates loaded=${certificates.length}`
+        logstr += `- Valid (non-expired) cert length=${validCerts.length}`
 
-        console.debug(`Using certificates: ${validCerts.length}`)
+        console.debug(logstr)
+
         return validCerts
     }
 
