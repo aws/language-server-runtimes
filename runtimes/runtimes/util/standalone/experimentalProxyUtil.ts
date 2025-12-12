@@ -132,7 +132,7 @@ export class ProxyConfigManager {
                 errorCode: error?.code ?? '',
                 errorMessage: 'Failed to read system certificates',
             })
-            console.warn('Failed to read system certificates:', error)
+            console.error('[SSL Certificates]: Failed to read system certificates', error)
         }
 
         if (process.env.AWS_CA_BUNDLE) {
