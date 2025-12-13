@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.11](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.10...language-server-runtimes/v0.3.11) (2025-12-12)
+
+
+### Bug Fixes
+
+* more logging for SSL certificates ([#727](https://github.com/aws/language-server-runtimes/issues/727)) ([98aaaa3](https://github.com/aws/language-server-runtimes/commit/98aaaa3f28ef134eb737292a11e2cbc25184db7b))
+
 ## [0.3.10](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.9...language-server-runtimes/v0.3.10) (2025-12-08)
 
 
