@@ -53,6 +53,7 @@ describe('ProxyConfigManager', function () {
 
     beforeEach(() => {
         originalEnv = { ...process.env }
+        process.env = {}
 
         telemetryStub = {
             emitMetric: sinon.stub(),
@@ -71,16 +72,16 @@ describe('ProxyConfigManager', function () {
         mockFs.restore()
     })
 
-    it('should cache and return same V3 config', async () => {
-        const config1 = await proxyManager.getV3ProxyConfig()
-        const config2 = await proxyManager.getV3ProxyConfig()
+    it('should cache and return same V3 config', () => {
+        const config1 = proxyManager.getV3ProxyConfig()
+        const config2 = proxyManager.getV3ProxyConfig()
 
         assert.strictEqual(config1, config2)
     })
 
-    it('should use secure agent for V3 config', async () => {
+    it('should use secure agent for V3 config', () => {
         const getAgentSpy = sinon.spy(proxyManager, 'getSecureAgent')
-        await proxyManager.getV3ProxyConfig()
+        proxyManager.getV3ProxyConfig()
 
         assert(getAgentSpy.calledOnce)
     })
@@ -263,8 +264,8 @@ describe('ProxyConfigManager', function () {
             readLinuxCertificatesStub.returns(sysCerts)
         })
 
-        it('should create HttpsAgent when no proxy set', async () => {
-            const agent = await proxyManager.createSecureAgent()
+        it('should create HttpsAgent when no proxy set', () => {
+            const agent = proxyManager.createSecureAgent()
 
             assert(agent instanceof HttpsAgent)
             assert.strictEqual((agent as HttpsAgent).options.rejectUnauthorized, true)
@@ -283,9 +284,9 @@ describe('ProxyConfigManager', function () {
             )
         })
 
-        it('should create HttpsProxyAgent when proxy set', async () => {
+        it('should create HttpsProxyAgent when proxy set', () => {
             process.env.HTTPS_PROXY = 'https://proxy'
-            const agent = await proxyManager.createSecureAgent()
+            const agent = proxyManager.createSecureAgent()
 
             assert(agent instanceof HttpsProxyAgent)
             assert.strictEqual(agent.options.rejectUnauthorized, true)
