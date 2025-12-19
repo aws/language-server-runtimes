@@ -5,73 +5,36 @@
  * Based on windows-system-proxy 1.0.0 (Apache-2.0). Modified for synchronous use
  * https://github.com/httptoolkit/windows-system-proxy/blob/main/src/index.ts
  */
-import winreg from 'winreg'
+import { enumerateValues, HKEY, RegistryValue } from 'registry-js'
 
 export interface ProxyConfig {
     proxyUrl: string
     noProxy: string[]
 }
 
-const KEY_PROXY_ENABLE = 'ProxyEnable'
-const KEY_PROXY_SERVER = 'ProxyServer'
-const KEY_PROXY_OVERRIDE = 'ProxyOverride'
+export function getWindowsSystemProxy(): ProxyConfig | undefined {
+    const proxyValues = enumerateValues(
+        HKEY.HKEY_CURRENT_USER,
+        'Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings'
+    )
+    console.debug(`Retrieved ${proxyValues.length} registry values for proxy settings`)
 
-type WindowsProxyRegistryKeys = {
-    proxyEnable: string | undefined
-    proxyServer: string | undefined
-    proxyOverride: string | undefined
-}
+    const proxyEnabled = getValue(proxyValues, 'ProxyEnable')
+    const proxyServer = getValue(proxyValues, 'ProxyServer')
 
-function readWindowsRegistry(): Promise<WindowsProxyRegistryKeys> {
-    return new Promise((resolve, reject) => {
-        const regKey = new winreg({
-            hive: winreg.HKCU,
-            key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings',
-        })
-
-        regKey.values((err: Error, items: winreg.RegistryItem[]) => {
-            if (err) {
-                console.warn('', err.message)
-                resolve({
-                    proxyEnable: undefined,
-                    proxyServer: undefined,
-                    proxyOverride: undefined,
-                })
-                return
-            }
-
-            const results: Record<string, string> = {}
-
-            items.forEach((item: winreg.RegistryItem) => {
-                results[item.name] = item.value as string
-            })
-
-            resolve({
-                proxyEnable: results[KEY_PROXY_ENABLE],
-                proxyServer: results[KEY_PROXY_SERVER],
-                proxyOverride: results[KEY_PROXY_OVERRIDE],
-            })
-        })
-    })
-}
-
-export async function getWindowsSystemProxy(): Promise<ProxyConfig | undefined> {
-    const registryValues = await readWindowsRegistry()
-    const proxyEnabled = registryValues.proxyEnable
-    const proxyServer = registryValues.proxyServer
-    const proxyOverride = registryValues.proxyOverride
-
-    if (!proxyEnabled || !proxyServer) {
+    if (!proxyEnabled || !proxyEnabled.data || !proxyServer || !proxyServer.data) {
         console.debug('Proxy not enabled or server not configured')
         return undefined
     }
 
+    // Build noProxy list from ProxyOverride (semicolon-separated, with <local> → localhost,127.0.0.1,::1)
+    const proxyOverride = getValue(proxyValues, 'ProxyOverride')?.data
     const noProxy = (proxyOverride ? (proxyOverride as string).split(';') : []).flatMap(host =>
         host === '<local>' ? ['localhost', '127.0.0.1', '::1'] : [host]
     )
 
     // Parse proxy configuration which can be in multiple formats
-    const proxyConfigString = proxyServer
+    const proxyConfigString = proxyServer.data as string
 
     if (proxyConfigString.startsWith('http://') || proxyConfigString.startsWith('https://')) {
         console.debug('Using full URL format proxy configuration')
@@ -115,3 +78,5 @@ export async function getWindowsSystemProxy(): Promise<ProxyConfig | undefined> 
         }
     }
 }
+
+const getValue = (values: readonly RegistryValue[], name: string) => values.find(value => value?.name === name)

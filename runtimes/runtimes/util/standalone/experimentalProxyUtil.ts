@@ -25,16 +25,16 @@ export class ProxyConfigManager {
 
     constructor(private readonly telemetry: Telemetry) {}
 
-    async getSecureAgent(): Promise<HttpsAgent | HttpsProxyAgent> {
+    getSecureAgent(): HttpsAgent | HttpsProxyAgent {
         if (!this.cachedAgent) {
-            this.cachedAgent = await this.createSecureAgent()
+            this.cachedAgent = this.createSecureAgent()
         }
         return this.cachedAgent
     }
 
-    public async getV3ProxyConfig(): Promise<NodeHttpHandler> {
+    public getV3ProxyConfig(): NodeHttpHandler {
         if (!this.cachedV3Config) {
-            const agent = await this.getSecureAgent()
+            const agent = this.getSecureAgent()
             this.cachedV3Config = new NodeHttpHandler({
                 httpAgent: agent,
                 httpsAgent: agent,
@@ -57,12 +57,12 @@ export class ProxyConfigManager {
         return undefined
     }
 
-    private static async getSystemProxy(): Promise<string | undefined> {
+    private static getSystemProxy(): string | undefined {
         switch (process.platform) {
             case 'darwin':
                 return getMacSystemProxy()?.proxyUrl
             case 'win32':
-                return (await getWindowsSystemProxy())?.proxyUrl
+                return getWindowsSystemProxy()?.proxyUrl
             default:
                 return undefined
         }
@@ -166,7 +166,7 @@ export class ProxyConfigManager {
      *
      * @returns {HttpsAgent | HttpsProxyAgent}
      */
-    async createSecureAgent(): Promise<HttpsAgent | HttpsProxyAgent> {
+    createSecureAgent(): HttpsAgent | HttpsProxyAgent {
         const certs = this.getCertificates()
         const agentOptions = {
             ca: certs,
@@ -184,7 +184,7 @@ export class ProxyConfigManager {
         }
 
         // Fall back to OS auto‑detect (HTTP or HTTPS only)
-        const sysProxyUrl = await ProxyConfigManager.getSystemProxy()
+        const sysProxyUrl = ProxyConfigManager.getSystemProxy()
         if (sysProxyUrl) {
             this.emitProxyMetric('AutoDetect', certs.length, sysProxyUrl)
             return new HttpsProxyAgent({ ...agentOptions, proxy: sysProxyUrl })
