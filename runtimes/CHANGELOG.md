@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.12](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.11...language-server-runtimes/v0.3.12) (2025-12-19)
+
+
+### Reverts
+
+* pr 719 as dependency change cause unexpected network issue on windows machine  ([#729](https://github.com/aws/language-server-runtimes/issues/729)) ([3987770](https://github.com/aws/language-server-runtimes/commit/3987770c5870d049cb5eb549dbe6a45175946798))
+
 ## [0.3.11](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.10...language-server-runtimes/v0.3.11) (2025-12-12)
 
 
