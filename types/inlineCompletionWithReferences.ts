@@ -38,6 +38,8 @@ export type InlineCompletionItemWithReferences = InlineCompletionItem & {
     mostRelevantMissingImports?: {
         statement?: string
     }[]
+
+    devSettings?: any
 }
 /**
  * Extend InlineCompletionList to include optional references. This is not inheriting from `InlineCompletionList`
