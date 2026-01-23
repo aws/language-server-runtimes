@@ -202,10 +202,9 @@ export class Auth {
                     this.atxCredentials = bearerCredentials
                 } else {
                     this.connection.console.info('Runtime: Storing Q credentials in bearer')
+                    await this.handleBearerCredentialsMetadata(request.metadata)
                     this.setCredentials(bearerCredentials)
                 }
-
-                await this.handleBearerCredentialsMetadata(request.metadata)
                 this.connection.console.info('Runtime: Successfully saved bearer credentials')
             } else {
                 this.bearerCredentials = undefined
