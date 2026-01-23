@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.13](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.12...language-server-runtimes/v0.3.13) (2026-01-23)
+
+
+### Bug Fixes
+
+* atx bearer no longers update credential metadata ([#732](https://github.com/aws/language-server-runtimes/issues/732)) ([8b03630](https://github.com/aws/language-server-runtimes/commit/8b03630cce84bf145ac4cd7dadec88698c83bba5))
+
 ## [0.3.12](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.11...language-server-runtimes/v0.3.12) (2025-12-19)
 
 
