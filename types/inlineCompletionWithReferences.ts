@@ -38,8 +38,6 @@ export type InlineCompletionItemWithReferences = InlineCompletionItem & {
     mostRelevantMissingImports?: {
         statement?: string
     }[]
-
-    devSettings?: any
 }
 /**
  * Extend InlineCompletionList to include optional references. This is not inheriting from `InlineCompletionList`
@@ -61,6 +59,8 @@ export type InlineCompletionListWithReferences = {
      * Server returns partialResultToken for client to request next set of results
      */
     partialResultToken?: number | string
+
+    metadata?: any
 }
 
 export interface InlineCompletionStates {
