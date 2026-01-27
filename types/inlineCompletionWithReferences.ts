@@ -59,6 +59,8 @@ export type InlineCompletionListWithReferences = {
      * Server returns partialResultToken for client to request next set of results
      */
     partialResultToken?: number | string
+
+    metadata?: any
 }
 
 export interface InlineCompletionStates {
