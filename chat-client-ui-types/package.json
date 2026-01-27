@@ -17,6 +17,7 @@
     },
     "author": "Amazon Web Services",
     "license": "Apache-2.0",
+    "sideEffects": false,
     "dependencies": {
         "@aws/language-server-runtimes-types": "^0.1.63"
     }
