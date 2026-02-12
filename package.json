@@ -55,7 +55,10 @@
         "typescript": "^5.8.3"
     },
     "overrides": {
-        "cross-spawn": "^7.0.6"
+        "cross-spawn": "^7.0.6",
+        "mac-ca": {
+            "undici": "^7.0.0"
+        }
     },
     "typesVersions": {
         "*": {
