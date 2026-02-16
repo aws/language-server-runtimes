@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.14](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.13...language-server-runtimes/v0.3.14) (2026-02-12)
+
+
+### Bug Fixes
+
+* override undici to ^7.0.0 ([#734](https://github.com/aws/language-server-runtimes/issues/734)) ([69d984f](https://github.com/aws/language-server-runtimes/commit/69d984f4c4134927f71b86cd2bfff088542ddba5))
+
 ## [0.3.13](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.12...language-server-runtimes/v0.3.13) (2026-01-23)
 
 
