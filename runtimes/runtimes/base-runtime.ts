@@ -62,6 +62,7 @@ import {
     listAvailableModelsRequestType,
     subscriptionDetailsNotificationType,
     subscriptionUpgradeNotificationType,
+    executeTerminalCommandRequest,
     getSupplementalContextRequestType,
 } from '../protocol'
 import { createConnection } from 'vscode-languageserver/browser'
@@ -305,6 +306,10 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
                 onDidChangeDependencyPaths(handler) {
                     lspConnection.onNotification(didChangeDependencyPathsNotificationType, handler)
                 },
+            },
+            terminal: {
+                executeCommand: (params, token) =>
+                    lspConnection.sendRequest(executeTerminalCommandRequest, params, token),
             },
         }
 

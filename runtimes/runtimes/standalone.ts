@@ -36,6 +36,7 @@ import {
     getMfaCodeRequestType,
     CheckDiagnosticsParams,
     OpenWorkspaceFileParams,
+    executeTerminalCommandRequest,
     getSupplementalContextRequestType,
 } from '../protocol'
 import { ProposedFeatures, createConnection } from 'vscode-languageserver/node'
@@ -450,6 +451,10 @@ export const standalone = (props: RuntimeProps) => {
                     onGetSupplementalContext: handler => {
                         lspConnection.onRequest(getSupplementalContextRequestType, handler)
                     },
+                },
+                terminal: {
+                    executeCommand: (params, token) =>
+                        lspConnection.sendRequest(executeTerminalCommandRequest, params, token),
                 },
             }
 

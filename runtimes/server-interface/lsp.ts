@@ -65,6 +65,9 @@ import {
     CheckDiagnosticsResult,
     OpenWorkspaceFileParams,
     OpenWorkspaceFileResult,
+    ExecuteTerminalCommandParams,
+    ExecuteTerminalCommandResult,
+    CancellationToken,
     GetSupplementalContextParams,
     SupplementalContextItem,
 } from '../protocol'
@@ -196,5 +199,17 @@ export type Lsp = {
         onGetSupplementalContext: (
             handler: RequestHandler<GetSupplementalContextParams, SupplementalContextItem[] | undefined | null, void>
         ) => void
+    }
+    terminal: {
+        /**
+         * Execute a command in the IDE terminal
+         * @param params Terminal command execution parameters
+         * @param token Optional cancellation token
+         * @returns Promise that resolves with the execution result
+         */
+        executeCommand: (
+            params: ExecuteTerminalCommandParams,
+            token?: CancellationToken
+        ) => Promise<ExecuteTerminalCommandResult>
     }
 }
