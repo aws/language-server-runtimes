@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.15](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.14...language-server-runtimes/v0.3.15) (2026-02-21)
+
+
+### Bug Fixes
+
+* **runtimes:** replace mac-ca with native macOS certificate reading ([#736](https://github.com/aws/language-server-runtimes/issues/736)) ([134d721](https://github.com/aws/language-server-runtimes/commit/134d72158f73d2cd3614bf39fa24ad6ed9c9da0e))
+
 ## [0.3.14](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.13...language-server-runtimes/v0.3.14) (2026-02-12)
 
 
