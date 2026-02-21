@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { spawnSync } from 'node:child_process'
 import { readdirSync, readFileSync } from 'node:fs'
 import * as path from 'node:path'
 import { OperationalTelemetryProvider, TELEMETRY_SCOPES } from '../../operational-telemetry/operational-telemetry'
@@ -87,10 +88,23 @@ export function readWindowsCertificates(): string[] {
 }
 
 export function readMacosCertificates(): string[] {
-    const macCertsReader = require('mac-ca')
-    const certs = macCertsReader.get({
-        excludeBundled: false,
-    })
+    const splitPattern = /(?=-----BEGIN\sCERTIFICATE-----)/g
+    const args = ['find-certificate', '-a', '-p']
 
-    return certs
+    const systemRootCerts = spawnSync('/usr/bin/security', [
+        ...args,
+        '/System/Library/Keychains/SystemRootCertificates.keychain',
+    ])
+        .stdout.toString()
+        .split(splitPattern)
+        .map(c => c.trim())
+        .filter(Boolean)
+
+    const userKeychainCerts = spawnSync('/usr/bin/security', args)
+        .stdout.toString()
+        .split(splitPattern)
+        .map(c => c.trim())
+        .filter(Boolean)
+
+    return [...new Set([...systemRootCerts, ...userKeychainCerts])]
 }
