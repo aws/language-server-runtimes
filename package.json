@@ -56,9 +56,7 @@
     },
     "overrides": {
         "cross-spawn": "^7.0.6",
-        "mac-ca": {
-            "undici": "^7.0.0"
-        }
+        "prebuild-install": "^7.0.0"
     },
     "typesVersions": {
         "*": {
