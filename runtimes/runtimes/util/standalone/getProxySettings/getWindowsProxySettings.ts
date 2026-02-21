@@ -5,36 +5,44 @@
  * Based on windows-system-proxy 1.0.0 (Apache-2.0). Modified for synchronous use
  * https://github.com/httptoolkit/windows-system-proxy/blob/main/src/index.ts
  */
-import { enumerateValues, HKEY, RegistryValue } from 'registry-js'
+import { spawnSync } from 'node:child_process'
 
 export interface ProxyConfig {
     proxyUrl: string
     noProxy: string[]
 }
 
+const INTERNET_SETTINGS_KEY = 'HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings'
+
+function readRegistryValue(name: string): string | undefined {
+    if (process.platform !== 'win32') return undefined
+    const result = spawnSync('reg', ['query', INTERNET_SETTINGS_KEY, '/v', name], { encoding: 'utf-8' })
+    if (result.status !== 0) return undefined
+    // reg query output format: "    name    REG_SZ    value"
+    const match = result.stdout.match(new RegExp(`^\\s+${name}\\s+REG_(?:SZ|DWORD)\\s+(.+)$`, 'm'))
+    return match?.[1]?.trim()
+}
+
 export function getWindowsSystemProxy(): ProxyConfig | undefined {
-    const proxyValues = enumerateValues(
-        HKEY.HKEY_CURRENT_USER,
-        'Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings'
-    )
-    console.debug(`Retrieved ${proxyValues.length} registry values for proxy settings`)
+    const proxyEnabled = readRegistryValue('ProxyEnable')
+    const proxyServer = readRegistryValue('ProxyServer')
 
-    const proxyEnabled = getValue(proxyValues, 'ProxyEnable')
-    const proxyServer = getValue(proxyValues, 'ProxyServer')
-
-    if (!proxyEnabled || !proxyEnabled.data || !proxyServer || !proxyServer.data) {
+    // ProxyEnable is a REG_DWORD: "0x1" = enabled
+    if (!proxyEnabled || proxyEnabled === '0x0' || !proxyServer) {
         console.debug('Proxy not enabled or server not configured')
         return undefined
     }
 
+    console.debug('Retrieved registry values for proxy settings')
+
     // Build noProxy list from ProxyOverride (semicolon-separated, with <local> → localhost,127.0.0.1,::1)
-    const proxyOverride = getValue(proxyValues, 'ProxyOverride')?.data
-    const noProxy = (proxyOverride ? (proxyOverride as string).split(';') : []).flatMap(host =>
+    const proxyOverride = readRegistryValue('ProxyOverride')
+    const noProxy = (proxyOverride ? proxyOverride.split(';') : []).flatMap(host =>
         host === '<local>' ? ['localhost', '127.0.0.1', '::1'] : [host]
     )
 
     // Parse proxy configuration which can be in multiple formats
-    const proxyConfigString = proxyServer.data as string
+    const proxyConfigString = proxyServer
 
     if (proxyConfigString.startsWith('http://') || proxyConfigString.startsWith('https://')) {
         console.debug('Using full URL format proxy configuration')
@@ -78,5 +86,3 @@ export function getWindowsSystemProxy(): ProxyConfig | undefined {
         }
     }
 }
-
-const getValue = (values: readonly RegistryValue[], name: string) => values.find(value => value?.name === name)
