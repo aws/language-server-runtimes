@@ -5,7 +5,7 @@ import { InlineCompletionItem } from 'vscode-languageserver-types'
  */
 export type InlineCompletionItemWithReferences = InlineCompletionItem & {
     /**
-     * Identifier for the the recommendation returned by server.
+     * Identifier for the recommendation returned by server.
      */
     itemId: string
 
