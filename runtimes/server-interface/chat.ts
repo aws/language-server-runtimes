@@ -23,6 +23,8 @@ import {
     InlineChatParams,
     InlineChatResult,
     ContextCommandParams,
+    FilterContextCommandsParams,
+    FilterContextCommandsResult,
     CreatePromptParams,
     InlineChatResultParams,
     ListConversationsParams,
@@ -80,6 +82,9 @@ export type Chat = {
         handler: RequestHandler<OpenFileDialogParams, OpenFileDialogResult, OpenFileDialogResult>
     ) => void
     onListAvailableModels: (handler: RequestHandler<ListAvailableModelsParams, ListAvailableModelsResult, void>) => void
+    onFilterContextCommands: (
+        handler: RequestHandler<FilterContextCommandsParams, FilterContextCommandsResult, void>
+    ) => void
     // Notifications
     onSendFeedback: (handler: NotificationHandler<FeedbackParams>) => void
     onReady: (handler: NotificationHandler<void>) => void

@@ -27,6 +27,7 @@ export const EXECUTE_SHELL_COMMAND_SHORTCUT_METHOD = 'aws/chat/executeShellComma
 
 // context
 export const CONTEXT_COMMAND_NOTIFICATION_METHOD = 'aws/chat/sendContextCommands'
+export const FILTER_CONTEXT_COMMANDS_REQUEST_METHOD = 'aws/chat/filterContextCommands'
 export const CREATE_PROMPT_NOTIFICATION_METHOD = 'aws/chat/createPrompt'
 export const INLINE_CHAT_RESULT_NOTIFICATION_METHOD = 'aws/chat/inlineChatResult'
 
@@ -471,6 +472,15 @@ export interface ContextCommand extends QuickActionCommand {
 }
 
 export interface ContextCommandParams {
+    contextCommandGroups: ContextCommandGroup[]
+}
+
+export interface FilterContextCommandsParams {
+    tabId: string
+    searchTerm: string
+}
+
+export interface FilterContextCommandsResult {
     contextCommandGroups: ContextCommandGroup[]
 }
 
