@@ -76,6 +76,9 @@ import {
     ListRulesResult,
     listRulesRequestType,
     RuleClickResult,
+    FilterContextCommandsParams,
+    FilterContextCommandsResult,
+    filterContextCommandsRequestType,
     PinnedContextParams,
     pinnedContextNotificationType,
     ActiveEditorChangedParams,
@@ -178,6 +181,12 @@ export class BaseChat implements Chat {
 
     public onFileClicked(handler: NotificationHandler<FileClickParams>) {
         this.connection.onNotification(fileClickNotificationType.method, handler)
+    }
+
+    public onFilterContextCommands(
+        handler: RequestHandler<FilterContextCommandsParams, FilterContextCommandsResult, void>
+    ) {
+        this.connection.onRequest(filterContextCommandsRequestType.method, handler)
     }
 
     public sendContextCommands(params: ContextCommandParams) {

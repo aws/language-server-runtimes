@@ -43,7 +43,10 @@ import {
     InlineChatParams,
     InlineChatResult,
     CONTEXT_COMMAND_NOTIFICATION_METHOD,
+    FILTER_CONTEXT_COMMANDS_REQUEST_METHOD,
     ContextCommandParams,
+    FilterContextCommandsParams,
+    FilterContextCommandsResult,
     CREATE_PROMPT_NOTIFICATION_METHOD,
     CreatePromptParams,
     INLINE_CHAT_RESULT_NOTIFICATION_METHOD,
@@ -172,6 +175,13 @@ export const fileClickNotificationType = new ProtocolNotificationType<FileClickP
 export const contextCommandsNotificationType = new ProtocolNotificationType<ContextCommandParams, void>(
     CONTEXT_COMMAND_NOTIFICATION_METHOD
 )
+export const filterContextCommandsRequestType = new ProtocolRequestType<
+    FilterContextCommandsParams,
+    FilterContextCommandsResult,
+    never,
+    void,
+    void
+>(FILTER_CONTEXT_COMMANDS_REQUEST_METHOD)
 export const createPromptNotificationType = new ProtocolNotificationType<CreatePromptParams, void>(
     CREATE_PROMPT_NOTIFICATION_METHOD
 )
