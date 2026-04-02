@@ -56,7 +56,8 @@
     },
     "overrides": {
         "cross-spawn": "^7.0.6",
-        "prebuild-install": "^7.0.0"
+        "prebuild-install": "^7.0.0",
+        "node-forge": "^1.4.0"
     },
     "typesVersions": {
         "*": {
