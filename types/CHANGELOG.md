@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.64](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.63...language-server-runtimes-types/v0.1.64) (2026-04-02)
+
+
+### Features
+
+* delegate lsp to handle context command filtering ([#743](https://github.com/aws/language-server-runtimes/issues/743)) ([8836c33](https://github.com/aws/language-server-runtimes/commit/8836c335180c13142b6789637cc5f3915e4a5475))
+
 ## [0.1.63](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes-types/v0.1.62...language-server-runtimes-types/v0.1.63) (2025-11-25)
 
 
