@@ -187,6 +187,25 @@ export class BaseChat implements Chat {
         handler: RequestHandler<FilterContextCommandsParams, FilterContextCommandsResult, void>
     ) {
         this.connection.onRequest(filterContextCommandsRequestType.method, handler)
+
+        // Also register as a notification handler. Some IDE hosts forward
+        // webview messages as notifications (sendNotification) rather than
+        // requests (sendRequest). When received as a notification there is
+        // no response channel, so we push the results back to the client
+        // via sendContextCommands.
+        this.connection.onNotification(
+            filterContextCommandsRequestType.method,
+            async (params: FilterContextCommandsParams) => {
+                try {
+                    const result = await handler(params, {} as any)
+                    if (result && 'contextCommandGroups' in result) {
+                        this.sendContextCommands(result as ContextCommandParams)
+                    }
+                } catch {
+                    // Swallow errors — notification handlers have no error channel
+                }
+            }
+        )
     }
 
     public sendContextCommands(params: ContextCommandParams) {

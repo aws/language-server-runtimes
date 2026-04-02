@@ -182,7 +182,19 @@ export const baseRuntime = (connections: { reader: MessageReader; writer: Messag
         onButtonClick: params => lspConnection.onRequest(buttonClickRequestType.method, params),
         sendChatUpdate: params => lspConnection.sendNotification(chatUpdateNotificationType.method, params),
         onFileClicked: handler => lspConnection.onNotification(fileClickNotificationType.method, handler),
-        onFilterContextCommands: handler => lspConnection.onRequest(filterContextCommandsRequestType.method, handler),
+        onFilterContextCommands: handler => {
+            lspConnection.onRequest(filterContextCommandsRequestType.method, handler)
+            // Also listen as notification — some IDE hosts forward webview
+            // messages via sendNotification instead of sendRequest.
+            lspConnection.onNotification(filterContextCommandsRequestType.method, async (params: any) => {
+                try {
+                    const result = await handler(params, {} as any)
+                    if (result && 'contextCommandGroups' in result) {
+                        lspConnection.sendNotification(contextCommandsNotificationType.method, result)
+                    }
+                } catch {}
+            })
+        },
         sendContextCommands: params => lspConnection.sendNotification(contextCommandsNotificationType.method, params),
         sendPinnedContext: params => lspConnection.sendNotification(pinnedContextNotificationType.method, params),
         onPinnedContextAdd: params => lspConnection.sendNotification(onPinnedContextAddNotificationType.method, params),
