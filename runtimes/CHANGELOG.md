@@ -1,5 +1,25 @@
 # Changelog
 
+## [0.3.16](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.15...language-server-runtimes/v0.3.16) (2026-04-02)
+
+
+### Features
+
+* delegate lsp to handle context command filtering ([#743](https://github.com/aws/language-server-runtimes/issues/743)) ([8836c33](https://github.com/aws/language-server-runtimes/commit/8836c335180c13142b6789637cc5f3915e4a5475))
+* delegate lsp to handle context command filtering ([#745](https://github.com/aws/language-server-runtimes/issues/745)) ([2c7174a](https://github.com/aws/language-server-runtimes/commit/2c7174a53ef792021c2d070867d87efe5ae2f7a8))
+
+
+### Bug Fixes
+
+* bump node-forge to ^1.4.0 to resolve CVEs ([#746](https://github.com/aws/language-server-runtimes/issues/746)) ([c1cd1a4](https://github.com/aws/language-server-runtimes/commit/c1cd1a49775b188bd892540e11126b6dfe907dd3))
+
+
+### Dependencies
+
+* The following workspace dependencies were updated
+  * dependencies
+    * @aws/language-server-runtimes-types bumped from ^0.1.63 to ^0.1.64
+
 ## [0.3.15](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.14...language-server-runtimes/v0.3.15) (2026-03-09)
 
 
