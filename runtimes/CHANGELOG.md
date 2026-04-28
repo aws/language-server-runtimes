@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.17](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.16...language-server-runtimes/v0.3.17) (2026-04-28)
+
+
+### Bug Fixes
+
+* dummy commit to trigger release-please ([#750](https://github.com/aws/language-server-runtimes/issues/750)) ([ee03545](https://github.com/aws/language-server-runtimes/commit/ee03545c1e4d0a1d530fc59563de526e9d36433a))
+
 ## [0.3.16](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.15...language-server-runtimes/v0.3.16) (2026-04-02)
 
 
