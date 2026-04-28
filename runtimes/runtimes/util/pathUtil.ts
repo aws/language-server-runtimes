@@ -55,6 +55,7 @@ export function basenamePath(path: string, ext?: string): string {
     }
 
     // Remove extension if it matches
+    // .
     if (ext.startsWith('.')) {
         return basename.endsWith(ext) && basename !== ext ? basename.slice(0, -ext.length) : basename
     } else {
