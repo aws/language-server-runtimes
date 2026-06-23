@@ -9,6 +9,7 @@
     },
     "author": "Amazon Web Services",
     "license": "Apache-2.0",
+    "sideEffects": false,
     "engines": {
         "node": ">=24.0.0"
     },
