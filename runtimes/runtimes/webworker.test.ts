@@ -22,7 +22,7 @@ describe('webworker', () => {
 
     it('should initialize lsp connection and start listening', async () => {
         try {
-            const { webworker } = await import('./webworker')
+            const { webworker } = await import('./webworker.js')
             // If webworker loads successfully, it should be a function
             assert.strictEqual(typeof webworker, 'function')
         } catch (error) {
