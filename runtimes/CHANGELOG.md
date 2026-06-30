@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.18](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.17...language-server-runtimes/v0.3.18) (2026-06-30)
+
+
+### Bug Fixes
+
+* use Node16 moduleResolution to support modern package exports maps ([#761](https://github.com/aws/language-server-runtimes/issues/761)) ([576ff36](https://github.com/aws/language-server-runtimes/commit/576ff366b29fb06b2d468884145a45c5176527bd))
+
 ## [0.3.17](https://github.com/aws/language-server-runtimes/compare/language-server-runtimes/v0.3.16...language-server-runtimes/v0.3.17) (2026-04-28)
 
 
